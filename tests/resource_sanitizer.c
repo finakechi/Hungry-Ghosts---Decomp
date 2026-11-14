@@ -58,5 +58,15 @@ int main(void) {
     for(unsigned i=0;i<32;i++)assert(t.ram[0xa88000+i]==0);
     store(&t,0xb00000,4,0x60000000);store(&t,0xb00008,4,0x100);store(&t,0xb0000c,4,0x121);
     hg_resource_rebase(&e,0xb00000,0x3200);assert(load(&t,0xb00008,4)==0x3200);
+    /* Combined path with a real synthetic FLK5 texture and alternate ID. */
+    disk_word(&t,72,0x96);disk_word(&t,2048,0x354b4c46);
+    disk_word(&t,2052,1);disk_word(&t,2056,2048);disk_word(&t,2060,0);
+    disk_word(&t,2064,0x09000020);disk_word(&t,2080,0x60000000);
+    disk_word(&t,2088,0x100);disk_word(&t,2092,0x121);
+    hg_resource_request_raw(&e,0,0);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(load(&t,0xb00028,4)==0x1e00 && load(&t,0xb0002c,4)==0x1e21);
+    assert(load(&t,0xb00008,4)==0x1d00 && load(&t,0x3f4558,4)==0xb00000);
+    store(&t,0x1ff05bf,1,0xfe);
+    assert(hg_resource_map_address(&e,0xffffffff,0x1ff05c0)==0xfffffffe);
     free(t.ram);puts("PASS: synthetic request/worker/PACK/CDVD and AREA finalization under sanitizers");return 0;
 }

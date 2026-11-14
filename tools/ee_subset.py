@@ -21,6 +21,7 @@ class Machine:
         self.pending = None
         self.hooks = {}
         self.steps = 0
+        self.executed = set()
 
     def put(self, address, data):
         self.mem.update((address + i, x) for i, x in enumerate(data))
@@ -60,6 +61,7 @@ class Machine:
                 self.pc = self.reg[31] & MASK64
                 continue
             pc = self.pc
+            self.executed.add(pc)
             word = self.load(pc, 4)
             op, rs, rt, rd, sa, fn = word >> 26, (word >> 21) & 31, (word >> 16) & 31, (word >> 11) & 31, (word >> 6) & 31, word & 63
             imm = sx(word & 0xffff, 16)
@@ -71,6 +73,8 @@ class Machine:
                 if fn == 0: wordreg(rd, b << sa)
                 elif fn == 2: wordreg(rd, (b & 0xffffffff) >> sa)
                 elif fn == 3: wordreg(rd, sx(b,32) >> sa)
+                elif fn == 0x3c: self.setreg(rd,b << (sa+32))
+                elif fn == 0x3e: self.setreg(rd,b >> (sa+32))
                 elif fn == 8: target = a
                 elif fn == 0x18:
                     product = sx(a,32) * sx(b,32)

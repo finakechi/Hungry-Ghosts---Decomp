@@ -1,5 +1,33 @@
 # Hungry Ghosts — master handoff
 
+## M4 current result — 2026-11-14
+
+**M4 complete for the selected bootstrap FLK5 resource.** The combined
+`hg_resource_worker_fixed` operation connects M2 loading/publication, new fixup
+`00137ed0`, M3 rebasing and reconstructed address helper `001389d0`. Eight new
+functions add 395 original words / 1,580 bytes: total 24 functions / 1,415 words /
+5,660 bytes. Both loader fixup calls now retain the original member ID in a2.
+
+Actual PCSX2 EE breakpoints observed `137ed0 → 1385b0 → 1389d0 → 130834`, then
+bootstrap publication and worker completion. The selected directory-0 member's
+entire 4,352-byte output, return, five handles and arena match reconstructed C.
+**99 synthetic tests**, 1,227 new instruction comparisons (393/395 addresses;
+two guarded unreachable instructions), M1–M3 regressions, ASan/UBSan, byte and
+safety checks pass. [M4 report](docs/M4.md) separates each evidence level and
+provides exact commands; [runtime comparison](evidence/m4/runtime-comparison.json)
+binds private captures and original image identity.
+
+Geometry/material `1386e0` and upload `152ae0` remain explicit boundaries; neither
+is called by the selected retail member. Other variants have model evidence,
+not retail runtime equivalence. No whole-game/byte-match/native-port claim.
+Starting branch was clean `research/m4-resource-fixup` at merged `main` commit
+`7e54e15`; older PR/branch/status claims below are historical and superseded here.
+No M4 push, PR or merge is authorized or performed. Original/private research is
+preserved; existing private backup destination is unchanged.
+
+Next: AREA overlay activation/lifetime through an observed real transition,
+including general PACK or type-1 fixups only where that path requires them.
+
 ## GitHub and private recovery integration — 2026-11-14
 
 M1–M3 history and source have been revalidated for authorized GitHub publication.

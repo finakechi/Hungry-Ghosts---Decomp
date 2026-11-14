@@ -38,6 +38,20 @@ void hg_area_finalize(HGResourceEnv *, uint32_t, uint32_t);       /* 00131dd0 */
  * Invalid phase values keep yielding, matching the original nonprogress loop.
  * This helper is not counted as another reconstructed retail function. */
 uint32_t hg_pack_bootstrap_step(HGResourceEnv *, uint32_t);
-/* 001385b0: linked resource address rebasing; 001389d0 remains external. */
+/* 001385b0: linked rebasing; the combined adapter resolves 001389d0. */
 void hg_resource_rebase(HGResourceEnv *, uint32_t, uint32_t);
+/* M4 original functions. Extra frame arguments are host adapters for the
+ * original guest stack scratch; see implementation and docs/M4.md. */
+uint32_t hg_resource_fixup(HGResourceEnv *, uint32_t, uint32_t, uint32_t, uint32_t); /* 00137ed0 */
+uint32_t hg_resource_map_address(HGResourceEnv *, uint32_t, uint32_t); /* 001389d0 */
+uint32_t hg_flk5_entry(HGResourceEnv *, uint32_t, uint32_t);       /* 00138af0 */
+uint32_t hg_flk5_type(HGResourceEnv *, uint32_t, uint32_t);        /* 00138b30 */
+uint32_t hg_flk5_count(HGResourceEnv *, uint32_t);                 /* 00138b70 */
+uint32_t hg_flk5_size(HGResourceEnv *, uint32_t);                  /* 00138b90 */
+void hg_flk5_disable(HGResourceEnv *, uint32_t, uint32_t);         /* 00138560 */
+uint32_t hg_resource_base_delta(HGResourceEnv *, uint32_t, uint32_t); /* 001385a0 */
+/* Combined M2 loading/publication -> M4 fixup -> M3 rebasing operation.
+ * frame must be 16-byte aligned and reserve [frame-0x70, frame+0x240)
+ * of guest scratch, away from resources and live state. */
+void hg_resource_worker_fixed(HGResourceEnv *, uint32_t frame);
 #endif

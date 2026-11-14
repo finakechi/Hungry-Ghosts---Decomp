@@ -23,7 +23,7 @@ ARITIES={'init':0,'schedule':3,'finish':0,'request_raw':2,'request':2,'worker':0
          'bootstrap':1,'bootstrap_step':1,'area_index':0,'area_step':1,'area_finalize':2}
 RETURNS={'special','area_index','area_step','bootstrap_step'}
 EXTERNAL_ARITIES={0x119ac8:3,0x1041e0:1,0x103d60:1,0x103d80:2,0x103da0:0,
-                  0x1434e0:0,0x137ed0:2,0x156a50:1,0x131da0:1,
+                  0x1434e0:0,0x137ed0:3,0x156a50:1,0x131da0:1,
                   0x130900:1,0x131420:1,0x130020:1,0x12fe90:1,0x12fde0:1,
                   0x12fcf0:1,0x12ff20:1,0x12ffa0:1}
 

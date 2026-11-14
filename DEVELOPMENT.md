@@ -258,3 +258,12 @@ additive private Drive upload, full downloaded verification and isolated restore
 The existing synthetic CI discovers `tests/test_backup.py` without Drive credentials
 or proprietary fixtures. Private IDs/authentication stay beneath ignored `local/`.
 See [integration verification](docs/INTEGRATION.md) for actual results and limits.
+
+## M4: combined FLK5 processing
+
+[docs/M4.md](docs/M4.md) records exact original-byte, differential, synthetic,
+sanitizer and private runtime commands plus the repeatable EE breakpoint sequence.
+Use `hg_resource_worker_fixed(env, frame)` to resolve fixup/helper boundaries
+through the existing bus; reserve aligned guest scratch as specified in the API.
+The old worker retains M2's isolated external seam for regressions. New packets
+are under `analysis/resource_fixup/` and results under `evidence/m4/`.

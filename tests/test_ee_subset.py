@@ -35,6 +35,13 @@ class SubsetTests(unittest.TestCase):
         m.run(0x1000)
         self.assertEqual(m.reg[3],m.reg[2])
 
+    def test_doubleword_shift32_extracts_low24_and_preserves_upper_lane(self):
+        m=self.run_words([(4<<16)|(2<<11)|(8<<6)|0x3c,
+                          (2<<16)|(2<<11)|(8<<6)|0x3e,0x03e00008,0])
+        m.reg[4]=(0xabcdef<<64)|0xfedcba9876543210
+        m.reg[2]=0x12345678<<64
+        m.run(0x1000)
+        self.assertEqual(m.reg[2],(0x12345678<<64)|0x543210)
     def test_unknown_and_unmapped_fail(self):
         m=self.run_words([0x44000000])
         with self.assertRaises(ValueError):m.run(0x1000)
