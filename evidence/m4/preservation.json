@@ -1,0 +1,31 @@
+{
+  "schema": "hg-m4-preservation/v1",
+  "result": "passed",
+  "implementation_commit": "36ebbd8b5e846f968c357e0e4011ac922b92fb29",
+  "branch": "research/m4-resource-fixup",
+  "snapshot_git_status": [],
+  "verification": {
+    "result": "passed",
+    "snapshot_id": "20261114T210035Z-c8528d81230e",
+    "files_verified": 947,
+    "bytes_verified": 365128227,
+    "manifest_sha256": "75636b3d8b6c84dc53fa8971965d6f887120e36aed87515b4a32a06aff5bde4e",
+    "archive_sha256": "ed7c684a40421d0da883cece817f37f2bd80fe52b868003ddb1d2cc335aa9dbb"
+  },
+  "restoration": "passed; full isolated restore, recovered bundle clone and git fsck --full",
+  "m4_files": 90,
+  "inventory_only_entries": 7,
+  "excluded_entries": 26,
+  "previous_remote_snapshots": "Both preserved; all four earlier archive/manifest hashes match fresh downloaded bytes",
+  "original_media_inventory": "unchanged",
+  "previous_ghidra_recovery_files": "343 regular-file hashes unchanged",
+  "original_backup_configuration": "unchanged; derived configuration added only M4 source, same destination",
+  "remote_actions": "New owner-only snapshot child; upload of archive and manifest only; no replacement/deletion/sharing change",
+  "git_actions": "Local implementation and subsequent preservation-only commits; no push, PR or merge",
+  "private_receipt": "local/m4-backup-final.json",
+  "private_metadata": "local/m4-backup-drive-metadata.json",
+  "limits": [
+    "Backup covers implementation commit 36ebbd8; subsequent preservation-only handoff commit is outside this immutable snapshot.",
+    "Original media and bulk extraction are inventory-only; the private archive contains research/captures, not original media."
+  ]
+}

@@ -6,8 +6,8 @@
   "count": 4558,
   "status_counts": {
     "analyzed-partial-byte-checked": 12,
-    "auto-discovered-unreviewed": 4530,
-    "reconstructed-model-differential-tested": 16
+    "auto-discovered-unreviewed": 4522,
+    "reconstructed-model-differential-tested": 24
   },
   "functions": [
     {
@@ -15952,9 +15952,14 @@
         "0x00138b90",
         "0x00152ae0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_fixup",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json",
+      "bootstrap_runtime_verification": "debugger-observed-selected-member",
+      "m4_runtime_evidence": "evidence/m4/runtime-comparison.json"
     },
     {
       "entry": "0x00138370",
@@ -16010,9 +16015,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_flk5_disable",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x001385a0",
@@ -16025,9 +16033,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_base_delta",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x001385b0",
@@ -16047,7 +16058,9 @@
       "gameplay_runtime_verification": "not-tested",
       "analyst_name": "hg_resource_rebase",
       "milestone": "M3",
-      "evidence": "evidence/m3/reconstruction.json"
+      "evidence": "evidence/m3/reconstruction.json",
+      "bootstrap_runtime_verification": "debugger-observed-selected-member",
+      "m4_runtime_evidence": "evidence/m4/runtime-comparison.json"
     },
     {
       "entry": "0x00138690",
@@ -16110,9 +16123,14 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_map_address",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json",
+      "bootstrap_runtime_verification": "debugger-observed-selected-member",
+      "m4_runtime_evidence": "evidence/m4/runtime-comparison.json"
     },
     {
       "entry": "0x00138a80",
@@ -16140,9 +16158,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_flk5_entry",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x00138b30",
@@ -16155,9 +16176,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_flk5_type",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x00138b70",
@@ -16170,9 +16194,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_flk5_count",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x00138b90",
@@ -16185,9 +16212,12 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_flk5_size",
+      "milestone": "M4",
+      "evidence": "evidence/m4/differential.json"
     },
     {
       "entry": "0x00138bb0",

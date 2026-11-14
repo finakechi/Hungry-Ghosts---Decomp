@@ -1,5 +1,11 @@
 # Scheduler and resource loading: M2 evidence
 
+M4 update: the combined `hg_resource_worker_fixed` operation now resolves FLK5
+fixup/rebasing and retains the original member-ID argument at both M2 boundaries.
+See [M4 semantics](../resource_fixup/README.md) and [verified retail path](../../docs/M4.md).
+The M2 dependency-isolated results below are historical; their external fixup
+seam remains available for regression tests.
+
 Reference: original Japanese ELF SHA-256
 `a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61`.
 The [instruction packet](functions.json) contains **684 original instruction rows /

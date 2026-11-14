@@ -1,0 +1,13 @@
+{
+  "schema": "hg-publication-audit/v1",
+  "base": "7e54e15b2b13b407e200aa061435f00c2cac8b09",
+  "head": "36ebbd8b5e846f968c357e0e4011ac922b92fb29",
+  "commits": [
+    "36ebbd8b5e846f968c357e0e4011ac922b92fb29"
+  ],
+  "result": "no-heuristic-findings",
+  "limits": "Requires content review of source, bounded instruction evidence, licensing and summarized captures. Does not prove absence of every secret.",
+  "objects_checked": 39,
+  "findings": [],
+  "status": "passed"
+}

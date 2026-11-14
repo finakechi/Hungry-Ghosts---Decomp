@@ -129,8 +129,17 @@ def main():
         if seed%2:
             cd.mem.store(0x3f2c80,1,1);md.mem.store(0x3f2c80,1,1)
         execute(lib,cd,md,'request_raw',(0,seed%3));execute(lib,cd,md,'worker');sequences+=1
+    # M4: member-ID register survives a descriptor/handle alias at phase 6.
+    alias_cases=0
+    for identifier,cursor in ((9,0x3f431c),(0x12d2,0x3f3b40)):
+        mem=Memory(data,segments);base=0x3f8e00
+        mem.store(base+0x3b,6,1);mem.store(base+0x3c,1,2)
+        mem.store(base+0x48,0xb00000);mem.store(base+0x4c,cursor)
+        mem.store(cursor+8,identifier)
+        cd,md=pair(mem,{})
+        execute(lib,cd,md,'special',(base,0x3f3b00,0x3f3b00));alias_cases+=1
     result=dict(schema='hg-resource-differential/v1',elf_sha256=EXPECTED,seed='0x1504602',
-                randomized_invocations=total,cases_per_function=per_function,end_to_end_sequences=sequences,
+                randomized_invocations=total,cases_per_function=per_function,end_to_end_sequences=sequences,alias_cases=alias_cases,
                 result='passed',source='src/resource_loader.c + src/disc_read.c',
                 comparison='Return values where defined, non-stack RAM/scratchpad, ordered defined external arguments and thread descriptors; includes nonzero directory IDs and arena rounding/wrap boundaries.',
                 limitations=['Kernel threads, CDVD responses and asset fixups are deterministic mocks.',

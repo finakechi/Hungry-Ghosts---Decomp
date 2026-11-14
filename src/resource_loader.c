@@ -144,8 +144,9 @@ uint32_t hg_pack_special_step(HGResourceEnv *e,uint32_t task,uint32_t directory,
         w8(e,task+0x3b,r8(e,task+0x3b)+1);break;
     case 6:
         cursor=r32(e,task+0x4c);address=r32(e,task+0x48);
-        w32(e,0x3f4300+r32(e,cursor+8)*4,address);
-        result=call(e,0x137ed0,address,0,0,0);w32(e,task+0x48,result);
+        { uint32_t member_id=r32(e,cursor+8);
+        w32(e,0x3f4300+member_id*4,address);
+        result=call(e,0x137ed0,r32(e,task+0x48),0,member_id,0); }w32(e,task+0x48,result);
         w32(e,task+0x4c,r32(e,task+0x4c)+0x10);
         count=(uint16_t)(r16(e,task+0x3c)-1);w16(e,task+0x3c,count);w8(e,task+0x3b,count==0?7:4);break;
     case 7:
@@ -186,7 +187,7 @@ uint32_t hg_pack_bootstrap_step(HGResourceEnv *e,uint32_t task) {
             uint32_t cursor=r32(e,task+0x4c),id=r32(e,cursor+8);
             w32(e,0x3f4300+id*4,r32(e,task+0x48)+(r32(e,cursor)-r32(e,header+0x10)));
             if(remaining_fixups!=0) {
-                remaining_fixups--;call(e,0x137ed0,r32(e,0x3f4300+id*4),0,0,0);
+                remaining_fixups--;call(e,0x137ed0,r32(e,0x3f4300+id*4),0,id,0);
             }
             i++;w32(e,task+0x4c,r32(e,task+0x4c)+0x10);
         }while(i<r32(e,header+8));
@@ -227,7 +228,8 @@ uint32_t hg_area_read_step(HGResourceEnv *e,uint32_t task) {
     return 0;
 }
 
-/* 001385b0. Rebase header +08/+0c, notify the aligned end, then update each
+/* 001385b0. Rebase header +08/+0c, call the discarded-result address permutation,
+ * then update each
  * linked record's +34 address. No inferred format checks or bounds are added.
  * Header/callback alias effects and the two separate +34 stores are preserved. */
 void hg_resource_rebase(HGResourceEnv *e,uint32_t block,uint32_t base) {
@@ -249,4 +251,132 @@ void hg_resource_rebase(HGResourceEnv *e,uint32_t block,uint32_t base) {
         if((tag&0xf0000000u)==0x60000000u)return;
         block+=(tag&0xffffu)*16u+16u;
     }
+}
+
+/* FLK5 helpers use the low 24 bits of the index and encoded offset. */
+uint32_t hg_flk5_entry(HGResourceEnv *e,uint32_t block,uint32_t index) {
+    if(r32(e,block)!=0x354b4c46u)return block;
+    return block+(r32(e,block+16+(index&0xffffffu)*4)&0xffffffu);
+}
+uint32_t hg_flk5_type(HGResourceEnv *e,uint32_t block,uint32_t index) {
+    if(r32(e,block)!=0x354b4c46u)return 0xffff;
+    return r32(e,block+16+(index&0xffffffu)*4)&0xff000000u;
+}
+uint32_t hg_flk5_count(HGResourceEnv *e,uint32_t block) {
+    return r32(e,block)==0x354b4c46u?r32(e,block+4):0xffff;
+}
+uint32_t hg_flk5_size(HGResourceEnv *e,uint32_t block) {
+    return r32(e,block)==0x354b4c46u?r32(e,block+8):0xffff;
+}
+void hg_flk5_disable(HGResourceEnv *e,uint32_t block,uint32_t index) {
+    if(r32(e,block)==0x354b4c46u)w32(e,block+16+(index&0xffffffu)*4,0xff000000u);
+}
+uint32_t hg_resource_base_delta(HGResourceEnv *e,uint32_t block,uint32_t base) {
+    return base-r32(e,block+8);
+}
+static int64_t signed_word(uint32_t v) {
+    return (v&0x80000000u)?(int64_t)v-INT64_C(0x100000000):(int64_t)v;
+}
+static int positive_word(uint32_t v) { return v!=0 && (v&0x80000000u)==0; }
+
+/* 001389d0: signed quotient/remainder address permutation, not allocation.
+ * frame is the original helper's adjusted sp. Negative inputs can read BEFORE
+ * its 32-byte table: use the caller-provided guest scratch, never a host array.
+ * The table is copied before lookup, preserving aliasing with the source. */
+uint32_t hg_resource_map_address(HGResourceEnv *e,uint32_t address,uint32_t frame) {
+    uint32_t table[8];
+    for(uint32_t i=0;i<8;i++)table[i]=r32(e,0x3e0260+i*4);
+    for(uint32_t i=0;i<8;i++)w32(e,frame+i*4,table[i]);
+    int64_t value=signed_word(address),q=value/32,rem=value%32;
+    int64_t group=rem/8+(q/4)*4,offset=rem%8+(q%4)*8;
+    uint32_t byte=r8(e,frame+(uint32_t)offset);
+    return (uint32_t)(group*32)+(byte>=128?byte-256u:byte);
+}
+
+/* 00137ed0. frame is guest scratch at the original adjusted sp, with at least
+ * [frame,frame+0x240) available. Keeping original stack slots in the existing
+ * bus preserves word wrap, table aliasing and malformed indices without host
+ * array overflows. ABI register saves are interpreter concerns, not C locals.
+ * 001386e0 (geometry/material processing) and 00152ae0 (upload) stay explicit
+ * external operations; neither is exercised by the selected bootstrap member. */
+uint32_t hg_resource_fixup(HGResourceEnv *e,uint32_t block,uint32_t index,uint32_t id,uint32_t frame) {
+    uint32_t textures=0,models=0,model_cursor=frame+0x140,texture_cursor=frame+0x100;
+    w32(e,frame+0xfc,index);
+    if(id==999999u) {
+        if(r8(e,block+12)!=0)return 0;
+        w8(e,block+12,1);
+    }
+    if(id==0x3d || id==0x7d || id==0x92) {
+        hg_resource_rebase(e,block,id==0x3d?0x3f00u:id==0x7d?0x3b00u:0x3600u);
+        call(e,0x152ae0,block,0,0,0);return block;
+    }
+    w32(e,frame+0xf8,hg_flk5_count(e,block));
+    w32(e,frame+0xc0,id==0x7c?0x3b00u:(id==0x96 || id==0x22f)?0x1e00u:0x3200u);
+    w32(e,frame+0xb0,id==0x7c?1u:0u);
+    w32(e,frame+0xe0,0);w32(e,frame+0xd0,0);
+    for(uint32_t i=0;i<64;i++)w32(e,frame+0x140+i*4,0);
+    w32(e,frame+0xa0,frame+0x100);
+    for(uint32_t i=0;i<16;i++)w32(e,frame+0x100+i*4,0);
+    for(uint32_t i=0;positive_word(r32(e,frame+0xf8)) && i<r32(e,frame+0xf8);i++) {
+        uint32_t entry=hg_flk5_entry(e,block,i),type=hg_flk5_type(e,block,i);
+        if(type==0x01000000u) {
+            w32(e,model_cursor,entry);model_cursor+=4;models++;
+        }else if(type==0x09000000u && id!=999999u) {
+            if(r32(e,frame+0xb0)==1)hg_flk5_disable(e,block,i);
+            if(r32(e,frame+0xd0)==0)w32(e,frame+0xd0,entry);
+            w32(e,texture_cursor,entry);textures++;texture_cursor+=4;
+        }
+    }
+    model_cursor=frame+0x140;
+    if(models!=0 || textures!=0) {
+        if(textures!=0 && id!=999999u)
+            w32(e,frame+0xe0,hg_resource_base_delta(e,r32(e,frame+0x100+(r32(e,frame+0xfc)<<2)),r32(e,frame+0xc0)));
+        else w32(e,frame+0xe0,r32(e,frame+0xc0));
+        for(uint32_t i=0;i<models;i++,model_cursor+=4) {
+            uint32_t entry=r32(e,model_cursor);
+            if(r32(e,entry)!=0xffffffffu) {
+                call(e,0x1386e0,entry,r32(e,frame+0xe0),0,0);
+                entry=r32(e,model_cursor);
+                uint32_t link=r32(e,entry+0x30);
+                if(link!=0)call(e,0x1386e0,entry+link,r32(e,frame+0xe0),0,0);
+            }
+        }
+        for(uint32_t i=0;i<textures;i++) {
+            hg_resource_rebase(e,r32(e,r32(e,frame+0xa0)),r32(e,frame+0xc0));
+            w32(e,frame+0xa0,r32(e,frame+0xa0)+4);
+        }
+        if(r32(e,frame+0xb0)==1)
+            call(e,0x152ae0,r32(e,frame+0x100+(r32(e,frame+0xfc)<<2)),0,0,0);
+    }
+    if(textures!=0 && id!=999999u) {
+        if(r32(e,frame+0xd0)==0 || r32(e,frame+0xb0)==0)
+            w32(e,frame+0xd0,block+hg_flk5_size(e,block));
+        w32(e,block+8,r32(e,frame+0xe0));
+        uint32_t end=r32(e,frame+0xd0);
+        if((end&127u)!=0)w32(e,frame+0xd0,end+(128u-(end&127u)));
+    }
+    return r32(e,frame+0xd0);
+}
+
+/* Host-only composition adapter. The M2 boundary remains usable in isolation;
+ * this entry wires it to M4 and M3 using the SAME bus and disc environment.
+ * Original fixup frame: caller sp-0x240; rebase/helper consume another 0x50.
+ * Callers reserve scratch away from resource, loader and disc state. */
+typedef struct { HGResourceEnv *outer; HGResourceEnv env; uint32_t frame; } HGProcessing;
+static uint32_t process_load(void *user,uint32_t a,uint32_t n) {
+    HGProcessing *p=user;return p->outer->load(p->outer->user,a,n);
+}
+static void process_store(void *user,uint32_t a,uint32_t n,uint32_t v) {
+    HGProcessing *p=user;p->outer->store(p->outer->user,a,n,v);
+}
+static uint32_t process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x137ed0)return hg_resource_fixup(&p->env,a,b,c,p->frame);
+    if(pc==0x1389d0)return hg_resource_map_address(&p->env,a,p->frame-0x50);
+    return p->outer->call(p->outer->user,pc,a,b,c,d);
+}
+void hg_resource_worker_fixed(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
+    hg_resource_worker(&p.env);
 }

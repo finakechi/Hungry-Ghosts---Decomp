@@ -1,0 +1,9 @@
+{
+  "result": "passed",
+  "mutant": "base delta subtraction replaced with addition in disposable ignored C",
+  "detection": "behavioral memory mismatch at 00b00008",
+  "mutant_compiled": true,
+  "verifier_exit": 1,
+  "original_sources_mutated": false,
+  "historical_m2_controls": "All nine also detected; evidence/m4/negative-controls-m2.json"
+}

@@ -1,0 +1,173 @@
+{
+  "schema": "hg-m4-checks/v1",
+  "result": "passed",
+  "date": "2026-11-14",
+  "build": {
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "image_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e"
+  },
+  "start": {
+    "branch": "research/m4-resource-fixup",
+    "head": "7e54e15b2b13b407e200aa061435f00c2cac8b09",
+    "dirty": false
+  },
+  "tools": {
+    "host": "MainPC/CachyOS",
+    "python": "3.14.9",
+    "cc": "GCC 16.2.1 20260810",
+    "java": "OpenJDK 21.0.12.1",
+    "ghidra": "12.1.4",
+    "language": "r5900:LE:32:default",
+    "pcsx2": "2.8.2",
+    "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+    "ee_reloaded_jar_sha256": "825d6f5f506acef68985ebfaab77e90896d3c687a1e512dd440efa2014b2fe07",
+    "ee_reloaded": "2.1.38 (installed CHANGELOG; extension compatibility 12.1.4)"
+  },
+  "checks": [
+    {
+      "name": "source_inspection",
+      "status": "passed",
+      "result": "Eight bodies and two M2 call sites checked against instructions; independent alias review"
+    },
+    {
+      "name": "original_inputs",
+      "status": "passed",
+      "command": "python -B \"$HG_PS2DINFO/tools/check_local_inputs.py\" --manifest evidence/local-inputs.json"
+    },
+    {
+      "name": "original_bytes",
+      "status": "passed",
+      "words": {
+        "M1": 283,
+        "M2": 684,
+        "M3": 53,
+        "M4": 395
+      },
+      "unknown": 0,
+      "command": "python -B \"$HG_PS2DINFO/tools/verify_elf_evidence.py\" --require-all-bytes \"$HG_ELF\" analysis/resource_fixup/functions.json; repeat for M1/M2 packets"
+    },
+    {
+      "name": "structure",
+      "status": "passed",
+      "command": "python -B \"$HG_PS2DINFO/tools/validate_evidence.py\" analysis/resource_fixup/functions.json; repeat for M1/M2 packets"
+    },
+    {
+      "name": "synthetic",
+      "status": "passed",
+      "tests": 99,
+      "failed": 0,
+      "skipped": 0,
+      "command": "python -B -m unittest discover -s tests -v"
+    },
+    {
+      "name": "m4_differential",
+      "status": "passed",
+      "cases": 1227,
+      "executed_instruction_addresses": 393,
+      "total_instruction_addresses": 395,
+      "evidence": "evidence/m4/differential.json"
+    },
+    {
+      "name": "unreachable_fallback",
+      "status": "not run",
+      "addresses": [
+        "0x00137fb0",
+        "0x00137fb4"
+      ],
+      "reason": "Outer branch only admits IDs 3d/7d/92; fallback requires none of those"
+    },
+    {
+      "name": "malformed_model",
+      "status": "passed",
+      "result": "Expected bus fault and instruction budget observed, not original validation behavior"
+    },
+    {
+      "name": "m1_differential",
+      "status": "passed",
+      "cases": 1448
+    },
+    {
+      "name": "m2_differential",
+      "status": "passed",
+      "randomized_invocations": 970,
+      "sequences": 12,
+      "alias_cases": 2
+    },
+    {
+      "name": "m3_differential",
+      "status": "passed",
+      "cases": 256,
+      "limitation": "Historical helper mock retained for isolated regression"
+    },
+    {
+      "name": "sanitizers",
+      "status": "passed",
+      "build": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/resource_sanitizer.c src/resource_loader.c src/disc_read.c -o local/m4/resource_sanitizer",
+      "run": "ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 local/m4/resource_sanitizer"
+    },
+    {
+      "name": "negative_controls",
+      "status": "passed",
+      "M2_detected": 9,
+      "M4_behavioral_detected": 1,
+      "evidence": "evidence/m4/negative-control.json"
+    },
+    {
+      "name": "actual_original_game_debugger",
+      "status": "passed",
+      "observed": "Selected EE entry, rebasing, helper, return, publication and completion",
+      "evidence": "evidence/m4/runtime-comparison.json"
+    },
+    {
+      "name": "retail_integrated_comparison",
+      "status": "passed",
+      "member_bytes": 4352,
+      "handles": 5,
+      "arena_and_completion": true,
+      "evidence": "evidence/m4/runtime-comparison.json"
+    },
+    {
+      "name": "compileall",
+      "status": "passed",
+      "command": "python -B -m compileall -q tools tests"
+    },
+    {
+      "name": "diff_whitespace",
+      "status": "passed",
+      "command": "git diff --check"
+    },
+    {
+      "name": "remote_ci",
+      "status": "not run",
+      "reason": "No push authorized"
+    },
+    {
+      "name": "AREA_geometry_upload_runtime",
+      "status": "not run",
+      "reason": "Separate unobserved subsystems; explicit boundaries retained"
+    },
+    {
+      "name": "bound_source_freshness",
+      "status": "passed",
+      "result": "All M4 differential/runtime/regression receipts match final relevant source digests"
+    },
+    {
+      "name": "publication_audit",
+      "status": "passed",
+      "result": "39 new Git objects; zero heuristic findings; source and bounded instruction evidence reviewed",
+      "command": "python -B tools/hg_publication_audit.py --base 7e54e15b2b13b407e200aa061435f00c2cac8b09 --head 36ebbd8b5e846f968c357e0e4011ac922b92fb29 --output local/m4/publication-audit-final.json",
+      "evidence": "evidence/m4/publication.json"
+    },
+    {
+      "name": "private_recovery",
+      "status": "passed",
+      "result": "947 files / 365128227 bytes; fresh Drive download, full archive verification, isolated restore, recovered bundle clone/fsck; earlier snapshots preserved",
+      "evidence": "evidence/m4/preservation.json"
+    }
+  ],
+  "limits": [
+    "No byte matching or whole-game equivalence.",
+    "Public packet contains bounded instruction evidence, not original assets or captures.",
+    "Publication audit and final backup results are recorded after local commit in preservation evidence."
+  ]
+}

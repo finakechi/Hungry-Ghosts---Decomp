@@ -77,6 +77,15 @@ class ResourceTests(unittest.TestCase):
         self.assertEqual((d.mem.load(t+0x3b,1),d.mem.load(t+0x3c,2)),(7,0))
         self.assertEqual((d.mem.load(t+0x48),d.mem.load(t+0x4c)),(0xb00020,0x3f3b50))
         self.assertEqual(d.mem.load(0x3f4324),0xb00000)
+    def test_special_fixup_retains_id_and_reloads_address_across_alias(self):
+        for id,cursor,expected in ((9,0x3f4300+9*4-8,0xb00000),
+                                   (0x12d2,0x3f3b40,0xb00000)):
+            d=Driver();t=0x3f8e00
+            d.mem.store(t+0x3b,6,1);d.mem.store(t+0x3c,1,2)
+            d.mem.store(t+0x48,0xb00000);d.mem.store(t+0x4c,cursor)
+            d.mem.store(cursor+8,id)
+            d.invoke(self.lib,'special',t,0x3f3b00,0x3f3b00)
+            self.assertIn(('call',0x137ed0,expected,0,id),d.calls)
     def test_area_read_full_operation_and_zero_tail(self):
         d=Driver();t=0x3f8e00;d.mem.store(0x3dff04,0xa87800)
         d.mem.store(0x3e01b4,10);d.mem.store(0x3fa1b0,1,1);d.mem.store(0x3fa1b1,2,1)
