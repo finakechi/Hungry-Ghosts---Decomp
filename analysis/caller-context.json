@@ -1,0 +1,487 @@
+{
+  "schema": "hg-caller-context/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "functions": [
+    {
+      "entry": "0x00100008",
+      "description": "startup",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x001001c8",
+          "start": "0x00100008"
+        }
+      ],
+      "listing_sha256": "c6b1963c09e8cd8d55986680554a7d927723ca09337733913b8503ce5abf59f0",
+      "byte_verified_instructions": 112,
+      "direct_calls": [
+        {
+          "site": "0x00100198",
+          "target": "0x0010cf28"
+        },
+        {
+          "site": "0x001001a0",
+          "target": "0x001041e0"
+        },
+        {
+          "site": "0x001001b8",
+          "target": "0x0011d830"
+        }
+      ]
+    },
+    {
+      "entry": "0x0011d830",
+      "description": "main-loop candidate",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0011da00",
+          "start": "0x0011d830"
+        }
+      ],
+      "listing_sha256": "3e4af5320e7c9bb5aa09a6ed810128d187a8801c1b29c0d44e0e57fef8788673",
+      "byte_verified_instructions": 116,
+      "direct_calls": [
+        {
+          "site": "0x0011d838",
+          "target": "0x0011db30"
+        },
+        {
+          "site": "0x0011d840",
+          "target": "0x001482c0"
+        },
+        {
+          "site": "0x0011d850",
+          "target": "0x0011da00"
+        },
+        {
+          "site": "0x0011d858",
+          "target": "0x0011dc40"
+        },
+        {
+          "site": "0x0011d860",
+          "target": "0x0012fbf0"
+        },
+        {
+          "site": "0x0011d868",
+          "target": "0x001431f0"
+        },
+        {
+          "site": "0x0011d870",
+          "target": "0x0013d7d0"
+        },
+        {
+          "site": "0x0011d878",
+          "target": "0x0011dc50"
+        },
+        {
+          "site": "0x0011d88c",
+          "target": "0x00103c40"
+        },
+        {
+          "site": "0x0011d8a0",
+          "target": "0x00103c40"
+        },
+        {
+          "site": "0x0011d8a8",
+          "target": "0x00104aa8"
+        },
+        {
+          "site": "0x0011d8b0",
+          "target": "0x00104aa8"
+        },
+        {
+          "site": "0x0011d8b8",
+          "target": "0x00156870"
+        },
+        {
+          "site": "0x0011d8c0",
+          "target": "0x00155bf0"
+        },
+        {
+          "site": "0x0011d8cc",
+          "target": "0x001432c0"
+        },
+        {
+          "site": "0x0011d8d4",
+          "target": "0x001465d0"
+        },
+        {
+          "site": "0x0011d8e0",
+          "target": "0x0011dfd0"
+        },
+        {
+          "site": "0x0011d900",
+          "target": "0x0011dfd0"
+        },
+        {
+          "site": "0x0011d93c",
+          "target": "0x00148970"
+        },
+        {
+          "site": "0x0011d944",
+          "target": "0x0013d970"
+        },
+        {
+          "site": "0x0011d94c",
+          "target": "0x00156740"
+        },
+        {
+          "site": "0x0011d954",
+          "target": "0x00143240"
+        },
+        {
+          "site": "0x0011d95c",
+          "target": "0x00139240"
+        },
+        {
+          "site": "0x0011d964",
+          "target": "0x001467b0"
+        },
+        {
+          "site": "0x0011d96c",
+          "target": "0x0013da80"
+        },
+        {
+          "site": "0x0011d978",
+          "target": "0x00100b80"
+        },
+        {
+          "site": "0x0011d988",
+          "target": "0x00102738"
+        },
+        {
+          "site": "0x0011d990",
+          "target": "0x00102408"
+        },
+        {
+          "site": "0x0011d998",
+          "target": "0x00102150"
+        },
+        {
+          "site": "0x0011d9a0",
+          "target": "0x00101cb0"
+        },
+        {
+          "site": "0x0011d9a8",
+          "target": "0x00101780"
+        },
+        {
+          "site": "0x0011d9d8",
+          "target": "0x00149890"
+        },
+        {
+          "site": "0x0011d9e0",
+          "target": "0x001496e0"
+        }
+      ]
+    },
+    {
+      "entry": "0x0011db30",
+      "description": "IOP initialization",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0011dc34",
+          "start": "0x0011db30"
+        }
+      ],
+      "listing_sha256": "26d22eabc6bfc862755f837efe38c2b0afe3e5f052e57845bb64bad97245e5e3",
+      "byte_verified_instructions": 65,
+      "direct_calls": [
+        {
+          "site": "0x0011db44",
+          "target": "0x001067a8"
+        },
+        {
+          "site": "0x0011db4c",
+          "target": "0x0010f850"
+        },
+        {
+          "site": "0x0011db54",
+          "target": "0x00110300"
+        },
+        {
+          "site": "0x0011db64",
+          "target": "0x0010c308"
+        },
+        {
+          "site": "0x0011db80",
+          "target": "0x0010c2d0"
+        },
+        {
+          "site": "0x0011dba0",
+          "target": "0x001067a8"
+        },
+        {
+          "site": "0x0011dba8",
+          "target": "0x0010f850"
+        },
+        {
+          "site": "0x0011dbb0",
+          "target": "0x00110300"
+        },
+        {
+          "site": "0x0011dbb8",
+          "target": "0x001080c8"
+        },
+        {
+          "site": "0x0011dbc0",
+          "target": "0x0010aeb8"
+        },
+        {
+          "site": "0x0011dbdc",
+          "target": "0x0011b378"
+        },
+        {
+          "site": "0x0011dbe8",
+          "target": "0x0011b100"
+        },
+        {
+          "site": "0x0011dbf8",
+          "target": "0x0010be08"
+        }
+      ]
+    },
+    {
+      "entry": "0x0012fbf0",
+      "description": "disc file lookup",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0012fcf0",
+          "start": "0x0012fbf0"
+        }
+      ],
+      "listing_sha256": "7d086acb11ba5169a2b895097a186bc339fcccf9905188e259a8eabcedb040e1",
+      "byte_verified_instructions": 64,
+      "direct_calls": [
+        {
+          "site": "0x0012fc08",
+          "target": "0x0010fd28"
+        },
+        {
+          "site": "0x0012fc14",
+          "target": "0x0010f2f8"
+        },
+        {
+          "site": "0x0012fc28",
+          "target": "0x0010fd28"
+        },
+        {
+          "site": "0x0012fc34",
+          "target": "0x0010f2f8"
+        },
+        {
+          "site": "0x0012fc70",
+          "target": "0x0010fd28"
+        },
+        {
+          "site": "0x0012fc7c",
+          "target": "0x0010f2f8"
+        },
+        {
+          "site": "0x0012fc90",
+          "target": "0x0010fd28"
+        },
+        {
+          "site": "0x0012fc9c",
+          "target": "0x0010f2f8"
+        }
+      ]
+    },
+    {
+      "entry": "0x00130900",
+      "description": "PACK directory loader candidate",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x00130d34",
+          "start": "0x00130900"
+        },
+        {
+          "end_exclusive": "0x00130d4c",
+          "start": "0x00130d38"
+        },
+        {
+          "end_exclusive": "0x00130ddc",
+          "start": "0x00130d50"
+        },
+        {
+          "end_exclusive": "0x00130e14",
+          "start": "0x00130de0"
+        },
+        {
+          "end_exclusive": "0x00130eac",
+          "start": "0x00130e18"
+        },
+        {
+          "end_exclusive": "0x00130f8c",
+          "start": "0x00130eb0"
+        },
+        {
+          "end_exclusive": "0x0013101c",
+          "start": "0x00130f90"
+        },
+        {
+          "end_exclusive": "0x00131064",
+          "start": "0x00131020"
+        },
+        {
+          "end_exclusive": "0x001310fc",
+          "start": "0x00131068"
+        },
+        {
+          "end_exclusive": "0x0013119c",
+          "start": "0x00131100"
+        },
+        {
+          "end_exclusive": "0x001312cc",
+          "start": "0x001311a0"
+        },
+        {
+          "end_exclusive": "0x0013134c",
+          "start": "0x001312d0"
+        },
+        {
+          "end_exclusive": "0x0013141c",
+          "start": "0x00131350"
+        }
+      ],
+      "listing_sha256": "9e074042a2d2829b75ee3ee31a73601e97f78c9759f11558244d8d9450333abe",
+      "byte_verified_instructions": 699,
+      "direct_calls": [
+        {
+          "site": "0x00130d18",
+          "target": "0x0012fb30"
+        },
+        {
+          "site": "0x00130e60",
+          "target": "0x0012fb30"
+        },
+        {
+          "site": "0x00130e68",
+          "target": "0x0012fb90"
+        },
+        {
+          "site": "0x001310d8",
+          "target": "0x00131810"
+        },
+        {
+          "site": "0x00131110",
+          "target": "0x001319c0"
+        },
+        {
+          "site": "0x00131128",
+          "target": "0x001318f0"
+        },
+        {
+          "site": "0x00131158",
+          "target": "0x001303e0"
+        },
+        {
+          "site": "0x00131184",
+          "target": "0x001319c0"
+        },
+        {
+          "site": "0x001311a0",
+          "target": "0x001318f0"
+        },
+        {
+          "site": "0x00131214",
+          "target": "0x00137ed0"
+        },
+        {
+          "site": "0x001313f0",
+          "target": "0x001434e0"
+        }
+      ]
+    },
+    {
+      "entry": "0x00131810",
+      "description": "AREA read path",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x00131884",
+          "start": "0x00131810"
+        },
+        {
+          "end_exclusive": "0x001318f0",
+          "start": "0x00131888"
+        }
+      ],
+      "listing_sha256": "554d314889bbda119159d6e01308e5da9e103abad01930180b084c36fc7401f2",
+      "byte_verified_instructions": 55,
+      "direct_calls": [
+        {
+          "site": "0x00131848",
+          "target": "0x0012fbc0"
+        },
+        {
+          "site": "0x0013186c",
+          "target": "0x001319c0"
+        },
+        {
+          "site": "0x00131888",
+          "target": "0x001318f0"
+        },
+        {
+          "site": "0x00131898",
+          "target": "0x0012fbc0"
+        },
+        {
+          "site": "0x001318b8",
+          "target": "0x00131dd0"
+        }
+      ]
+    },
+    {
+      "entry": "0x00131dd0",
+      "description": "AREA post-read helper",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x00131e30",
+          "start": "0x00131dd0"
+        }
+      ],
+      "listing_sha256": "4ac5350bf880f528ccddcf1c32c431e8ad784203a1c35f8e6fe205f85d88b120",
+      "byte_verified_instructions": 24,
+      "direct_calls": [
+        {
+          "site": "0x00131df0",
+          "target": "0x001041e0"
+        },
+        {
+          "site": "0x00131e0c",
+          "target": "0x00119ac8"
+        }
+      ]
+    },
+    {
+      "entry": "0x0010e6d8",
+      "description": "controller RPC-style hook lead",
+      "status": "analyzed-partial-not-reconstructed",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0010e7a4",
+          "start": "0x0010e6d8"
+        }
+      ],
+      "listing_sha256": "ce3a0b7d00af2c9a1c66d248c8a7084aad869ac223a73be09db18a5c1dd255e6",
+      "byte_verified_instructions": 51,
+      "direct_calls": [
+        {
+          "site": "0x0010e750",
+          "target": "0x001070b8"
+        },
+        {
+          "site": "0x0010e77c",
+          "target": "0x0010dda8"
+        }
+      ]
+    }
+  ],
+  "limitations": "Original listings and pseudocode remain in ignored local exports; partial interpretation is not full semantic verification."
+}

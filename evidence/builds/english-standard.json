@@ -1,0 +1,416 @@
+{
+  "schema": "hg-build/v1",
+  "build": "english-standard",
+  "observation_date": "2026-11-14",
+  "evidence_class": "byte-verified",
+  "image": {
+    "size_bytes": 4389568512,
+    "sha256": "c6c2d90417c547633b324999c129b0169633ccac935fb06e3666e61e3665ffea",
+    "sha1": "5992a8ad15050b16bd6268d35b3a6b36c9829d91",
+    "md5": "8d3c3876834e8caf2902cbbf3e1ece74",
+    "crc32": "42fa3e8f"
+  },
+  "iso9660": {
+    "volume_id": "",
+    "volume_blocks": 2143344
+  },
+  "system_cnf": {
+    "text": "BOOT2 = cdrom0:\\SCPS_150.46;1\r\nVER = 1.02\r\nVMODE = NTSC\r\n",
+    "sha256": "b9bae7d4345fa8dadb5b34e2f17418ffa1b48ae44bd8c500e0ca4fbea4cdadd6"
+  },
+  "serial": "SCPS-15046",
+  "boot_path": "/SCPS_150.46",
+  "elf": {
+    "type": 2,
+    "machine": 8,
+    "flags": "0x20924000",
+    "entry": "0x00100008",
+    "pt_load": [
+      {
+        "offset": 2048,
+        "vaddr": 1048576,
+        "paddr": 1048576,
+        "filesz": 3058048,
+        "memsz": 9992192,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 145408,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 294912,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 366592,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 378880,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 2048,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 47104,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 2048,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 2048,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 36864,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 16384,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 30720,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 382976,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11040768,
+        "paddr": 11040768,
+        "filesz": 0,
+        "memsz": 20480,
+        "flags": 7,
+        "align": 2048
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 11423744,
+        "paddr": 11423744,
+        "filesz": 0,
+        "memsz": 0,
+        "flags": 6,
+        "align": 16
+      },
+      {
+        "offset": 3061760,
+        "vaddr": 1879048192,
+        "paddr": 1879048192,
+        "filesz": 0,
+        "memsz": 16384,
+        "flags": 6,
+        "align": 16
+      }
+    ],
+    "section_count": 22,
+    "section_table_offset": 3061872,
+    "sha256": "c12bd48ea7bd3b4199b29db0fb2b0f4b5e064a408fbcc23669d4ca14ecac72d9",
+    "size_bytes": 3062752,
+    "word_xor_crc": "B3C0E286"
+  },
+  "files": [
+    {
+      "path": "/AREA0/A0_B00.BIN",
+      "lba": 1401737,
+      "size_bytes": 143872,
+      "sha256": "f8efd2c6dea1c77919140bb06d64d88d4f495943463a2ff9debc56482df23f91",
+      "sha1": "e233ca84f9a33c49d4f0e607a2651f8e2d8de474",
+      "md5": "fed2e0b98f3f5d564f07583cc65a4ac5",
+      "crc32": "41a4dc03"
+    },
+    {
+      "path": "/AREA0/A0_B01.BIN",
+      "lba": 1401808,
+      "size_bytes": 293376,
+      "sha256": "d3b186cf6eb3d5dc7c4b7929305d3904381bacd973f26af243b7089041babcb9",
+      "sha1": "2646045f721602bd83fe3f785cee1b4b435843d6",
+      "md5": "0f538a5a38837065e32417ab32f71a84",
+      "crc32": "1a7a675d"
+    },
+    {
+      "path": "/AREA0/A0_B02.BIN",
+      "lba": 1401952,
+      "size_bytes": 366592,
+      "sha256": "9f3e8dd9da915336a9e6a638adaf6932a7c3218ff63c2a3102c83d5f60eb94c9",
+      "sha1": "6bcc22df5a4ed05a7064e92b974461aba93f5488",
+      "md5": "c71f2e76f396294703385fceb9304320",
+      "crc32": "3b1c2c95"
+    },
+    {
+      "path": "/AREA0/A0_B03.BIN",
+      "lba": 1402131,
+      "size_bytes": 378240,
+      "sha256": "c6438132fd0e6adcfc6ea1406154d301012574b690d90bc90b9102330770abdb",
+      "sha1": "889cc58a86b23bd3dfa1f9f6bc14996930d6bfce",
+      "md5": "c10ebc075b00b3e4143def0865a4c5a4",
+      "crc32": "24fa3dc8"
+    },
+    {
+      "path": "/AREA0/A0_B04.BIN",
+      "lba": 1402316,
+      "size_bytes": 2048,
+      "sha256": "ae8b04aca5c174aff0cc9539bc9e88c8e904ab18a5ce6273dcf25afd116f0237",
+      "sha1": "c65d2c16539ae585da75f8b4c6eade0cb999cb93",
+      "md5": "63227cc828bad29658a7e4bdcf1838f8",
+      "crc32": "fa2b799a"
+    },
+    {
+      "path": "/AREA0/A0_B05.BIN",
+      "lba": 1402317,
+      "size_bytes": 47104,
+      "sha256": "9a39beb8e13aa45d96f90cbb4e8357e38a6e72dafa5a68aec65ba601a9d2ce1a",
+      "sha1": "7e840e30dab4387269a9d7ac9e5e046e6e248841",
+      "md5": "9abffe009455d475bb637397a1ff51df",
+      "crc32": "f3156399"
+    },
+    {
+      "path": "/AREA0/A0_B06.BIN",
+      "lba": 1402340,
+      "size_bytes": 2048,
+      "sha256": "8509cd4e665b048e07fef8bd22b884ac8186b516df65ff22bca881673f105870",
+      "sha1": "46e02b72878d1ab0ef4107ac6a0af5298d1cc358",
+      "md5": "6bf9dc807bc0bfc68e4fe2029aa501ca",
+      "crc32": "f489c485"
+    },
+    {
+      "path": "/AREA0/A0_B07.BIN",
+      "lba": 1402341,
+      "size_bytes": 2048,
+      "sha256": "054b6ef6700377472b0e92e97e36ac423fae22bd213ca57938ec49de4d58b67d",
+      "sha1": "87c8547afb0e7cd671d42de93c22f755d2382a42",
+      "md5": "2c717fba25925b06422294bf259094dd",
+      "crc32": "384a1bad"
+    },
+    {
+      "path": "/AREA0/A0_B08.BIN",
+      "lba": 1402342,
+      "size_bytes": 36864,
+      "sha256": "5f5a17e647bb8aaa5cec8a9e76fd87b197e34988e5bee688ae7a0d82aed764ff",
+      "sha1": "5e07a519ab680185b3944715c26ba8728598f4e9",
+      "md5": "39af35a617c29ebbd4b971cbfb456c33",
+      "crc32": "bf64b7dc"
+    },
+    {
+      "path": "/AREA0/A0_B09.BIN",
+      "lba": 1402360,
+      "size_bytes": 16384,
+      "sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+      "sha1": "1abd71f128345e38d2f588495f3a05f7aee767c5",
+      "md5": "ecaa97ca8df92e712f1f8897b9bdb00a",
+      "crc32": "630ce540"
+    },
+    {
+      "path": "/AREA1/A1_B00.BIN",
+      "lba": 1402368,
+      "size_bytes": 30720,
+      "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+      "sha1": "3a8ff7b66ffd35cfeb99dbccc9c0a9c2695fab44",
+      "md5": "126d918ebaa2c23bb6c986f62b498bbd",
+      "crc32": "68ad84b6"
+    },
+    {
+      "path": "/AREA2/A2_B00.BIN",
+      "lba": 1402383,
+      "size_bytes": 382976,
+      "sha256": "1d77875f55cc084517fa855a1b0716b5e54454fc0eb299770c6810e943b071e0",
+      "sha1": "db4b84fc4b42f204655beb43e4bf311e34f5f393",
+      "md5": "af4063c3d1b8af9d9cfa9fbad01e9e4a",
+      "crc32": "009006dd"
+    },
+    {
+      "path": "/AREA2/A2_B10.BIN",
+      "lba": 1402570,
+      "size_bytes": 20480,
+      "sha256": "49592bfda3f4e5a4020f7560df9dae008ce6b75401634ea17960db1de7c9eb71",
+      "sha1": "6a3a31f0fffbf4ae1f6c839ffd258ade4b861098",
+      "md5": "d676de2ba097ea21a7315f3053d90c28",
+      "crc32": "b639a69a"
+    },
+    {
+      "path": "/DATA/PACK.DAT",
+      "lba": 1402580,
+      "size_bytes": 448763904,
+      "sha256": "bdb82e7769fcf77f907848ac348c9e0e91b6faaa21b0a3d2949578ed6f591f42",
+      "sha1": "47122e2affd428f64bcd9ceae47c4996da87bf3a",
+      "md5": "64f58e78b3934dcb3effe5cb1d8e0d69",
+      "crc32": "28a3e45c"
+    },
+    {
+      "path": "/DUMMY.DAT",
+      "lba": 2121157,
+      "size_bytes": 45432836,
+      "sha256": "7d7c28ff7493353ee883773f70724ec89c65b604cc53078acedc2f0276d28ba6",
+      "sha1": "59bce544bbab13c7012ed686de54c7f459614166",
+      "md5": "b2a5f6d804aa41d8e0bf59a2e14a6066",
+      "crc32": "2e68bd32"
+    },
+    {
+      "path": "/IRX/IOPRP271.IMG",
+      "lba": 1401497,
+      "size_bytes": 266817,
+      "sha256": "8d752d01d3dda7d418ae174ffe645787f4bf3fab4e035ca1c3300a0522ee22f1",
+      "sha1": "8ff1b5495e4f5aceef99b1b6a876df7f17d5dca4",
+      "md5": "821efccc14493d8b59cf785c7140b1a2",
+      "crc32": "e778bd6c"
+    },
+    {
+      "path": "/IRX/LIBSD.IRX",
+      "lba": 1401628,
+      "size_bytes": 28605,
+      "sha256": "57cbd80b7c2f966985e14ca18c03e849e3b3eb1216f06a6f4c1e6ca85084ea37",
+      "sha1": "041a63790f0b8d686b0e7924f626229c3e6a41d1",
+      "md5": "725cd064487110ecbfa78c611e206eb4",
+      "crc32": "d05d5132"
+    },
+    {
+      "path": "/IRX/MCMAN.IRX",
+      "lba": 1401642,
+      "size_bytes": 95877,
+      "sha256": "cdb1dfd12cb71f60d4834eb888dbbffeb6f6382e3bdffc1a50122034f7969b6b",
+      "sha1": "7c7274de8853b177e217a1165bab8772560d0aaa",
+      "md5": "ca999db6e1a6c5a8d5f1293f6a58c847",
+      "crc32": "a9ece5bf"
+    },
+    {
+      "path": "/IRX/MCSERV.IRX",
+      "lba": 1401689,
+      "size_bytes": 7417,
+      "sha256": "42790c4999c9deb17bb0fe2ceb155d3b141adf059c3055e11039070be2a8a7a6",
+      "sha1": "2cdd78066a067abc71a58b2c1f410a01f858f3b3",
+      "md5": "61fb5215251656e813a35791d2d07a44",
+      "crc32": "c84cfde4"
+    },
+    {
+      "path": "/IRX/PADMAN.IRX",
+      "lba": 1401693,
+      "size_bytes": 43813,
+      "sha256": "c11d3fffbca7f99f571299eddbbea3a77fa2d0614dbb22ee8f5a4f9a1c22d67f",
+      "sha1": "6d90ae825242a54cc9a5b38ea87b4ec64305760a",
+      "md5": "86c2d1269e8474c0b9728716fd90602d",
+      "crc32": "22bd2466"
+    },
+    {
+      "path": "/IRX/SDRDRV.IRX",
+      "lba": 1401715,
+      "size_bytes": 8065,
+      "sha256": "37b615869fed71ec90760543d83170dc7b7608142a4117d665a0cfbe78c3cc52",
+      "sha1": "1d2c234f780830982413423a5c0f263211db2c3c",
+      "md5": "50d7187c61f0c1a1cd754ef9399602c4",
+      "crc32": "deb0e939"
+    },
+    {
+      "path": "/IRX/SG2IOP.IRX",
+      "lba": 1401719,
+      "size_bytes": 27405,
+      "sha256": "a8ac82dc1f12b7960187d344d2bd5167383172c77f3ed15482b1183d30a9c1c1",
+      "sha1": "398e2856ea0b5c9f8def969812e525b621e305f9",
+      "md5": "048bba4e16ae8d1c5809f5b9c9c4e70a",
+      "crc32": "bb592fd5"
+    },
+    {
+      "path": "/IRX/SIO2MAN.IRX",
+      "lba": 1401733,
+      "size_bytes": 6641,
+      "sha256": "0facd5a832d3114c3477ded714f8766d443705a1440deeb84c59927cf0b6968e",
+      "sha1": "8c12e29ca939d46dbe774a646dd20f68088a0cdd",
+      "md5": "07d3682a85c246cff2537f5b037a5283",
+      "crc32": "e1d0d792"
+    },
+    {
+      "path": "/SCPS_150.46",
+      "lba": 1400001,
+      "size_bytes": 3062752,
+      "sha256": "c12bd48ea7bd3b4199b29db0fb2b0f4b5e064a408fbcc23669d4ca14ecac72d9",
+      "sha1": "b7e41c97f65633617b1acd4431be8a4f8c23488c",
+      "md5": "02159e1cd874277abf9ab2ccc9936ce0",
+      "crc32": "dc6a8b18"
+    },
+    {
+      "path": "/STREAM/STREAM.DAT",
+      "lba": 1621703,
+      "size_bytes": 1022881792,
+      "sha256": "d4bc6aab9756ceb9075ea2d48e10498f4dd8f943fcacda698e093b38edeb1fcc",
+      "sha1": "91df254f289ff855f99646a13c669b42df953464",
+      "md5": "8a826c4ae07cf0f505711ed43be070de",
+      "crc32": "5bf85a31"
+    },
+    {
+      "path": "/SYSTEM.CNF",
+      "lba": 1400000,
+      "size_bytes": 57,
+      "sha256": "b9bae7d4345fa8dadb5b34e2f17418ffa1b48ae44bd8c500e0ca4fbea4cdadd6",
+      "sha1": "9a351d24df20c0d12f1d2308078347abbb293020",
+      "md5": "18ad257e6ccb842c43b59c8b9be932e8",
+      "crc32": "69df97c1"
+    }
+  ]
+}

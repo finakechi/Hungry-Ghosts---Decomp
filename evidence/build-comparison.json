@@ -1,0 +1,56 @@
+{
+  "schema": "hg-build-comparison/v1",
+  "build_hashes": {
+    "japan": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "english-standard": "c12bd48ea7bd3b4199b29db0fb2b0f4b5e064a408fbcc23669d4ca14ecac72d9",
+    "english-modern": "4bc0d365858c3b62f0f97edafc8cd2dc24afd2d96d0d2d3b1fdeb9e50c36414d"
+  },
+  "comparisons": [
+    {
+      "left": "japan",
+      "right": "english-standard",
+      "changed_bytes": 881,
+      "changed_aligned_words": 286,
+      "changed_bytes_in_pt_load": 881,
+      "changed_bytes_outside_pt_load": 0,
+      "changed_files": [
+        "/DATA/PACK.DAT",
+        "/SCPS_150.46"
+      ]
+    },
+    {
+      "left": "japan",
+      "right": "english-modern",
+      "changed_bytes": 1466,
+      "changed_aligned_words": 446,
+      "changed_bytes_in_pt_load": 1466,
+      "changed_bytes_outside_pt_load": 0,
+      "changed_files": [
+        "/DATA/PACK.DAT",
+        "/SCPS_150.46"
+      ]
+    },
+    {
+      "left": "english-standard",
+      "right": "english-modern",
+      "changed_bytes": 585,
+      "changed_aligned_words": 160,
+      "changed_bytes_in_pt_load": 585,
+      "changed_bytes_outside_pt_load": 0,
+      "changed_files": [
+        "/DATA/PACK.DAT",
+        "/SCPS_150.46"
+      ]
+    }
+  ],
+  "lead": {
+    "address": "0x0010e6d8",
+    "file_offset": "0xeed8",
+    "words": {
+      "japan": "0x27bdffb0",
+      "english-standard": "0x27bdffb0",
+      "english-modern": "0x3c190096"
+    },
+    "interpretation": "Original entry is an RPC-style controller-library wrapper; patch hook does not by itself identify the player movement routine."
+  }
+}

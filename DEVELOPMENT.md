@@ -1,0 +1,152 @@
+# Reproduce and continue M1
+
+Run commands from the repository root in a POSIX shell. Originals stay read-only;
+all extraction, databases, profiles, logs and build products go in ignored local/.
+Tools creating evidence use exclusive creation and refuse existing output files.
+Use fresh output names when repeating a check. Do not overwrite existing databases.
+
+## Synthetic checks
+
+```sh
+python -m unittest discover -s tests -v
+git diff --check
+```
+
+Python 3.10+ standard library and `cc` with C11 are sufficient. The tests compile
+src/disc_read.c to local/build/disc_read.so and use synthetic data only. The
+checked-in GitHub workflow was prepared; it has not run remotely in this milestone.
+
+## Original and comparative inputs
+
+Set `HG_JAPAN_ISO`, `HG_STANDARD_ISO`, `HG_MODERN_ISO` to the three owner-local
+images; `HG_BIOS` to the absolute path of the owner-local BIOS; `HG_GHIDRA` to the
+Ghidra installation directory; `HG_PCSX2` to the PCSX2 executable; and
+`HG_PS2DINFO` to the shared repository. No actual private absolute path belongs in
+tracked config or documentation. The current original ISOs/BIOS are immediately
+above this repository; their filenames are recorded in the user's assignment.
+
+```sh
+mkdir -p local/recheck local/logs local/ghidra
+python tools/hg_identify.py "$HG_JAPAN_ISO" --build japan --output local/recheck/japan.json --extract-boot local/recheck/japan
+python tools/hg_identify.py "$HG_STANDARD_ISO" --build english-standard --output local/recheck/english-standard.json --extract-boot local/recheck/english-standard
+python tools/hg_identify.py "$HG_MODERN_ISO" --build english-modern --output local/recheck/english-modern.json --extract-boot local/recheck/english-modern
+python tools/hg_pack_scan.py "$HG_JAPAN_ISO" --output local/recheck/pack.json
+python tools/hg_overlay_scan.py "$HG_JAPAN_ISO" --output local/recheck/area.json
+python tools/hg_compare_builds.py --japan local/recheck/japan/SCPS_150.46 --english-standard local/recheck/english-standard/SCPS_150.46 --english-modern local/recheck/english-modern/SCPS_150.46 --output local/recheck/comparison.json
+```
+
+The comparison defaults to the pinned evidence/builds manifests and verifies the
+supplied ELF hashes. An unexpected revision must get its own manifest and explicit
+analysis, not a forced comparison. ISO parsing deliberately rejects unsupported
+multi-extent/interleaved files, malformed records, out-of-image extents and cycles.
+The PACK scanner checks outer directory/member bounds, not full nested formats.
+
+## Original-byte and model checks
+
+```sh
+python tools/verify_elf_evidence.py --elf local/recheck/japan/SCPS_150.46
+python "$HG_PS2DINFO/tools/validate_evidence.py" analysis/disc_read/functions.json
+python tools/verify_disc_read.py --elf local/recheck/japan/SCPS_150.46 --output local/recheck/differential.json
+```
+
+The first verifies actual ELF bytes/JAL targets. The second validates the shared
+evidence format. The third compares four original functions against compiled C,
+using the deterministic seed 0x15046 and mocked CDVD calls. These are different
+checks. Neither the format validator nor compilation establishes equivalence.
+The shared validator revision/hash used for M1 are pinned in docs/sources.md.
+
+## Ghidra import and preserved working copy
+
+The installed combination actually tested was Ghidra 12.1.4, EE Reloaded 2.1.38,
+OpenJDK 21, language `r5900:LE:32:default`, compiler spec `default`.
+Use new project names in reproduction; never add `-overwrite` to these commands.
+
+```sh
+"$HG_GHIDRA/support/analyzeHeadless" local/ghidra HG_Reproduce_Base -import local/recheck/japan/SCPS_150.46 -processor r5900:LE:32:default -cspec default -analysisTimeoutPerFile 600 -scriptPath ghidra_scripts -postScript HGExport.java local/recheck/exports/base 0x00100008 -log local/logs/reproduce-base.log -scriptlog local/logs/reproduce-base-script.log
+```
+
+Close the database, then copy it before the map correction:
+
+```sh
+python - <<'PY'
+from pathlib import Path
+import shutil
+p=Path('local/ghidra')
+if (p/'HG_Reproduce_Work.gpr').exists():
+    raise SystemExit('Working project already exists; choose a new name')
+shutil.copy2(p/'HG_Reproduce_Base.gpr',p/'HG_Reproduce_Work.gpr')
+shutil.copytree(p/'HG_Reproduce_Base.rep',p/'HG_Reproduce_Work.rep')
+PY
+"$HG_GHIDRA/support/analyzeHeadless" local/ghidra HG_Reproduce_Work -process SCPS_150.46 -scriptPath ghidra_scripts -preScript HGMap.java -postScript HGExport.java local/recheck/exports/work 0x0011d830 0x0012fbf0 0x00130900 0x00131810 0x00131dd0 0x0011db30 0x0010e6d8 -log local/logs/reproduce-work.log -scriptlog local/logs/reproduce-work-script.log
+"$HG_GHIDRA/support/analyzeHeadless" local/ghidra HG_Reproduce_Work -process SCPS_150.46 -readOnly -noanalysis -scriptPath ghidra_scripts -postScript HGExport.java local/recheck/exports/read_state 0x001318f0 0x001319c0 0x001319e0 0x00131bf0 -log local/logs/reproduce-read.log -scriptlog local/logs/reproduce-read-script.log
+python tools/hg_context.py --elf local/recheck/japan/SCPS_150.46 --export-root local/recheck/exports --output local/recheck/context.json
+python tools/hg_evidence.py --elf local/recheck/japan/SCPS_150.46 --export local/recheck/exports/read_state --context local/recheck/context.json --output local/recheck/functions.json --inventory-output local/recheck/inventory.json --map-output local/recheck/map.json
+"$HG_GHIDRA/support/analyzeHeadless" local/ghidra HG_Reproduce_Work -process SCPS_150.46 -noanalysis -scriptPath ghidra_scripts -postScript HGAnnotate.java -log local/logs/reproduce-names.log -scriptlog local/logs/reproduce-names-script.log
+```
+
+HGMap and HGAnnotate guard the original ELF hash. Apply HGMap only once; existing
+blocks cause refusal. Only the working copy is changed. HGExport itself does not
+mutate the program. Preserve its original JSON, analysis logs and warnings in local/.
+Original pseudocode is not promoted to verified source. The known extension rom0
+conflict and suspect mirrors must not be used as verified hardware mappings.
+
+## Isolated PCSX2 boot and read-only capture
+
+PCSX2's `-datapath` adds a **PCSX2/** child. A minimal profile placed directly in
+the supplied parent will be ignored and may open the setup wizard. M1 used the
+existing PCSX2 2.8.2 AppImage; `-help` and `-version` use one leading hyphen.
+
+Prepare a new ignored profile. The BIOS link is read-only input to the emulator;
+memory cards are disabled and all generated state remains inside this profile.
+
+```sh
+mkdir -p local/runtime/repro/PCSX2/inis local/runtime/repro/PCSX2/bios
+ln -s "$HG_BIOS" local/runtime/repro/PCSX2/bios/ps2-0150a-20001228.bin
+cat > local/runtime/repro/PCSX2/inis/PCSX2.ini <<'INI'
+[UI]
+SettingsVersion = 1
+SetupWizardIncomplete = false
+StartPaused = false
+PauseOnFocusLoss = false
+StartFullscreen = false
+ConfirmShutdown = false
+[EmuCore]
+EnablePatches = false
+EnableCheats = false
+EnableWideScreenPatches = false
+EnableNoInterlacingPatches = false
+EnablePINE = true
+PINESlot = 28046
+SaveStateOnShutdown = false
+EnableDiscordPresence = false
+[Filenames]
+BIOS = ps2-0150a-20001228.bin
+[EmuCore/GS]
+Renderer = 12
+AspectRatio = 4:3
+[SPU2/Output]
+OutputMuted = true
+[MemoryCards]
+Slot1_Enable = false
+Slot2_Enable = false
+INI
+"$HG_PCSX2" -datapath "$PWD/local/runtime/repro" -logfile "$PWD/local/logs/reproduce-runtime.log" -batch -fastboot -- "$HG_JAPAN_ISO"
+```
+
+Let fast boot run without gameplay input. In another shell, set `HG_PINE_SOCKET`
+to the runtime directory's `pcsx2.sock.28046`. Do not connect to another session's
+socket or enable the same slot concurrently. After file lookup initializes:
+
+```sh
+python tools/hg_pine_read.py --socket "$HG_PINE_SOCKET" --output local/recheck/runtime.json --range 0x1318f0 184 --range 0x1319c0 28 --range 0x1319e0 492 --range 0x131bf0 428 --range 0x3eace0 72 --range 0x3f3a30 176
+python tools/hg_runtime_verify.py --capture local/recheck/runtime.json --elf local/recheck/japan/SCPS_150.46 --manifest evidence/builds/japan.json --emulator "$HG_PCSX2" --profile local/runtime/repro/PCSX2/inis/PCSX2.ini --output local/recheck/runtime-verification.json
+```
+
+Only read/identity/status protocol operations are used. Running reads are
+sequential, not atomic. The verifier checks the four instruction ranges and
+initialized PACK/AREA LBA/size data, not gameplay behavior. Stop this isolated
+emulator normally after the capture; do not terminate unrelated emulator sessions.
+
+For actual behavioral validation, use the official debugger and reproducible
+breakpoint/input sequences with recorded registers/memory around the four entries.
+That is the next verification level, not an achieved part of M1.
