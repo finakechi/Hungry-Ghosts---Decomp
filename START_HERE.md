@@ -1,5 +1,19 @@
 # Hungry Ghosts — start here
 
+## GitHub and private recovery integration — 2026-11-14
+
+M1–M3 history and source have been revalidated for authorized GitHub publication.
+The integration adds additive private backup tooling, 16 synthetic recovery/audit
+tests and [repeat/restore procedures](docs/BACKUP.md). The local suite has
+80 passing tests; M1/M2/M3 model and original-byte checks pass again.
+[Integration report](docs/INTEGRATION.md) records scope and verification limits;
+the report records actual publication/recovery results as they are observed.
+The first private Drive copy passed full downloaded verification and isolated
+restoration: 815 files / 359,144,294 bytes. Its Git bundle clones and passes fsck.
+Latest private transport/verification receipts are in `local/integration/`.
+Historical milestone sections below retain their original no-publication status.
+No merge, shutdown, final project-track choice or backup schedule is authorized.
+
 ## Current M3 update — 2026-11-14
 
 Evidence safeguards and a connected rebasing dependency are implemented on local

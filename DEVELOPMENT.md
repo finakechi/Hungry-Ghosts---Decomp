@@ -249,3 +249,12 @@ export snapshot; ambiguous multi-snapshot roots now fail. Runtime reanalysis CLI
 additionally requires `--emulator` and authenticates the full original image.
 `hg_check_binding.py --record RECORD --input LABEL PATH ...` checks current source
 and all labeled inputs against a bound receipt. JDK 21 is required by safety tests.
+
+## GitHub integration and independent private recovery
+
+[Backup procedures](docs/BACKUP.md) cover configuration, dry-run, source validation,
+additive private Drive upload, full downloaded verification and isolated restore.
+`tools/hg_publication_audit.py` audits unpublished historical objects before push.
+The existing synthetic CI discovers `tests/test_backup.py` without Drive credentials
+or proprietary fixtures. Private IDs/authentication stay beneath ignored `local/`.
+See [integration verification](docs/INTEGRATION.md) for actual results and limits.

@@ -1,0 +1,15 @@
+{
+  "repo": ".",
+  "snapshot_root": "local/backups",
+  "sources": [
+    {"label": "recovery", "path": "local/recovery/REPLACE_WITH_VERIFIED_SNAPSHOT", "kind": "recovery"},
+    {"label": "ghidra", "path": "local/ghidra", "kind": "ghidra"},
+    {"label": "exports", "path": "local/exports"},
+    {"label": "logs", "path": "local/logs"},
+    {"label": "runtime", "path": "local/runtime"},
+    {"label": "m2", "path": "local/m2"},
+    {"label": "m3", "path": "local/m3"}
+  ],
+  "inventory_only": [],
+  "rclone": {"remote": "OWNER_CONFIGURED_DRIVE_REMOTE", "folder_id": "EXISTING_PRIVATE_FOLDER_ID"}
+}
