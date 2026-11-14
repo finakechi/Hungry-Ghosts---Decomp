@@ -146,8 +146,10 @@
     "Remote CI not run; no byte matching or full-game equivalence claimed."
   ],
   "shutdown": {
-    "decision": "withheld while pre-existing unsaved editor work remains",
+    "decision": "not attempted; MainPC left running",
     "poweroff_attempted": false,
-    "reason": "Kate reports windowModified=true. Unrelated editor was not saved or closed."
-  }
+    "reason": "Kate reports windowModified=true. Unrelated editor was not saved or closed.",
+    "final_editor_recheck": "windowModified=true"
+  },
+  "implementation_commit": "3ec079fc3df953f67462682f4a1e25565464475a"
 }

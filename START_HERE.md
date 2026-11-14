@@ -30,7 +30,7 @@ and both patched ISO SHA-1 values match the pinned translation reference.
 
 The existing repository was cloned as `decomp/` beneath the original-media
 directory. Local branch: `research/m2-resource-loader`, based on M1 `d67d8ef`.
-M2 implementation/evidence commit: **pending local finalization**.
+M2 implementation/evidence commit: `3ec079fc3df953f67462682f4a1e25565464475a` (local); the final handoff commit follows it.
 Remote main remained `d3cc12e`; no open PRs, push, merge or publication.
 
 Ignored `local/ghidra/HungryGhosts_JP_M1.gpr` preserves the initial import;
@@ -51,8 +51,8 @@ between those revisions and are used directly. The older unrelated checkout was
 not changed.
 
 **Shutdown safety:** an unrelated Kate window reports unsaved changes. It was
-preserved. MainPC must remain running while that condition holds; M2 completion
-alone does not authorize bypassing it. Final gate/result receipt:
+preserved. The final safety recheck still reports modified=true: **shutdown was
+not attempted and MainPC was left running**. M2 completion does not override this. Final gate/result receipt:
 ignored `local/m2/final-report.json`.
 
 Next: reconstruct real resource fixups and general PACK loader paths, observe an

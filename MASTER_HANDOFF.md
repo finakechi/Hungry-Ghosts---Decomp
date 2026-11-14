@@ -12,7 +12,7 @@ kernel/CDVD/fixup dependencies, plus the connected AREA read/finalization helper
 reconstructed. Combined M1+M2 coverage is **15 functions, 967 instructions /
 3,868 bytes**; no whole-game percentage or byte match is implied.
 
-Implementation/evidence commit: **pending local finalization**.
+Implementation/evidence commit: `3ec079fc3df953f67462682f4a1e25565464475a` (local). A subsequent handoff-only commit records this identity; inspect HEAD for the final documentation commit.
 Branch: `research/m2-resource-loader`, based on verified M1
 `d67d8ef1aa06b347e101c5ce3af71b811f368351`. The initial working tree was clean.
 No user changes were replaced. GitHub read access works; remote main remained
@@ -147,7 +147,7 @@ handoffs. There is no unresolved technical blocker to this milestone.
 The user authorized shutdown only if no known unsaved work would be lost.
 Preflight found a pre-existing unrelated Kate window reporting
 `windowModified=true`, with Save All enabled. It was neither saved nor closed.
-**MainPC must remain running while that condition holds.** The physical host was
+The final safety recheck still reported unsaved changes. **Shutdown was not attempted; MainPC was left running.** The physical host was
 verified as MainPC/CachyOS, PID 1 systemd, no detected virtualization; logind says
 poweroff is permitted. No forced shutdown, privilege escalation or attempt to
 bypass the unsaved-work condition is authorized. A final gate/result receipt is
