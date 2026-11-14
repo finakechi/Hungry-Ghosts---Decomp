@@ -1,0 +1,65 @@
+{
+  "schema": "hg-runtime-verification/v1",
+  "timestamp_utc": "2026-11-14T05:18:22.443055+00:00",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "image_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "emulator": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 0
+  },
+  "emulator_binary_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+  "settings": {
+    "EnablePatches": "false",
+    "EnableCheats": "false",
+    "EnableWideScreenPatches": "false",
+    "EnableNoInterlacingPatches": "false",
+    "EnablePINE": "true"
+  },
+  "renderer": "12",
+  "inputs": "Fast boot of original ISO; no gameplay input or save state loaded; memory cards disabled.",
+  "code_ranges": [
+    {
+      "address": "0x001318f0",
+      "size_bytes": 184,
+      "sha256": "850859bc5e6bd23b86a8dd48fffdd141eae9cee49a4e4e3a032f7320a22c020a",
+      "matches_original_elf": true
+    },
+    {
+      "address": "0x001319c0",
+      "size_bytes": 28,
+      "sha256": "67f9808f3e3c99430430c7cb0f12462b5423d6a9f97c99c0ecd024157286a09c",
+      "matches_original_elf": true
+    },
+    {
+      "address": "0x001319e0",
+      "size_bytes": 492,
+      "sha256": "c09ef9686a910f9325d6748ecc39321a5b58eeb08fe1c6609e08266aa2e5f596",
+      "matches_original_elf": true
+    },
+    {
+      "address": "0x00131bf0",
+      "size_bytes": 428,
+      "sha256": "d0520c25521d01c8f5f17f55391fec36fc5afd7c6d128f7eb25cf43c4f038224",
+      "matches_original_elf": true
+    }
+  ],
+  "pack_lookup": {
+    "lba": 1402580,
+    "size_bytes": 448763904,
+    "matches_iso9660": true
+  },
+  "area_lookup": {
+    "table_slots": 22,
+    "distinct_disc_files": 13,
+    "all_lba_and_sizes_match": true
+  },
+  "raw_capture_sha256": "8beb1fc90551a1ef0e7e0dbcdb7a2ed8a5336783155d5991d53cce8775e5aa39",
+  "limitations": [
+    "Code presence and initialized file metadata verified at runtime, not function call coverage or behavioral equivalence.",
+    "Reads while running are sequential, not atomic.",
+    "No gameplay or rendering correctness asserted."
+  ]
+}

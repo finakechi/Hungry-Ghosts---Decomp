@@ -1,0 +1,1 @@
+{"inputs": [{"name": "HG_ELF", "size": 3062752, "status": "verified"}, {"name": "HG_JAPAN_ISO", "size": 4389568512, "status": "verified"}], "schema": "ps2-local-input-check/v1"}

@@ -1,0 +1,28 @@
+{
+  "schema": "hg-resource-differential/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "seed": "0x1504602",
+  "randomized_invocations": 970,
+  "cases_per_function": {
+    "init": 100,
+    "schedule": 100,
+    "finish": 100,
+    "request_raw": 100,
+    "request": 100,
+    "worker": 35,
+    "special": 100,
+    "bootstrap": 35,
+    "area_index": 100,
+    "area_step": 100,
+    "area_finalize": 100
+  },
+  "end_to_end_sequences": 12,
+  "result": "passed",
+  "source": "src/resource_loader.c + src/disc_read.c",
+  "comparison": "Return values where defined, non-stack RAM/scratchpad, ordered defined external arguments and thread descriptors; includes nonzero directory IDs and arena rounding/wrap boundaries.",
+  "limitations": [
+    "Kernel threads, CDVD responses and asset fixups are deterministic mocks.",
+    "No concurrent interrupts or overlapping destination/context aliases modeled.",
+    "Bootstrap PACK path complete within these dependencies; other worker loader branches remain callbacks."
+  ]
+}

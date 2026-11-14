@@ -1,0 +1,7 @@
+{
+  "schema": "ps2-local-inputs/v1",
+  "inputs": {
+    "HG_JAPAN_ISO": {"kind": "file", "size": 4389568512, "sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e"},
+    "HG_ELF": {"kind": "file", "size": 3062752, "sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"}
+  }
+}

@@ -1,0 +1,1 @@
+OK analysis/resource_loader/functions.json: structurally valid (NOT binary-verified)

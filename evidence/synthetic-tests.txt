@@ -1,0 +1,37 @@
+test_busy_short_circuits_ready_and_error (test_disc_read.DiscReadTests.test_busy_short_circuits_ready_and_error) ... ok
+test_chunked_full_lifecycle (test_disc_read.DiscReadTests.test_chunked_full_lifecycle) ... ok
+test_error_restarts_whole_request (test_disc_read.DiscReadTests.test_error_restarts_whole_request) ... ok
+test_inhibit_blocks_only_value_one (test_disc_read.DiscReadTests.test_inhibit_blocks_only_value_one) ... ok
+test_negative_length_uses_whole_file_size (test_disc_read.DiscReadTests.test_negative_length_uses_whole_file_size) ... ok
+test_read_rejection_waits_and_retries (test_disc_read.DiscReadTests.test_read_rejection_waits_and_retries) ... ok
+test_setup_preserves_derived_fields (test_disc_read.DiscReadTests.test_setup_preserves_derived_fields) ... ok
+test_signed_offset_truncates_toward_zero (test_disc_read.DiscReadTests.test_signed_offset_truncates_toward_zero) ... ok
+test_unknown_poll_state_preserves_memory (test_disc_read.DiscReadTests.test_unknown_poll_state_preserves_memory) ... ok
+test_zero_length_poll_has_no_effects (test_disc_read.DiscReadTests.test_zero_length_poll_has_no_effects) ... ok
+test_jal_link_and_delay (test_ee_subset.SubsetTests.test_jal_link_and_delay) ... ok
+test_quadword_preserves_upper_lane (test_ee_subset.SubsetTests.test_quadword_preserves_upper_lane) ... ok
+test_signed_helper (test_ee_subset.SubsetTests.test_signed_helper) ... ok
+test_taken_branch_and_return_delay_slots (test_ee_subset.SubsetTests.test_taken_branch_and_return_delay_slots) ... ok
+test_unknown_and_unmapped_fail (test_ee_subset.SubsetTests.test_unknown_and_unmapped_fail) ... ok
+test_untaken_branch_executes_delay_slot (test_ee_subset.SubsetTests.test_untaken_branch_executes_delay_slot) ... ok
+test_word_wrap_sign_extension_and_shift (test_ee_subset.SubsetTests.test_word_wrap_sign_extension_and_shift) ... ok
+test_elf_ambiguous_file_mapping_fails (test_inputs.InputTests.test_elf_ambiguous_file_mapping_fails) ... ok
+test_elf_mapping_excludes_bss (test_inputs.InputTests.test_elf_mapping_excludes_bss) ... ok
+test_elf_rejects_bad_segment (test_inputs.InputTests.test_elf_rejects_bad_segment) ... ok
+test_elf_rejects_wrong_machine_and_truncation (test_inputs.InputTests.test_elf_rejects_wrong_machine_and_truncation) ... ok
+test_evidence_checks_bytes_and_decoded_jal_target (test_inputs.InputTests.test_evidence_checks_bytes_and_decoded_jal_target) ... ok
+test_iso_and_identification_roundtrip_without_retail (test_inputs.InputTests.test_iso_and_identification_roundtrip_without_retail) ... ok
+test_iso_both_endian_mismatch_fails (test_inputs.InputTests.test_iso_both_endian_mismatch_fails) ... ok
+test_iso_directory_cycle_fails (test_inputs.InputTests.test_iso_directory_cycle_fails) ... ok
+test_pack_bad_member_and_count_fail (test_inputs.InputTests.test_pack_bad_member_and_count_fail) ... ok
+test_pack_boundary_is_measured (test_inputs.InputTests.test_pack_boundary_is_measured) ... ok
+test_error_and_invalid_lengths_fail (test_pine.PineTests.test_error_and_invalid_lengths_fail) ... ok
+test_fragmented_reply_and_only_read_opcodes (test_pine.PineTests.test_fragmented_reply_and_only_read_opcodes) ... ok
+test_only_ee_ram_ranges_allowed (test_pine.PineTests.test_only_ee_ram_ranges_allowed) ... ok
+test_short_closed_reply_fails (test_pine.PineTests.test_short_closed_reply_fails) ... ok
+test_tail_does_not_read_outside_range (test_pine.PineTests.test_tail_does_not_read_outside_range) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.049s
+
+OK

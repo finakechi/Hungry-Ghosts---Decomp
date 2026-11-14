@@ -1,0 +1,319 @@
+{
+  "schema": "hg-resource-context/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "functions": [
+    {
+      "entry": "0x00121810",
+      "interpretation": "Main callback phase 0 requests (kind=0,id=0); phase 1 waits for 003eacec to clear.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0012184c",
+          "start": "0x00121810"
+        },
+        {
+          "end_exclusive": "0x00121884",
+          "start": "0x00121850"
+        },
+        {
+          "end_exclusive": "0x0012189c",
+          "start": "0x00121888"
+        },
+        {
+          "end_exclusive": "0x001218f4",
+          "start": "0x001218a0"
+        },
+        {
+          "end_exclusive": "0x001219d4",
+          "start": "0x001218f8"
+        }
+      ],
+      "listing_sha256": "51f878e5e97784b25392f45c83a1a564cf90765e2e550d34a2854a8445653193",
+      "direct_edges": [
+        {
+          "site": "0x00121854",
+          "target": "0x00139010",
+          "kind": "call"
+        },
+        {
+          "site": "0x00121874",
+          "target": "0x00130150",
+          "kind": "call"
+        },
+        {
+          "site": "0x001218cc",
+          "target": "0x001390b0",
+          "kind": "call"
+        },
+        {
+          "site": "0x001218d4",
+          "target": "0x00147f10",
+          "kind": "call"
+        },
+        {
+          "site": "0x001218f8",
+          "target": "0x002cdef0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00121938",
+          "target": "0x001219e0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00121978",
+          "target": "0x001219e0",
+          "kind": "call"
+        },
+        {
+          "site": "0x001219bc",
+          "target": "0x00143300",
+          "kind": "call"
+        }
+      ],
+      "instruction_rows": 109
+    },
+    {
+      "entry": "0x00143240",
+      "interpretation": "Main-context callback dispatch, separate from kernel resource thread execution.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x001432b4",
+          "start": "0x00143240"
+        }
+      ],
+      "listing_sha256": "7514457198bf60fd772bbce12f8517c7bf21ea07180641df51eacb01f4bdb660",
+      "direct_edges": [],
+      "instruction_rows": 29
+    },
+    {
+      "entry": "0x001432c0",
+      "interpretation": "Registers main callback and resets its context.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x00143300",
+          "start": "0x001432c0"
+        }
+      ],
+      "listing_sha256": "4ca0f081beedcf8f65b441d9462dbbc491bdc1f19a57c2fd7cd037422f317748",
+      "direct_edges": [],
+      "instruction_rows": 16
+    },
+    {
+      "entry": "0x0011df10",
+      "interpretation": "Frame interrupt increments counters and wakes active normal resource thread.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0011df80",
+          "start": "0x0011df10"
+        }
+      ],
+      "listing_sha256": "7be5979ad193c9d0be19f78b40988aede2dd303d9d77d7041cdfd00bf1986f82",
+      "direct_edges": [
+        {
+          "site": "0x0011df18",
+          "target": "0x0010cca0",
+          "kind": "call"
+        },
+        {
+          "site": "0x0011df5c",
+          "target": "0x00104e10",
+          "kind": "call"
+        }
+      ],
+      "instruction_rows": 28
+    },
+    {
+      "entry": "0x0011df80",
+      "interpretation": "Other interrupt wakes priority-kind-100 context; normal worker is not used here.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x0011dfc8",
+          "start": "0x0011df80"
+        }
+      ],
+      "listing_sha256": "164ae7da2940db4a97ef497e1c009c2bd663dbc46b7fd58d2668bdb6288b0ff4",
+      "direct_edges": [
+        {
+          "site": "0x0011df88",
+          "target": "0x0010cca0",
+          "kind": "call"
+        },
+        {
+          "site": "0x0011dfa8",
+          "target": "0x00104e10",
+          "kind": "call"
+        }
+      ],
+      "instruction_rows": 18
+    },
+    {
+      "entry": "0x00130900",
+      "interpretation": "General PACK loader dependency; selected mode 8 calls AREA read helper before directory load.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "end_exclusive": "0x00130d34",
+          "start": "0x00130900"
+        },
+        {
+          "end_exclusive": "0x00130d4c",
+          "start": "0x00130d38"
+        },
+        {
+          "end_exclusive": "0x00130ddc",
+          "start": "0x00130d50"
+        },
+        {
+          "end_exclusive": "0x00130e14",
+          "start": "0x00130de0"
+        },
+        {
+          "end_exclusive": "0x00130eac",
+          "start": "0x00130e18"
+        },
+        {
+          "end_exclusive": "0x00130f8c",
+          "start": "0x00130eb0"
+        },
+        {
+          "end_exclusive": "0x0013101c",
+          "start": "0x00130f90"
+        },
+        {
+          "end_exclusive": "0x00131064",
+          "start": "0x00131020"
+        },
+        {
+          "end_exclusive": "0x001310fc",
+          "start": "0x00131068"
+        },
+        {
+          "end_exclusive": "0x0013119c",
+          "start": "0x00131100"
+        },
+        {
+          "end_exclusive": "0x001312cc",
+          "start": "0x001311a0"
+        },
+        {
+          "end_exclusive": "0x0013134c",
+          "start": "0x001312d0"
+        },
+        {
+          "end_exclusive": "0x0013141c",
+          "start": "0x00131350"
+        }
+      ],
+      "listing_sha256": "9e074042a2d2829b75ee3ee31a73601e97f78c9759f11558244d8d9450333abe",
+      "direct_edges": [
+        {
+          "site": "0x00130d18",
+          "target": "0x0012fb30",
+          "kind": "call"
+        },
+        {
+          "site": "0x00130e60",
+          "target": "0x0012fb30",
+          "kind": "call"
+        },
+        {
+          "site": "0x00130e68",
+          "target": "0x0012fb90",
+          "kind": "call"
+        },
+        {
+          "site": "0x001310d8",
+          "target": "0x00131810",
+          "kind": "call"
+        },
+        {
+          "site": "0x00131110",
+          "target": "0x001319c0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00131128",
+          "target": "0x001318f0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00131158",
+          "target": "0x001303e0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00131184",
+          "target": "0x001319c0",
+          "kind": "call"
+        },
+        {
+          "site": "0x001311a0",
+          "target": "0x001318f0",
+          "kind": "call"
+        },
+        {
+          "site": "0x00131214",
+          "target": "0x00137ed0",
+          "kind": "call"
+        },
+        {
+          "site": "0x001313f0",
+          "target": "0x001434e0",
+          "kind": "call"
+        }
+      ],
+      "instruction_rows": 699
+    },
+    {
+      "entry": "0x00119ac8",
+      "interpretation": "Memset-style library dependency, including MMI byte replication; not reconstructed here.",
+      "status": "analyzed-partial-byte-checked",
+      "body_ranges": [
+        {
+          "start": "0x00119ac8",
+          "end_exclusive": "0x00119b88"
+        }
+      ],
+      "listing_sha256": "09c7829fb0e061976495f53e07fa77cde5f74607c3657deb18319097cf4a51be",
+      "direct_edges": [],
+      "instruction_rows": 48
+    }
+  ],
+  "verified": {
+    "schema": "ps2-elf-byte-check/v1",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "endianness": "little",
+    "segments": 1,
+    "instructions_verified": 947,
+    "instructions_unknown": 0,
+    "scope": "file-backed PT_LOAD bytes only; no semantic or runtime verification"
+  },
+  "callback_edges": [
+    {
+      "source": "0x0011d830",
+      "registers_callback_via": "0x001432c0",
+      "callback": "0x00121810",
+      "dispatch": "0x00143240"
+    },
+    {
+      "request": "0x00130150",
+      "scheduler": "0x00143360",
+      "entry_argument": "0x00130220",
+      "descriptor_field": "+0x04",
+      "kernel_create": "0x00103d60",
+      "kernel_start": "0x00103d80"
+    },
+    {
+      "wake_handler": "0x0011df10",
+      "active_field": "0x003f8e30",
+      "thread_id_field": "0x003f8e34",
+      "wake_call": "0x00104e10"
+    }
+  ],
+  "limitations": "Callback relationships are derived from arguments/descriptor writes; live sampling is not a PC trace. Context functions are not counted as new reconstructions."
+}

@@ -1,0 +1,32 @@
+{
+  "observation_date": "2026-11-14",
+  "os": "Linux",
+  "python": "3.14.9",
+  "compiler": "cc (GCC) 16.2.1 20260810",
+  "ghidra": "12.1.4",
+  "language": "r5900:LE:32:default",
+  "compiler_spec": "default",
+  "emotion_engine_extension": {
+    "changelog_release": "2.1.38",
+    "ghidra_compatibility_version": "12.1.4",
+    "jar_sha256": "825d6f5f506acef68985ebfaab77e90896d3c687a1e512dd440efa2014b2fe07"
+  },
+  "java": [
+    "openjdk version \"21.0.12.1\" 2026-08-18",
+    "OpenJDK Runtime Environment (build 21.0.12.1+1)",
+    "OpenJDK 64-Bit Server VM (build 21.0.12.1+1, mixed mode, sharing)"
+  ],
+  "vscode": [
+    "1.145.2",
+    "c4453f8ea430795f941c1b2ff6c9321135a74a02",
+    "x64"
+  ],
+  "pcsx2": "2.8.2 AppImage",
+  "github_integration": "Authenticated repository metadata read succeeded; no publication performed.",
+  "repository_baseline": "d3cc12e7cffd4bcbdd07a742a0e2f0423042b884",
+  "ps2dinfo": {
+    "revision": "ab295d765728700f107321c5771b62783bd2e83c",
+    "validator_sha256": "66fb9db3fae3675ca55232306363d6db8914f6aa28353b379caa52cc5be4e505",
+    "status": "Local main; validator unmodified. An unrelated untracked file was left untouched. Not presumed synchronized to remote."
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "language": "r5900:LE:32:default",
+  "compiler_spec": "default",
+  "sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "ghidra_version": "12.1.4",
+  "blocks": [
+    {
+      "name": "SECTION4",
+      "start": "0x00100000",
+      "address_space": "ram",
+      "end_exclusive": "0x003ea980",
+      "initialized": true,
+      "execute": true,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "hg_bss",
+      "start": "0x003ea980",
+      "address_space": "ram",
+      "end_exclusive": "0x00a87800",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "hg_overlay_arena",
+      "start": "0x00a87800",
+      "address_space": "ram",
+      "end_exclusive": "0x00ae5000",
+      "initialized": false,
+      "execute": true,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "hg_remaining_ee_ram",
+      "start": "0x00ae5000",
+      "address_space": "ram",
+      "end_exclusive": "0x02000000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "registers.io",
+      "start": "0x10000000",
+      "address_space": "ram",
+      "end_exclusive": "0x10010000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "vu0.code",
+      "start": "0x11000000",
+      "address_space": "ram",
+      "end_exclusive": "0x11001000",
+      "initialized": false,
+      "execute": true,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "vu0.data",
+      "start": "0x11004000",
+      "address_space": "ram",
+      "end_exclusive": "0x11005000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "vu1.code",
+      "start": "0x11008000",
+      "address_space": "ram",
+      "end_exclusive": "0x1100c000",
+      "initialized": false,
+      "execute": true,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "vu1.data",
+      "start": "0x1100c000",
+      "address_space": "ram",
+      "end_exclusive": "0x11010000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "registers.gs",
+      "start": "0x12000000",
+      "address_space": "ram",
+      "end_exclusive": "0x12002000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "iop_ram",
+      "start": "0x1c000000",
+      "address_space": "ram",
+      "end_exclusive": "0x1e000000",
+      "initialized": false,
+      "execute": true,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "RAM(uncached)",
+      "start": "0x20000000",
+      "address_space": "ram",
+      "end_exclusive": "0x21e84800",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": false,
+      "mapped": true
+    },
+    {
+      "name": "RAM(uncached_and_accelerated)",
+      "start": "0x30100000",
+      "address_space": "ram",
+      "end_exclusive": "0x31f84800",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": false,
+      "mapped": true
+    },
+    {
+      "name": "scratchpad",
+      "start": "0x70000000",
+      "address_space": "ram",
+      "end_exclusive": "0x70004000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": true,
+      "mapped": false
+    },
+    {
+      "name": "BIOS/rom09(cached)",
+      "start": "0x9fc00000",
+      "address_space": "ram",
+      "end_exclusive": "0x9fd00000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": false,
+      "mapped": true
+    },
+    {
+      "name": "BIOS/rom0b(uncached)",
+      "start": "0xbfc00000",
+      "address_space": "ram",
+      "end_exclusive": "0xbfd00000",
+      "initialized": false,
+      "execute": false,
+      "read": true,
+      "write": false,
+      "mapped": true
+    },
+    {
+      "name": ".comment",
+      "start": "0x00000000",
+      "address_space": ".comment",
+      "end_exclusive": "0x0000002b",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    },
+    {
+      "name": ".reginfo",
+      "start": "0x00000000",
+      "address_space": ".reginfo",
+      "end_exclusive": "0x00000018",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    },
+    {
+      "name": ".shstrtab",
+      "start": "0x00000000",
+      "address_space": ".shstrtab",
+      "end_exclusive": "0x0000002d",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    },
+    {
+      "name": "_elfHeader",
+      "start": "0x00000000",
+      "address_space": "_elfHeader",
+      "end_exclusive": "0x00000034",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    },
+    {
+      "name": "_elfProgramHeaders",
+      "start": "0x00000000",
+      "address_space": "_elfProgramHeaders",
+      "end_exclusive": "0x00000200",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    },
+    {
+      "name": "_elfSectionHeaders",
+      "start": "0x00000000",
+      "address_space": "_elfSectionHeaders",
+      "end_exclusive": "0x00000370",
+      "initialized": true,
+      "execute": false,
+      "read": false,
+      "write": false,
+      "mapped": false
+    }
+  ],
+  "function_count": 4558,
+  "limitations": [
+    "Extension-generated mirror/BIOS maps are retained as tool output and are not validated hardware maps.",
+    "Address spaces distinguish nonloaded ELF metadata overlays from EE ram.",
+    "AREA overlays are not imported into this baseline map."
+  ],
+  "milestone": "M2"
+}

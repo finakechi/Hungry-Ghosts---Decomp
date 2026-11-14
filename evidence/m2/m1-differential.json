@@ -1,0 +1,23 @@
+{
+  "schema": "hg-differential/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "seed": "0x15046",
+  "cases": 1448,
+  "randomized_cases": 1400,
+  "randomized_cases_per_function": 350,
+  "lifecycle_sequences": 12,
+  "lifecycle_steps": 48,
+  "result": "passed",
+  "function_entries": {
+    "poll": 1251568,
+    "setup": 1251776,
+    "continue": 1251808,
+    "start": 1252336
+  },
+  "limitations": [
+    "CDVD operations mocked",
+    "Restricted interpreter independently implemented for this group; not a hardware oracle",
+    "No interrupts or concurrent mutation",
+    "Does not establish matching or full-game equivalence"
+  ]
+}

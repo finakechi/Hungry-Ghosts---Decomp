@@ -1,0 +1,23 @@
+/local/
+/build/
+__pycache__/
+*.py[cod]
+*.iso
+*.chd
+*.bin
+*.elf
+*.irx
+*.gpr
+*.rep/
+*.lock
+*.lock~
+SCPS_*
+PACK.DAT
+.env
+
+# Private backup packages and owner authentication/configuration
+*.bundle
+*.tar
+*.tar.gz
+rclone.conf
+backup-config.json

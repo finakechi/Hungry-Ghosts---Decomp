@@ -1,0 +1,67 @@
+{
+  "milestone": "M1 executable foundation",
+  "observation_date": "2026-11-14",
+  "toolchain_record": "evidence/toolchain.json",
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tests -v",
+      "outcome": "passed",
+      "count": 32,
+      "evidence": "evidence/synthetic-tests.txt",
+      "retail_input": false
+    },
+    {
+      "command": "python tools/verify_disc_read.py --elf <local original ELF> --output <new output>",
+      "outcome": "passed",
+      "count": 1448,
+      "evidence": "evidence/disc-read-differential.json",
+      "retail_input": true
+    },
+    {
+      "command": "python tools/verify_elf_evidence.py --elf <local original ELF>",
+      "outcome": "passed",
+      "instructions": 283,
+      "bytes": 1132,
+      "evidence": "analysis/disc_read/functions.json",
+      "retail_input": true
+    },
+    {
+      "command": "python <PS2DInfo>/tools/validate_evidence.py analysis/disc_read/functions.json",
+      "outcome": "passed",
+      "scope": "Structural validation only; pinned validator source in docs/sources.md"
+    },
+    {
+      "command": "python tools/hg_context.py --elf <local original ELF> --export-root <local exports> --output <new output>",
+      "outcome": "passed",
+      "functions": 8,
+      "evidence": "analysis/caller-context.json",
+      "retail_input": true
+    },
+    {
+      "command": "python tools/hg_runtime_verify.py [see DEVELOPMENT.md]",
+      "outcome": "passed",
+      "evidence": "evidence/runtime-boot.json",
+      "scope": "Running code presence and initialized file data, not gameplay semantics"
+    },
+    {
+      "command": "python -m compileall -q tools tests",
+      "outcome": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "outcome": "passed"
+    },
+    {
+      "command": "Export staged index with git checkout-index; run python -m unittest discover -s tests -v in that export",
+      "outcome": "passed",
+      "count": 32,
+      "retail_input": false,
+      "log_sha256": "99aff660a9b40c04bbf4ea8424f032367fbdd0f68a51184bf47be08c1bcb419e"
+    }
+  ],
+  "limits": [
+    "Only Python 3.14.9 / GCC 16.2.1 executed locally.",
+    "Prepared synthetic CI has not been run remotely.",
+    "No byte matching or full-game behavioral equivalence tested."
+  ]
+}

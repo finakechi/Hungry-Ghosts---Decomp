@@ -1,0 +1,215 @@
+{
+  "schema": "hg-overlay-header/v1",
+  "classification": "byte-verified headers; overlay semantics inferred",
+  "interpretation": "MWo3 files share header +8 = 00a87800, corresponding to empty PT_LOAD segments. Field meanings otherwise unasserted.",
+  "records": [
+    {
+      "path": "/AREA0/A0_B00.BIN",
+      "size_bytes": 143872,
+      "lba": 1401737,
+      "sha256": "f8efd2c6dea1c77919140bb06d64d88d4f495943463a2ff9debc56482df23f91",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000001",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00010bc0",
+        "0x10": "0x00012600",
+        "0x14": "0x00000080",
+        "0x18": "0x00aaaa00",
+        "0x1c": "0x00aaaa00"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B01.BIN",
+      "size_bytes": 293376,
+      "lba": 1401808,
+      "sha256": "d3b186cf6eb3d5dc7c4b7929305d3904381bacd973f26af243b7089041babcb9",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000002",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00032b40",
+        "0x10": "0x00014e80",
+        "0x14": "0x00000100",
+        "0x18": "0x00acf200",
+        "0x1c": "0x00acf200"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B02.BIN",
+      "size_bytes": 366592,
+      "lba": 1401952,
+      "sha256": "9f3e8dd9da915336a9e6a638adaf6932a7c3218ff63c2a3102c83d5f60eb94c9",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000003",
+        "0x08": "0x00a87800",
+        "0x0c": "0x0003a440",
+        "0x10": "0x0001f180",
+        "0x14": "0x00000000",
+        "0x18": "0x00ae0e00",
+        "0x1c": "0x00ae0e00"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B03.BIN",
+      "size_bytes": 378240,
+      "lba": 1402131,
+      "sha256": "c6438132fd0e6adcfc6ea1406154d301012574b690d90bc90b9102330770abdb",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000004",
+        "0x08": "0x00a87800",
+        "0x0c": "0x0004f5c0",
+        "0x10": "0x0000cf80",
+        "0x14": "0x00000100",
+        "0x18": "0x00ae3d80",
+        "0x1c": "0x00ae3d80"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B04.BIN",
+      "size_bytes": 2048,
+      "lba": 1402316,
+      "sha256": "ae8b04aca5c174aff0cc9539bc9e88c8e904ab18a5ce6273dcf25afd116f0237",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000005",
+        "0x08": "0x00a87800",
+        "0x0c": "0x000003c0",
+        "0x10": "0x00000400",
+        "0x14": "0x00000000",
+        "0x18": "0x00a88000",
+        "0x1c": "0x00a88000"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B05.BIN",
+      "size_bytes": 47104,
+      "lba": 1402317,
+      "sha256": "9a39beb8e13aa45d96f90cbb4e8357e38a6e72dafa5a68aec65ba601a9d2ce1a",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000006",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00004bc0",
+        "0x10": "0x00006600",
+        "0x14": "0x00000000",
+        "0x18": "0x00a92a00",
+        "0x1c": "0x00a92a00"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B06.BIN",
+      "size_bytes": 2048,
+      "lba": 1402340,
+      "sha256": "8509cd4e665b048e07fef8bd22b884ac8186b516df65ff22bca881673f105870",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000007",
+        "0x08": "0x00a87800",
+        "0x0c": "0x000000c0",
+        "0x10": "0x00000000",
+        "0x14": "0x00000000",
+        "0x18": "0x00a87900",
+        "0x1c": "0x00a87900"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B07.BIN",
+      "size_bytes": 2048,
+      "lba": 1402341,
+      "sha256": "054b6ef6700377472b0e92e97e36ac423fae22bd213ca57938ec49de4d58b67d",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000008",
+        "0x08": "0x00a87800",
+        "0x0c": "0x000000c0",
+        "0x10": "0x00000000",
+        "0x14": "0x00000000",
+        "0x18": "0x00a87900",
+        "0x1c": "0x00a87900"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B08.BIN",
+      "size_bytes": 36864,
+      "lba": 1402342,
+      "sha256": "5f5a17e647bb8aaa5cec8a9e76fd87b197e34988e5bee688ae7a0d82aed764ff",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x00000009",
+        "0x08": "0x00a87800",
+        "0x0c": "0x000067c0",
+        "0x10": "0x00002300",
+        "0x14": "0x00000000",
+        "0x18": "0x00a90300",
+        "0x1c": "0x00a90300"
+      }
+    },
+    {
+      "path": "/AREA0/A0_B09.BIN",
+      "size_bytes": 16384,
+      "lba": 1402360,
+      "sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x0000000a",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00002d40",
+        "0x10": "0x00000d80",
+        "0x14": "0x00000000",
+        "0x18": "0x00a8b300",
+        "0x1c": "0x00a8b300"
+      }
+    },
+    {
+      "path": "/AREA1/A1_B00.BIN",
+      "size_bytes": 30720,
+      "lba": 1402368,
+      "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x0000000b",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00004740",
+        "0x10": "0x00002a80",
+        "0x14": "0x00000000",
+        "0x18": "0x00a8ea00",
+        "0x1c": "0x00a8ea00"
+      }
+    },
+    {
+      "path": "/AREA2/A2_B00.BIN",
+      "size_bytes": 382976,
+      "lba": 1402383,
+      "sha256": "1d77875f55cc084517fa855a1b0716b5e54454fc0eb299770c6810e943b071e0",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x0000000c",
+        "0x08": "0x00a87800",
+        "0x0c": "0x0004dbc0",
+        "0x10": "0x0000f980",
+        "0x14": "0x00000000",
+        "0x18": "0x00ae4d80",
+        "0x1c": "0x00ae4d80"
+      }
+    },
+    {
+      "path": "/AREA2/A2_B10.BIN",
+      "size_bytes": 20480,
+      "lba": 1402570,
+      "sha256": "49592bfda3f4e5a4020f7560df9dae008ce6b75401634ea17960db1de7c9eb71",
+      "magic": "MWo3",
+      "header_words": {
+        "0x04": "0x0000000d",
+        "0x08": "0x00a87800",
+        "0x0c": "0x00002040",
+        "0x10": "0x00002880",
+        "0x14": "0x00000000",
+        "0x18": "0x00a8c100",
+        "0x1c": "0x00a8c100"
+      }
+    }
+  ]
+}
