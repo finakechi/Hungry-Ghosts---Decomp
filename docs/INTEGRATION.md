@@ -23,7 +23,7 @@ AREA execution trace, gameplay equivalence or final port objective is claimed.
 
 | Command / check | Result |
 |---|---|
-| `python -B -m unittest discover -s tests -v` | 80 passed, no failures/skips; includes 16 new backup/audit tests |
+| `python -B -m unittest discover -s tests -v` | 81 passed, no failures/skips; includes 17 new backup/audit tests |
 | C11 synthetic integration with ASan/UBSan (DEVELOPMENT command) | Passed |
 | Shared byte verifier on M1 / M2 records | 283 / 684 instruction rows verified, no unknown rows |
 | Shared structure validator on both records | Passed; structure is separate from byte/semantic verification |
@@ -106,3 +106,22 @@ are validated in place but omitted from the new payload. Its old manifest is
 retained as provenance; use the **new** manifest to verify the filtered recovery
 copy. Current and historical Ghidra `.gpr`/`.rep` regular files are included whole.
 No database-open/application or gameplay-replay test is claimed.
+
+## GitHub publication receipt
+
+Implementation commit `033e79cea2a25a741f0d26e1a4c608e3d3017f75` was pushed to
+`research/m3-evidence-safety` in the existing repository. [PR #1](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/1)
+is open against `main`; it is not merged. The remote branch SHA matched locally.
+All four original milestone commits appear in the PR history unchanged.
+
+Both the [push workflow](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43625811335)
+and [PR workflow](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43625859227)
+completed successfully for that implementation commit. Each ran 80 tests and
+sanitizers on Python 3.10 and 3.14. A subsequent safety review adds automatic
+nested-Ghidra detection and pair-completeness checks, with an additional regression
+for 81 tests. Final head/CI readback and the post-commit Drive snapshot receipt
+are kept privately in `local/integration/`; PR checks show the current head result.
+
+No force push, history rewrite, replacement repository, merge, shutdown or backup
+schedule was used. The final snapshot is taken after the committed changes, so
+its Git bundle and manifest identify the recoverable publication revision.

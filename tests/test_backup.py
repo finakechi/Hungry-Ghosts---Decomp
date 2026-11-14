@@ -136,6 +136,14 @@ class BackupTests(unittest.TestCase):
         self.cfg['sources'][0]['path'] = 'local'; self.save_config()
         with self.assertRaisesRegex(ValueError, 'isolated'): b.create(self.config, True)
 
+    def test_nested_database_checked_without_kind_label(self):
+        project = self.source / 'nested'; project.mkdir()
+        (project / 'analysis.gpr').touch()
+        with self.assertRaisesRegex(ValueError, 'project pair'): b.create(self.config, True)
+        (project / 'analysis.rep').mkdir()
+        (project / 'analysis.lock').touch()
+        with self.assertRaisesRegex(ValueError, 'lock'): b.create(self.config, True)
+
     def test_legacy_recovery_mismatch(self):
         recovery = self.repo / 'local/recovery'; (recovery / 'logs').mkdir(parents=True)
         (recovery / 'logs/a.txt').write_text('synthetic')

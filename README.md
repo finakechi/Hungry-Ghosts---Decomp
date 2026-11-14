@@ -8,8 +8,8 @@ point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
 M1 establishes verified build identities and four disc-read functions. M2 adds
 11 scheduler/request/PACK/AREA functions, including a complete bootstrap loading
-operation with explicit dependencies. Combined coverage is 15 functions / 3,868
-original bytes, with 49 synthetic tests, instruction differential checks,
+operation with explicit dependencies. M3 adds a connected rebasing dependency, bringing coverage to 16 functions /
+4,080 original bytes. The current suite has 81 synthetic tests, instruction differential checks,
 sanitizers and negative controls. PCSX2 captures substantiate actual bootstrap
 loading and code/data identity. Full-game equivalence and byte matching remain
 untested. No final rebuild/port track has been selected.
@@ -27,3 +27,6 @@ research sources and reuse limits are listed in [docs/sources.md](docs/sources.m
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 Synthetic tests now also require JDK 21 for the Java export transaction tests.
+
+Private recovery tooling and verified GitHub integration are documented in
+[docs/INTEGRATION.md](docs/INTEGRATION.md) and [docs/BACKUP.md](docs/BACKUP.md).

@@ -79,6 +79,27 @@ def closed_database(root):
             'limit': 'Closed-project checks plus stable pre/post hashes; not an application transaction or filesystem freeze.'}
 
 
+
+def database_check(root, explicit=False):
+    root = Path(root)
+    if root.suffix == '.gpr' and root.is_file():
+        raise ValueError('Select the containing Ghidra project directory, including .rep')
+    projects = list(root.rglob('*.gpr'))
+    repositories = list(root.rglob('*.rep'))
+    if not explicit and not projects and not repositories:
+        return None
+    for project in projects:
+        repository = project.with_suffix('.rep')
+        if project.is_symlink() or repository.is_symlink() or not repository.is_dir():
+            raise ValueError('Missing or linked Ghidra project pair: ' + str(project))
+    for repository in repositories:
+        if not repository.with_suffix('.gpr').is_file() or repository.is_symlink():
+            raise ValueError('Missing or linked Ghidra project pair: ' + str(repository))
+        if any(p.is_symlink() for p in repository.rglob('*')):
+            raise ValueError('Linked Ghidra database member: ' + str(repository))
+    return closed_database(root)
+
+
 def blocked(path):
     name = path.name.lower()
     return (path.suffix.lower() in {'.iso', '.chd', '.elf', '.irx', '.bin'}
@@ -167,8 +188,9 @@ def create(config_path, dry_run=False):
         raise ValueError('Snapshot output must be isolated beneath local/')
     checks, inventories, exclusions = {}, {}, []
     for label, path, kind in sources:
-        if kind == 'ghidra':
-            checks[label] = closed_database(path)
+        database = database_check(path, kind == 'ghidra')
+        if database is not None:
+            checks[label + '_database'] = database
         if kind == 'recovery':
             checks[label] = validate_recovery(path)
         inventories[label], skipped = inventory(path)
@@ -208,8 +230,7 @@ def create(config_path, dry_run=False):
             files[label + '/' + name] = entry
         if inventory(source)[0] != inventories[label]:
             raise ValueError('Source set changed during copy: ' + label)
-        if kind == 'ghidra':
-            closed_database(source)
+        database_check(source, kind == 'ghidra')
     git_dir = data / 'git'
     git_dir.mkdir()
     bundle = git_dir / 'history.bundle'

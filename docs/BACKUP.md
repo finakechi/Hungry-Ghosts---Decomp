@@ -9,7 +9,9 @@ are inventory-only; an owner must recover those separately from lawful originals
 ## Prepare and inspect
 
 Run from the repository root with Python 3.10+ and Git. Linux `/proc` is required
-for database-open checks. Close Ghidra normally, including headless jobs. Do not
+for database-open checks. Close Ghidra normally, including headless jobs. Nested `.gpr`/`.rep` projects
+are detected regardless of source labels; missing pairs or linked database
+members fail closed. Do not
 copy an active project or stop an unrelated process to make backup proceed.
 
 Copy `config/backup.example.json` to `local/backup-config.json`. Select existing
