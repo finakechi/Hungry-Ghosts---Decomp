@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Assemble M2's game-owned packet; delegate structural/ELF checks to PS2DInfo."""
+from hg_evidence_safety import select_export, digest, receipt
 import argparse
 import hashlib
 import json
@@ -17,14 +18,13 @@ def main():
     p.add_argument('--exports',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
     a=p.parse_args();data=a.elf.read_bytes();functions=[]
     for key,entry in ENTRIES.items():
-        candidates=sorted(a.exports.glob(f'*/{entry:08x}.json'))
-        if not candidates:raise ValueError(f'Missing actual export {entry:08x}')
-        row=json.loads(candidates[0].read_text())
+        selected=select_export(a.exports,entry)
+        row=json.loads(selected.read_text())
         functions.append(dict(entry=row['entry'],name='hg_'+NAMES[key],complete=True,body_ranges=row['body_ranges'],
                               instructions=row['instructions'],references=[{**r,'ghidra_type':r['type'],'type':'call' if 'CALL' in r['type'] else 'unknown'} for r in row['references_to']],
                               interpretation='M2 reconstruction; exact behavior and dependencies in analysis/resource_loader/README.md.',
-                              verification_status='reconstructed-model-differential-tested',source='src/resource_loader.c',
-                              original_listing_sha256=row['listing_sha256']))
+                              verification_status='original-byte-verified',source='src/resource_loader.c',
+                              original_listing_sha256=row['listing_sha256'],snapshot_sha256=digest(selected)))
     record=dict(schema='ps2-evidence/v1',program=dict(game='Hungry Ghosts',build_id='japan',executable='SCPS_150.46',
                 sha256=EXPECTED,processor='EE/R5900',reported_language='r5900:LE:32:default',endianness='little',
                 address_space='ram',address_context='Original unrelocated file-backed EE PT_LOAD; named M2 project copied from preserved M1 working project.',
@@ -35,6 +35,7 @@ def main():
                                  'Full other worker loaders are preserved as external calls.','Host memory bridge/resumable helper are not original ABI.']),
                 functions=functions)
     verification=shared_module(a.ps2dinfo).verify(data,record,require_all_bytes=True)
+    record['binding']=receipt(ROOT, {'elf':a.elf,'shared_verifier':a.ps2dinfo/'tools/verify_elf_evidence.py', **{f'export_{e:08x}':select_export(a.exports,e) for e in ENTRIES.values()}}, 'original-bytes', ['hg_m2_evidence.py'], ['No semantic or runtime promotion.'])
     with a.output.open('x') as fp:json.dump(record,fp,indent=2);fp.write('\n')
     print(json.dumps(verification))
     print('New functions:',len(functions),'bytes:',sum(len(f['instructions'])*4 for f in functions))

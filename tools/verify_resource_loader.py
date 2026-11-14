@@ -14,6 +14,10 @@ EXPECTED='a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61'
 
 
 def shared_module(path):
+    from hg_evidence_safety import digest
+    pins=json.loads((ROOT/'evidence/m2/shared-tools.json').read_text())
+    if digest(path/'tools/verify_elf_evidence.py') != pins['tools']['verify_elf_evidence.py']:
+        raise ValueError('Shared verifier hash mismatch')
     spec=importlib.util.spec_from_file_location('ps2_shared_elf',path/'tools/verify_elf_evidence.py')
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);return module
 
@@ -132,6 +136,9 @@ def main():
                 limitations=['Kernel threads, CDVD responses and asset fixups are deterministic mocks.',
                              'No concurrent interrupts or overlapping destination/context aliases modeled.',
                              'Bootstrap PACK path complete within these dependencies; other worker loader branches remain callbacks.'])
+    from hg_evidence_safety import receipt
+    result['binding']=receipt(ROOT,{'elf':a.elf,'shared_verifier':a.ps2dinfo/'tools/verify_elf_evidence.py'},'differential',['verify_resource_loader.py'],result['limitations'])
+    result['binding']['ps2dinfo_revision']=__import__('subprocess').check_output(['git','rev-parse','HEAD'],cwd=a.ps2dinfo).decode().strip()
     with a.output.open('x') as fp:json.dump(result,fp,indent=2);fp.write('\n')
     print(json.dumps(result))
 

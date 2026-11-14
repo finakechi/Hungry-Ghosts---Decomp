@@ -24,3 +24,6 @@ For owner-local analysis and verification, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 No game, BIOS, extracted assets or patch payload is distributed here. External
 research sources and reuse limits are listed in [docs/sources.md](docs/sources.md).
+
+M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
+Synthetic tests now also require JDK 21 for the Java export transaction tests.

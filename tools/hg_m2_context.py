@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verify bounded origin/wake/dependency functions without promoting them to source."""
+from hg_evidence_safety import select_export, digest, receipt
 import argparse
 import json
 from pathlib import Path
@@ -20,9 +21,8 @@ def main():
         0x119ac8:'Memset-style library dependency, including MMI byte replication; not reconstructed here.'}
     raw=[];result=[]
     for entry,description in descriptions.items():
-        paths=sorted(a.exports.glob(f'*/{entry:08x}.json'))
-        if not paths:raise ValueError(f'Missing context export {entry:08x}')
-        row=json.loads(paths[0].read_text());raw.append(row)
+        selected=select_export(a.exports,entry)
+        row=json.loads(selected.read_text());raw.append(row)
         calls=[]
         for ins in row['instructions']:
             word=int.from_bytes(bytes.fromhex(ins['bytes']),'little');at=int(ins['address'],16)
@@ -40,6 +40,7 @@ def main():
                                      kernel_create='0x00103d60',kernel_start='0x00103d80'),
                                 dict(wake_handler='0x0011df10',active_field='0x003f8e30',thread_id_field='0x003f8e34',wake_call='0x00104e10')],
                 limitations='Callback relationships are derived from arguments/descriptor writes; live sampling is not a PC trace. Context functions are not counted as new reconstructions.')
+    packet['binding']=receipt(Path(__file__).resolve().parents[1],{'elf':a.elf,'shared_verifier':a.ps2dinfo/'tools/verify_elf_evidence.py',**{f'export_{e:08x}':select_export(a.exports,e) for e in descriptions}},'original-bytes',['hg_m2_context.py'],[packet['limitations']])
     with a.output.open('x') as fp:json.dump(packet,fp,indent=2);fp.write('\n')
     print(f'PASS: {len(raw)} context functions original-byte checked')
 

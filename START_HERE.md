@@ -1,5 +1,22 @@
 # Hungry Ghosts — start here
 
+## Current M3 update — 2026-11-14
+
+Evidence safeguards and a connected rebasing dependency are implemented on local
+`research/m3-evidence-safety`. [M3 report](docs/M3.md) gives recovery scope, exact
+checks and limits. 13 safeguard tests passed before retail work; final synthetic
+suite has 64 tests. `hg_resource_rebase` at `001385b0` adds 53 original instructions
+/ 212 bytes: combined reconstructed coverage is **16 functions / 1,020 words /
+4,080 bytes**. 256 new bounded differentials pass. Fresh PCSX2 verifies the new
+body's code presence only; full fixup and AREA execution remain unresolved.
+Same-disk hash-verified recovery snapshot and Git bundle are under ignored
+`local/recovery/20261114T171347Z`; off-disk recovery remains unknown. Original
+media and original Ghidra databases were preserved. No push, PR or merge.
+
+The M2 sections below are retained as historical milestone evidence; their
+counts, branch and next-step summaries are superseded by this update.
+
+
 **Version 2.0 — 2026-11-14, America/New_York.** Detailed status:
 [MASTER_HANDOFF.md](MASTER_HANDOFF.md). Read AGENTS.md first.
 

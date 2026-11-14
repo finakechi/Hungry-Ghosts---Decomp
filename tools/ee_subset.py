@@ -16,6 +16,7 @@ class Machine:
     def __init__(self):
         self.mem = {}
         self.reg = [0] * 32
+        self.hi = self.lo = 0
         self.pc = 0
         self.pending = None
         self.hooks = {}
@@ -71,6 +72,10 @@ class Machine:
                 elif fn == 2: wordreg(rd, (b & 0xffffffff) >> sa)
                 elif fn == 3: wordreg(rd, sx(b,32) >> sa)
                 elif fn == 8: target = a
+                elif fn == 0x18:
+                    product = sx(a,32) * sx(b,32)
+                    self.lo, self.hi = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
+                    wordreg(rd, product)
                 elif fn == 0x21: wordreg(rd,a+b)
                 elif fn == 0x23: wordreg(rd,a-b)
                 elif fn == 0x25: self.setreg(rd,a|b)

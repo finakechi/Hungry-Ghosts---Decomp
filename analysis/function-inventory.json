@@ -6,8 +6,8 @@
   "count": 4558,
   "status_counts": {
     "analyzed-partial-byte-checked": 12,
-    "auto-discovered-unreviewed": 4531,
-    "reconstructed-model-differential-tested": 15
+    "auto-discovered-unreviewed": 4530,
+    "reconstructed-model-differential-tested": 16
   },
   "functions": [
     {
@@ -16042,9 +16042,12 @@
       "calls": [
         "0x001389d0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_rebase",
+      "milestone": "M3",
+      "evidence": "evidence/m3/reconstruction.json"
     },
     {
       "entry": "0x00138690",

@@ -1,0 +1,357 @@
+{
+  "schema": "hg-loading-runtime-verification/v1",
+  "metadata": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 0
+  },
+  "timestamp_utc": "2026-11-14T05:58:01.526661+00:00",
+  "samples": 2147,
+  "requested_hz": 120,
+  "transitions": [
+    {
+      "elapsed_seconds": 2.08999881579075e-06,
+      "active": 0,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 0,
+      "special_phase": 0,
+      "request_busy": 0,
+      "disc_state": 0
+    },
+    {
+      "elapsed_seconds": 2.3149513970001863,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 1,
+      "special_phase": 0,
+      "request_busy": 1,
+      "disc_state": 0
+    },
+    {
+      "elapsed_seconds": 2.331727138000133,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 1,
+      "special_phase": 0,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.449152013999992,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 2,
+      "special_phase": 0,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.4659304750002775,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 2,
+      "special_phase": 3,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.4827084850003303,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 2,
+      "special_phase": 7,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.4994848759997694,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 2,
+      "special_phase": 11,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.5162615859990183,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 3,
+      "special_phase": 11,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.533037876999515,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 4,
+      "special_phase": 11,
+      "request_busy": 1,
+      "disc_state": 0
+    },
+    {
+      "elapsed_seconds": 2.5498155869991024,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 4,
+      "special_phase": 11,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.667250452999724,
+      "active": 1,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 5,
+      "special_phase": 11,
+      "request_busy": 1,
+      "disc_state": 1
+    },
+    {
+      "elapsed_seconds": 2.6840265829996497,
+      "active": 0,
+      "kind": 0,
+      "directory": 0,
+      "loader_phase": 5,
+      "special_phase": 11,
+      "request_busy": 0,
+      "disc_state": 1
+    }
+  ],
+  "active_interval_seconds": [
+    2.3149513970001863,
+    2.6756376630000887
+  ],
+  "completion_first_observed_seconds": 2.6840265829996497,
+  "observed_bootstrap_phases": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "observed_special_phases": [
+    0,
+    3,
+    7,
+    11
+  ],
+  "requests": [
+    {
+      "destination": "0x003f3b00",
+      "byte_offset": 0,
+      "byte_size": 2048,
+      "observations": 26,
+      "expected_start_lba": 1402580
+    },
+    {
+      "destination": "0x00b00000",
+      "byte_offset": 559104,
+      "byte_size": 346880,
+      "observations": 18,
+      "expected_start_lba": 1402853
+    }
+  ],
+  "original_pack": {
+    "lba": 1402580,
+    "size_bytes": 448763904,
+    "directory": 0,
+    "member_count": 5,
+    "header_sha256": "97fcf9c15e57490a603c8a556be1549f452f8d337ab40542aca29007d262e9fb",
+    "header_matches": true
+  },
+  "handles": [
+    {
+      "index": 0,
+      "address": "0x00b52000",
+      "matches": true
+    },
+    {
+      "index": 1,
+      "address": "0x00b01100",
+      "matches": true
+    },
+    {
+      "index": 2,
+      "address": "0x00b4e680",
+      "matches": true
+    },
+    {
+      "index": 3,
+      "address": "0x00b4f800",
+      "matches": true
+    },
+    {
+      "index": 4,
+      "address": "0x00b00000",
+      "matches": true
+    }
+  ],
+  "expected_arena_end": "0x00b55000",
+  "arena_pointers_match": true,
+  "payload_magic_and_count_match": true,
+  "flk5_header_word_08": {
+    "original": 4352,
+    "observed": 12800,
+    "interpretation": "Observed post-read mutation; full asset-fixup semantics are not reconstructed."
+  },
+  "settings": {
+    "EnablePatches": false,
+    "EnableCheats": false,
+    "EnableWideScreenPatches": false,
+    "EnableNoInterlacingPatches": false
+  },
+  "inputs": "Saved capture reanalysis; no fresh run or input-history claim.",
+  "raw_capture_sha256": "5934831840d058bb4969248746bf45e168250d54640bd3a7343754ca4fe8863a",
+  "limitations": [
+    "Sequential live sampling is not atomic; short states can be missed.",
+    "Observed loading states and loaded data support the bootstrap operation; no PC/breakpoint call trace.",
+    "No runtime claim for other worker jobs, AREA operation, all error paths, or mocked asset-fixup semantics."
+  ],
+  "binding": {
+    "schema": "hg-verification-binding/v1",
+    "level": "saved-runtime",
+    "result": "passed",
+    "source": {
+      "revision": "f59d3659948eedc067ba1c33cf994c366b24a212",
+      "files": {
+        "ghidra_scripts/HGAnnotate.java": "c54f53b4e1651f11b8db691fe1cf488b437cd8d3854e7cf55090bdf8693ac6ee",
+        "ghidra_scripts/HGAnnotateM2.java": "cbd6003f6639d237e0920cf02867990d3a232e5139d0af90a95727d3aa6c6911",
+        "ghidra_scripts/HGDiscoverM2.java": "d7509cff61b2459888005ae6d3cdee6ad67b02d239deee63660843a6881fcd6b",
+        "ghidra_scripts/HGExport.java": "c3991d5b2aeeff8c2f548849acdc204ed8d4fd7e075682b1ccaf2945bff7eadb",
+        "ghidra_scripts/HGExportSet.java": "7537560791c8dec4c4d1bf56d61438b71b7674c6216d74bc853ab1143689b7ba",
+        "ghidra_scripts/HGMap.java": "47d81d94a7ad40e6803dec438575f0f2516fbca6c2d80900015436696eb71926",
+        "ghidra_scripts/HGRefs.java": "78576179bd57554bfedb8595f64c4a97e601a1d40d0d6de64a10944be173b860",
+        "src/disc_read.c": "8bd355a99e772cabaa72aaddd27f92e46c6c2e9fa58d6b00bd6329dda890d3d2",
+        "src/disc_read.h": "1bbaf53de50bd64857ee01ec9bce7b44da0efad008a88e3f9e584b1f8a026878",
+        "src/resource_loader.c": "a29289d7bbbf754efe765fb8504fa95964c91b412ebd270a63dbb5c43cb88e79",
+        "src/resource_loader.h": "a01c6d43856cf1df2759553445924fb7c4305d089250be4dd2ef178e836898c3",
+        "tests/disc_harness.py": "a0d1969d3b0db5c2f997f2411bd9c9cc5bf9dba3a19454377a1853bc5ed1cbe2",
+        "tests/resource_harness.py": "778a88dd1eb50cab1cfc04d7bfa17d8f69791fb8be023398c594392ad96a7241",
+        "tests/resource_sanitizer.c": "7189de45a48b1dcdfd8be96ee8fb3d5d7db9842b23a87b670c53048f17f45047",
+        "tests/test_disc_read.py": "5c3b207a5c61f021866f1808f7ee6e0fa167031fb3d877ba710b126e4714eddc",
+        "tests/test_ee_subset.py": "8bbc48232e1709da5d66422f455e57099f335241fd47cf2a7d5c61d4fed05e59",
+        "tests/test_evidence_safety.py": "17434a649c1cc015f64301a753858a5b577b8c3019c71448fd0a696602fdc14a",
+        "tests/test_inputs.py": "e5c8224c7c3e6a67b3842ceb28553d3c503657588e5cb24fd558a70b82e873fc",
+        "tests/test_pine.py": "c11b9640f4ae1abe599fbdf91ff476c057425d7d7afa07933031212d133c6f88",
+        "tests/test_resource_loader.py": "07797d9c024f88212ae556bb14d9ce7501a73f5ab1b17c8309f5e5b352cedb18",
+        "tests/test_resource_rebase.py": "916c710313653301caeba9172b8f187a951fc82aaf2c96590f9b28cf54db1289",
+        "tools/ee_subset.py": "b00e389aeade39196e8a73d6227bf45fe3a725552bbf3db2e30dbf60b995c1ca",
+        "tools/hg_check_binding.py": "854d9705db5cc83d8ddc23818210a00dbbf15e0e707d5544befbd1c0e9ffa5b8",
+        "tools/hg_compare_builds.py": "1086a0c75fb2faaf6d5cae5115c32d0ec2865c1f408aa84205bd048360731e41",
+        "tools/hg_context.py": "e946be1214b4450362cc3ce82d9dd3111072361fc22c99cd1d40247ff71447c7",
+        "tools/hg_evidence.py": "9b733774246592269f83583e0885d058663088aefe2c2fc8acb7b26b885b4ffe",
+        "tools/hg_evidence_safety.py": "e324225da26fcd43798950f92984ed8c078b30f0ba7bda72c78d4cfd97a5a640",
+        "tools/hg_identify.py": "c8e004fac00f1dfc972ac7a7fe217c81e7fa003576ba2ba3546fd019c5439f02",
+        "tools/hg_loading_capture.py": "93d94aa90d529c6d6aeca30f632c4e5a484b585cdd8bfd4b1d54937598f77834",
+        "tools/hg_loading_code_check.py": "297f4763ee588ad41e4f72e57dc2b1c25b45040be78cbce6df73fb0f2c0032a4",
+        "tools/hg_m2_context.py": "e8370fdf422b39211a5a9cf79a86740b1efbc4b559d72367c2b8d21676820909",
+        "tools/hg_m2_evidence.py": "98189c61f9a767b0a243222d92bfe8e7c18c99f6bc692f1dd41ceb2924057934",
+        "tools/hg_m2_inventory.py": "a8066f4ab839105ccfbfbb63713c13d4f4c2bd8e0166cb96521c8295bd34a86c",
+        "tools/hg_m2_negative_controls.py": "ab1f56d31b7e7f2c4816db392fad9188ce6bd08554a41be2bfc856647aaf1f0b",
+        "tools/hg_overlay_scan.py": "f5c86dcb8be16c08d7671c68fe1eff8fffd83ff5a0b8534010508133719f0bf5",
+        "tools/hg_pack_scan.py": "a77166b05383527f7deae0a8cdf0483aa470814c19e0667b27307be2f663a092",
+        "tools/hg_pine_read.py": "504d0172385a067bd603139d87502b04363e43fe880a030d42ba61529fe13ddd",
+        "tools/hg_runtime_verify.py": "e5f0a94e6a0fbd1bf753f1fc9f09e2d6366baa1da0e8ae0e3b35f87f09c34b90",
+        "tools/verify_disc_read.py": "d76bc956c347c90a44b8e0095bdd7d653c59f8f4c52cd1bc4cdceabec6a55be7",
+        "tools/verify_elf_evidence.py": "3a4cb0c038299db848f4842a5e37cb03eb3574a6ca53cddd961b700ad5ac38fd",
+        "tools/verify_loading_runtime.py": "15906f174a2588b4c47d62bb54637787ab64fd97ab57f9167d72c2da9cdeaa37",
+        "tools/verify_resource_loader.py": "82a45459747d09eeec494bcaeb14989f02a52f87bc4bc926aae4bfae80e6de44",
+        "tools/verify_resource_rebase.py": "e69a2ac177a2576183b54563ae65e4f636f82d45759c2705899e625cde6d2e5e"
+      },
+      "dirty_files": [
+        " M .github/workflows/tests.yml",
+        " M DEVELOPMENT.md",
+        " M MASTER_HANDOFF.md",
+        " M README.md",
+        " M START_HERE.md",
+        " M ghidra_scripts/HGExport.java",
+        " M src/resource_loader.c",
+        " M src/resource_loader.h",
+        " M tests/resource_sanitizer.c",
+        " M tools/ee_subset.py",
+        " M tools/hg_context.py",
+        " M tools/hg_evidence.py",
+        " M tools/hg_m2_context.py",
+        " M tools/hg_m2_evidence.py",
+        " M tools/hg_m2_inventory.py",
+        " M tools/hg_m2_negative_controls.py",
+        " M tools/verify_loading_runtime.py",
+        " M tools/verify_resource_loader.py",
+        "?? docs/M3.md",
+        "?? ghidra_scripts/HGExportSet.java",
+        "?? tests/test_evidence_safety.py",
+        "?? tests/test_resource_rebase.py",
+        "?? tools/hg_check_binding.py",
+        "?? tools/hg_evidence_safety.py",
+        "?? tools/verify_resource_rebase.py"
+      ]
+    },
+    "inputs": {
+      "raw": "af407cfa2fb82edde7f3db2da12d2b10e2794e73cce236e29f7df4631c084f04",
+      "post": "d15f9269bc823bf26b123026980acdf12ef7f5688be841e1cfc8003ff0317b4f",
+      "image": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+      "profile": "f8044a424b12000367e5009a5dd8612ca6f47f9f9c8bdffaa9d91330666034fe",
+      "emulator": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea"
+    },
+    "python_version": "3.14.9",
+    "command": [
+      "verify_loading_runtime.py"
+    ],
+    "limitations": [
+      "Sequential live sampling is not atomic; short states can be missed.",
+      "Observed loading states and loaded data support the bootstrap operation; no PC/breakpoint call trace.",
+      "No runtime claim for other worker jobs, AREA operation, all error paths, or mocked asset-fixup semantics."
+    ],
+    "runtime": {
+      "before": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 0
+      },
+      "after": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 0
+      },
+      "post_before": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 0
+      },
+      "post_after": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 0
+      },
+      "settings": {
+        "EnablePatches": false,
+        "EnableCheats": false,
+        "EnableWideScreenPatches": false,
+        "EnableNoInterlacingPatches": false
+      }
+    }
+  }
+}

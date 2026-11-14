@@ -14,7 +14,7 @@ from verify_loading_runtime import verify
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('elf','ps2dinfo','raw','post','image','profile','output'):p.add_argument('--'+name,type=Path,required=True)
-    a=p.parse_args();folder=ROOT/'local/m2/negative-controls';folder.mkdir(exist_ok=True)
+    a=p.parse_args();folder=ROOT/'local/m3/negative-controls';folder.mkdir(exist_ok=True)
     results=[];packet=json.loads((ROOT/'analysis/resource_loader/functions.json').read_text())
     ins=packet['functions'][0]['instructions'][0];word=bytearray.fromhex(ins['bytes']);word[0]^=1;ins['bytes']=word.hex()
     shared=shared_module(a.ps2dinfo)

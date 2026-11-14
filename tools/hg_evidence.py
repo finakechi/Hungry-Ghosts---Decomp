@@ -4,6 +4,7 @@
 Public output contains a small investigated code group, not whole-game listings.
 Refuses a wrong ELF and verifies every exported instruction against PT_LOAD bytes.
 """
+from hg_evidence_safety import select_export, receipt
 import argparse
 import hashlib
 import json
@@ -43,12 +44,12 @@ def main():
     if hashlib.sha256(data).hexdigest()!=EXPECTED:raise ValueError('wrong ELF')
     elf=elf32(data);functions=[]
     for entry,name in NAMES.items():
-        raw=checked_function(json.loads((a.export/f'{entry:08x}.json').read_text()),data,elf)
+        raw=checked_function(json.loads(select_export(a.export,entry).read_text()),data,elf)
         functions.append(dict(entry=f'0x{entry:08x}',name=name,complete=True,
                               body_ranges=raw['body_ranges'],instructions=raw['instructions'],
                               references=[{**r,'type':'call' if 'CALL' in r['type'] else 'unknown'} for r in raw['references_to']],
                               interpretation=MEANING[entry],
-                              verification_status='reconstructed-model-differential-tested',
+                              verification_status='original-byte-verified',
                               byte_sha256=raw['listing_sha256'],
                               source='src/disc_read.c',
                               questions=['External CDVD/IOP implementations and concurrent behavior not reconstructed.']))
@@ -61,7 +62,8 @@ def main():
                     retrieval_method='headless Java Ghidra API',truncated=False,
                     limitations=['Analyst-assigned names, not retail symbols.','Original Ghidra pseudocode retained in ignored local exports.',
                                  'Differential test uses mocked CDVD and a restricted interpreter.','No full-game equivalence or matching claim.']),
-                functions=functions,verification=dict(local_byte_check='passed',local_differential='evidence/disc-read-differential.json'))
+                functions=functions,verification=dict(local_byte_check='passed',local_differential='not-run-by-this-command'))
+    record['binding']=receipt(Path(__file__).resolve().parents[1],{'elf':a.elf,**{f'export_{e:08x}':select_export(a.export,e) for e in NAMES}},'original-bytes',['hg_evidence.py'],['No behavioral promotion.'])
     a.output.parent.mkdir(parents=True,exist_ok=True)
     for path,obj in [(a.output,record)]:
         with path.open('x') as fp:json.dump(obj,fp,indent=2);fp.write('\n')
@@ -74,7 +76,7 @@ def main():
     for f in inventory:
         entry=int(f['entry'],16)
         if entry in NAMES:
-            f['analyst_name']=NAMES[entry];f['status']='reconstructed-model-differential-tested'
+            f['analyst_name']=NAMES[entry];f['status']='original-byte-verified'
         elif f['entry'] in context:
             c=context[f['entry']]
             if c['body_ranges']!=f['body_ranges']:raise ValueError('context range mismatch')

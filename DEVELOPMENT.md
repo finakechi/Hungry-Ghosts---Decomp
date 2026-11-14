@@ -2,7 +2,8 @@
 
 Run commands from the repository root in a POSIX shell. Originals stay read-only;
 all extraction, databases, profiles, logs and build products go in ignored local/.
-Tools creating evidence use exclusive creation and refuse existing output files.
+HGExport now reserves a fresh destination and publishes a completion manifest.
+Legacy exports lack that guarantee; Python builders still use exclusive output files.
 Use fresh output names when repeating a check. Do not overwrite existing databases.
 
 ## Synthetic checks
@@ -240,3 +241,11 @@ python tools/hg_m2_negative_controls.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO
 The expected result is nine detected defects. A compile error or unexpected
 exception does not count as detecting a C behavioral defect. Positive source,
 retail media, BIOS and databases are never mutated by these controls.
+
+## M3 safety and reconstruction
+
+See [docs/M3.md](docs/M3.md) for current commands and limits. Select one explicit
+export snapshot; ambiguous multi-snapshot roots now fail. Runtime reanalysis CLI
+additionally requires `--emulator` and authenticates the full original image.
+`hg_check_binding.py --record RECORD --input LABEL PATH ...` checks current source
+and all labeled inputs against a bound receipt. JDK 21 is required by safety tests.

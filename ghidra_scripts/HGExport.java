@@ -20,14 +20,14 @@ public class HGExport extends GhidraScript {
         return s.toString();
     }
     private void save(Path p, Object data) throws Exception {
-        try (Writer w = Files.newBufferedWriter(p)) {
+        try (Writer w = Files.newBufferedWriter(p, StandardOpenOption.CREATE_NEW)) {
             new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(data, w);
         }
     }
     public void run() throws Exception {
         String[] args = getScriptArgs();
-        Path out = Paths.get(args[0]);
-        Files.createDirectories(out);
+        HGExportSet transaction = new HGExportSet(Paths.get(args[0]));
+        Path out = transaction.staging();
         Map<String,Object> meta = new LinkedHashMap<>();
         meta.put("language", currentProgram.getLanguageID().toString());
         meta.put("compiler_spec", currentProgram.getCompilerSpec().getCompilerSpecID().toString());
@@ -64,7 +64,7 @@ public class HGExport extends GhidraScript {
         save(out.resolve("map.json"), meta);
         save(out.resolve("functions.json"), inventory);
         // String references are investigation leads, not function names.
-        try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(out.resolve("strings.tsv")))) {
+        try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(out.resolve("strings.tsv"), StandardOpenOption.CREATE_NEW))) {
             for (Data d : currentProgram.getListing().getDefinedData(true)) {
                 if (!d.hasStringValue()) continue;
                 String value = String.valueOf(d.getValue()).replace("\n", "\\n").replace("\t", "\\t").replace("\r", "\\r");
@@ -79,7 +79,7 @@ public class HGExport extends GhidraScript {
         for (int i = 1; i < args.length; i++) {
             Address address = toAddr(Long.decode(args[i]));
             Function f = getFunctionContaining(address);
-            if (f == null) { println("No function at " + args[i]); continue; }
+            if (f == null) throw new IOException("Missing requested function " + args[i]);
             Map<String,Object> record = new LinkedHashMap<>();
             record.put("entry", addr(f.getEntryPoint())); record.put("name", f.getName());
             List<Object> ranges = new ArrayList<>();
@@ -105,6 +105,8 @@ public class HGExport extends GhidraScript {
             save(out.resolve(String.format("%08x.json", f.getEntryPoint().getOffset())), record);
         }
         decompiler.dispose();
+        monitor.checkCancelled();
+        transaction.finish();
         println("HG export: " + inventory.size() + " functions, language " + meta.get("language"));
     }
 }

@@ -38,4 +38,6 @@ void hg_area_finalize(HGResourceEnv *, uint32_t, uint32_t);       /* 00131dd0 */
  * Invalid phase values keep yielding, matching the original nonprogress loop.
  * This helper is not counted as another reconstructed retail function. */
 uint32_t hg_pack_bootstrap_step(HGResourceEnv *, uint32_t);
+/* 001385b0: linked resource address rebasing; 001389d0 remains external. */
+void hg_resource_rebase(HGResourceEnv *, uint32_t, uint32_t);
 #endif

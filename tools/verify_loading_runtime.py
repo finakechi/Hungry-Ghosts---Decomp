@@ -7,6 +7,7 @@ import struct
 import configparser
 from pathlib import Path
 from hg_identify import ISO,read_at
+from hg_evidence_safety import digest, receipt
 
 
 def u32(data,offset):return struct.unpack_from('<I',data,offset)[0]
@@ -17,6 +18,8 @@ def verify(raw,post,image,profile):
     for meta in [raw['metadata_before'],raw['metadata_after'],post['metadata_before'],post['metadata_after']]:
         if meta['serial']!='SCPS-15046' or meta['uuid'].lower()!='91aa4b28' or meta['status']!=0:
             raise ValueError('Runtime identity/status mismatch')
+    manifest=json.loads((Path(__file__).resolve().parents[1]/'evidence/builds/japan.json').read_text())
+    if digest(image)!=manifest['image']['sha256']:raise ValueError('Original image hash mismatch')
     with image.open('rb') as fp:
         iso=ISO(fp);rec=iso.files['/DATA/PACK.DAT'];base=rec['lba']*2048
         header=read_at(fp,base,2048);bulk_offset=u32(header,16);bulk_size=u32(header,20)
@@ -75,7 +78,7 @@ def verify(raw,post,image,profile):
                 expected_arena_end=f'0x{expected_end:08x}',arena_pointers_match=True,payload_magic_and_count_match=True,
                 flk5_header_word_08=dict(original=u32(first_payload,8),observed=u32(samples[0xb00000],8),
                     interpretation='Observed post-read mutation; full asset-fixup semantics are not reconstructed.'),
-                settings=settings,inputs='Original Japanese ISO fast boot; no gameplay input/save state; memory cards disabled.',
+                settings=settings,inputs='Saved capture reanalysis; no fresh run or input-history claim.',
                 raw_capture_sha256=hashlib.sha256(json.dumps(raw,sort_keys=True).encode()).hexdigest(),
                 limitations=['Sequential live sampling is not atomic; short states can be missed.',
                              'Observed loading states and loaded data support the bootstrap operation; no PC/breakpoint call trace.',
@@ -85,7 +88,10 @@ def verify(raw,post,image,profile):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('raw','post','image','profile','output'):p.add_argument('--'+name,type=Path,required=True)
+    p.add_argument('--emulator',type=Path,required=True,help='Executable used for the saved capture')
     a=p.parse_args();result=verify(json.loads(a.raw.read_text()),json.loads(a.post.read_text()),a.image,a.profile)
+    raw=json.loads(a.raw.read_text());post=json.loads(a.post.read_text())
+    result['binding']=receipt(Path(__file__).resolve().parents[1],{k:getattr(a,k) for k in ('raw','post','image','profile','emulator')},'saved-runtime',['verify_loading_runtime.py'],result['limitations'],dict(before=raw['metadata_before'],after=raw['metadata_after'],post_before=post['metadata_before'],post_after=post['metadata_after'],settings=result['settings']))
     with a.output.open('x') as fp:json.dump(result,fp,indent=2);fp.write('\n')
     print(f'PASS: active directory/bulk reads, loader phases, completion, {len(result["handles"])} handles and arena pointers match original PACK')
 

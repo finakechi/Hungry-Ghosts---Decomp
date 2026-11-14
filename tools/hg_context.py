@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verify the analyzed callers and retain hashes/ranges/direct-call addresses."""
+from hg_evidence_safety import select_export
 import argparse
 import hashlib
 import json
@@ -18,9 +19,7 @@ def main():
     if hashlib.sha256(data).hexdigest()!=EXPECTED:raise ValueError('wrong original ELF')
     elf=elf32(data);records=[]
     for entry,description in ENTRIES.items():
-        paths=sorted(a.export_root.glob(f'*/{entry:08x}.json'))
-        if not paths:raise ValueError(f'missing export {entry:08x}')
-        row=checked_function(json.loads(paths[0].read_text()),data,elf);calls=[]
+        row=checked_function(json.loads(select_export(a.export_root,entry).read_text()),data,elf);calls=[]
         for ins in row['instructions']:
             word=int.from_bytes(bytes.fromhex(ins['bytes']),'little');at=int(ins['address'],16)
             if word>>26==3:

@@ -226,3 +226,27 @@ uint32_t hg_area_read_step(HGResourceEnv *e,uint32_t task) {
     }
     return 0;
 }
+
+/* 001385b0. Rebase header +08/+0c, notify the aligned end, then update each
+ * linked record's +34 address. No inferred format checks or bounds are added.
+ * Header/callback alias effects and the two separate +34 stores are preserved. */
+void hg_resource_rebase(HGResourceEnv *e,uint32_t block,uint32_t base) {
+    uint32_t old_end=r32(e,block+0xc),old_base=r32(e,block+8);
+    w32(e,block+0xc,base+(old_end-old_base));
+    w32(e,block+8,base);
+    uint32_t end=r32(e,block+0xc);
+    if((end&31u)!=0)end=(end&0xffffffe0u)+32u;
+    call(e,0x1389d0,end,0,0,0);
+    for(;;) {
+        w32(e,block+0x34,r32(e,block+0x34)&0xffffc000u);
+        w32(e,block+0x34,r32(e,block+0x34)|base);
+        uint32_t product=r32(e,block+0x50)*r32(e,block+0x54)*4u;
+        /* Signed word divide by 256, truncating toward zero, without host
+         * signed overflow or implementation-defined uint-to-int conversion. */
+        uint32_t step=(product&0x80000000u) ? 0u-((0u-product)/256u) : product/256u;
+        uint32_t tag=r32(e,block);
+        base+=step;
+        if((tag&0xf0000000u)==0x60000000u)return;
+        block+=(tag&0xffffu)*16u+16u;
+    }
+}

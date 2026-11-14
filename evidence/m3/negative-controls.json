@@ -1,0 +1,66 @@
+{
+  "schema": "hg-negative-controls/v1",
+  "controls": [
+    {
+      "control": "changed original-byte row",
+      "detected": true,
+      "oracle": "PS2DInfo byte mismatch"
+    },
+    {
+      "control": "busy_gate",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "3d37e6dc6edc274738a4ee1274dbbaccb610455debcc7f3cc4f8482d86816dc2"
+    },
+    {
+      "control": "directory_sector_shift",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "3e82badc843a3e9214625cfd7c4e70a96aefbed04aecaf8f645733ea3bbb77f2"
+    },
+    {
+      "control": "completion_busy_clear",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "9bb4130402892699a24090eb5d94404516a14e7ad84442a9984a404f46fbc0d1"
+    },
+    {
+      "control": "member_handle_offset",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "53c243a767fbe13adcdfaf0bec966c81472c659709256c0574ce7100931f8ca2"
+    },
+    {
+      "control": "arena_alignment",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "955160e42d60843f39de697c0feb92d69f33c6b31e9252cae3d9401dc9ffbd4c"
+    },
+    {
+      "control": "area_cache_argument",
+      "detected": true,
+      "returncode": 1,
+      "oracle": "Original-instruction differential assertion",
+      "log_sha256": "fc38f38aef4827af081c46f9cba9cccdd560ca6dfc64cdb8fcce3e2ba590a6d5"
+    },
+    {
+      "control": "runtime_handle",
+      "detected": true,
+      "oracle": "Runtime resource handle mapping mismatch"
+    },
+    {
+      "control": "runtime_missing_activity",
+      "detected": true,
+      "oracle": "Required loading and completion transitions were not observed"
+    }
+  ],
+  "count": 9,
+  "result": "passed",
+  "source_sha256": "a29289d7bbbf754efe765fb8504fa95964c91b412ebd270a63dbb5c43cb88e79",
+  "safety": "Only disposable source/evidence/capture copies were mutated. Original media, source and databases were unchanged."
+}

@@ -32,6 +32,7 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
     case 0x103da0:return 0;
     case 0x1434e0:assert(++t->ticks<100);return 0;
     case 0x137ed0:return a+32;
+    case 0x1389d0:return 0;
     case 0x1041e0:assert(a==2);return 0;
     default:assert(!"Unexpected external operation");return 0;
     }
@@ -55,5 +56,7 @@ int main(void) {
     assert(load(&t,0x3f4d3c,4)==0xb01000 && memcmp(t.ram+0xb00000,"TEST",4)==0);
     store(&t,0xa87814,4,32);memset(t.ram+0xa88000,0xff,32);hg_area_finalize(&e,0xa87800,2048);
     for(unsigned i=0;i<32;i++)assert(t.ram[0xa88000+i]==0);
+    store(&t,0xb00000,4,0x60000000);store(&t,0xb00008,4,0x100);store(&t,0xb0000c,4,0x121);
+    hg_resource_rebase(&e,0xb00000,0x3200);assert(load(&t,0xb00008,4)==0x3200);
     free(t.ram);puts("PASS: synthetic request/worker/PACK/CDVD and AREA finalization under sanitizers");return 0;
 }
