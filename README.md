@@ -6,12 +6,13 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
-M1 identifies three local disc builds, establishes an isolated Ghidra executable
-map, inventories 4,556 automatic function candidates, and reconstructs four
-connected disc-read functions (1,132 original bytes). They pass 32 synthetic tests
-and 1,448 differential checks with mocked CDVD operations. Runtime inspection
-confirms their code bytes and initialized file records; gameplay equivalence and
-byte matching remain untested. No final rebuild/port track has been selected.
+M1 establishes verified build identities and four disc-read functions. M2 adds
+11 scheduler/request/PACK/AREA functions, including a complete bootstrap loading
+operation with explicit dependencies. Combined coverage is 15 functions / 3,868
+original bytes, with 49 synthetic tests, instruction differential checks,
+sanitizers and negative controls. PCSX2 captures substantiate actual bootstrap
+loading and code/data identity. Full-game equivalence and byte matching remain
+untested. No final rebuild/port track has been selected.
 
 ```sh
 python -m unittest discover -s tests -v

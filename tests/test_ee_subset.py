@@ -44,5 +44,21 @@ class SubsetTests(unittest.TestCase):
         self.assertEqual(sx(0xffffffff,32),-1)
         self.assertEqual(sx(0x80000000,32),-2147483648)
 
+    def test_halfword_load_signedness_and_store_width(self):
+        m=self.run_words([0x84820000,0xa4820002,0x94830000,0x03e00008,0])
+        m.reg[4]=0x8000;m.put(0x8000,b'\0\x80\xaa\xbb')
+        self.assertEqual(m.run(0x1000),-32768)
+        self.assertEqual(m.reg[3],32768);self.assertEqual(m.get(0x8002,2),b'\0\x80')
+
+    def test_andi_zero_extends_immediate_and_tail_jump_preserves_link(self):
+        m=self.run_words([0x3082ffff,0x08000800,0x24420001])
+        m.reg[4]=0xffff00008000
+        m.hooks[0x2000]=lambda cpu:cpu.reg[2]
+        self.assertEqual(m.run(0x1000),32769)
+
+    def test_sltu_compares_full_unsigned_doubleword(self):
+        m=self.run_words([0x0085102b,0x03e00008,0]);m.reg[4]=(1<<64)-1;m.reg[5]=1
+        self.assertEqual(m.run(0x1000),0)
+
 
 if __name__=='__main__':unittest.main()

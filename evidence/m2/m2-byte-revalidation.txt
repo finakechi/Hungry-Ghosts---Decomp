@@ -1,0 +1,1 @@
+{"elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61", "endianness": "little", "instructions_unknown": 0, "instructions_verified": 684, "schema": "ps2-elf-byte-check/v1", "scope": "file-backed PT_LOAD bytes only; no semantic or runtime verification", "segments": 1}

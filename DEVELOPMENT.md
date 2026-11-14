@@ -150,3 +150,93 @@ emulator normally after the capture; do not terminate unrelated emulator session
 For actual behavioral validation, use the official debugger and reproducible
 breakpoint/input sequences with recorded registers/memory around the four entries.
 That is the next verification level, not an achieved part of M1.
+
+## M2: connected resource-loading checks
+
+Use the original inputs and environment variables from the earlier sections.
+The actual shared-tool revision used is
+`2e4a226e00d33ab35391aacade71b55826e5f52f`. It is newer than the supplied
+af62918c revision; tools/tests are unchanged between them. The older unrelated
+local PS2DInfo checkout was not modified. An ignored reference checkout supplies
+the existing tools. If absent, clone it into local/references/PS2DInfo, inspect its
+status, and select that revision; never reset an existing user checkout.
+
+The exact final test commands used, with private paths represented by variables:
+
+```sh
+python "$HG_PS2DINFO/tools/check_local_inputs.py" --manifest evidence/local-inputs.json
+python "$HG_PS2DINFO/tools/verify_elf_evidence.py" --require-all-bytes "$HG_ELF" analysis/disc_read/functions.json
+python "$HG_PS2DINFO/tools/verify_elf_evidence.py" --require-all-bytes "$HG_ELF" analysis/resource_loader/functions.json
+python "$HG_PS2DINFO/tools/validate_evidence.py" analysis/disc_read/functions.json
+python "$HG_PS2DINFO/tools/validate_evidence.py" analysis/resource_loader/functions.json
+python -m unittest discover -s tests -v
+python tools/verify_disc_read.py --elf "$HG_ELF" --output local/m2/recheck-m1.json
+python tools/verify_resource_loader.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --output local/m2/recheck-resource.json
+cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/resource_sanitizer.c src/resource_loader.c src/disc_read.c -o local/m2/resource_sanitizer
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 local/m2/resource_sanitizer
+python -m compileall -q tools tests
+git diff --check
+```
+
+`HG_ELF` and `HG_JAPAN_ISO` must be exported for the shared input checker (or placed
+in its ignored literal config). No extra Python packages are needed. Synthetic
+tests require neither shared repository nor retail files; the two retail
+differential commands are separate. M2 adds the observed integer instructions to
+the strict M1 interpreter and directly uses the shared ELF mapping parser.
+All kernel/CDVD/fixup operations in differential tests are mocks. The harness
+compares defined external arguments, descriptors, ordinary RAM and scratchpad,
+excluding original stack scratch bytes and undefined return registers.
+
+To reproduce Ghidra discovery, first close the M1 working database and copy its
+.gpr and .rep into a **new** M2 project name (the copy procedure above applies).
+Do not replace either preserved M1 project. Then use the separate copy:
+
+```sh
+"$HG_GHIDRA/support/analyzeHeadless" local/ghidra HungryGhosts_JP_M2_Repro -process SCPS_150.46 -noanalysis -scriptPath ghidra_scripts -preScript HGDiscoverM2.java -postScript HGExport.java local/m2/repro/exports/original 0x001431f0 0x00143360 0x001434f0 0x00130150 0x00130170 0x00130220 0x001303e0 0x001306a0 0x0012fbc0 0x00131810 0x00131dd0 0x00121810 0x00143240 0x001432c0 0x0011df10 0x0011df80 0x00130900 0x00119ac8 -log local/m2/repro/ghidra.log -scriptlog local/m2/repro/ghidra-script.log
+python tools/hg_m2_evidence.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --exports local/m2/repro/exports --output local/m2/repro/functions.json
+python tools/hg_m2_context.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --exports local/m2/repro/exports --output local/m2/repro/context.json
+```
+
+Create the output/log directories first. HGDiscoverM2 only discovers the two
+missing original entries. A later HGAnnotateM2 run on this copy assigns analyst
+names; it does not claim the C host environment is the original ABI. Main memory
+blocks are unchanged from M1. The current raw Ghidra exports stay in ignored local/.
+
+For runtime activity, create a fresh profile from the M1 isolated INI, with all
+optional patches still false and PINESlot changed to **28047**. As above,
+`-datapath` appends PCSX2/. M2 used local/m2/runtime/PCSX2/inis/PCSX2.ini and an
+ignored BIOS link. Start the sampler in one shell before launching the emulator
+in another shell. It waits up to 30 seconds for original serial/CRC identity:
+
+```sh
+python tools/hg_loading_capture.py --socket "$HG_PINE_SOCKET" --output local/m2/repro/boot-loading-raw.json --seconds 18 --hz 120
+```
+
+```sh
+"$HG_PCSX2" -datapath "$PWD/local/m2/runtime" -logfile "$PWD/local/m2/repro/pcsx2.log" -batch -fastboot -- "$HG_JAPAN_ISO"
+```
+
+Do not supply gameplay input or a save state. After boot sampling has completed:
+
+```sh
+python tools/hg_pine_read.py --socket "$HG_PINE_SOCKET" --output local/m2/repro/post-loading-raw.json --range 0x3f3b00 2048 --range 0x3f4300 32 --range 0xb00000 16 --range 0x3f4d3c 36 --range 0x3f8e00 80 --range 0x3eace0 72
+python tools/verify_loading_runtime.py --raw local/m2/repro/boot-loading-raw.json --post local/m2/repro/post-loading-raw.json --image "$HG_JAPAN_ISO" --profile local/m2/runtime/PCSX2/inis/PCSX2.ini --output local/m2/repro/runtime-verification.json
+python tools/hg_loading_code_check.py --socket "$HG_PINE_SOCKET" --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --record analysis/disc_read/functions.json --record analysis/resource_loader/functions.json --private-output local/m2/repro/runtime-code-raw.json --output local/m2/repro/runtime-code-check.json
+```
+
+Raw captures remain local. The runtime verifier checks actual loading phases,
+directory/bulk requests, original directory bytes, calculated handles and arena
+pointers. It records the transformed FLK5 +08 field rather than claiming it is
+unchanged. It rejects missing observations; rerun a fresh capture if the relevant
+operation was missed. Sampling is sequential and is not a breakpoint/PC trace.
+Stop only the emulator instance that this session created after its captures.
+
+Negative controls run offline on disposable copies:
+
+```sh
+python tools/hg_m2_negative_controls.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --raw local/m2/repro/boot-loading-raw.json --post local/m2/repro/post-loading-raw.json --image "$HG_JAPAN_ISO" --profile local/m2/runtime/PCSX2/inis/PCSX2.ini --output local/m2/repro/negative-controls.json
+```
+
+The expected result is nine detected defects. A compile error or unexpected
+exception does not count as detecting a C behavioral defect. Positive source,
+retail media, BIOS and databases are never mutated by these controls.

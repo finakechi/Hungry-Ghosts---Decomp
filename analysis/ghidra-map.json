@@ -247,10 +247,11 @@
       "mapped": false
     }
   ],
-  "function_count": 4556,
+  "function_count": 4558,
   "limitations": [
     "Extension-generated mirror/BIOS maps are retained as tool output and are not validated hardware maps.",
     "Address spaces distinguish nonloaded ELF metadata overlays from EE ram.",
     "AREA overlays are not imported into this baseline map."
-  ]
+  ],
+  "milestone": "M2"
 }

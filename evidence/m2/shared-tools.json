@@ -1,0 +1,15 @@
+{
+  "observation_date": "2026-11-14",
+  "reported_revision": "af62918c7b2d1b0a4c435fc2176de14111c69e68",
+  "observed_remote_main": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+  "reported_revision_is_ancestor": true,
+  "tools_unchanged_since_reported_revision": true,
+  "tools": {
+    "verify_elf_evidence.py": "a11914de20492520565735ef4092d55126adafcd126d97271d6ff9819203fd1c",
+    "validate_evidence.py": "66fb9db3fae3675ca55232306363d6db8914f6aa28353b379caa52cc5be4e505",
+    "check_local_inputs.py": "29fc302f4ce2707fa2d9639fa36a375f0b98f8c5c9ec1298601aba56c247038e",
+    "ingest_evidence.py": "157cfa027e3534b38012d045f33edba0038d1f4fbaa607fdb224ad86db3e1ef6"
+  },
+  "usage": "Existing shared implementations run from ignored reference checkout. No generic implementation copied into this repository.",
+  "original_local_checkout": "Unchanged, including its unrelated untracked file; not pulled or reset."
+}

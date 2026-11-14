@@ -2,12 +2,12 @@
   "schema": "hg-function-inventory/v1",
   "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
   "ghidra_version": "12.1.4",
-  "discovery": "Automatic Ghidra analysis of boot ELF after RAM-map correction; not an exhaustive function boundary oracle.",
-  "count": 4556,
+  "discovery": "M1 analysis plus two explicitly discovered M2 entries; automatic candidates are not verified function totals.",
+  "count": 4558,
   "status_counts": {
-    "analyzed-partial-byte-checked": 8,
-    "auto-discovered-unreviewed": 4544,
-    "reconstructed-model-differential-tested": 4
+    "analyzed-partial-byte-checked": 12,
+    "auto-discovered-unreviewed": 4531,
+    "reconstructed-model-differential-tested": 15
   },
   "functions": [
     {
@@ -8981,9 +8981,10 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "analyzed-partial-byte-checked",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Memset-style library dependency, including MMI byte replication; not reconstructed here."
     },
     {
       "entry": "0x00119b88",
@@ -9929,7 +9930,7 @@
     },
     {
       "entry": "0x0011d830",
-      "name": "FUN_0011d830",
+      "name": "hg_main_loop_candidate",
       "body_bytes": 464,
       "body_ranges": [
         {
@@ -10081,6 +10082,25 @@
       "gameplay_runtime_verification": "not-tested"
     },
     {
+      "entry": "0x0011df10",
+      "name": "hg_vblank_resource_wake_candidate",
+      "body_bytes": 112,
+      "body_ranges": [
+        {
+          "start": "0x0011df10",
+          "end_exclusive": "0x0011df80"
+        }
+      ],
+      "calls": [
+        "0x00104e10",
+        "0x0010cca0"
+      ],
+      "status": "analyzed-partial-byte-checked",
+      "byte_matching": "not-tested",
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Frame interrupt increments counters and wakes active normal resource thread."
+    },
+    {
       "entry": "0x0011df80",
       "name": "FUN_0011df80",
       "body_bytes": 72,
@@ -10094,9 +10114,10 @@
         "0x00104e10",
         "0x0010cca0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "analyzed-partial-byte-checked",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Other interrupt wakes priority-kind-100 context; normal worker is not used here."
     },
     {
       "entry": "0x0011dfd0",
@@ -11386,9 +11407,10 @@
         "0x00147f10",
         "0x002cdef0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "analyzed-partial-byte-checked",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Main callback phase 0 requests (kind=0,id=0); phase 1 waits for 003eacec to clear."
     },
     {
       "entry": "0x001219e0",
@@ -13964,7 +13986,7 @@
     },
     {
       "entry": "0x0012fbc0",
-      "name": "FUN_0012fbc0",
+      "name": "hg_area_index",
       "body_bytes": 40,
       "body_ranges": [
         {
@@ -13973,13 +13995,16 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_area_index",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x0012fbf0",
-      "name": "FUN_0012fbf0",
+      "name": "hg_lookup_disc_files",
       "body_bytes": 256,
       "body_ranges": [
         {
@@ -14117,7 +14142,7 @@
     },
     {
       "entry": "0x00130150",
-      "name": "FUN_00130150",
+      "name": "hg_resource_request_raw",
       "body_bytes": 24,
       "body_ranges": [
         {
@@ -14128,13 +14153,16 @@
       "calls": [
         "0x00143360"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_request_raw",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x00130170",
-      "name": "FUN_00130170",
+      "name": "hg_resource_request",
       "body_bytes": 164,
       "body_ranges": [
         {
@@ -14149,13 +14177,45 @@
       "calls": [
         "0x00143360"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_request",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
+    },
+    {
+      "entry": "0x00130220",
+      "name": "hg_resource_worker",
+      "body_bytes": 448,
+      "body_ranges": [
+        {
+          "start": "0x00130220",
+          "end_exclusive": "0x001303e0"
+        }
+      ],
+      "calls": [
+        "0x0012fcf0",
+        "0x0012fde0",
+        "0x0012fe90",
+        "0x0012ff20",
+        "0x0012ffa0",
+        "0x00130020",
+        "0x001306a0",
+        "0x00130900",
+        "0x00131420",
+        "0x001434f0"
+      ],
+      "status": "reconstructed-model-differential-tested",
+      "byte_matching": "not-tested",
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_worker",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x001303e0",
-      "name": "FUN_001303e0",
+      "name": "hg_pack_special_step",
       "body_bytes": 652,
       "body_ranges": [
         {
@@ -14214,13 +14274,16 @@
         "0x00137ed0",
         "0x00156a50"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_pack_special_step",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x001306a0",
-      "name": "FUN_001306a0",
+      "name": "hg_pack_bootstrap",
       "body_bytes": 584,
       "body_ranges": [
         {
@@ -14247,13 +14310,16 @@
         "0x00137ed0",
         "0x001434e0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_pack_bootstrap",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x00130900",
-      "name": "FUN_00130900",
+      "name": "hg_load_pack_directory_candidate",
       "body_bytes": 2796,
       "body_ranges": [
         {
@@ -14320,7 +14386,7 @@
         "0x001434e0"
       ],
       "status": "analyzed-partial-byte-checked",
-      "analyst_description": "PACK directory loader candidate",
+      "analyst_description": "General PACK loader dependency; selected mode 8 calls AREA read helper before directory load.",
       "byte_matching": "not-tested",
       "gameplay_runtime_verification": "not-tested"
     },
@@ -14362,7 +14428,7 @@
     },
     {
       "entry": "0x00131810",
-      "name": "FUN_00131810",
+      "name": "hg_area_read_step",
       "body_bytes": 220,
       "body_ranges": [
         {
@@ -14380,14 +14446,17 @@
         "0x001319c0",
         "0x00131dd0"
       ],
-      "status": "analyzed-partial-byte-checked",
+      "status": "reconstructed-model-differential-tested",
       "analyst_description": "AREA read path",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_area_read_step",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x001318f0",
-      "name": "FUN_001318f0",
+      "name": "hg_read_poll",
       "body_bytes": 184,
       "body_ranges": [
         {
@@ -14418,7 +14487,7 @@
     },
     {
       "entry": "0x001319c0",
-      "name": "FUN_001319c0",
+      "name": "hg_read_setup",
       "body_bytes": 28,
       "body_ranges": [
         {
@@ -14434,7 +14503,7 @@
     },
     {
       "entry": "0x001319e0",
-      "name": "FUN_001319e0",
+      "name": "hg_read_continue",
       "body_bytes": 492,
       "body_ranges": [
         {
@@ -14479,7 +14548,7 @@
     },
     {
       "entry": "0x00131bf0",
-      "name": "FUN_00131bf0",
+      "name": "hg_read_start",
       "body_bytes": 428,
       "body_ranges": [
         {
@@ -14521,7 +14590,7 @@
     },
     {
       "entry": "0x00131dd0",
-      "name": "FUN_00131dd0",
+      "name": "hg_area_finalize",
       "body_bytes": 96,
       "body_ranges": [
         {
@@ -14533,10 +14602,13 @@
         "0x001041e0",
         "0x00119ac8"
       ],
-      "status": "analyzed-partial-byte-checked",
+      "status": "reconstructed-model-differential-tested",
       "analyst_description": "AREA post-read helper",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_area_finalize",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x00131e30",
@@ -18902,7 +18974,7 @@
     },
     {
       "entry": "0x001431f0",
-      "name": "FUN_001431f0",
+      "name": "hg_resource_init",
       "body_bytes": 76,
       "body_ranges": [
         {
@@ -18913,9 +18985,12 @@
       "calls": [
         "0x00119ac8"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_init",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x00143240",
@@ -18928,9 +19003,10 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "analyzed-partial-byte-checked",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Main-context callback dispatch, separate from kernel resource thread execution."
     },
     {
       "entry": "0x001432c0",
@@ -18943,9 +19019,10 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "analyzed-partial-byte-checked",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_description": "Registers main callback and resets its context."
     },
     {
       "entry": "0x00143300",
@@ -18964,7 +19041,7 @@
     },
     {
       "entry": "0x00143360",
-      "name": "FUN_00143360",
+      "name": "hg_resource_schedule",
       "body_bytes": 380,
       "body_ranges": [
         {
@@ -18976,9 +19053,12 @@
         "0x00103d60",
         "0x00103d80"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_schedule",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x001434e0",
@@ -18997,7 +19077,7 @@
     },
     {
       "entry": "0x001434f0",
-      "name": "FUN_001434f0",
+      "name": "hg_resource_finish",
       "body_bytes": 52,
       "body_ranges": [
         {
@@ -19008,9 +19088,12 @@
       "calls": [
         "0x00103da0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-tested",
+      "analyst_name": "hg_resource_finish",
+      "milestone": "M2",
+      "evidence": "analysis/resource_loader/functions.json"
     },
     {
       "entry": "0x00143530",

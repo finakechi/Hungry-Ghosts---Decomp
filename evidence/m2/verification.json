@@ -1,0 +1,153 @@
+{
+  "schema": "hg-m2-verification/v1",
+  "observation_date": "2026-11-14",
+  "milestone": "M2",
+  "milestone_complete": true,
+  "scope": "Complete bootstrap resource request/worker/PACK control path with explicit dependencies; AREA helpers reconstructed and model tested.",
+  "coverage": {
+    "new_functions": 11,
+    "new_instruction_rows": 684,
+    "new_bytes": 2736,
+    "total_functions": 15,
+    "total_instruction_rows": 967,
+    "total_bytes": 3868
+  },
+  "acceptance": {
+    "1": {
+      "satisfied": true,
+      "evidence": "M1 revalidation logs and m1-differential.json"
+    },
+    "2": {
+      "satisfied": true,
+      "evidence": "analysis/resource_loader/context.json and README.md"
+    },
+    "3": {
+      "satisfied": true,
+      "evidence": "src/resource_loader.c + src/disc_read.c"
+    },
+    "4": {
+      "satisfied": true,
+      "evidence": "synthetic-tests.txt and resource-differential.json"
+    },
+    "5": {
+      "satisfied": true,
+      "evidence": "m2-byte-revalidation.txt and negative-controls.json"
+    },
+    "6": {
+      "satisfied": true,
+      "evidence": "runtime-loading.json and runtime-code.json"
+    },
+    "7": {
+      "satisfied": true,
+      "evidence": "DEVELOPMENT.md and saved tools"
+    },
+    "8": {
+      "satisfied": true,
+      "evidence": "MASTER_HANDOFF.md + START_HERE.md v2.0"
+    }
+  },
+  "checks": [
+    {
+      "command": "python -m unittest discover -s tests -v",
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "log": "evidence/m2/synthetic-tests.txt"
+    },
+    {
+      "command": "python \"$HG_PS2DINFO/tools/check_local_inputs.py\" --manifest evidence/local-inputs.json",
+      "outcome": "passed",
+      "log": "evidence/m2/local-input-check.txt"
+    },
+    {
+      "command": "python \"$HG_PS2DINFO/tools/verify_elf_evidence.py\" --require-all-bytes \"$HG_ELF\" analysis/disc_read/functions.json",
+      "outcome": "passed",
+      "instructions": 283
+    },
+    {
+      "command": "python \"$HG_PS2DINFO/tools/verify_elf_evidence.py\" --require-all-bytes \"$HG_ELF\" analysis/resource_loader/functions.json",
+      "outcome": "passed",
+      "instructions": 684
+    },
+    {
+      "command": "python \"$HG_PS2DINFO/tools/validate_evidence.py\" <each M1/M2 packet>",
+      "outcome": "both passed"
+    },
+    {
+      "command": "python tools/verify_disc_read.py --elf \"$HG_ELF\" --output <fresh output>",
+      "outcome": "passed",
+      "checks": 1448,
+      "evidence": "evidence/m2/m1-differential.json"
+    },
+    {
+      "command": "python tools/verify_resource_loader.py --elf \"$HG_ELF\" --ps2dinfo \"$HG_PS2DINFO\" --output <fresh output>",
+      "outcome": "passed",
+      "randomized_invocations": 970,
+      "end_to_end_sequences": 12
+    },
+    {
+      "command": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/resource_sanitizer.c src/resource_loader.c src/disc_read.c -o local/m2/resource_sanitizer",
+      "outcome": "passed"
+    },
+    {
+      "command": "ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 local/m2/resource_sanitizer",
+      "outcome": "passed",
+      "log": "evidence/m2/sanitizers.txt"
+    },
+    {
+      "command": "python tools/hg_m2_negative_controls.py [arguments in DEVELOPMENT.md]",
+      "outcome": "passed",
+      "defects_detected": 9
+    },
+    {
+      "command": "python tools/verify_loading_runtime.py [arguments in DEVELOPMENT.md]",
+      "outcome": "passed",
+      "samples": 2147
+    },
+    {
+      "command": "python tools/hg_loading_code_check.py [arguments in DEVELOPMENT.md]",
+      "outcome": "passed",
+      "runtime_instruction_words": 967
+    },
+    {
+      "command": "python -m compileall -q tools tests",
+      "outcome": "passed"
+    },
+    {
+      "command": "git diff --check",
+      "outcome": "passed"
+    },
+    {
+      "command": "Export staged index with git checkout-index; run full synthetic suite and ASan/UBSan C integration from that export",
+      "outcome": "passed",
+      "tests_passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "unit_log_sha256": "5499397f9df4181eb756f96ce81aae69f692c23eda971a118468edee08ab1abf",
+      "sanitizer_log_sha256": "b13f915426bccf2b63d6ee56ed358a903e43e1550fc87ff3236731318f8ffc57"
+    }
+  ],
+  "toolchain": {
+    "python": "3.14.9",
+    "compiler": "cc (GCC) 16.2.1 20260810",
+    "ghidra": "12.1.4 / EE Reloaded 2.1.38 / r5900:LE:32:default",
+    "pcsx2": "2.8.2 AppImage"
+  },
+  "source_sha256": {
+    "src/resource_loader.c": "d96c944a69269dc5ad6ffdaaaab6216ede04e9507744df83d7d563f40c63a7ac",
+    "src/resource_loader.h": "94b4bad6be59300b68e457c04a109fd0ec34fa47631cc9948aa992ac53d8c930",
+    "src/disc_read.c": "8bd355a99e772cabaa72aaddd27f92e46c6c2e9fa58d6b00bd6329dda890d3d2",
+    "tools/ee_subset.py": "67782f88ab1de4078079c8e4ecbdfae00c4f64be7b0d554789b25fdd8e2dbf94"
+  },
+  "limits": [
+    "External kernel/CDVD/fixup operations are mocks in differential tests.",
+    "No concurrent or overlapping read-context destination alias equivalence.",
+    "Runtime is sequential state/data observation, not PC traces; AREA runtime and general PACK jobs remain future work.",
+    "Remote CI not run; no byte matching or full-game equivalence claimed."
+  ],
+  "shutdown": {
+    "decision": "withheld while pre-existing unsaved editor work remains",
+    "poweroff_attempted": false,
+    "reason": "Kate reports windowModified=true. Unrelated editor was not saved or closed."
+  }
+}

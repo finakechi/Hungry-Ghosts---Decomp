@@ -1,0 +1,1 @@
+PASS: synthetic request/worker/PACK/CDVD and AREA finalization under sanitizers

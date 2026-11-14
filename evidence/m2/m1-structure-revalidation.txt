@@ -1,0 +1,1 @@
+OK analysis/disc_read/functions.json: structurally valid (NOT binary-verified)

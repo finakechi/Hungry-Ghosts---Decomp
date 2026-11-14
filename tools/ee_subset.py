@@ -1,4 +1,4 @@
-"""Strict integer R5900 subset for the four disc-read functions, not an emulator.
+"""Strict integer R5900 subset for investigated M1/M2 functions, not an emulator.
 
 Supports only observed operations; unknown opcodes and unmapped reads fail.
 Models word sign extension, low 64-bit arithmetic, 128-bit lq/sq, and delay slots.
@@ -74,27 +74,33 @@ class Machine:
                 elif fn == 0x21: wordreg(rd,a+b)
                 elif fn == 0x23: wordreg(rd,a-b)
                 elif fn == 0x25: self.setreg(rd,a|b)
+                elif fn == 0x24: self.setreg(rd,a&b)
+                elif fn == 0x2a: self.setreg(rd,int(sx(a,64)<sx(b,64)))
+                elif fn == 0x2b: self.setreg(rd,int(a<b))
                 elif fn == 0x2d: self.setreg(rd,a+b)
                 else: raise ValueError(f'unsupported SPECIAL {word:08x} at {pc:08x}')
             elif op == 1 and rt == 1:
                 target = pc + 4 + imm*4 if sx(a,64) >= 0 else pc + 8
-            elif op == 3:
+            elif op in (2,3):
                 target = ((pc+4) & 0xf0000000) | ((word & 0x3ffffff) << 2)
-                self.setreg(31,pc+8)
+                if op == 3:self.setreg(31,pc+8)
             elif op in (4,5):
                 take = a == b if op == 4 else a != b
                 target = pc+4+imm*4 if take else pc+8
             elif op == 9: wordreg(rt,a+imm)
+            elif op == 10: self.setreg(rt,int(sx(a,64)<imm))
             elif op == 11: self.setreg(rt, int(a < (imm & MASK64)))
+            elif op == 12:self.setreg(rt,a & (word&0xffff))
+            elif op == 13:self.setreg(rt,a | (word&0xffff))
             elif op == 15: wordreg(rt,(word & 0xffff)<<16)
-            elif op in (0x20,0x24,0x23,0x37,0x1e):
+            elif op in (0x20,0x24,0x21,0x25,0x23,0x37,0x1e):
                 address = (a+imm) & 0xffffffff
-                size = {0x20:1,0x24:1,0x23:4,0x37:8,0x1e:16}[op]
+                size = {0x20:1,0x24:1,0x21:2,0x25:2,0x23:4,0x37:8,0x1e:16}[op]
                 v = self.load(address,size)
                 if op == 0x1e: self.reg[rt] = v if rt else 0
-                else: self.setreg(rt,sx(v,size*8) if op in (0x20,0x23) else v)
-            elif op in (0x28,0x2b,0x3f,0x1f):
-                size = {0x28:1,0x2b:4,0x3f:8,0x1f:16}[op]
+                else: self.setreg(rt,sx(v,size*8) if op in (0x20,0x21,0x23) else v)
+            elif op in (0x28,0x29,0x2b,0x3f,0x1f):
+                size = {0x28:1,0x29:2,0x2b:4,0x3f:8,0x1f:16}[op]
                 self.store((a+imm)&0xffffffff,self.reg[rt],size)
             else:
                 raise ValueError(f'unsupported instruction {word:08x} at {pc:08x}')

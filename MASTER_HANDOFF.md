@@ -1,9 +1,171 @@
 # Hungry Ghosts — master handoff
 
-**Version 1.0 — 2026-11-14, America/New_York.** This and START_HERE.md describe the
-same milestone. The long-term objective is executable reverse engineering of the
-entire original Japanese game. The final target (matching decompilation, functional
-reconstruction, static recompilation, or native port) remains undecided.
+**Version 2.0 — 2026-11-14, America/New_York.** Synchronized with START_HERE.md.
+The long-term objective remains executable decompilation of the original Japanese
+game. No matching, static-recompilation or native-port outcome has been selected.
+
+## Current M2 result
+
+M2 reconstructs a complete bootstrap resource-loading control path with explicit
+kernel/CDVD/fixup dependencies, plus the connected AREA read/finalization helpers.
+**11 additional functions, 684 instructions / 2,736 original bytes** are now
+reconstructed. Combined M1+M2 coverage is **15 functions, 967 instructions /
+3,868 bytes**; no whole-game percentage or byte match is implied.
+
+Implementation/evidence commit: **pending local finalization**.
+Branch: `research/m2-resource-loader`, based on verified M1
+`d67d8ef1aa06b347e101c5ce3af71b811f368351`. The initial working tree was clean.
+No user changes were replaced. GitHub read access works; remote main remained
+`d3cc12e7cffd4bcbdd07a742a0e2f0423042b884`, with no open PRs when checked.
+No push, PR, merge or publication was performed.
+
+### Revalidation and shared tooling
+
+The original ISO and ELF hashes/sizes passed PS2DInfo's input verifier. M1's 283
+instruction rows passed its current ELF-byte verifier, its original 32 synthetic
+tests passed, and all 1,448 M1 differential checks passed again after the M2
+interpreter extensions. [M2 evidence](evidence/m2/) preserves the actual results.
+
+The original local PS2DInfo checkout and its unrelated untracked file were left
+untouched. An ignored reference checkout verified remote main at
+`2e4a226e00d33ab35391aacade71b55826e5f52f`, newer than the supplied
+`af62918c7b2d1b0a4c435fc2176de14111c69e68`. The supplied revision is an ancestor;
+tools/tests have no differences between them. M2 uses the existing shared
+`verify_elf_evidence.py`, `validate_evidence.py` and `check_local_inputs.py` rather
+than adding generic replacements. [Pinned hashes](evidence/m2/shared-tools.json).
+M1 compatibility tools remain; no generic shared implementation was copied here.
+
+Readelf confirms no .mdebug, an empty .symtab/.strtab, and the same Metrowerks
+compiler comment. No usable retail debug symbols or matching toolchain emerged.
+
+### Established operation and new source
+
+Main `0011d830` registers callback `00121810` via `001432c0`, then dispatches it
+through `00143240`. Callback phase 0 requests kind 0 / directory 0 via `00130150`.
+The request tail-jumps to `00143360`, carrying worker entry `00130220`. This
+creates/starts a normal EE kernel thread; the main-context dispatcher itself is
+not the resource thread scheduler. Frame interrupt `0011df10` wakes the normal
+thread while its active halfword is 1. The recovered worker's job 0 calls
+`001306a0`, which reads a PACK directory, runs `001303e0`, reads its bulk range,
+publishes resource handles and updates arena pointers through M1's read group.
+The worker clears request-busy, then `001434f0` clears active and exits/deletes
+the thread. [Byte-checked context and edges](analysis/resource_loader/context.json).
+
+[Source](src/resource_loader.c), [API/layout](src/resource_loader.h),
+[full instruction evidence](analysis/resource_loader/functions.json), and
+[detailed semantics/dependencies](analysis/resource_loader/README.md) preserve:
+
+- `001431f0` init; `00143360` thread scheduling; `001434f0` completion.
+- `00130150` raw request; `00130170` ID-remapping request; `00130220` worker.
+- `001303e0` special-member phases; `001306a0` complete bootstrap PACK loader.
+- `0012fbc0` AREA selection; `00131810` AREA read/poll; `00131dd0` finalization.
+
+The AREA relationship is genuine: general PACK loader `00130900` calls the AREA
+helper for mode 8. The helper reads a selected AREA file via M1, then performs
+FlushCache(2) and a saved-header-size zero-tail call. Its real runtime use beyond
+bootstrap was not observed; its reconstruction is synthetic/differential tested.
+The general PACK loader, other worker loaders, codecs, fixups and kernel/IOP
+implementations remain explicit dependencies, not claimed completed source.
+
+Original widths, signedness, tail/indirect calls, descriptor layouts, delay slots,
+counter wrap, busy rejection, unchecked CreateThread failure and post-call reloads
+are preserved. The extra C environment, memory bridge and resumable bootstrap
+helper are host testing adaptations. They do not replace real threads, interrupts,
+or guarantee concurrent/overlapping-buffer equivalence.
+
+### Runtime evidence of actual loading
+
+Isolated PCSX2 2.8.2 fast-booted the hash-verified original ISO, optional patches
+disabled, no gameplay input/save state, memory cards disabled. Read-only PINE
+collected **2,147 samples** at requested 120 Hz. Active job 0 was observed from
+2.315 to 2.676 seconds of sampling; completion first appeared at 2.684 seconds.
+The captured request ranges were directory `[offset 0, length 2048]` into
+`003f3b00` and bulk `[559104, 346880]` into `00b00000`, repeatedly observed 26 and
+18 times respectively. Loader phases 1–5, special phases 3/7/b, busy and active
+completion transitions were observed.
+
+The loaded 2 KiB directory header equals original PACK directory 0. All five
+resource handles equal the original members' calculated addresses. Arena end
+`00b55000` and derived arena pointers match the reconstructed calculation.
+[Activity/data verification](evidence/m2/runtime-loading.json). All **967** M1+M2
+instruction words also match runtime memory through the shared byte verifier:
+[code-presence check](evidence/m2/runtime-code.json).
+
+The first FLK5 header retains magic/count but its +08 word changes from 1100 to
+3200. This is observed post-read transformation; the actual fixup semantics are
+unreconstructed. The verifier deliberately records this difference instead of
+claiming the entire transformed payload equals the disc. Sequential samples are
+not atomic or a PC/breakpoint call trace; they do substantiate actual resource
+activity beyond M1's code-presence observations. No AREA gameplay, all-error-path,
+asset-decoding or full-game runtime equivalence is claimed. The owned emulator
+was stopped cleanly; project headless Ghidra operations finished.
+
+### Final verification results
+
+Exact commands and reproducible setup are in [DEVELOPMENT.md](DEVELOPMENT.md).
+Current result records are under [evidence/m2](evidence/m2/).
+
+| Check | Actual outcome |
+|---|---|
+| `python -m unittest discover -s tests -v` | 49 passed, 0 failed/skipped |
+| Shared `verify_elf_evidence.py --require-all-bytes` on M1 / M2 packets | 283 / 684 instruction rows verified, 0 unknown |
+| Shared `validate_evidence.py` on both packets | Both structurally valid |
+| `python tools/verify_disc_read.py ...` | 1,448 passed |
+| `python tools/verify_resource_loader.py ...` | 970 randomized invocations + 12 end-to-end sequences passed |
+| ASan/UBSan synthetic C integration executable | Passed, no sanitizer error |
+| `python tools/hg_m2_negative_controls.py ...` | All 9 deliberate defects detected |
+| `python tools/verify_loading_runtime.py ...` | Observed activity, data/handles and arena pointers passed |
+| `python tools/hg_loading_code_check.py ...` | 15 runtime bodies / 967 words passed |
+
+Negative controls mutate disposable copies only: one evidence byte row, six C
+defects, a runtime handle and removal of observed activity. They must produce
+specific mismatches, not arbitrary compile failures. [Results](evidence/m2/negative-controls.json).
+The restricted instruction runner is independently implemented and rejects
+unsupported instructions. External operations remain deterministic mocks; the
+new 970 cases include nonzero directory IDs, error/busy states and rounding/wrap
+boundaries. Remote CI was not run or claimed. Original images/BIOS/databases were
+not patched; proprietary inputs/raw captures/private paths remain out of Git.
+
+### Ghidra and inventory continuity
+
+M1 baseline/working projects are preserved. `local/ghidra/HungryGhosts_JP_M2.gpr`
+is a separate copy. Only two missing entries were explicitly discovered:
+worker `00130220` and wake handler `0011df10`. Analyst labels for 11 reconstructed
+functions and four globals were saved and re-exported in M2. The memory-block map
+is unchanged. Inventory now has **4,558 candidates**: 15 reconstructed/model-tested,
+12 partially analyzed/byte-checked and 4,531 unreviewed. Known extension mirror/
+rom0 limitations from M1 still apply. No whole-game completeness claim follows.
+
+### Acceptance and shutdown decision
+
+All eight M2 acceptance criteria are supported within the explicitly bounded
+bootstrap operation and AREA reconstruction: M1 revalidation, connected path,
+source integration, passing regressions/differentials, byte checks/negative
+controls, substantive runtime observations, reproduction tools and synchronized
+handoffs. There is no unresolved technical blocker to this milestone.
+
+The user authorized shutdown only if no known unsaved work would be lost.
+Preflight found a pre-existing unrelated Kate window reporting
+`windowModified=true`, with Save All enabled. It was neither saved nor closed.
+**MainPC must remain running while that condition holds.** The physical host was
+verified as MainPC/CachyOS, PID 1 systemd, no detected virtualization; logind says
+poweroff is permitted. No forced shutdown, privilege escalation or attempt to
+bypass the unsaved-work condition is authorized. A final gate/result receipt is
+kept in ignored `local/m2/final-report.json`; do not infer shutdown from M2 success.
+
+### Next substantial milestone
+
+Recover real fixup `00137ed0` and its data transformations, then extend the
+reconstruction through general PACK loader `00130900` / `00131420` and observe
+an actual AREA transition. Add breakpoint or equivalent PC-correlated traces to
+strengthen the current sampled-state evidence. Kernel scheduling, IOP/CDVD,
+remaining codecs and overlay activation remain research dependencies. Continue
+executable work without choosing the final project track on the user's behalf.
+
+## Historical M1 record
+
+The following sections preserve M1's original findings and continuation point;
+the current M2 results above supersede their progress/next-action summaries.
 
 ## M1 outcome and repository state
 
