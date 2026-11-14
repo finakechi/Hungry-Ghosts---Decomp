@@ -25,6 +25,14 @@ Starting branch was clean `research/m4-resource-fixup` at merged `main` commit
 No M4 push, PR or merge is authorized or performed. Original/private research is
 preserved; existing private backup destination is unchanged.
 
+Implementation commit: `36ebbd8b5e846f968c357e0e4011ac922b92fb29` (local).
+The existing private Drive backup passed fresh download verification, full isolated
+restore, recovered Git clone and fsck: **947 files / 365,128,227 bytes**, including
+90 M4 files. Both earlier snapshots and the original configuration/media/research
+were preserved. [Preservation receipt](evidence/m4/preservation.json) records hashes
+and limits. This immutable backup covers the implementation commit; the later
+preservation-only handoff commit is outside it. No push, PR or merge occurred.
+
 Next: AREA overlay activation/lifetime through an observed real transition,
 including general PACK or type-1 fixups only where that path requires them.
 

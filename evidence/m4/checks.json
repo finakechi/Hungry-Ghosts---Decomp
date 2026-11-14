@@ -150,6 +150,19 @@
       "name": "bound_source_freshness",
       "status": "passed",
       "result": "All M4 differential/runtime/regression receipts match final relevant source digests"
+    },
+    {
+      "name": "publication_audit",
+      "status": "passed",
+      "result": "39 new Git objects; zero heuristic findings; source and bounded instruction evidence reviewed",
+      "command": "python -B tools/hg_publication_audit.py --base 7e54e15b2b13b407e200aa061435f00c2cac8b09 --head 36ebbd8b5e846f968c357e0e4011ac922b92fb29 --output local/m4/publication-audit-final.json",
+      "evidence": "evidence/m4/publication.json"
+    },
+    {
+      "name": "private_recovery",
+      "status": "passed",
+      "result": "947 files / 365128227 bytes; fresh Drive download, full archive verification, isolated restore, recovered bundle clone/fsck; earlier snapshots preserved",
+      "evidence": "evidence/m4/preservation.json"
     }
   ],
   "limits": [
