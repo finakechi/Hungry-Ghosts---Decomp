@@ -30,3 +30,13 @@ The historical November 13 research handoff supplied useful leads and explicitly
 had no retail-byte or executed-test evidence. It is context; current evidence
 records and test results supersede its corresponding unknowns. No license for
 this project's own work has been selected by the user in this milestone.
+
+M6 inspected the GPL-3.0+ tagged PCSX2 `v2.8.2` sources for default numerical
+settings and the functional multiply/add/root sequence: [Pcsx2Config.cpp](https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/Pcsx2Config.cpp),
+[iFPU.cpp](https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/x86/iFPU.cpp), and
+[microVU_Lower.inl](https://github.com/PCSX2/pcsx2/blob/v2.8.2/pcsx2/x86/microVU_Lower.inl).
+These establish the captured emulator version's default chop rounding and
+separate multiply/add/root operations, not universal PS2 hardware equivalence.
+No emulator implementation was copied. Independent C integer significands and
+Python exact-rational comparisons are checked against original instructions and
+all 16 independently captured selected geometry results.

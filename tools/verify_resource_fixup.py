@@ -17,7 +17,7 @@ from test_resource_fixup import FRAME, FUNCTIONS, configure, FixupDriver, flk
 
 SYMBOLS={n:('hg_resource_'+n if n in ('fixup','map_address','base_delta') else 'hg_'+n) for n in FUNCTIONS}
 
-def evidence(exports):
+def evidence(exports,geometry_exports=None):
     packet=json.loads((ROOT/'analysis/resource_loader/functions.json').read_text())
     packet.pop('binding',None);packet['functions']=[]
     packet['provenance'].update(source='Read-only HGExport from preserved M2 project; ELF checked with pinned verifier.',
@@ -32,7 +32,90 @@ def evidence(exports):
             interpretation='M4 reconstruction; scope and external boundaries in docs/M4.md.',
             verification_status='original-byte-verified',source='src/resource_loader.c',
             original_listing_sha256=r['listing_sha256'],snapshot_sha256=digest(selected)))
+    if geometry_exports:
+        from test_resource_geometry import ENTRIES
+        packet['provenance']['limitations'] = [
+            'M6 geometry uses the selected finite-normal FP domain; exceptional flags and VU timing are outside scope.',
+            'Upload 00152ae0 remains external; M4 isolated tests retain their geometry mock.']
+        for name,entry in ENTRIES.items():
+            selected=select_export(geometry_exports,entry);r=json.loads(selected.read_text())
+            packet['functions'].append(dict(entry=r['entry'],name='hg_resource_'+name,complete=True,
+                body_ranges=r['body_ranges'],instructions=r['instructions'],
+                references=[{**v,'ghidra_type':v['type'],'type':'call' if 'CALL' in v['type'] else 'unknown'} for v in r['references_to']],
+                interpretation='M6 selected geometry/material processing; finite-normal FP scope in docs/M6.md.',
+                verification_status='original-byte-verified',source='src/resource_loader.c',
+                original_listing_sha256=r['listing_sha256'],snapshot_sha256=digest(selected)))
     return packet
+
+
+def execute_geometry(lib,name,args,mem,coverage):
+    """Execute original geometry/dependencies, including original fixup callers.
+
+    No geometry/sqrt/material hooks: their actual authenticated instructions run.
+    """
+    from test_resource_geometry import GeometryDriver, ENTRIES
+    from ee_subset import sx, MASK64
+    cd=GeometryDriver(clone(mem),lib);md=GeometryDriver(clone(mem),lib)
+    if name in ('descriptor_address','sqrt'):
+        result=getattr(lib,'hg_resource_'+name)(*args)
+    else:result=getattr(lib,'hg_resource_'+name)(C.byref(cd.env),*args)
+    m=machine(md);m.hooks.pop(0x137ed0,None)
+    for n,v in enumerate(args[:3] if name=='fixup' else args,4):
+        m.reg[n]=v if name=='descriptor_address' and n==4 else sx(v,32)&MASK64
+    if name=='fixup':m.reg[29]=args[3]+0x240
+    if name=='sqrt':m.fpr[12]=args[0]
+    saved={n:(0x123456789abcdef0<<64)|(n*0x1234567) for n in list(range(16,24))+[30]}
+    for n,v in saved.items():m.reg[n]=v
+    saved.update({28:m.reg[28],29:m.reg[29]})
+    m.run(0x137ed0 if name=='fixup' else ENTRIES[name],limit=1000000)
+    for n,v in saved.items():
+        if m.reg[n]!=v:raise AssertionError(f'{name}: original ABI register {n} not restored')
+    if name!='geometry':
+        answer=m.fpr[0] if name=='sqrt' else m.reg[2] & (MASK64 if name=='descriptor_address' else 0xffffffff)
+        if result!=answer:raise AssertionError(f'{name}: return mismatch C {result:x} EE {answer:x}')
+    if name=='sqrt' and (m.q!=m.fpr[0] or m.vf[4]&0xffffffff!=m.fpr[0]):
+        raise AssertionError('Original sqrt register transfer differs')
+    compare(cd,md,'M6 '+name+str(args));coverage.update(m.executed)
+
+
+def geometry_cases(lib,data,segments,coverage,image=None):
+    from test_resource_geometry import geometry, configure
+    configure(lib);rng=random.Random(0x1504606);counts={}
+    def check(name,args,mem):
+        execute_geometry(lib,name,args,mem,coverage);counts[name]=counts.get(name,0)+1
+    for kind in (0,1,2,3,4,5,255):
+        for case in range(24):
+            mem=Memory(data,segments);block=0xb00000
+            geometry(mem,block,kind,packets=case%5,vertices=case%4,bones=case%6)
+            for offset in (0x14,0x24,0x1c,0x2c):
+                bits=(rng.randrange(100,181)<<23)|rng.getrandbits(23)|(rng.randrange(2)<<31)
+                mem.store(block+offset,bits)
+            if kind==2 and case%7==0:mem.store(block,rng.choice([0x80000000,0xffffffff]))
+            check('geometry',(block,rng.getrandbits(32)),mem)
+    for case in range(128):
+        mem=Memory(data,segments);block=0xb00000
+        for i in range(case%16):mem.store(block+i*4,rng.getrandbits(24))
+        mem.store(block+(case%16)*4,0x60000000 if case%2 else 0x13000000)
+        check('material_next',(block,),mem)
+        delta=[0,1,0x3fff,0x4000,0x7fffffff,0x80000000,0xffffffff][case%7]
+        check('descriptor_address',(rng.getrandbits(64),delta),mem)
+        value=[0,0x3f800000,0x3f800001,0x40000000,0x41c80000][case%5] if case<20 else (rng.randrange(40,220)<<23)|rng.getrandbits(23)
+        check('sqrt',(value,),mem)
+    if image:
+        from hg_identify import ISO,read_at
+        from verify_fixup_runtime import IMAGE
+        if digest(image)!=IMAGE:raise ValueError('Wrong original image')
+        with image.open('rb') as fp:
+            base=ISO(fp).files['/DATA/PACK.DAT']['lba']*2048
+            directory=read_at(fp,base+0xc6*2048,2048)
+            if int.from_bytes(directory[32:36],'little')!=13:raise ValueError('Selected fixup count changed')
+            for i in range(13):
+                import struct
+                offset,size,ident,_=struct.unpack_from('<4I',directory,64+i*16)
+                block=0x1270000+offset-int.from_bytes(directory[16:20],'little')
+                mem=Memory(data,segments);mem.put(block,read_at(fp,base+offset,size))
+                check('fixup',(block,0,ident,FRAME),mem)
+    return counts
 
 def execute(lib,data,segments,name,args,seedmem,coverage):
     cd=FixupDriver(clone(seedmem),lib);md=FixupDriver(clone(seedmem),lib)
@@ -63,10 +146,13 @@ def main():
     for n in ('elf','exports','ps2dinfo','output'):p.add_argument('--'+n,type=Path,required=True)
     p.add_argument('--packet',type=Path)
     p.add_argument('--source',type=Path,help='Disposable C source for negative controls')
+    p.add_argument('--geometry-exports',type=Path,help='M6 read-only export snapshot')
+    p.add_argument('--image',type=Path,help='Authenticated original for 13 connected instruction comparisons')
     a=p.parse_args()
     if digest(a.elf)!=EXPECTED:raise ValueError('Wrong original executable')
     shared=shared_module(a.ps2dinfo);data=a.elf.read_bytes();segments,_=shared.segments_from_elf(data)
-    packet=evidence(a.exports);byte_check=shared.verify(data,packet,require_all_bytes=True)
+    if a.image and not a.geometry_exports:raise ValueError('--image requires --geometry-exports')
+    packet=evidence(a.exports,a.geometry_exports);byte_check=shared.verify(data,packet,require_all_bytes=True)
     if a.packet:
         with a.packet.open('x') as f:json.dump(packet,f,indent=2);f.write('\n')
     lib=configure(library(source=a.source,output=ROOT/'local/m4/fixup.so'));rng=random.Random(0x137ed0)
@@ -121,6 +207,7 @@ def main():
             else:args=(block,[0,1,2,0x1000000,0xff000001][case%5])
             if case%3==0:mem.store(block,0x12345678)
             check(name,args,mem)
+    m6=geometry_cases(lib,data,segments,coverage,a.image) if a.geometry_exports else {}
     bodies={int(i['address'],16) for f in packet['functions'] for i in f['instructions']}
     missed=sorted(bodies-coverage)
     malformed=[]
@@ -135,16 +222,26 @@ def main():
             malformed.append({'case':label,'result':'passed','observed_host_boundary':str(exc)})
         else:raise AssertionError('Malformed fixture did not reach expected bus/budget boundary')
     report={'schema':'hg-fixup-check/v1','result':'passed','cases':counts,'total_cases':sum(counts.values()),
+        'm6_cases':m6,'m6_total_cases':sum(m6.values()),
         'byte_check':byte_check,'malformed_model_cases':malformed,'instruction_coverage':{'executed':len(bodies&coverage),'total':len(bodies),
             'not_executed':[f'0x{x:08x}' for x in missed]},
         'binding':receipt(ROOT,{'elf':a.elf,'shared_verifier':a.ps2dinfo/'tools/verify_elf_evidence.py',
             **{f'export_{entry:08x}':select_export(a.exports,entry) for entry,_,_ in FUNCTIONS.values()},
-            **({'tested_c_source':a.source} if a.source else {})},
+            **({'tested_c_source':a.source} if a.source else {}),
+            **({'original_image':a.image} if a.image else {}),
+            **({f'geometry_export_{int(f["entry"],16):08x}':select_export(a.geometry_exports,int(f['entry'],16))
+                for f in packet['functions'][len(FUNCTIONS):]} if a.geometry_exports else {})},
             'differential',['verify_resource_fixup.py'],[
-                'External 001386e0 geometry/material and 00152ae0 upload are argument-traced mocks.',
+                'M4 cases retain argument-traced geometry/upload mocks; M6 cases execute original geometry and all its reachable helpers without hooks.',
+                'FP model covers the selected finite-normal chop domain, functional VU transfers; no exceptional flags or timing equivalence.',
                 'Ordinary RAM compared; scratch stack excluded; original callee-saved registers checked.',
                 'Finite fixtures; malformed nontermination/unmapped accesses are tested separately.',
                 'Original-byte and model checks alone do not establish game runtime equivalence.'])}
+    if a.geometry_exports:
+        new_bodies={int(i['address'],16) for f in packet['functions'][len(FUNCTIONS):] for i in f['instructions']}
+        report['m6_instruction_coverage']=dict(executed=len(new_bodies&coverage),total=len(new_bodies),
+            not_executed=[hex(x) for x in sorted(new_bodies-coverage)])
     with a.output.open('x') as f:json.dump(report,f,indent=2);f.write('\n')
     print('PASS',report['total_cases'],'comparisons;',len(bodies&coverage),'/',len(bodies),'instruction addresses; missed',report['instruction_coverage']['not_executed'])
+    if m6:print('PASS',sum(m6.values()),'M6 comparisons;',report['m6_instruction_coverage'])
 if __name__=='__main__':main()

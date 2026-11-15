@@ -1,0 +1,2550 @@
+{
+  "schema": "ps2-evidence/v1",
+  "program": {
+    "game": "Hungry Ghosts",
+    "build_id": "japan",
+    "executable": "SCPS_150.46",
+    "sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "processor": "EE/R5900",
+    "reported_language": "r5900:LE:32:default",
+    "endianness": "little",
+    "address_space": "ram",
+    "address_context": "Original unrelocated file-backed EE PT_LOAD; named M2 project copied from preserved M1 working project.",
+    "instruction_encoding": "ee-mips32",
+    "load_address": "0x00100000"
+  },
+  "provenance": {
+    "classification": "observed",
+    "observation_date": "2026-11-14",
+    "source": "Read-only HGExport from preserved M2 project; ELF checked with pinned verifier.",
+    "tool": "Ghidra HGExport.java",
+    "tool_version": "12.1.4",
+    "retrieval_method": "headless Ghidra -readOnly -noanalysis",
+    "truncated": false,
+    "limitations": [
+      "M6 geometry uses the selected finite-normal FP domain; exceptional flags and VU timing are outside scope.",
+      "Upload 00152ae0 remains external; M4 isolated tests retain their geometry mock."
+    ]
+  },
+  "functions": [
+    {
+      "entry": "0x001386e0",
+      "name": "hg_resource_geometry",
+      "complete": true,
+      "body_ranges": [
+        {
+          "start": "0x001386e0",
+          "end_exclusive": "0x00138854"
+        },
+        {
+          "start": "0x00138858",
+          "end_exclusive": "0x00138904"
+        },
+        {
+          "start": "0x00138908",
+          "end_exclusive": "0x0013893c"
+        },
+        {
+          "start": "0x00138940",
+          "end_exclusive": "0x001389d0"
+        }
+      ],
+      "instructions": [
+        {
+          "text": "addiu sp,sp,-0x70",
+          "address": "0x001386e0",
+          "bytes": "90ffbd27"
+        },
+        {
+          "text": "sd ra,0x50(sp)",
+          "address": "0x001386e4",
+          "bytes": "5000bfff"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x001386e8",
+          "bytes": "00008044"
+        },
+        {
+          "text": "sq s4,0x40(sp)",
+          "address": "0x001386ec",
+          "bytes": "4000b47f"
+        },
+        {
+          "text": "sq s3,0x30(sp)",
+          "address": "0x001386f0",
+          "bytes": "3000b37f"
+        },
+        {
+          "text": "sq s2,0x20(sp)",
+          "address": "0x001386f4",
+          "bytes": "2000b27f"
+        },
+        {
+          "text": "move s3,a0",
+          "address": "0x001386f8",
+          "bytes": "2d988000"
+        },
+        {
+          "text": "sq s1,0x10(sp)",
+          "address": "0x001386fc",
+          "bytes": "1000b17f"
+        },
+        {
+          "text": "addiu s2,s3,0x40",
+          "address": "0x00138700",
+          "bytes": "40007226"
+        },
+        {
+          "text": "sq s0,0x0(sp)",
+          "address": "0x00138704",
+          "bytes": "0000b07f"
+        },
+        {
+          "text": "lwc1 f4,0x14(a0)",
+          "address": "0x00138708",
+          "bytes": "140084c4"
+        },
+        {
+          "text": "c.lt.S f4,f0",
+          "address": "0x0013870c",
+          "bytes": "34200046"
+        },
+        {
+          "text": "bc1f 0x00138720",
+          "address": "0x00138710",
+          "bytes": "03000045"
+        },
+        {
+          "text": "_move s0,a1",
+          "address": "0x00138714",
+          "bytes": "2d80a000"
+        },
+        {
+          "text": "b 0x00138724",
+          "address": "0x00138718",
+          "bytes": "02000010"
+        },
+        {
+          "text": "_neg.S f2,f4",
+          "address": "0x0013871c",
+          "bytes": "87200046"
+        },
+        {
+          "text": "mov.S f2,f4",
+          "address": "0x00138720",
+          "bytes": "86200046"
+        },
+        {
+          "text": "lwc1 f1,0x24(s3)",
+          "address": "0x00138724",
+          "bytes": "240061c6"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x00138728",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x0013872c",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f1,f0",
+          "address": "0x00138730",
+          "bytes": "34080046"
+        },
+        {
+          "text": "bc1f 0x00138740",
+          "address": "0x00138734",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_mov.S f0,f1",
+          "address": "0x00138738",
+          "bytes": "06080046"
+        },
+        {
+          "text": "neg.S f0,f1",
+          "address": "0x0013873c",
+          "bytes": "07080046"
+        },
+        {
+          "text": "c.le.S f2,f0",
+          "address": "0x00138740",
+          "bytes": "36100046"
+        },
+        {
+          "text": "bc1t 0x0013876c",
+          "address": "0x00138744",
+          "bytes": "09000145"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138748",
+          "bytes": "00000000"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x0013874c",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x00138750",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f4,f0",
+          "address": "0x00138754",
+          "bytes": "34200046"
+        },
+        {
+          "text": "bc1f 0x00138764",
+          "address": "0x00138758",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_nop",
+          "address": "0x0013875c",
+          "bytes": "00000000"
+        },
+        {
+          "text": "neg.S f4,f4",
+          "address": "0x00138760",
+          "bytes": "07210046"
+        },
+        {
+          "text": "b 0x0013878c",
+          "address": "0x00138764",
+          "bytes": "09000010"
+        },
+        {
+          "text": "_lwc1 f3,0x1c(s3)",
+          "address": "0x00138768",
+          "bytes": "1c0063c6"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x0013876c",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x00138770",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f1,f0",
+          "address": "0x00138774",
+          "bytes": "34080046"
+        },
+        {
+          "text": "bc1f 0x00138784",
+          "address": "0x00138778",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_nop",
+          "address": "0x0013877c",
+          "bytes": "00000000"
+        },
+        {
+          "text": "neg.S f1,f1",
+          "address": "0x00138780",
+          "bytes": "47080046"
+        },
+        {
+          "text": "mov.S f4,f1",
+          "address": "0x00138784",
+          "bytes": "06090046"
+        },
+        {
+          "text": "lwc1 f3,0x1c(s3)",
+          "address": "0x00138788",
+          "bytes": "1c0063c6"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x0013878c",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x00138790",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f3,f0",
+          "address": "0x00138794",
+          "bytes": "34180046"
+        },
+        {
+          "text": "bc1f 0x001387a4",
+          "address": "0x00138798",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_mov.S f2,f3",
+          "address": "0x0013879c",
+          "bytes": "86180046"
+        },
+        {
+          "text": "neg.S f2,f3",
+          "address": "0x001387a0",
+          "bytes": "87180046"
+        },
+        {
+          "text": "lwc1 f1,0x2c(s3)",
+          "address": "0x001387a4",
+          "bytes": "2c0061c6"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x001387a8",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x001387ac",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f1,f0",
+          "address": "0x001387b0",
+          "bytes": "34080046"
+        },
+        {
+          "text": "bc1f 0x001387c0",
+          "address": "0x001387b4",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_mov.S f0,f1",
+          "address": "0x001387b8",
+          "bytes": "06080046"
+        },
+        {
+          "text": "neg.S f0,f1",
+          "address": "0x001387bc",
+          "bytes": "07080046"
+        },
+        {
+          "text": "c.le.S f2,f0",
+          "address": "0x001387c0",
+          "bytes": "36100046"
+        },
+        {
+          "text": "bc1t 0x001387ec",
+          "address": "0x001387c4",
+          "bytes": "09000145"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001387c8",
+          "bytes": "00000000"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x001387cc",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x001387d0",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f3,f0",
+          "address": "0x001387d4",
+          "bytes": "34180046"
+        },
+        {
+          "text": "bc1f 0x001387e4",
+          "address": "0x001387d8",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001387dc",
+          "bytes": "00000000"
+        },
+        {
+          "text": "neg.S f3,f3",
+          "address": "0x001387e0",
+          "bytes": "c7180046"
+        },
+        {
+          "text": "b 0x0013880c",
+          "address": "0x001387e4",
+          "bytes": "09000010"
+        },
+        {
+          "text": "_mula.S f4,f4",
+          "address": "0x001387e8",
+          "bytes": "1a200446"
+        },
+        {
+          "text": "clear f0",
+          "address": "0x001387ec",
+          "bytes": "00008044"
+        },
+        {
+          "text": "nop",
+          "address": "0x001387f0",
+          "bytes": "00000000"
+        },
+        {
+          "text": "c.lt.S f1,f0",
+          "address": "0x001387f4",
+          "bytes": "34080046"
+        },
+        {
+          "text": "bc1f 0x00138804",
+          "address": "0x001387f8",
+          "bytes": "02000045"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001387fc",
+          "bytes": "00000000"
+        },
+        {
+          "text": "neg.S f1,f1",
+          "address": "0x00138800",
+          "bytes": "47080046"
+        },
+        {
+          "text": "mov.S f3,f1",
+          "address": "0x00138804",
+          "bytes": "c6080046"
+        },
+        {
+          "text": "mula.S f4,f4",
+          "address": "0x00138808",
+          "bytes": "1a200446"
+        },
+        {
+          "text": "jal 0x00143530",
+          "address": "0x0013880c",
+          "bytes": "4c0d050c"
+        },
+        {
+          "text": "_madd.S f12,f3,f3",
+          "address": "0x00138810",
+          "bytes": "1c1b0346"
+        },
+        {
+          "text": "swc1 f0,0x20(s3)",
+          "address": "0x00138814",
+          "bytes": "200060e6"
+        },
+        {
+          "text": "li v1,0x1",
+          "address": "0x00138818",
+          "bytes": "01000324"
+        },
+        {
+          "text": "lbu a0,0x10(s3)",
+          "address": "0x0013881c",
+          "bytes": "10006492"
+        },
+        {
+          "text": "beq a0,v1,0x001389b0",
+          "address": "0x00138820",
+          "bytes": "63008310"
+        },
+        {
+          "text": "_li v1,0x2",
+          "address": "0x00138824",
+          "bytes": "02000324"
+        },
+        {
+          "text": "beq a0,v1,0x00138940",
+          "address": "0x00138828",
+          "bytes": "45008310"
+        },
+        {
+          "text": "_nop",
+          "address": "0x0013882c",
+          "bytes": "00000000"
+        },
+        {
+          "text": "li v1,0x4",
+          "address": "0x00138830",
+          "bytes": "04000324"
+        },
+        {
+          "text": "beq a0,v1,0x00138858",
+          "address": "0x00138834",
+          "bytes": "08008310"
+        },
+        {
+          "text": "_li v1,0x3",
+          "address": "0x00138838",
+          "bytes": "03000324"
+        },
+        {
+          "text": "beq a0,v1,0x00138858",
+          "address": "0x0013883c",
+          "bytes": "06008310"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138840",
+          "bytes": "00000000"
+        },
+        {
+          "text": "beq a0,zero,0x00138858",
+          "address": "0x00138844",
+          "bytes": "04008010"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138848",
+          "bytes": "00000000"
+        },
+        {
+          "text": "b 0x001389b0",
+          "address": "0x0013884c",
+          "bytes": "58000010"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138850",
+          "bytes": "00000000"
+        },
+        {
+          "text": "addiu s1,sp,0x6c",
+          "address": "0x00138858",
+          "bytes": "6c00b127"
+        },
+        {
+          "text": "nop",
+          "address": "0x0013885c",
+          "bytes": "00000000"
+        },
+        {
+          "text": "jal 0x00138690",
+          "address": "0x00138860",
+          "bytes": "a4e1040c"
+        },
+        {
+          "text": "_move a0,s2",
+          "address": "0x00138864",
+          "bytes": "2d204002"
+        },
+        {
+          "text": "move s2,v0",
+          "address": "0x00138868",
+          "bytes": "2d904000"
+        },
+        {
+          "text": "beq s2,zero,0x001389b0",
+          "address": "0x0013886c",
+          "bytes": "50004012"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138870",
+          "bytes": "00000000"
+        },
+        {
+          "text": "lw v1,0x0(s2)",
+          "address": "0x00138874",
+          "bytes": "0000438e"
+        },
+        {
+          "text": "li v0,-0x19",
+          "address": "0x00138878",
+          "bytes": "e7ff0224"
+        },
+        {
+          "text": "sw v1,0x68(sp)",
+          "address": "0x0013887c",
+          "bytes": "6800a3af"
+        },
+        {
+          "text": "lw v1,0x4(s2)",
+          "address": "0x00138880",
+          "bytes": "0400438e"
+        },
+        {
+          "text": "sw v1,0x0(s1)",
+          "address": "0x00138884",
+          "bytes": "000023ae"
+        },
+        {
+          "text": "lw v1,0x0(s1)",
+          "address": "0x00138888",
+          "bytes": "0000238e"
+        },
+        {
+          "text": "and v0,v1,v0",
+          "address": "0x0013888c",
+          "bytes": "24106200"
+        },
+        {
+          "text": "sw v0,0x0(s1)",
+          "address": "0x00138890",
+          "bytes": "000022ae"
+        },
+        {
+          "text": "ld a0,0x68(sp)",
+          "address": "0x00138894",
+          "bytes": "6800a4df"
+        },
+        {
+          "text": "jal 0x00138a80",
+          "address": "0x00138898",
+          "bytes": "a0e2040c"
+        },
+        {
+          "text": "_move a1,s0",
+          "address": "0x0013889c",
+          "bytes": "2d280002"
+        },
+        {
+          "text": "sd v0,0x68(sp)",
+          "address": "0x001388a0",
+          "bytes": "6800a2ff"
+        },
+        {
+          "text": "lw v1,0x68(sp)",
+          "address": "0x001388a4",
+          "bytes": "6800a38f"
+        },
+        {
+          "text": "li v0,0x4",
+          "address": "0x001388a8",
+          "bytes": "04000224"
+        },
+        {
+          "text": "sw v1,0x0(s2)",
+          "address": "0x001388ac",
+          "bytes": "000043ae"
+        },
+        {
+          "text": "lw v1,0x0(s1)",
+          "address": "0x001388b0",
+          "bytes": "0000238e"
+        },
+        {
+          "text": "sw v1,0x4(s2)",
+          "address": "0x001388b4",
+          "bytes": "040043ae"
+        },
+        {
+          "text": "lw a3,0x8(s2)",
+          "address": "0x001388b8",
+          "bytes": "0800478e"
+        },
+        {
+          "text": "lbu v1,0x10(s3)",
+          "address": "0x001388bc",
+          "bytes": "10006392"
+        },
+        {
+          "text": "addiu s2,s2,0x14",
+          "address": "0x001388c0",
+          "bytes": "14005226"
+        },
+        {
+          "text": "sll a0,a3,0x3",
+          "address": "0x001388c4",
+          "bytes": "c0200700"
+        },
+        {
+          "text": "addu s2,s2,a0",
+          "address": "0x001388c8",
+          "bytes": "21904402"
+        },
+        {
+          "text": "sll a0,a3,0x1",
+          "address": "0x001388cc",
+          "bytes": "40200700"
+        },
+        {
+          "text": "addiu s2,s2,0x8",
+          "address": "0x001388d0",
+          "bytes": "08005226"
+        },
+        {
+          "text": "addu a2,a0,a3",
+          "address": "0x001388d4",
+          "bytes": "21308700"
+        },
+        {
+          "text": "sll a1,a2,0x2",
+          "address": "0x001388d8",
+          "bytes": "80280600"
+        },
+        {
+          "text": "sll a0,a3,0x4",
+          "address": "0x001388dc",
+          "bytes": "00210700"
+        },
+        {
+          "text": "addu s2,s2,a1",
+          "address": "0x001388e0",
+          "bytes": "21904502"
+        },
+        {
+          "text": "addiu s2,s2,0x8",
+          "address": "0x001388e4",
+          "bytes": "08005226"
+        },
+        {
+          "text": "beq v1,v0,0x00138920",
+          "address": "0x001388e8",
+          "bytes": "0d006210"
+        },
+        {
+          "text": "_addu s2,s2,a0",
+          "address": "0x001388ec",
+          "bytes": "21904402"
+        },
+        {
+          "text": "li v0,0x3",
+          "address": "0x001388f0",
+          "bytes": "03000224"
+        },
+        {
+          "text": "beq v1,v0,0x00138908",
+          "address": "0x001388f4",
+          "bytes": "04006210"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001388f8",
+          "bytes": "00000000"
+        },
+        {
+          "text": "b 0x00138860",
+          "address": "0x001388fc",
+          "bytes": "d8ff0010"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00138900",
+          "bytes": "00000000"
+        },
+        {
+          "text": "lbu v0,0x11(s3)",
+          "address": "0x00138908",
+          "bytes": "11006292"
+        },
+        {
+          "text": "addiu s2,s2,0x8",
+          "address": "0x0013890c",
+          "bytes": "08005226"
+        },
+        {
+          "text": "mult v0,v0,a2",
+          "address": "0x00138910",
+          "bytes": "18104600"
+        },
+        {
+          "text": "sll v0,v0,0x2",
+          "address": "0x00138914",
+          "bytes": "80100200"
+        },
+        {
+          "text": "b 0x00138860",
+          "address": "0x00138918",
+          "bytes": "d1ff0010"
+        },
+        {
+          "text": "_addu s2,s2,v0",
+          "address": "0x0013891c",
+          "bytes": "21904202"
+        },
+        {
+          "text": "lbu v1,0x11(s3)",
+          "address": "0x00138920",
+          "bytes": "11006392"
+        },
+        {
+          "text": "sll v0,a3,0x2",
+          "address": "0x00138924",
+          "bytes": "80100700"
+        },
+        {
+          "text": "addiu s2,s2,0x8",
+          "address": "0x00138928",
+          "bytes": "08005226"
+        },
+        {
+          "text": "mult v0,v1,v0",
+          "address": "0x0013892c",
+          "bytes": "18106200"
+        },
+        {
+          "text": "sll v0,v0,0x2",
+          "address": "0x00138930",
+          "bytes": "80100200"
+        },
+        {
+          "text": "b 0x00138860",
+          "address": "0x00138934",
+          "bytes": "caff0010"
+        },
+        {
+          "text": "_addu s2,s2,v0",
+          "address": "0x00138938",
+          "bytes": "21904202"
+        },
+        {
+          "text": "lw v1,0x0(s3)",
+          "address": "0x00138940",
+          "bytes": "0000638e"
+        },
+        {
+          "text": "addiu s2,s3,0x40",
+          "address": "0x00138944",
+          "bytes": "40007226"
+        },
+        {
+          "text": "slt at,zero,v1",
+          "address": "0x00138948",
+          "bytes": "2a080300"
+        },
+        {
+          "text": "beq at,zero,0x001389b0",
+          "address": "0x0013894c",
+          "bytes": "18002010"
+        },
+        {
+          "text": "_move s4,zero",
+          "address": "0x00138950",
+          "bytes": "2da00000"
+        },
+        {
+          "text": "addiu s1,sp,0x6c",
+          "address": "0x00138954",
+          "bytes": "6c00b127"
+        },
+        {
+          "text": "lw v1,0xc(s2)",
+          "address": "0x00138958",
+          "bytes": "0c00438e"
+        },
+        {
+          "text": "li v0,-0x19",
+          "address": "0x0013895c",
+          "bytes": "e7ff0224"
+        },
+        {
+          "text": "sw v1,0x68(sp)",
+          "address": "0x00138960",
+          "bytes": "6800a3af"
+        },
+        {
+          "text": "lw v1,0x10(s2)",
+          "address": "0x00138964",
+          "bytes": "1000438e"
+        },
+        {
+          "text": "sw v1,0x0(s1)",
+          "address": "0x00138968",
+          "bytes": "000023ae"
+        },
+        {
+          "text": "lw v1,0x0(s1)",
+          "address": "0x0013896c",
+          "bytes": "0000238e"
+        },
+        {
+          "text": "and v0,v1,v0",
+          "address": "0x00138970",
+          "bytes": "24106200"
+        },
+        {
+          "text": "sw v0,0x0(s1)",
+          "address": "0x00138974",
+          "bytes": "000022ae"
+        },
+        {
+          "text": "ld a0,0x68(sp)",
+          "address": "0x00138978",
+          "bytes": "6800a4df"
+        },
+        {
+          "text": "jal 0x00138a80",
+          "address": "0x0013897c",
+          "bytes": "a0e2040c"
+        },
+        {
+          "text": "_move a1,s0",
+          "address": "0x00138980",
+          "bytes": "2d280002"
+        },
+        {
+          "text": "sd v0,0x68(sp)",
+          "address": "0x00138984",
+          "bytes": "6800a2ff"
+        },
+        {
+          "text": "addiu s4,s4,0x1",
+          "address": "0x00138988",
+          "bytes": "01009426"
+        },
+        {
+          "text": "lw v1,0x68(sp)",
+          "address": "0x0013898c",
+          "bytes": "6800a38f"
+        },
+        {
+          "text": "sw v1,0xc(s2)",
+          "address": "0x00138990",
+          "bytes": "0c0043ae"
+        },
+        {
+          "text": "lw v1,0x0(s1)",
+          "address": "0x00138994",
+          "bytes": "0000238e"
+        },
+        {
+          "text": "sw v1,0x10(s2)",
+          "address": "0x00138998",
+          "bytes": "100043ae"
+        },
+        {
+          "text": "lw v1,0x0(s3)",
+          "address": "0x0013899c",
+          "bytes": "0000638e"
+        },
+        {
+          "text": "slt v1,s4,v1",
+          "address": "0x001389a0",
+          "bytes": "2a188302"
+        },
+        {
+          "text": "bne v1,zero,0x00138958",
+          "address": "0x001389a4",
+          "bytes": "ecff6014"
+        },
+        {
+          "text": "_addiu s2,s2,0x80",
+          "address": "0x001389a8",
+          "bytes": "80005226"
+        },
+        {
+          "text": "nop",
+          "address": "0x001389ac",
+          "bytes": "00000000"
+        },
+        {
+          "text": "ld ra,0x50(sp)",
+          "address": "0x001389b0",
+          "bytes": "5000bfdf"
+        },
+        {
+          "text": "lq s4,0x40(sp)",
+          "address": "0x001389b4",
+          "bytes": "4000b47b"
+        },
+        {
+          "text": "lq s3,0x30(sp)",
+          "address": "0x001389b8",
+          "bytes": "3000b37b"
+        },
+        {
+          "text": "lq s2,0x20(sp)",
+          "address": "0x001389bc",
+          "bytes": "2000b27b"
+        },
+        {
+          "text": "lq s1,0x10(sp)",
+          "address": "0x001389c0",
+          "bytes": "1000b17b"
+        },
+        {
+          "text": "lq s0,0x0(sp)",
+          "address": "0x001389c4",
+          "bytes": "0000b07b"
+        },
+        {
+          "text": "jr ra",
+          "address": "0x001389c8",
+          "bytes": "0800e003"
+        },
+        {
+          "text": "_addiu sp,sp,0x70",
+          "address": "0x001389cc",
+          "bytes": "7000bd27"
+        }
+      ],
+      "references": [
+        {
+          "from": "0x00138234",
+          "to": "0x001386e0",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00138250",
+          "to": "0x001386e0",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "interpretation": "M6 selected geometry/material processing; finite-normal FP scope in docs/M6.md.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "e877ceaa217b1a8dc241385ad13afbfd38bbc8b55a41f145a5c66312a0bb5cfd",
+      "snapshot_sha256": "835e99800cbb66d9e0fd276dcbd808d62c8f26a25797020e0b4ee2fdfb2ed5a2"
+    },
+    {
+      "entry": "0x00138690",
+      "name": "hg_resource_material_next",
+      "complete": true,
+      "body_ranges": [
+        {
+          "start": "0x00138690",
+          "end_exclusive": "0x001386cc"
+        },
+        {
+          "start": "0x001386d0",
+          "end_exclusive": "0x001386e0"
+        }
+      ],
+      "instructions": [
+        {
+          "text": "lui a1,0xff00",
+          "address": "0x00138690",
+          "bytes": "00ff053c"
+        },
+        {
+          "text": "lui v0,0x1300",
+          "address": "0x00138694",
+          "bytes": "0013023c"
+        },
+        {
+          "text": "lui a3,0xe000",
+          "address": "0x00138698",
+          "bytes": "00e0073c"
+        },
+        {
+          "text": "lui a2,0x6000",
+          "address": "0x0013869c",
+          "bytes": "0060063c"
+        },
+        {
+          "text": "lw t0,0x0(a0)",
+          "address": "0x001386a0",
+          "bytes": "0000888c"
+        },
+        {
+          "text": "and v1,t0,a3",
+          "address": "0x001386a4",
+          "bytes": "24180701"
+        },
+        {
+          "text": "bne v1,a2,0x001386b8",
+          "address": "0x001386a8",
+          "bytes": "03006614"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001386ac",
+          "bytes": "00000000"
+        },
+        {
+          "text": "b 0x001386d8",
+          "address": "0x001386b0",
+          "bytes": "09000010"
+        },
+        {
+          "text": "_addiu v0,a0,0x4",
+          "address": "0x001386b4",
+          "bytes": "04008224"
+        },
+        {
+          "text": "and v1,t0,a1",
+          "address": "0x001386b8",
+          "bytes": "24180501"
+        },
+        {
+          "text": "bne v1,v0,0x001386d0",
+          "address": "0x001386bc",
+          "bytes": "04006214"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001386c0",
+          "bytes": "00000000"
+        },
+        {
+          "text": "b 0x001386d8",
+          "address": "0x001386c4",
+          "bytes": "04000010"
+        },
+        {
+          "text": "_move v0,zero",
+          "address": "0x001386c8",
+          "bytes": "2d100000"
+        },
+        {
+          "text": "b 0x001386a0",
+          "address": "0x001386d0",
+          "bytes": "f3ff0010"
+        },
+        {
+          "text": "_addiu a0,a0,0x4",
+          "address": "0x001386d4",
+          "bytes": "04008424"
+        },
+        {
+          "text": "jr ra",
+          "address": "0x001386d8",
+          "bytes": "0800e003"
+        },
+        {
+          "text": "_nop",
+          "address": "0x001386dc",
+          "bytes": "00000000"
+        }
+      ],
+      "references": [
+        {
+          "from": "0x00138c10",
+          "to": "0x00138690",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00138860",
+          "to": "0x00138690",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00138d40",
+          "to": "0x00138690",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "interpretation": "M6 selected geometry/material processing; finite-normal FP scope in docs/M6.md.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "eddf8a4995a50ea7e6d32db6fdfe10ec07cd129a483581499777e2973e4e20bb",
+      "snapshot_sha256": "b28655f8840d0a8b156b06292dc4d9f9365bdc5f10328f38573045ed475299a5"
+    },
+    {
+      "entry": "0x00138a80",
+      "name": "hg_resource_descriptor_address",
+      "complete": true,
+      "body_ranges": [
+        {
+          "start": "0x00138a80",
+          "end_exclusive": "0x00138aec"
+        }
+      ],
+      "instructions": [
+        {
+          "text": "dsll32 v0,a0,0x0",
+          "address": "0x00138a80",
+          "bytes": "3c100400"
+        },
+        {
+          "text": "dsra32 v0,v0,0x0",
+          "address": "0x00138a84",
+          "bytes": "3f100200"
+        },
+        {
+          "text": "andi v1,v0,0x3fff",
+          "address": "0x00138a88",
+          "bytes": "ff3f4330"
+        },
+        {
+          "text": "dsrl32 v0,a0,0x5",
+          "address": "0x00138a8c",
+          "bytes": "7e110400"
+        },
+        {
+          "text": "addu v1,v1,a1",
+          "address": "0x00138a90",
+          "bytes": "21186500"
+        },
+        {
+          "text": "dsll32 v0,v0,0x0",
+          "address": "0x00138a94",
+          "bytes": "3c100200"
+        },
+        {
+          "text": "dsll32 v1,v1,0x0",
+          "address": "0x00138a98",
+          "bytes": "3c180300"
+        },
+        {
+          "text": "dsra32 v0,v0,0x0",
+          "address": "0x00138a9c",
+          "bytes": "3f100200"
+        },
+        {
+          "text": "dsra32 v1,v1,0x0",
+          "address": "0x00138aa0",
+          "bytes": "3f180300"
+        },
+        {
+          "text": "andi a2,v0,0x3fff",
+          "address": "0x00138aa4",
+          "bytes": "ff3f4630"
+        },
+        {
+          "text": "addu a2,a2,a1",
+          "address": "0x00138aa8",
+          "bytes": "2130c500"
+        },
+        {
+          "text": "lui v0,0xfff8",
+          "address": "0x00138aac",
+          "bytes": "f8ff023c"
+        },
+        {
+          "text": "ori a1,v0,0x1f",
+          "address": "0x00138ab0",
+          "bytes": "1f004534"
+        },
+        {
+          "text": "dsll32 v0,a2,0x0",
+          "address": "0x00138ab4",
+          "bytes": "3c100600"
+        },
+        {
+          "text": "dsll32 a2,a1,0x0",
+          "address": "0x00138ab8",
+          "bytes": "3c300500"
+        },
+        {
+          "text": "dsra32 v0,v0,0x0",
+          "address": "0x00138abc",
+          "bytes": "3f100200"
+        },
+        {
+          "text": "ori a1,zero,0xffff",
+          "address": "0x00138ac0",
+          "bytes": "ffff0534"
+        },
+        {
+          "text": "dsll32 v0,v0,0x5",
+          "address": "0x00138ac4",
+          "bytes": "7c110200"
+        },
+        {
+          "text": "dsll a1,a1,0x10",
+          "address": "0x00138ac8",
+          "bytes": "382c0500"
+        },
+        {
+          "text": "ori a1,a1,0xc000",
+          "address": "0x00138acc",
+          "bytes": "00c0a534"
+        },
+        {
+          "text": "or a1,a1,a2",
+          "address": "0x00138ad0",
+          "bytes": "2528a600"
+        },
+        {
+          "text": "pcpyld a1,zero,a1",
+          "address": "0x00138ad4",
+          "bytes": "892b0570"
+        },
+        {
+          "text": "and a0,a0,a1",
+          "address": "0x00138ad8",
+          "bytes": "24208500"
+        },
+        {
+          "text": "or a0,a0,v1",
+          "address": "0x00138adc",
+          "bytes": "25208300"
+        },
+        {
+          "text": "or a0,a0,v0",
+          "address": "0x00138ae0",
+          "bytes": "25208200"
+        },
+        {
+          "text": "jr ra",
+          "address": "0x00138ae4",
+          "bytes": "0800e003"
+        },
+        {
+          "text": "_move v0,a0",
+          "address": "0x00138ae8",
+          "bytes": "2d108000"
+        }
+      ],
+      "references": [
+        {
+          "from": "0x00138898",
+          "to": "0x00138a80",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013897c",
+          "to": "0x00138a80",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "interpretation": "M6 selected geometry/material processing; finite-normal FP scope in docs/M6.md.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "ae6eeaa1e4fedf2904c4a355e92c33c51ca7cf02e787dd895f2dc169ebbfa89c",
+      "snapshot_sha256": "4ca52034aed0ef6084989ab313f86d90f66a294c70e7e3f4a7728f5693378724"
+    },
+    {
+      "entry": "0x00143530",
+      "name": "hg_resource_sqrt",
+      "complete": true,
+      "body_ranges": [
+        {
+          "start": "0x00143530",
+          "end_exclusive": "0x00143558"
+        }
+      ],
+      "instructions": [
+        {
+          "text": "mfc1 v0,f12",
+          "address": "0x00143530",
+          "bytes": "00600244"
+        },
+        {
+          "text": "nop",
+          "address": "0x00143534",
+          "bytes": "00000000"
+        },
+        {
+          "text": "qmtc2 v0,vf4",
+          "address": "0x00143538",
+          "bytes": "0020a248"
+        },
+        {
+          "text": "vsqrt Q,vf4x",
+          "address": "0x0014353c",
+          "bytes": "bd03044a"
+        },
+        {
+          "text": "vwaitq",
+          "address": "0x00143540",
+          "bytes": "bf03004a"
+        },
+        {
+          "text": "vaddq.x vf4,vf0,Q",
+          "address": "0x00143544",
+          "bytes": "2001004b"
+        },
+        {
+          "text": "qmfc2 v0,vf4",
+          "address": "0x00143548",
+          "bytes": "00202248"
+        },
+        {
+          "text": "mtc1 v0,f0",
+          "address": "0x0014354c",
+          "bytes": "00008244"
+        },
+        {
+          "text": "jr ra",
+          "address": "0x00143550",
+          "bytes": "0800e003"
+        },
+        {
+          "text": "_nop",
+          "address": "0x00143554",
+          "bytes": "00000000"
+        }
+      ],
+      "references": [
+        {
+          "from": "0x0013e67c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013e698",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013e72c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013e7ec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0011fedc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0011ff8c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001201ac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001293c8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00120870",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001520c0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001205e4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00120688",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001207f8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001208d8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001209ec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001215f8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00121620",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0012c434",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0012c6a8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0012c6d8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00267970",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00267c40",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00267c64",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00143ea4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00143f68",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00143fd8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00144048",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001441f0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00153e2c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00134a24",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00134bc4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00134cfc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00135034",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00135114",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013567c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00135cb4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00135d9c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001365bc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00136798",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00136a78",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00136c8c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00136fec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00151a0c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001574fc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00145358",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00144d5c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00144dc0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00144e88",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00144eac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0026942c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00269498",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013772c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013880c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f11c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f144",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f168",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f29c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f2c4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f2f4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f520",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f61c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0013f6d4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00145fe4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00153a20",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00153bcc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0015c7dc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00188384",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001885f8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0015ca28",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0016a400",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0019532c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0016bdf0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0016bae0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00170b1c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018d630",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018ae6c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018b908",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018d9f0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018dc80",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018dec0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0018e124",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00264ad8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001953e4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001954f4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001a0680",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001a1224",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f0d48",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001ada58",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001ada98",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001adafc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001adb3c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001b2ce8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001b61ac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001c727c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e1414",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e14dc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e2160",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001c8500",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001c8620",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001c868c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e0e60",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e0efc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001d8f40",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e1a38",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f04cc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f0e44",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f0edc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f6d28",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f6e8c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001f70ac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001fda48",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001fdb40",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0021234c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00212544",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00211a84",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002150b4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0021d458",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0021ed88",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0021d920",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0021f42c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002406fc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00240758",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00253350",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00256d68",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002583e0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00258908",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0031bf54",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0026a158",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002721a4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0027232c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00272508",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00272d0c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002787b0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00278c90",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00278d78",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0028ccf0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0028eea0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002959ac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00295eac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0029c1d0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0029f3ec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002bac0c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002ba574",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002c28ac",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002c2b7c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002ccecc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002cfeec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002d0418",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002d0540",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002dd3fc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002ddeec",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002e1418",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002e14f8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002e154c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002f1e2c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002f35c4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002f8620",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002f90e8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002f92e4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0030229c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0030ba54",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x003191fc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00319adc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00326870",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0032f1b8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00333de8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00334208",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0033d004",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00347c14",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x003500f8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x003593c0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00359750",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0035a128",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e0de0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002b9774",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00296ecc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002b99f0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002b9ad8",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002ba258",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002ba46c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00261304",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00261354",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002616dc",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00218c5c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e918c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e92b0",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e9938",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e9c1c",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001e9f04",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x001ea044",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00235d64",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x00326518",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0023ee30",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0023f9d4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x0029e048",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        },
+        {
+          "from": "0x002361c4",
+          "to": "0x00143530",
+          "type": "call",
+          "ghidra_type": "UNCONDITIONAL_CALL"
+        }
+      ],
+      "interpretation": "M6 selected geometry/material processing; finite-normal FP scope in docs/M6.md.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "c94586312fa24bd0667056faac35de3cf4527b8e5b652fef85cbe273fe8e39b1",
+      "snapshot_sha256": "042a84099cf805879aaa976229d8f27ae43e7da1084f403e00270cc69ff33baa"
+    }
+  ]
+}

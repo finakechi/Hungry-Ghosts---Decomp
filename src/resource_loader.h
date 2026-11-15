@@ -70,9 +70,15 @@ uint32_t hg_flk5_count(HGResourceEnv *, uint32_t);                 /* 00138b70 *
 uint32_t hg_flk5_size(HGResourceEnv *, uint32_t);                  /* 00138b90 */
 void hg_flk5_disable(HGResourceEnv *, uint32_t, uint32_t);         /* 00138560 */
 uint32_t hg_resource_base_delta(HGResourceEnv *, uint32_t, uint32_t); /* 001385a0 */
+/* M6: selected finite-normal geometry/material processing. sqrt takes/returns
+ * raw FP bits; descriptor_address preserves the original 64-bit return. */
+uint32_t hg_resource_material_next(HGResourceEnv *, uint32_t); /* 00138690 */
+void hg_resource_geometry(HGResourceEnv *, uint32_t, uint32_t); /* 001386e0 */
+uint64_t hg_resource_descriptor_address(uint64_t, uint32_t); /* 00138a80 */
+uint32_t hg_resource_sqrt(uint32_t); /* 00143530 */
 /* Combined M2 worker/bootstrap and general/alternative PACK/AREA loading,
  * handle invalidation and publication,
- * followed by M4 fixup -> M3 rebasing where directed by the PACK header.
+ * followed by M4 fixup -> M6 geometry/material -> M3 rebasing as directed.
  * frame must be 16-byte aligned and reserve [frame-0x70, frame+0x240)
  * of guest scratch, away from resources and live state. */
 void hg_resource_worker_fixed(HGResourceEnv *, uint32_t frame);

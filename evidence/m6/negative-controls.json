@@ -1,0 +1,35 @@
+{
+  "result": "passed",
+  "controls": [
+    {
+      "defect": "material-control-bits",
+      "result": "passed",
+      "detection": "Transformed member differs",
+      "compiled": true,
+      "unexpected_success": false,
+      "mutated_c_sha256": "03d5dac94050c92d2ec240b187adabdd72c53c1e806560bd5c834814cf5ab38e"
+    },
+    {
+      "defect": "radius-rounding",
+      "result": "passed",
+      "detection": "Transformed member differs",
+      "compiled": true,
+      "unexpected_success": false,
+      "mutated_c_sha256": "cb4dc06ae67ae5d827c98e4f3133044bbab99f0141acc4fd2d55e3bedc72b602"
+    },
+    {
+      "defect": "composition-bypassed",
+      "result": "passed",
+      "detection": "Worker did not retain calculated selected contents",
+      "compiled": true,
+      "unexpected_success": false,
+      "mutated_c_sha256": "757e185e843e44aade672582f66dd1c1eb156fb166c032314f59c5cc1d2bd180"
+    },
+    {
+      "defect": "changed original-instruction evidence",
+      "result": "passed",
+      "detection": "pinned shared ELF byte verifier rejected altered record"
+    }
+  ],
+  "positive_c_sha256": "df33a77da446bd26e4f7d4a9dac83de970fa541f5d80d766aa178bf27a8ea4c9"
+}

@@ -1,0 +1,390 @@
+{
+  "schema": "hg-m6-checks/v1",
+  "result": "passed",
+  "commands": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "00.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_disc_read.py",
+        "--elf",
+        "$HG_ELF",
+        "--output",
+        "local/m6/checks/m1.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "01.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_loader.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m6/checks/m2.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "02.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_rebase.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m3/fixup-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m6/checks/m3.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "03.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_fixup.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m4/fixup-export",
+        "--geometry-exports",
+        "local/m6/geometry-export",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m6/checks/m4-m6.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "04.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "$HG_ELF",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--area-code-exports",
+        "local/m5/area1-observed-export",
+        "--actor-dependency-exports",
+        "local/m5/actor-dependency-export",
+        "--output",
+        "local/m6/checks/m5.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "05.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_fixup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m4/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m4/runtime/capture-profile.ini",
+        "--output",
+        "local/m6/checks/m4-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "06.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m5/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m5/resume/capture-profile.ini",
+        "--pack-runtime",
+        "local/m6/captures2",
+        "--pack-profile",
+        "local/m6/capture2-profile.ini",
+        "--output",
+        "local/m6/checks/runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "07.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/check_local_inputs.py",
+        "--manifest",
+        "evidence/local-inputs.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "08.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/disc_read/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "09.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/disc_read/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "10.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/resource_loader/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "11.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/resource_loader/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "12.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/resource_fixup/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "13.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/resource_fixup/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "14.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/area_lifecycle/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "15.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/area_lifecycle/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "16.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/pack_finalization/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "17.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/pack_finalization/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "18.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/area_lifecycle/area1-functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "19.log"
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-Isrc",
+        "tests/resource_sanitizer.c",
+        "src/resource_loader.c",
+        "src/disc_read.c",
+        "-o",
+        "local/m6/checks/resource_sanitizer"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "20.log"
+    },
+    {
+      "command": [
+        "local/m6/checks/resource_sanitizer"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "21.log"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "compileall",
+        "-q",
+        "tools",
+        "tests"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "22.log"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "23.log"
+    }
+  ],
+  "python_version": "3.14.9",
+  "compiler": "cc (GCC) 16.2.1 20260810",
+  "new_functions": 4,
+  "new_instruction_words": 241,
+  "new_instruction_bytes": 964,
+  "total_functions": 34,
+  "total_instruction_words": 2748,
+  "total_instruction_bytes": 10992,
+  "synthetic_tests": 126,
+  "m6_differentials": 565,
+  "m6_synthetic_differentials": 552,
+  "m6_original_disc_fixup_differentials": 13,
+  "m6_new_addresses_executed": 241,
+  "raw_area_mapping": "original ISO file; no invented ELF mapping",
+  "not_run": [
+    "PS2 silicon validation",
+    "whole-game equivalence",
+    "compiler byte matching",
+    "general rendering/upload equivalence"
+  ],
+  "blocked": []
+}

@@ -138,6 +138,35 @@ int main(void) {
     assert(load(&t,0xc00028,4)==0x1e00 && load(&t,0xc01028,4)==0x3200);
     assert(load(&t,0x3f4d50,4)==0xc01000 && load(&t,0x3f4d54,4)==0xc02000);
     assert(load(&t,0x3f4d5c,4)==0xc52000);
+    /* M6: thirteen synthetic model+texture members through the same kind-2
+     * AREA/worker path. No geometry/upload external mock is accepted above. */
+    memset(t.disk+0x1000,0,0x7800);
+    disk_word(&t,0x1000,2);disk_word(&t,0x1004,13);disk_word(&t,0x1008,13);
+    disk_word(&t,0x100c,0x2000);disk_word(&t,0x1010,0x2000);
+    disk_word(&t,0x1014,13*2048);disk_word(&t,0x1020,13);disk_word(&t,0x1800,3);
+    for(unsigned i=0;i<13;i++) {
+        uint32_t a=0x2000+i*2048,descriptor=0x1040+i*16;
+        disk_word(&t,descriptor,a);disk_word(&t,descriptor+4,2048);disk_word(&t,descriptor+8,0x200+i);
+        disk_word(&t,a,0x354b4c46);disk_word(&t,a+4,2);disk_word(&t,a+8,2048);
+        disk_word(&t,a+16,0x01000020);disk_word(&t,a+20,0x09000400);
+        disk_word(&t,a+0x20,1);disk_word(&t,a+0x30,0x30000);
+        disk_word(&t,a+0x34,0xc0400000);disk_word(&t,a+0x44,0x40000000);
+        disk_word(&t,a+0x3c,0xbf800000);disk_word(&t,a+0x4c,0x40800000);
+        disk_word(&t,a+0x60,0x60000000);disk_word(&t,a+0x64,0x100);
+        disk_word(&t,a+0x68,0x4018);disk_word(&t,a+0x6c,1);
+        disk_word(&t,a+0xac,0x13000000);
+        disk_word(&t,a+0x400,0x60000000);disk_word(&t,a+0x408,0x100);
+        disk_word(&t,a+0x40c,0x120);disk_word(&t,a+0x434,0x18);
+        disk_word(&t,a+0x450,64);disk_word(&t,a+0x454,4);
+    }
+    t.ticks=0;hg_resource_request_raw(&e,2,2);hg_resource_worker_fixed(&e,0x1ff05c0);
+    for(unsigned i=0;i<13;i++) {
+        uint32_t a=0xc00000+i*2048;
+        assert(load(&t,a+0x40,4)==0x40a00000 && load(&t,a+8,4)==0x3100);
+        assert(load(&t,a+0x64,4)==0x3100+0x100 && load(&t,a+0x68,4)==(0x3100+0x200)*32);
+        assert(load(&t,a+0x408,4)==0x3200 && load(&t,0x3f4b00+i*4,4)==a);
+    }
+    assert(load(&t,0x3f8e30,2)==0 && load(&t,0x3eacec,1)==0);
     /* Invoke the reconstructed AREA1 actor callback with synthetic actor state.
      * Resident actor/matrix operations stay explicit mocked boundaries. */
     memset(t.ram+0x5f0000,0xa5,0x400);store(&t,0x5f0018,1,0);
@@ -154,5 +183,5 @@ int main(void) {
     store(&t,0x5f0018,1,2);hg_area1_actor(&e,0x5f0000,actor_setup);
     assert(load(&t,0x5f0018,1)==3);hg_area1_actor(&e,0x5f0000,actor_setup);
     assert(memcmp(t.ram+0xa87800,t.area,2049)==0);
-    free(t.ram);puts("PASS: synthetic M1-M5 request/worker/PACK/AREA/fixup and retained arenas under sanitizers");return 0;
+    free(t.ram);puts("PASS: synthetic M1-M6 request/worker/PACK/AREA/geometry and retained arenas under sanitizers");return 0;
 }
