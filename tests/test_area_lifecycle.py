@@ -219,7 +219,12 @@ class GeneralPackAreaTests(unittest.TestCase):
         self.assertEqual(d.mem.load(0x3f4d5c),DEST+8192+0x50000)
         self.assertEqual(d.mem.load(0x3eace0,1),1)
         self.assertEqual((d.mem.load(TASK+0x30,2),d.mem.load(0x3eacec,1)),(0,0))
-        self.assertEqual(d.calls[-3:],[('call',0x130020,TASK),('call',0x12fe90,TASK),('call',0x103da0)])
+        # M7 resolves these entries in the fixed worker. This fixture's zero
+        # context/override gates both operations, preserving all preceding
+        # M5 publications without delegating either routine to the mock.
+        self.assertFalse(any(x[:2] in [('call',0x130020),('call',0x12fe90)] for x in d.calls))
+        self.assertEqual(d.calls[-1],('call',0x103da0))
+        self.assertEqual((d.mem.load(0x3f9fef,1),d.mem.load(0x46e10c,1)),(0,0))
 
     def test_alternative_retains_raw_end_and_special_state_reservations(self):
         for kind in (2,3):

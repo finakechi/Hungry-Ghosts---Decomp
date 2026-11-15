@@ -1,0 +1,32 @@
+{
+  "schema": "hg-m7-negative-controls/v1",
+  "result": "passed",
+  "controls": [
+    {
+      "name": "ready-publication",
+      "result": "detected",
+      "classification": "compiled behavioral mismatch",
+      "source_sha256": "2216d31847c8670f7c00bebf206e2080dfd8c94acde99d0e6b403e6088d5e8a5",
+      "error": "ValueError: engine return: state differs at 0046e100",
+      "command": "verify_engine_runtime.py with the positive authenticated inputs and --source disposable C copy"
+    },
+    {
+      "name": "arena-reuse",
+      "result": "detected",
+      "classification": "compiled behavioral mismatch",
+      "source_sha256": "913bbcd0f122d4621a3420a98e1ba5708ebea081bfa374113e375113aebea18f",
+      "error": "ValueError: engine return: state differs at 003f4300",
+      "command": "verify_engine_runtime.py with the positive authenticated inputs and --source disposable C copy"
+    },
+    {
+      "name": "altered-original-instruction",
+      "result": "detected",
+      "classification": "original-byte mismatch",
+      "error": "byte mismatch at 0x0012FCF0 (file +0x304F0)"
+    }
+  ],
+  "limitations": [
+    "Two compiled C behavioral defects; the evidence control is separate and not counted as a C defect.",
+    "Only disposable ignored copies were changed; original source, media and captures were preserved."
+  ]
+}

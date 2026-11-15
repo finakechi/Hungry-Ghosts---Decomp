@@ -27,6 +27,12 @@ void hg_resource_finish(HGResourceEnv *);                       /* 001434f0 */
 void hg_resource_request_raw(HGResourceEnv *, uint32_t, uint32_t); /* 00130150 */
 void hg_resource_request(HGResourceEnv *, uint32_t, uint32_t);   /* 00130170 */
 void hg_resource_worker(HGResourceEnv *);                       /* 00130220 */
+/* M7 directory preparation. Isolated entries retain their original call seams;
+ * worker_fixed resolves these and their general PACK loads on the same bus. */
+void hg_resource_load_indexed(HGResourceEnv *, uint32_t);        /* 0012fcf0 */
+void hg_resource_load_context(HGResourceEnv *, uint32_t);        /* 0012fde0 */
+void hg_resource_prepare_context(HGResourceEnv *, uint32_t);     /* 0012fe90 */
+void hg_resource_prepare_retained(HGResourceEnv *, uint32_t);    /* 00130020 */
 uint32_t hg_pack_special_step(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 001303e0 */
 void hg_pack_bootstrap(HGResourceEnv *, uint32_t);                /* 001306a0 */
 void hg_pack_general(HGResourceEnv *, uint32_t);                  /* 00130900 */
@@ -78,8 +84,15 @@ uint64_t hg_resource_descriptor_address(uint64_t, uint32_t); /* 00138a80 */
 uint32_t hg_resource_sqrt(uint32_t); /* 00143530 */
 /* Combined M2 worker/bootstrap and general/alternative PACK/AREA loading,
  * handle invalidation and publication,
- * followed by M4 fixup -> M6 geometry/material -> M3 rebasing as directed.
+ * followed by M4 fixup -> M6 geometry/material -> M3 rebasing as directed,
+ * and M7 retained/context directory preparation on worker kinds 2/3/8.
  * frame must be 16-byte aligned and reserve [frame-0x70, frame+0x240)
  * of guest scratch, away from resources and live state. */
 void hg_resource_worker_fixed(HGResourceEnv *, uint32_t frame);
+/* Host-only measured continuation after kind-3 loading/phase reset, through
+ * the retained/context pair, before worker completion. Same scratch contract.
+ * External 00156a50 may return zero while busy; on successful completion its
+ * resource endpoint is (input + word(input+0x10) + 0x40) & ~0x3f, modulo 2^32.
+ * Audio/IOP state and timing remain the caller's separate responsibility. */
+void hg_resource_prepare_engine_fixed(HGResourceEnv *, uint32_t task, uint32_t frame);
 #endif

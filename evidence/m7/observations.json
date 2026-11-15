@@ -1,0 +1,1845 @@
+{
+  "schema": "hg-engine-observation-summary/v1",
+  "observation_date": "2026-11-15",
+  "timezone": "America/New_York",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "image_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "emulator_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+  "profile_sha256": "a6f3f63a8a1e6efda3de7e5d2f918642550d51c6e581d7695ae162f706951d41",
+  "contract_profile_sha256": "65c97a1adf915de5c11ac1fd4064515a4767c8989bc7730b1eecb4ea72cd996e",
+  "provenance": "Two fresh original-image boots, no savestate/patches/cards. PCs and displayed defined GPRs manually reviewed from debugger screenshots; PINE supplies paused memory only.",
+  "limitations": [
+    "First fresh boot used name \u30a2\u30e7; second used \u30a2. The selected directories, input containers and endpoints agree.",
+    "Primary resource capture expanded after operation return; entry snapshot lacks lower new buffers, which C calculates from disc instead.",
+    "Early title stops, repeated c7 audio calls, and the rejected running stop01 attempt are not selected checkpoints."
+  ],
+  "observation_sha256": "70d22e0124d2292141948d33b22e7dde4a2cd85ff1ade760dc50356645763a94",
+  "observations": [
+    {
+      "event": "retained_entry",
+      "pc": "0x00130020",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:18.955482+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop17",
+      "capture_sha256": "6c68fc25780f886a00f396bd7e6da2ed5218c7526ceeeb60e4ca2dda51aba63b",
+      "screenshot_sha256": "6baaa5f85185c8249700625d4e34fbb8aca22ba1bcc170134ebf4bf5eee04d7f",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "d25a05232b06f997300494e6b6f866aa8157aefdd7a557bc63551e021ecde239"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "08d2d92a7eef304199fd962372256959d54ebd56f73db34f04dfd815b6b359e5"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "0ebd427ab1c4142ae9ad42e14469c2187d1fc58ddc9d56e8e3df4e4cde3db97c"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "a4b3ef5b1bd6590cc79c72a5aa7ac0390ba6d6d3a2258d99ce7701c9a907ae96"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "1f8ab148982675a37c1a807bf6b474f7defa2b2e4c922abff24b11d8eeb02837"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general6b_entry",
+      "pc": "0x00130900",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:31.630698+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop18",
+      "capture_sha256": "7538aa8b42f4fa49219eaf18cdcc2bac704783ea9b1339672b77cce2eff472bd",
+      "screenshot_sha256": "c9db87aa14412060751baee65dd6a5348ae428558823eb895188eca049553019",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "d25a05232b06f997300494e6b6f866aa8157aefdd7a557bc63551e021ecde239"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "08d2d92a7eef304199fd962372256959d54ebd56f73db34f04dfd815b6b359e5"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "0ebd427ab1c4142ae9ad42e14469c2187d1fc58ddc9d56e8e3df4e4cde3db97c"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "a4b3ef5b1bd6590cc79c72a5aa7ac0390ba6d6d3a2258d99ce7701c9a907ae96"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "c731d37fd7cb5d55964eb270db2ac1cdb35e896e9e37070ed00ccec0728978d0"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general6b_return",
+      "pc": "0x00131414",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:54:40.372275+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop19",
+      "capture_sha256": "3e2b8fee46c701bd79750230c6c8539f9fcd532f431ce9cede636c772bae377f",
+      "screenshot_sha256": "5671764e37c2d50d6c216e95b2f7d4bcf4008dccc1decb776f0076be34bc303c",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "5ec91d7437e459ac69fdb29ff219b32aedc6477c5a95e38739783bfe9ea60131"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "0d2d92996f19bf3fea2cff23702db40cbd283adbb73fd7cf69466e837d2362e7"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "eded0ce059678422dfca2c115b4e59cdc67f389a035dd351dc8f76cbf027a395"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "77bf870462c97cb34590f9853c19e4423f186e18c9d4144a763522f9c9b2effb"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general4c_entry",
+      "pc": "0x00130900",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:41.571324+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop20",
+      "capture_sha256": "bab71dff0f8ed4b11df44440084727e5b521954c912661fedfa8ffe2797835c5",
+      "screenshot_sha256": "77652e6dc36d0a632d8fd2a376cd2e095c4116f3044187aefff66c59c5ba1fc4",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "5ec91d7437e459ac69fdb29ff219b32aedc6477c5a95e38739783bfe9ea60131"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "0d2d92996f19bf3fea2cff23702db40cbd283adbb73fd7cf69466e837d2362e7"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "eded0ce059678422dfca2c115b4e59cdc67f389a035dd351dc8f76cbf027a395"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "73360966b23dff5c0192efe9d1625aef13eed604c00c149abd69278d9b97cd69"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general4c_return",
+      "pc": "0x00131414",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:54:43.067923+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop21",
+      "capture_sha256": "573acd5c78c83fa9c0420f91accda7f572acc0963d8336c550dca5e882a57340",
+      "screenshot_sha256": "58c8168f1f13a11f0b9b1391bdbeaa7bb6863a06fd890d4646b565e4d1a84d1f",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "786a7baf14c731ff8ee603b3dff5753574fdff0fd28076b9f400d2d46849efac"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "79a244b517a12fabbfc31c8875b6bec312883fcb47576975241859e50dd5a67c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "9cef6f6bef18d70471bbbeec01ec9c9bcef7014d70e589d741828c9767571ed2"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "context_entry",
+      "pc": "0x0012fe90",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:44.267714+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop22",
+      "capture_sha256": "3e693d1ed7c1de424853823baa4c020bac43715fc0f2a5b5374844b869d9058e",
+      "screenshot_sha256": "fddf6468dafb91bde2fff80b1f5c9f762cf77623206cb9313952578d17441f41",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "786a7baf14c731ff8ee603b3dff5753574fdff0fd28076b9f400d2d46849efac"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "79a244b517a12fabbfc31c8875b6bec312883fcb47576975241859e50dd5a67c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "9cef6f6bef18d70471bbbeec01ec9c9bcef7014d70e589d741828c9767571ed2"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "context_dispatch",
+      "pc": "0x0012fde0",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:45.463154+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop23",
+      "capture_sha256": "eed3d40f1400042f71b0ff88c02341a6df00ad3ac7590289cd6eaed1ae7abae3",
+      "screenshot_sha256": "1801a33c7c5148d0b5cea6bcdfcbf844a2aea6e21a6401acb5fd1f8930a4e18f",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "786a7baf14c731ff8ee603b3dff5753574fdff0fd28076b9f400d2d46849efac"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "79a244b517a12fabbfc31c8875b6bec312883fcb47576975241859e50dd5a67c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "9cef6f6bef18d70471bbbeec01ec9c9bcef7014d70e589d741828c9767571ed2"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general85_entry",
+      "pc": "0x00130900",
+      "registers": {
+        "a0": "0x003f8e00"
+      },
+      "timestamp_utc": "2026-11-15T21:54:46.661530+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop24",
+      "capture_sha256": "6fd0b73d666e9bb84ce496098fca38485c86fe219227680d482d54f3a08c76fe",
+      "screenshot_sha256": "e2f50d63db7abc1ea88d4585b0d54f567fd656f9ac29a31e60bb5f1cabe2b67b",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "786a7baf14c731ff8ee603b3dff5753574fdff0fd28076b9f400d2d46849efac"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "79a244b517a12fabbfc31c8875b6bec312883fcb47576975241859e50dd5a67c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "c862748946dd7d5778e5c00cef846a862d93696157ac1990a0f31e25ec6003ec"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "general85_return",
+      "pc": "0x00131414",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:54:47.853474+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop25",
+      "capture_sha256": "0061d595af88b61520f2ae25b26916f3e9f66df0a6314b3519fe0d697a0eb454",
+      "screenshot_sha256": "313435af75c7b74b6706b7375b547c18e0bc02082aa5ab6a22af2d7c13c8be36",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "459058bf3424c08867a91b1ddea1cf78198b407979731f5d161c4ca9f3fd119d"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "1012cfc83926e5d372b2f89a694ef02f23831eb07aade1647b72c479380cd233"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "9fc375ec0fcddb3e7ed09c0360ae516178aa4aec612069bb422f8bf183c042fe"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "68119705672c1ed2bfdb10eadb511464a209ab8afe4139fbe40aac3103d4ad2d"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "engine_return",
+      "pc": "0x00130378",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:54:49.052142+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop26",
+      "capture_sha256": "e884988ffcaaa5f1438b50e610ea16fa96c5dd80091cc14c0887e73508249476",
+      "screenshot_sha256": "712c2a6a9d14809c1263c914290cdd1ec5042581065427c2187cd73dfa1c45c9",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "459058bf3424c08867a91b1ddea1cf78198b407979731f5d161c4ca9f3fd119d"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "1012cfc83926e5d372b2f89a694ef02f23831eb07aade1647b72c479380cd233"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "9fc375ec0fcddb3e7ed09c0360ae516178aa4aec612069bb422f8bf183c042fe"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "68119705672c1ed2bfdb10eadb511464a209ab8afe4139fbe40aac3103d4ad2d"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "finish",
+      "pc": "0x001434f0",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:56:28.173177+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop27",
+      "capture_sha256": "1415308cca0ff7f54ce2f392e862a0087461e86b5245db817f8e9646402e1c3d",
+      "screenshot_sha256": "fb49e108ac28a56768dd2c3717649d0361ddf479f65b69751e3c01e41a0cf515",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "31d292704d5460b60ee968ee59744e0c2d1dacaf534ac0f8bf4a7109b6fc8283"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "1012cfc83926e5d372b2f89a694ef02f23831eb07aade1647b72c479380cd233"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "9fc375ec0fcddb3e7ed09c0360ae516178aa4aec612069bb422f8bf183c042fe"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "68119705672c1ed2bfdb10eadb511464a209ab8afe4139fbe40aac3103d4ad2d"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "exit",
+      "pc": "0x00103da0",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:56:46.939854+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop28",
+      "capture_sha256": "617b8c185583a44cc8009591e29d8bb57b52ca36905bacf26818c0dfbc8c16a3",
+      "screenshot_sha256": "45ead99a2cb9ea24547ebcbe3f15d0cf7b9a216f636bccbcca9865b1de8da1fe",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "31d292704d5460b60ee968ee59744e0c2d1dacaf534ac0f8bf4a7109b6fc8283"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "1012cfc83926e5d372b2f89a694ef02f23831eb07aade1647b72c479380cd233"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "9fc375ec0fcddb3e7ed09c0360ae516178aa4aec612069bb422f8bf183c042fe"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "b488158a90d7b1566d5cf40a2f9a67b45190798eb35b6991ef7756ff983f9291"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "d6ffc16efab4e3474ed653d64c6510c768cab7703c0c6c16e2cc211592d46078"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "a1591a87f66eced286a026be194ec87be0fe1e9479baf3b85caeba29aaa5ff98"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "bank6b_entry",
+      "pc": "0x00156a50",
+      "registers": {
+        "a0": "0x01009000"
+      },
+      "timestamp_utc": "2026-11-15T22:10:12.142397+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "bank6b-entry",
+      "capture_sha256": "63a9a73b7e53a207895e98ac88a4acd942dda09165b5320c499eabead006010f",
+      "screenshot_sha256": "a5df8b830ed78e30f634e5bb6683496636243dfe84b50a9158a5740341bb98cd",
+      "ranges": [
+        {
+          "address": "0x003eaa00",
+          "size_bytes": 128,
+          "sha256": "2dd947220dc6de60a26ad3f56ff111c190240f19d7aca33a976a18962102f5b5"
+        },
+        {
+          "address": "0x00a87440",
+          "size_bytes": 352,
+          "sha256": "3f2f18307e1aef35be253160ac3f064339f9735b21931a5b5b7c7bd0b8392f0c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "0ebd427ab1c4142ae9ad42e14469c2187d1fc58ddc9d56e8e3df4e4cde3db97c"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "a4b3ef5b1bd6590cc79c72a5aa7ac0390ba6d6d3a2258d99ce7701c9a907ae96"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "44f4befdaf28889d5f49c824af4b04f83a497aabfbaeca08fa1dcd8475f09dbd"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x00f78000",
+          "size_bytes": 47104,
+          "sha256": "0a75ffebfe64e63e333c167e68db7d8a744fa72f962a60e5efe1f491a15cdfde"
+        },
+        {
+          "address": "0x01009000",
+          "size_bytes": 323584,
+          "sha256": "d359fef636e783bd6f7bd8f11eda9ee2f2ba932f4ef094381aeac43017f02332"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "bank6b_return",
+      "pc": "0x00156ab8",
+      "registers": {
+        "v0": "0x0100a740"
+      },
+      "timestamp_utc": "2026-11-15T22:10:43.652279+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "bank6b-return",
+      "capture_sha256": "4e6cf717f72a5ef19c58504d77793c11ec0fa0312db1ecfe172d97310b66970b",
+      "screenshot_sha256": "521b7878599efac00a73c2960e0f94645ae4269b55a90ceb1a6eebbdde77a69d",
+      "ranges": [
+        {
+          "address": "0x003eaa00",
+          "size_bytes": 128,
+          "sha256": "ca9aa1e3a4e455b47045035021326ebccc77b68359a2832a5b5ad32a31c1a681"
+        },
+        {
+          "address": "0x00a87440",
+          "size_bytes": 352,
+          "sha256": "d6a8732d6c17d6e1fb0c58e01fcfc79135d82dcffd9d16ed8f6605ed9d65699c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "0ebd427ab1c4142ae9ad42e14469c2187d1fc58ddc9d56e8e3df4e4cde3db97c"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "a4b3ef5b1bd6590cc79c72a5aa7ac0390ba6d6d3a2258d99ce7701c9a907ae96"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "44f4befdaf28889d5f49c824af4b04f83a497aabfbaeca08fa1dcd8475f09dbd"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x00f78000",
+          "size_bytes": 47104,
+          "sha256": "0a75ffebfe64e63e333c167e68db7d8a744fa72f962a60e5efe1f491a15cdfde"
+        },
+        {
+          "address": "0x01009000",
+          "size_bytes": 323584,
+          "sha256": "30c7e812669300dd92c7849447076e96b39e9507d9720c20f5c6dc55f096617b"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "bank85_entry",
+      "pc": "0x00156a50",
+      "registers": {
+        "a0": "0x00f78000"
+      },
+      "timestamp_utc": "2026-11-15T22:12:38.053812+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "bank85-entry",
+      "capture_sha256": "d608d6b0daa8af50158b9015fbe91f7a71b1cdc9cbddb39264d03ebf97feb8fa",
+      "screenshot_sha256": "377c73f7a73af4e51671a1639cbd902af6dfebb508329d9a48a8bbdf452408df",
+      "ranges": [
+        {
+          "address": "0x003eaa00",
+          "size_bytes": 128,
+          "sha256": "ca9aa1e3a4e455b47045035021326ebccc77b68359a2832a5b5ad32a31c1a681"
+        },
+        {
+          "address": "0x00a87440",
+          "size_bytes": 352,
+          "sha256": "d6a8732d6c17d6e1fb0c58e01fcfc79135d82dcffd9d16ed8f6605ed9d65699c"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "3e8bf057c6dc039ce6905642fd29c636c5cd15132ca2b731b4fcf43b7f86a321"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x00f78000",
+          "size_bytes": 47104,
+          "sha256": "097b71b06d4366411dc421d0de71bffc6ce7a7a6fba607dcda99fd41524f08a9"
+        },
+        {
+          "address": "0x01009000",
+          "size_bytes": 323584,
+          "sha256": "964c8835c7e22fc6da3d67a4a7d94c40ef6211b155a958e5a5f47e6ee5f1c0f7"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "bank85_return",
+      "pc": "0x00156ab8",
+      "registers": {
+        "v0": "0x00f78880"
+      },
+      "timestamp_utc": "2026-11-15T22:13:27.624578+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "bank85-return",
+      "capture_sha256": "f58aa57b1364e14b5aa2309d7aa6678f9b49bb7981bed9c1e311c30a6628ab23",
+      "screenshot_sha256": "0fe6eac652d5970c2893714fb3cf82832119797d36e8637e1f4c8fc6c0ac7af6",
+      "ranges": [
+        {
+          "address": "0x003eaa00",
+          "size_bytes": 128,
+          "sha256": "249f0fbd71eadf61963d11390532d8ba207e55316147bc5de2d4bb3a38a9253c"
+        },
+        {
+          "address": "0x00a87440",
+          "size_bytes": 352,
+          "sha256": "ce6084bd1e3b6959c901fe8e5bcf18b95d4846bcba1d9e05ae21429447d51b66"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "70614e9158006d6927569a2ff19534c0c2764e0daa4a15614736ce85bdd1781d"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "d275f7ccbd5b9ddc45051b0e00ee7a95b4b0ea6b9189da758a19d866650f8f38"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "3e8bf057c6dc039ce6905642fd29c636c5cd15132ca2b731b4fcf43b7f86a321"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x00f78000",
+          "size_bytes": 47104,
+          "sha256": "73a828e5e21f2cd45607aa36866d773802e82ffdee4afd5239fd921090a56fef"
+        },
+        {
+          "address": "0x01009000",
+          "size_bytes": 323584,
+          "sha256": "964c8835c7e22fc6da3d67a4a7d94c40ef6211b155a958e5a5f47e6ee5f1c0f7"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "engine_output",
+      "pc": "0x00130378",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:56:01.721548+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "engine-output",
+      "capture_sha256": "219c88670ae5975368133e483212044ccebaa247422f0d8103baf396e2bc341e",
+      "screenshot_sha256": "4c256cdea9de6081687a7884e72ce5a2662377fcc3edc414d1c3401acca39227",
+      "ranges": [
+        {
+          "address": "0x00f78000",
+          "size_bytes": 8388608,
+          "sha256": "59eb981347b0b80c38e61b49d83f8311c3651331f7bba19747e700c555a88606"
+        }
+      ]
+    },
+    {
+      "event": "actor_boundary",
+      "pc": "0x00a8a070",
+      "registers": {
+        "a0": "0x004d8150"
+      },
+      "timestamp_utc": "2026-11-15T22:14:45.863681+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "actor-boundary",
+      "capture_sha256": "a0a770983e156bc8fc401d12a5231d047321535eb7d761fb3749cc327f115760",
+      "screenshot_sha256": "3430ea4b0ae22c2ad4b11ef49a7469fcdea620b1d3e5c8f2e88cec645b8ba773",
+      "ranges": [
+        {
+          "address": "0x004d8150",
+          "size_bytes": 1280,
+          "sha256": "7914788c9dc58fea52eb7321081ac0649623873f93d339787d7de4787810fdac"
+        },
+        {
+          "address": "0x003eb054",
+          "size_bytes": 16,
+          "sha256": "80206d9096757d3f286502d0989f5601412741575d7c4578cfff95922ee9092c"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        }
+      ]
+    },
+    {
+      "event": "c6_entry",
+      "pc": "0x00131420",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:52:54.962541+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "c6-entry",
+      "capture_sha256": "f1a8755a603d187ed1a0274ca7e7b76098ed548f2dfbc53986eb50de3b3b11bb",
+      "screenshot_sha256": "13c881e64c80c80f21c1851c5cf0fae7b5179d982bee1b583d78ba385f62f4f0",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "fed66e24901af661a76530385d4816dbcb502b0602d44ca80dadb717fa2bdec4"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "fefb6ad81a8966fbd77aee4da2e3f38a99be849420f4026775ee32dc085ef7b7"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "ef3503136069cee7ad3e5ebc65502af4c335d5bff3b704b5fa56a6554b21729b"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "9e045b00b8a3114c226d986259e870f11274d9929ab663d71f812228459138e2"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "e7360547f8387f2e2dea6634fb8b7709ba9aa06e896185d45790364a2ee9682a"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "a90a5378cc401897283205d145687b72601b27e8e406efd6f07eff92b8713cd9"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "692814dcc183673882cdf53baa45a34dc5be3c15f01e3d69b69dadefab525aec"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "c6_return",
+      "pc": "0x001317fc",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:53:04.675373+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop01",
+      "capture_sha256": "4013f9c1e7b7cbbc01d03cc5fe2b06464e65e645e53c28aacfb6f51be0f86969",
+      "screenshot_sha256": "36790f3e1b823d43e71763bd167c05e518170c977311434157f65e191c1327db",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "cb503d520bf866b09a56752ddf3232b94ee4f4af5bca6efcac2abd7b5235a5b5"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "8f99424fd71737889813071929226d4a279df320528828c5d5b46d22c28191ea"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "ac8960559ceae41a3cf3e3df84a768db71df8a2e15da807321cc2befea730238"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "9dd584e51d9762a44ad302ef0edb07944bc65394b84c4d0782fb4d95bace50a2"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "6932c538d8019cce21e733f37a0fb37d4a81aef9946f91e3ed0ac8fc5d3c3eec"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "eaf596439686a51de53354d674e547773a4ceffa6da56f290ec1d130b4c6295d"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "directory5_entry",
+      "pc": "0x00130900",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:53:31.136258+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop03",
+      "capture_sha256": "5f9c7a20dd2fc5e3f53ddf906a99c83cd046037777bec3c0e92fd17d82aef2dd",
+      "screenshot_sha256": "392ce8529781547b7ebbebc5acd13641e5fb18fb6b80eac8880ddf7d23e8207c",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "cb503d520bf866b09a56752ddf3232b94ee4f4af5bca6efcac2abd7b5235a5b5"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "8f99424fd71737889813071929226d4a279df320528828c5d5b46d22c28191ea"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "ac8960559ceae41a3cf3e3df84a768db71df8a2e15da807321cc2befea730238"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "9dd584e51d9762a44ad302ef0edb07944bc65394b84c4d0782fb4d95bace50a2"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "d6418993d51121aec99cc0a7584894d97e2c9db1abc0c01e83d4d4f06ee497f1"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "eaf596439686a51de53354d674e547773a4ceffa6da56f290ec1d130b4c6295d"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "directory5_return",
+      "pc": "0x00131414",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:53:46.326598+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop04",
+      "capture_sha256": "b305aa3e3a623c4981de0c33a0252cf85e3af42a5d035e0d0826a464c5dfad8d",
+      "screenshot_sha256": "003acdeba862e668059a55ba1aeae91729a77d950c94c7ae76604ed11b1204f1",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "7fafc3c88c28b6106ade5253a7c556bfe068f78f68f21684cc8ef1354a2312d6"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "b33b2a426f3c0047a4039a373782cee02b014432e62dafa3934b594ed8bf6bb0"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "ccda11f44b2ee5e4b3095ab9ee6beaf4011a741ea500c6017cffcbbfb92280b5"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "bf8f9b4ca87755f272566b25dfd2b007bc0580b88e5b7307240f8a25d4b23b4b"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "f3f3474bfb3f04536f02ee1e400f4d4b188184a22859b9432966ef6747609397"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "bdc7a76d23e3978b15d802aa0958a1b0ba61fcb708636cc06555e738645ee773"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    },
+    {
+      "event": "c7_return",
+      "pc": "0x001317fc",
+      "registers": {},
+      "timestamp_utc": "2026-11-15T21:54:00.913577+00:00",
+      "metadata": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "capture_id": "stop16",
+      "capture_sha256": "476aceb93b376ab07dd762e7b9eedc9b18c4032ba737128f346a9de3358b80ff",
+      "screenshot_sha256": "c07f92492d3d7784b4fc13ff0c3ce0e26110cc85b334b09158bd78bc0c60c7df",
+      "ranges": [
+        {
+          "address": "0x0012fcf0",
+          "size_bytes": 1120,
+          "sha256": "aed07992b8c2f3f92fc0a57680cf14f277dcab0b60efb1e038b89067fdf71ec6"
+        },
+        {
+          "address": "0x003dff00",
+          "size_bytes": 1024,
+          "sha256": "fef5a61e067a6c008212b0270b3dac0397f79d9d841449ffc31509a347c626c9"
+        },
+        {
+          "address": "0x003eace0",
+          "size_bytes": 144,
+          "sha256": "d25a05232b06f997300494e6b6f866aa8157aefdd7a557bc63551e021ecde239"
+        },
+        {
+          "address": "0x003f3a30",
+          "size_bytes": 176,
+          "sha256": "81c10e04997f60191f848362fe9ebbf9acf4c18227779e5467ca49d0f6e858ea"
+        },
+        {
+          "address": "0x003f3b00",
+          "size_bytes": 2048,
+          "sha256": "08d2d92a7eef304199fd962372256959d54ebd56f73db34f04dfd815b6b359e5"
+        },
+        {
+          "address": "0x003f4300",
+          "size_bytes": 2600,
+          "sha256": "0ebd427ab1c4142ae9ad42e14469c2187d1fc58ddc9d56e8e3df4e4cde3db97c"
+        },
+        {
+          "address": "0x003f4d3c",
+          "size_bytes": 36,
+          "sha256": "a4b3ef5b1bd6590cc79c72a5aa7ac0390ba6d6d3a2258d99ce7701c9a907ae96"
+        },
+        {
+          "address": "0x003f8e00",
+          "size_bytes": 80,
+          "sha256": "fe1e804532706a8386460e6e0f09e0e752a6c53db825de586ace306d104892b3"
+        },
+        {
+          "address": "0x003f9fe0",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x003fa1b0",
+          "size_bytes": 96,
+          "sha256": "b526bc4409a88c7238a2ddfbaf0d79067ed7ac3d44d741ece844c09a3cc88890"
+        },
+        {
+          "address": "0x0046e100",
+          "size_bytes": 64,
+          "sha256": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b"
+        },
+        {
+          "address": "0x00a87800",
+          "size_bytes": 30720,
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+        },
+        {
+          "address": "0x01270000",
+          "size_bytes": 4784128,
+          "sha256": "70dba01734e95ca4ad747379d8c05ba6b43d0a5ff4e0d07e96f691ebeb956508"
+        },
+        {
+          "address": "0x700000c4",
+          "size_bytes": 4,
+          "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        }
+      ]
+    }
+  ]
+}
