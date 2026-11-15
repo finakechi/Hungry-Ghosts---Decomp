@@ -1,11 +1,37 @@
 {
   "schema": "hg-m5-preservation/v1",
-  "result": "pending-local-archive",
+  "result": "passed-local-only",
   "remote_result": "blocked",
-  "blocker": "API session has no Drive connector; browser host unavailable; rclone executable and configuration absent.",
+  "implementation_commit": "2609da9751bbcdb83a68f05b714ce3c95df2525d",
+  "snapshot_id": "20261115T004448Z-48cc262b9738",
+  "file_count": 1323,
+  "total_bytes": 404833472,
+  "m5_private_files": 328,
+  "archive_size": 111286356,
+  "archive_sha256": "6451a329f1f604ed4d3ac21c37fd42aa5c11523ee49d17f1573abdb891ecb92a",
+  "manifest_sha256": "0340634dee1428ca7d79743f744378f3a69401c9262973fb0756200c92013fe2",
+  "local_verification": [
+    "Full compressed archive and every member verified",
+    "Full exclusive isolated restore",
+    "Restored Git bundle cloned",
+    "Recovered Git fsck --full passed",
+    "Recovered HEAD equals implementation commit; M1-M4 commits available"
+  ],
+  "original_inventory_items_unchanged": 7,
+  "previous_backups": "Existing snapshots preserved; only new uniquely named snapshots created",
+  "blocker": "No Google Drive connector in API session; browser access host unavailable; rclone executable and configuration absent.",
+  "independent_Drive_download_verification": false,
   "github_branch_pushed": false,
   "pull_request": null,
-  "ci": "not run; branch remains local",
-  "media": "Read-only authenticated original inputs; extraction payloads excluded from backup archive",
-  "previous_backups": "Unchanged; additive snapshot will use existing configuration destination"
+  "ci": "not run; no M5 push or PR",
+  "limitations": [
+    "Same-disk archive restoration is not independent cloud verification.",
+    "Final preservation-only handoff commit follows the implementation snapshot and is not covered by that immutable snapshot.",
+    "Ghidra files restored and hash-verified; application reopening/gameplay replay not claimed.",
+    "Emulator left paused at18c280 following callback reuse; unrelated applications untouched."
+  ],
+  "private_receipts": {
+    "create": "local/m5-backup-committed-create.json",
+    "verification": "local/m5-backup-local-verification.json"
+  }
 }

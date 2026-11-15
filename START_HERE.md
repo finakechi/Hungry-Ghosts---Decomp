@@ -40,6 +40,16 @@ gate and publication audit before the authorized normal branch push and PR to
 main. Leave the PR open; do not merge. Current M4 history is already merged via
 PR #2; older no-publication claims below are historical.
 
+Implementation commit: `2609da9751bbcdb83a68f05b714ce3c95df2525d` (local).
+An additive local snapshot passed full member verification, isolated restore,
+recovered Git clone and fsck: **1,323 files / 404,833,472 bytes**, including **328
+private M5 files**. Restored HEAD equals that implementation commit. Original
+media/BIOS/extraction inventory matches the previous M4 snapshot. This is a
+same-disk recovery result, **not** an independently downloaded Drive backup. The
+later preservation-only handoff commit is outside this immutable snapshot.
+The implementation publication audit found zero heuristic findings. No push/PR
+or M5 remote CI was attempted while the Drive gate remains blocked.
+
 ## M4 current result — 2026-11-14
 
 **M4 complete for the selected bootstrap FLK5 resource.** The combined
