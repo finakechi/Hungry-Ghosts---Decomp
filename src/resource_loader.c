@@ -47,6 +47,60 @@ static void clear_task_phases(HGResourceEnv *e,uint32_t task) {
     w16(e,task+0x3c,0);w16(e,task+0x3e,0);
 }
 
+/* 0012fcf0. The high byte is an arithmetic word shift, not an unsigned
+ * table index. All table/address arithmetic remains modulo 2^32. */
+void hg_resource_load_indexed(HGResourceEnv *e,uint32_t task) {
+    uint32_t id=r32(e,task+0x44),high=id>>8;
+    if((id&0x80000000u)!=0)high|=0xff000000u;
+    uint32_t table=r32(e,0x3e0200u+((high-2u)<<2));
+    w32(e,task+0x44,r32(e,table+((id&255u)<<2)));
+    id=r32(e,task+0x44);
+    if(id==0xffffffffu || r16(e,0x46e130u+(r16(e,0x46e136)<<1))==id)return;
+    clear_task_phases(e,task);
+    w16(e,0x46e136,r16(e,0x46e136)+1u);
+    if(r16(e,0x46e136)>=3)w16(e,0x46e136,0);
+    uint32_t slot=r16(e,0x46e136);
+    w16(e,0x46e130u+(slot<<1),r32(e,task+0x44));
+    call(e,0x130900,task,0,0,0);
+}
+
+/* 0012fde0: context-to-directory lookup; ff and ffffffff are distinct
+ * no-load sentinels. The second table uses the original unadjusted index. */
+void hg_resource_load_context(HGResourceEnv *e,uint32_t task) {
+    uint32_t sub=r8(e,0x3fa201);
+    if(sub==255)return;
+    uint32_t kind=r8(e,0x3fa200);
+    uint32_t address=kind<3?0x3e01c0u+kind*12u+sub*4u:0x3e01e4u+kind*4u;
+    w32(e,task+0x44,r32(e,address));
+    if(r32(e,task+0x44)==0xffffffffu)return;
+    clear_task_phases(e,task);
+    call(e,0x130900,task,0,0,0);
+}
+
+void hg_resource_prepare_context(HGResourceEnv *e,uint32_t task) {
+    if(r32(e,0x700000c4)!=2)return;
+    w16(e,0x46e136,0);w16(e,0x46e130,0);
+    w16(e,0x46e132,0);w16(e,0x46e134,0);
+    if(r8(e,0x46e12d)==2 && r8(e,0x3fa202)!=255) {
+        w32(e,task+0x44,r8(e,0x3fa202)|0x200u);
+        call(e,0x12fcf0,task,0,0,0);
+    }else call(e,0x12fde0,task,0,0,0);
+}
+
+void hg_resource_prepare_retained(HGResourceEnv *e,uint32_t task) {
+    if(r32(e,0x700000c4)!=2 && r8(e,0x3fa1ba)==0)return;
+    uint32_t kind=r8(e,0x3fa1b0),wanted=kind==2?0x4d:0x4c;
+    if(wanted!=r8(e,0x3f9fef)) {
+        w32(e,task+0x44,kind==0 && r8(e,0x3fa1b1)==3 && r8(e,0x3fa1b2)==3?0x4a:0x6b);
+        clear_task_phases(e,task);call(e,0x130900,task,0,0,0);
+        /* The first loader may change the selector: reload it as the EE does. */
+        w32(e,task+0x44,r8(e,0x3fa1b0)==2?0x4d:0x4c);
+        w8(e,0x3f9fef,r32(e,task+0x44));
+        clear_task_phases(e,task);call(e,0x130900,task,0,0,0);
+    }
+    w8(e,0x46e10c,1);
+}
+
 void hg_resource_init(HGResourceEnv *e) {
     call(e,0x119ac8,0x3ead30,0,0x2c,0);
     call(e,0x119ac8,0x3f8e00,0,0x50,0);
@@ -715,6 +769,10 @@ static uint32_t process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32
     HGProcessing *p=user;
     if(pc==0x130900) {hg_pack_general(&p->env,a);return 0;}
     if(pc==0x131420) {hg_pack_alternative(&p->env,a);return 0;}
+    if(pc==0x130020) {hg_resource_prepare_retained(&p->env,a);return 0;}
+    if(pc==0x12fe90) {hg_resource_prepare_context(&p->env,a);return 0;}
+    if(pc==0x12fcf0) {hg_resource_load_indexed(&p->env,a);return 0;}
+    if(pc==0x12fde0) {hg_resource_load_context(&p->env,a);return 0;}
     if(pc==0x137ed0)return hg_resource_fixup(&p->env,a,b,c,p->frame);
     if(pc==0x1386e0) {hg_resource_geometry(&p->env,a,b);return 0;}
     if(pc==0x1389d0)return hg_resource_map_address(&p->env,a,p->frame-0x50);
@@ -724,4 +782,14 @@ void hg_resource_worker_fixed(HGResourceEnv *e,uint32_t frame) {
     HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
     p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
     hg_resource_worker(&p.env);
+}
+
+/* Host-only continuation for the measured pair at 00130368..00130378,
+ * after the second alternative loader and its phase reset. Uses exactly the
+ * worker's resolver, without replaying the preceding PACK/audio operation. */
+void hg_resource_prepare_engine_fixed(HGResourceEnv *e,uint32_t task,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
+    hg_resource_prepare_retained(&p.env,task);
+    hg_resource_prepare_context(&p.env,task);
 }

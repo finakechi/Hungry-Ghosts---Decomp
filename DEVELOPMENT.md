@@ -1,11 +1,10 @@
 # Hungry Ghosts — development and reproduction
 
-**Current documented baseline:** M6 on GitHub `main` at
-[`fd0af170`](https://github.com/finakechi/Hungry-Ghosts---Decomp/commit/fd0af17031aa27336c8236efb37690d98cc52c0b)
-(2026-11-15 review). Recheck the **actual local checkout** before reproducing
-anything: GitHub state does not establish MainPC's HEAD, private inputs or
-installed tool versions. The [M6 milestone report](docs/M6.md) owns the exact
-original-byte, reconstructed-behavior and PCSX2 comparison commands and limits.
+**Current local baseline:** M7 on `research/m7-engine-preparation`, based on
+verified GitHub main `280a1a296a877cc14709a6adca0505569f1a57c7` (2026-11-15).
+[The M7 report](docs/M7.md) owns the selected engine-preparation boundary,
+original-data commands and Resume here handoff. M7 is local and unpublished;
+recheck actual HEAD, tool versions and private inputs before reproducing.
 
 ## Current quick start — synthetic checks only
 
@@ -25,7 +24,7 @@ python3 -m unittest discover -s tests -v
 git diff --check
 ```
 
-Expected at the pinned M6 commit: **126 tests** and a passing full suite when
+Expected at the M7 local milestone: **136 tests** and a passing full suite when
 those prerequisites are installed. [GitHub CI](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43675180294)
 passed its two M6-head jobs (Python 3.10/3.14 with JDK 21 and C sanitizers).
 That remote result does not prove a new local run passed. If a prerequisite is
@@ -35,7 +34,7 @@ install or reconfigure system software automatically.
 ## Original media and runtime checks — owner-local only
 
 For original-game checks, establish the actual approved paths **before running**
-the [M6 verification commands](docs/M6.md#verification). The current routines
+the [M7 verification commands](docs/M7.md#commands-and-checks). The current routines
 use `HG_ELF` (unmodified Japanese boot ELF), `HG_JAPAN_ISO` (original image),
 `HG_PS2DINFO` (pinned shared-tools checkout), and, for emulator checks,
 `HG_PCSX2`. Ghidra work additionally uses `HG_GHIDRA`; comparative build checks
@@ -56,7 +55,7 @@ Private captures and recovered profiles are not included in the public clone.
 
 The following M1–M5 command recipes and observations are dated milestone
 material, **not** a claim about current MainPC paths, CI, backup status or the
-next operation. For current work start with the sections above and `docs/M6.md`.
+next operation. For current work start with the sections above and `docs/M7.md`.
 
 Run commands from the repository root in a POSIX shell. Originals stay read-only;
 all extraction, databases, profiles, logs and build products go in ignored local/.
@@ -352,3 +351,21 @@ That private observation set validates all 13 actual fixups, complete payload,
 publication and fresh AREA1 reuse. Runtime and original-data checks are local
 only; synthetic CI uses neither media nor captures. Snapshot/review delivery is
 recorded separately in the PR; preserve all prior snapshots.
+
+## M7: downstream engine directory preparation
+
+The existing fixed worker now resolves retained/context/indexed preparation. Use
+`hg_resource_prepare_engine_fixed(env, task, frame)` only for the measured pair
+after the kind-3 alternative loader and phase reset; it shares the worker's
+resolver and guest scratch contract. Audio/IOP remains an explicit callback under
+the separately checked resource-memory contract. See [M7](docs/M7.md) for the
+precise boundary; actor construction is not implied.
+
+```sh
+python -B tools/verify_engine_preparation.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" --output local/m7/repro-instructions.json
+python -B tools/verify_engine_runtime.py --elf "$HG_ELF" --image "$HG_JAPAN_ISO" --runtime local/m7 --ps2dinfo "$HG_PS2DINFO" --emulator "$HG_PCSX2" --profile local/m7/capture-profile.ini --contract-profile local/m7/contract-profile.ini --output local/m7/repro-runtime.json
+```
+
+The runtime command needs the private M7 observation bundle and both frozen
+profiles. A public-only checkout must report that gate SKIPPED when unavailable.
+Use fresh outputs on repetition. Synthetic CI needs none of those inputs.

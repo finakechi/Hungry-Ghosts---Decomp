@@ -1,5 +1,42 @@
 # Hungry Ghosts — start here
 
+## M7 resource preparation — 2026-11-15
+
+**The selected downstream resource branch is implemented and independently
+verified.** The fixed worker now resolves `130020 -> 12fe90` and their indexed /
+context directory loaders. Four original routines add **204 words / 816 bytes**:
+M1–M7 total **38 functions / 2,952 words / 11,808 instruction bytes**.
+
+Two fresh original-image PCSX2 boots verify directory loads **6b, 4c and 85**,
+**2,134,016 newly read resource bytes**, all 2,600 handle bytes, arena/task/ready
+state and retention of c6/AREA1 through worker completion. Audio remains external
+under a separately verified resource-memory/endpoint contract; no expected output
+is replayed. Later AREA1 state-0 dispatch is observed, with actor construction
+and activation still explicit boundaries. Upload was not reached.
+
+**136 synthetic tests**, **960 new instruction cases + 4 complete workers**,
+all **204 new instruction addresses**, M1–M6 regressions, strict C, ASan/UBSan,
+input/evidence checks and two compiled behavioral negative controls pass.
+[docs/M7.md](docs/M7.md) starts with Resume here and records exact boundaries,
+commands, evidence classes, limitations and local delivery identities. No M7
+push, PR, merge, remote CI or private upload is claimed. Implementation commit
+`7db283852d056da0b4f8bc9609dce00954c5d135` has a fully verified additive local
+snapshot: **2,091 files / 1,043,264,642 bytes**, complete isolated restore and
+recovered Git fsck pass. This is same-disk recovery, with no remote upload. The
+later preservation-only handoff commit is outside that immutable snapshot.
+
+**Phase 1 merge addendum — 2026-11-15:** HG documentation PR
+[#5](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/5) and PS2DInfo PR
+[#8](https://github.com/finakechi/PS2DInfo/pull/8) are verified merged at
+`280a1a296a877cc14709a6adca0505569f1a57c7` and
+`88fa49b64817fb98e59182c9cef7819b7a7d8746`. The original review-proposal wording
+below is preserved as historical state. This session has javac 21 and a passing
+full local suite; it does not revise the earlier environment failure report.
+
+ONE next action: trace the observed AREA1 state-0 six-argument `18a330` setup
+before defining the next actor implementation boundary. Publication requires
+Noah's separate explicit approval; no final port/rebuild strategy is selected.
+
 ## Phase 1 documentation update — 2026-11-15 (review proposal)
 
 The current starting commands are now at the top of

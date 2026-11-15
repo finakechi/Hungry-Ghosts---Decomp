@@ -1,0 +1,78 @@
+{
+  "schema": "hg-m7-preflight/v1",
+  "date": "2026-11-15",
+  "timezone": "America/New_York",
+  "baseline": {
+    "hg_start_branch": "research/m6-pack-finalization",
+    "hg_start_head": "53030ac0611d5b3513a47888660c61f1c08dec72",
+    "clean": true,
+    "hg_current_main": "280a1a296a877cc14709a6adca0505569f1a57c7",
+    "branch": "research/m7-engine-preparation",
+    "ps2dinfo_checkout": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+    "ps2dinfo_remote_head": "88fa49b64817fb98e59182c9cef7819b7a7d8746",
+    "synthetic_tests_passed": 126,
+    "worktrees": 1
+  },
+  "toolchain": {
+    "host": "MainPC, CachyOS Linux x86_64, kernel 7.3.3-1-cachyos",
+    "shell": "bash",
+    "python": "3.14.9",
+    "cc": "GCC 16.2.1 20260810",
+    "javac": "21.0.12.1",
+    "java": "OpenJDK 21.0.12.1",
+    "ghidra": "12.1.4",
+    "language": "r5900:LE:32:default",
+    "ee_extension_jar_sha256": "825d6f5f506acef68985ebfaab77e90896d3c687a1e512dd440efa2014b2fe07",
+    "pcsx2": "2.8.2",
+    "pcsx2_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+    "pine_slots": [
+      28052,
+      28053
+    ]
+  },
+  "build": {
+    "image_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "serial": "SCPS-15046",
+    "crc": "91AA4B28",
+    "system_cnf": "BOOT2 = cdrom0:\\SCPS_150.46;1; VER=1.02; VMODE=NTSC",
+    "elf_entry": "0x00100008",
+    "file_mapping": "File offset 0x800 maps to EE 0x00100000; 3,058,048 file-backed bytes.",
+    "resources": {
+      "/DATA/PACK.DAT": {
+        "lba": 1402580,
+        "size_bytes": 448763904,
+        "directory": false,
+        "hashes": {
+          "sha256": "f2e04a08493fb5681ab468323f6b21195c55a9428234a977aea2247f53540a1a",
+          "sha1": "7f45a140352790e55fded2de059f4be8c0d86ec2",
+          "md5": "d8e7fe67e7e7da674eee5d7135d87dd7",
+          "crc32": "98b005f5"
+        }
+      },
+      "/AREA1/A1_B00.BIN": {
+        "lba": 1402368,
+        "size_bytes": 30720,
+        "directory": false,
+        "hashes": {
+          "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+          "sha1": "3a8ff7b66ffd35cfeb99dbccc9c0a9c2695fab44",
+          "md5": "126d918ebaa2c23bb6c986f62b498bbd",
+          "crc32": "68ad84b6"
+        }
+      }
+    }
+  },
+  "github": {
+    "main_ci_run": 43764332347,
+    "result": "success",
+    "hg_phase1_pr": 5,
+    "ps2dinfo_phase1_pr": 8,
+    "phase1_both": "MERGED",
+    "new_branch_remote_ci": "SKIPPED: publication not authorized"
+  },
+  "limitations": [
+    "No consequential installation/settings changes; existing tool paths verified locally and omitted here.",
+    "Original input content, raw captures, Ghidra projects and private paths remain ignored."
+  ]
+}

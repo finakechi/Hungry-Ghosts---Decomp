@@ -47,6 +47,7 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
     case 0x130020:case 0x12fe90:assert(a==0x3f8e00);return 0;
     case 0x1434e0:assert(++t->ticks<100);return 0;
     case 0x137ed0:return a+32;
+    case 0x156a50:return (a+load(u,a+0x10,4)+0x40u)&0xffffffc0u;
     case 0x1389d0:return 0;
     case 0x1041e0:assert(a==2);return 0;
     case 0x1235c0:assert(a==0x5f0090 && b==5);return 0;
@@ -183,5 +184,40 @@ int main(void) {
     store(&t,0x5f0018,1,2);hg_area1_actor(&e,0x5f0000,actor_setup);
     assert(load(&t,0x5f0018,1)==3);hg_area1_actor(&e,0x5f0000,actor_setup);
     assert(memcmp(t.ram+0xa87800,t.area,2049)==0);
-    free(t.ram);puts("PASS: synthetic M1-M6 request/worker/PACK/AREA/geometry and retained arenas under sanitizers");return 0;
+    /* M7: kind-3 continuation through retained and context directories. The
+     * invented special member supplies the explicit successful audio endpoint;
+     * later raw members test publication and arena reuse without audio/IOP. */
+    memset(t.ram,0,0x2000000);memset(t.disk,0,sizeof t.disk);
+    memset(t.scratch,0,sizeof t.scratch);t.ticks=0;t.reads=0;t.rejects=0;
+    read_state=(HGReadState){0};disc.active=0;
+    store(&t,0x3ead20,4,1000);store(&t,0x3ead24,4,sizeof t.disk);
+    store(&t,0x700000c4,4,2);store(&t,0x3fa1b0,1,1);
+    store(&t,0x3e01c0,4,0x85);
+    store(&t,0x3f4d44,4,0xc00000);store(&t,0x3f4d48,4,0xc91000);
+    store(&t,0x3f4d50,4,0xd00000);store(&t,0x3f4d54,4,0xd00000);
+    disk_word(&t,3*2048,3);
+    for(unsigned i=0;i<3;i++) {
+        uint32_t id=i==0?0x6b:(i==1?0x4c:0x85),h=id*2048,p=0x81000+i*2048;
+        disk_word(&t,h,id);disk_word(&t,h+4,1);disk_word(&t,h+12,p);
+        disk_word(&t,h+16,p);disk_word(&t,h+20,2048);
+        disk_word(&t,h+8,1);disk_word(&t,h+64,p);
+        disk_word(&t,h+68,2048);disk_word(&t,h+72,i==1?0x74:0x95);
+        disk_word(&t,p,0x12345678+i);
+        if(i==0) {
+            disk_word(&t,h+8,0);disk_word(&t,h+16,p+2048);
+            disk_word(&t,h+20,0);disk_word(&t,h+24,1);
+            disk_word(&t,h+72,0x51);disk_word(&t,p+0x10,0x780);
+        }
+    }
+    hg_resource_request_raw(&e,3,3);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(load(&t,0x3f4444,4)==0xc917c0 && load(&t,0x3f4d48,4)==0xc91800);
+    assert(load(&t,0x3f4300+0x74*4,4)==0xc91800);
+    assert(load(&t,0x3f4300+0x95*4,4)==0xc00000);
+    assert(load(&t,0xc91800,4)==0x12345679 && load(&t,0xc00000,4)==0x1234567a);
+    assert(load(&t,0x3f9fef,1)==0x4c && load(&t,0x46e10c,1)==1);
+    assert(load(&t,0x3f8e30,2)==0 && load(&t,0x3eacec,1)==0);
+    unsigned reads=t.reads;
+    hg_resource_request_raw(&e,8,0);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(t.reads==reads && load(&t,0xc91800,4)==0x12345679);
+    free(t.ram);puts("PASS: synthetic M1-M7 workers, resource preparation and retained arenas under sanitizers");return 0;
 }
