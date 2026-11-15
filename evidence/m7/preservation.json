@@ -1,0 +1,24 @@
+{
+  "schema": "hg-m7-preservation/v1",
+  "result": "passed",
+  "implementation_commit": "7db283852d056da0b4f8bc9609dce00954c5d135",
+  "snapshot_id": "20261115T222743Z-2b7656a63ac5",
+  "files_verified": 2091,
+  "bytes_verified": 1043264642,
+  "archive_sha256": "e72679eb298a362e363525fc2911b39c1a7b615ed1f1042891ec6a8428d779c3",
+  "manifest_sha256": "d1ec4d013fc5d3601cddab9a2a7e2e77bcec45aa79c56816e7ed5efeeb9c081d",
+  "archive_bytes": 320506914,
+  "isolated_restored_files": 2091,
+  "recovered_git": "Complete-history bundle cloned; git fsck --full passed; implementation commit present and recovered HEAD matches.",
+  "publication_audit": {
+    "result": "no-heuristic-findings",
+    "objects": 29,
+    "findings": 0
+  },
+  "transport": "local only; no upload/download or independent off-machine recovery claimed",
+  "limitations": [
+    "Same physical disk; no new remote backup or M7 publication authorized.",
+    "The immutable snapshot contains the implementation commit. The later preservation/handoff-only commit is outside it; a separate final local Git bundle preserves that commit.",
+    "Original media, BIOS, extracted commercial files and symlink targets are inventory-only/excluded; prior snapshots and existing databases preserved."
+  ]
+}

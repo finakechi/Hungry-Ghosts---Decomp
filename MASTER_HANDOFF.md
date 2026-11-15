@@ -19,7 +19,11 @@ all **204 new instruction addresses**, M1–M6 regressions, strict C, ASan/UBSan
 input/evidence checks and two compiled behavioral negative controls pass.
 [docs/M7.md](docs/M7.md) starts with Resume here and records exact boundaries,
 commands, evidence classes, limitations and local delivery identities. No M7
-push, PR, merge, remote CI or private upload is claimed.
+push, PR, merge, remote CI or private upload is claimed. Implementation commit
+`7db283852d056da0b4f8bc9609dce00954c5d135` has a fully verified additive local
+snapshot: **2,091 files / 1,043,264,642 bytes**, complete isolated restore and
+recovered Git fsck pass. This is same-disk recovery, with no remote upload. The
+later preservation-only handoff commit is outside that immutable snapshot.
 
 **Phase 1 merge addendum — 2026-11-15:** HG documentation PR
 [#5](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/5) and PS2DInfo PR
