@@ -1,4 +1,62 @@
-# Reproduce and continue M1
+# Hungry Ghosts — development and reproduction
+
+**Current documented baseline:** M6 on GitHub `main` at
+[`fd0af170`](https://github.com/finakechi/Hungry-Ghosts---Decomp/commit/fd0af17031aa27336c8236efb37690d98cc52c0b)
+(2026-11-15 review). Recheck the **actual local checkout** before reproducing
+anything: GitHub state does not establish MainPC's HEAD, private inputs or
+installed tool versions. The [M6 milestone report](docs/M6.md) owns the exact
+original-byte, reconstructed-behavior and PCSX2 comparison commands and limits.
+
+## Current quick start — synthetic checks only
+
+**Requirements:** Python 3.10+, a C11 compiler (`cc`), and **JDK 21 with `javac`**
+for the Java export transaction test. A Java runtime without `javac` is
+insufficient. No ISO, BIOS, Ghidra, PCSX2, or PS2DInfo checkout is required for
+this synthetic suite. From the **Hungry Ghosts repository root**:
+
+```sh
+git status --short --branch
+git rev-parse HEAD
+python3 --version
+cc --version
+java -version
+javac -version
+python3 -m unittest discover -s tests -v
+git diff --check
+```
+
+Expected at the pinned M6 commit: **126 tests** and a passing full suite when
+those prerequisites are installed. [GitHub CI](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43675180294)
+passed its two M6-head jobs (Python 3.10/3.14 with JDK 21 and C sanitizers).
+That remote result does not prove a new local run passed. If a prerequisite is
+missing, record the affected check as **blocked/unrun**, not passed; do not
+install or reconfigure system software automatically.
+
+## Original media and runtime checks — owner-local only
+
+For original-game checks, establish the actual approved paths **before running**
+the [M6 verification commands](docs/M6.md#verification). The current routines
+use `HG_ELF` (unmodified Japanese boot ELF), `HG_JAPAN_ISO` (original image),
+`HG_PS2DINFO` (pinned shared-tools checkout), and, for emulator checks,
+`HG_PCSX2`. Ghidra work additionally uses `HG_GHIDRA`; comparative build checks
+use `HG_STANDARD_ISO` and `HG_MODERN_ISO`; an isolated emulator profile also
+requires the user's `HG_BIOS`. Check each needed input hash separately; use
+`evidence/local-inputs.json`, the game build manifests, and the shared
+`tools/check_local_inputs.py` as applicable. Never assume any local paths from
+historical reports.
+
+Use **fresh, exclusive destinations under ignored `local/`** and preserve the
+original media and existing Ghidra databases. The M6 report distinguishes
+synthetic tests, original-code bytes, saved/retail runtime observations,
+negative controls, and sanitizer checks. Without approved local inputs, those
+owner-local tests are **skipped**, not a failed attempt or a simulated pass.
+Private captures and recovered profiles are not included in the public clone.
+
+## Older milestone procedures (preserved for reproduction)
+
+The following M1–M5 command recipes and observations are dated milestone
+material, **not** a claim about current MainPC paths, CI, backup status or the
+next operation. For current work start with the sections above and `docs/M6.md`.
 
 Run commands from the repository root in a POSIX shell. Originals stay read-only;
 all extraction, databases, profiles, logs and build products go in ignored local/.
@@ -13,9 +71,10 @@ python -m unittest discover -s tests -v
 git diff --check
 ```
 
-Python 3.10+ standard library and `cc` with C11 are sufficient. The tests compile
-src/disc_read.c to local/build/disc_read.so and use synthetic data only. The
-checked-in GitHub workflow was prepared; it has not run remotely in this milestone.
+The original M1 implementation used Python 3.10+ and `cc` with C11, and compiled
+`src/disc_read.c` to `local/build/disc_read.so`. Its historical synthetic suite
+did not yet include the later Java tests. The GitHub workflow was not remotely
+run **during M1**; subsequent M6-head CI passed as stated above.
 
 ## Original and comparative inputs
 
@@ -23,8 +82,9 @@ Set `HG_JAPAN_ISO`, `HG_STANDARD_ISO`, `HG_MODERN_ISO` to the three owner-local
 images; `HG_BIOS` to the absolute path of the owner-local BIOS; `HG_GHIDRA` to the
 Ghidra installation directory; `HG_PCSX2` to the PCSX2 executable; and
 `HG_PS2DINFO` to the shared repository. No actual private absolute path belongs in
-tracked config or documentation. The current original ISOs/BIOS are immediately
-above this repository; their filenames are recorded in the user's assignment.
+tracked config or documentation. The original M1 checkout reported media just
+above its repository; **do not assume this remains true** on MainPC or in a new
+cloud checkout.
 
 ```sh
 mkdir -p local/recheck local/logs local/ghidra
@@ -275,8 +335,11 @@ differential, runtime reanalysis and sanitizer commands. The M5 runner keeps the
 resident ELF packet separate from its raw AREA1 instruction packet. Runtime
 reanalysis uses the recovered isolated profile, 19 manually transcribed debugger
 pairs and the resumed retention/reuse captures; it never infers PCs from PINE.
-The Drive transport gate is unresolved in this API session. Preserve the local
-source/backup and complete independent remote verification before branch delivery.
+The Drive transport gate was unresolved **during the original M5 session**;
+later independent delivery/recovery and merged PR #3 are recorded in
+[START_HERE.md](START_HERE.md)
+and [docs/M5.md](docs/M5.md). Preserve historical receipts; do not carry
+that old blocker into current status.
 
 ## M6: real selected PACK processing
 

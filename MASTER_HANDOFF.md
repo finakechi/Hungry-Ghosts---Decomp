@@ -1,5 +1,39 @@
 # Hungry Ghosts — master handoff
 
+## Phase 1 development-guide refresh — 2026-11-15 (review proposal)
+
+**Scope:** Updated `DEVELOPMENT.md` to put the current M6 synthetic baseline,
+prerequisites, owner-local retail input boundary and verified milestone links
+first; kept the original M1–M5 command recipes as dated reproduction guidance.
+Aligned `README.md` to require JDK 21 **including `javac`** for the complete
+synthetic suite. Corrected the historical M5 Drive blocker wording by linking
+the later delivery/merge record. No game code, evidence JSON, tests or original
+media changed. No new reconstruction or runtime claim is made.
+
+**Basis:** Fresh public `main` checkout at
+[`fd0af170`](https://github.com/finakechi/Hungry-Ghosts---Decomp/commit/fd0af17031aa27336c8236efb37690d98cc52c0b),
+with [M6](docs/M6.md), `AGENTS.md`, current CI definition, and successful
+[M6-head GitHub CI](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43675180294).
+
+**Actual local checks:** `python3 -m unittest discover -s tests -q` ran 126
+tests before and after the documentation edits with one **environment error**:
+the `test_java_export_transaction` test could not start `javac` (Java 21
+runtime is installed, but the compiler is absent). The other 125 tests
+reported no failures. This is **not** a passing full local suite; the remote
+CI's successful JDK-equipped jobs are a separate result. `git diff --check`
+passed after edits, and all **81 local Markdown links** checked across the
+updated guides and both handoffs resolved; external URLs were not probed.
+No retail input, Ghidra or PCSX2 was available in this
+checkout, so no original-byte/runtime checks were rerun.
+
+**Git/review status:** This documentation-only change is proposed on a separate
+review branch based on the clean `fd0af170` main revision. **No merge is
+claimed.** Consult the GitHub PR/CI for the actual commit and publication
+state. Review the diff and repeat the full suite in a JDK-equipped checkout
+before any merge decision. Phase 2 should add a bounded `Resume here`
+section to the **next authorized operational milestone**, not create an
+additional status document or assume M7 has started.
+
 ## M6 selected PACK processing — 2026-11-14
 
 **All 13 marked PACKc6 members now use real reconstructed processing.**
