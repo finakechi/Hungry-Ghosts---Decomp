@@ -1,5 +1,17 @@
 # Hungry Ghosts — start here
 
+## Phase 1 documentation update — 2026-11-15 (review proposal)
+
+The current starting commands are now at the top of
+[DEVELOPMENT.md](DEVELOPMENT.md): **Python 3.10+, C11, and JDK 21 with `javac`**
+for the full 126-test synthetic suite. The older M1–M5 procedures are still
+available there as historical reproduction steps. No M6 implementation or
+original-game evidence changed. The new guide is **proposed for review, not
+merged into `main`**. Local tests found one missing-`javac` environment error; the
+separately verified M6-head GitHub CI was successful. See the
+[Phase 1 master note](MASTER_HANDOFF.md#phase-1-development-guide-refresh--2026-11-15-review-proposal)
+for the actual checks and next approval boundary.
+
 ## M6 selected PACK processing — 2026-11-14
 
 **All 13 marked PACKc6 members now use real reconstructed processing.**

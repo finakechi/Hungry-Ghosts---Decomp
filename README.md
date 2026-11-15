@@ -19,15 +19,16 @@ and a final rebuild/port target remain unclaimed.
 python -m unittest discover -s tests -v
 ```
 
-Python 3.10+ and a C11 compiler are sufficient for synthetic tests. Build products
-go in ignored `local/build/`. No retail data, Ghidra or emulator is needed in CI.
-For owner-local analysis and verification, see [DEVELOPMENT.md](DEVELOPMENT.md).
+The full synthetic suite requires **Python 3.10+, a C11 compiler, and JDK 21
+with `javac`** for the Java export transaction test. Build products go in ignored
+`local/build/`. No retail data, Ghidra or emulator is needed in CI. See the
+[current quick start](DEVELOPMENT.md#current-quick-start--synthetic-checks-only)
+for prerequisite checks, and the later sections for owner-local verification.
 
 No game, BIOS, extracted assets or patch payload is distributed here. External
 research sources and reuse limits are listed in [docs/sources.md](docs/sources.md).
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
-Synthetic tests now also require JDK 21 for the Java export transaction tests.
 
 Private recovery tooling and verified GitHub integration are documented in
 [docs/INTEGRATION.md](docs/INTEGRATION.md) and [docs/BACKUP.md](docs/BACKUP.md).
