@@ -5,9 +5,9 @@
   "discovery": "M1 analysis plus two explicitly discovered M2 entries; automatic candidates are not verified function totals.",
   "count": 4558,
   "status_counts": {
-    "analyzed-partial-byte-checked": 12,
-    "auto-discovered-unreviewed": 4522,
-    "reconstructed-model-differential-tested": 24
+    "analyzed-partial-byte-checked": 11,
+    "auto-discovered-unreviewed": 4518,
+    "reconstructed-model-differential-tested": 29
   },
   "functions": [
     {
@@ -13965,9 +13965,13 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-individually-breakpoint-observed",
+      "analyst_name": "hg_resource_clear_dynamic_handles",
+      "milestone": "M5",
+      "evidence": "evidence/m5/differential.json",
+      "m5_runtime_evidence": "evidence/m5/runtime-comparison.json"
     },
     {
       "entry": "0x0012fb90",
@@ -13980,9 +13984,13 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-individually-breakpoint-observed",
+      "analyst_name": "hg_resource_clear_selected_handles",
+      "milestone": "M5",
+      "evidence": "evidence/m5/differential.json",
+      "m5_runtime_evidence": "evidence/m5/runtime-comparison.json"
     },
     {
       "entry": "0x0012fbc0",
@@ -14385,10 +14393,14 @@
         "0x00137ed0",
         "0x001434e0"
       ],
-      "status": "analyzed-partial-byte-checked",
+      "status": "reconstructed-model-differential-tested",
       "analyst_description": "General PACK loader dependency; selected mode 8 calls AREA read helper before directory load.",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "debugger-observed-selected-loader; fixup boundaries explicit",
+      "analyst_name": "hg_pack_general",
+      "milestone": "M5",
+      "evidence": "evidence/m5/differential.json",
+      "m5_runtime_evidence": "evidence/m5/runtime-comparison.json"
     },
     {
       "entry": "0x00131420",
@@ -14422,9 +14434,13 @@
         "0x00137ed0",
         "0x001434e0"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "debugger-observed-selected-loader; fixup boundaries explicit",
+      "analyst_name": "hg_pack_alternative",
+      "milestone": "M5",
+      "evidence": "evidence/m5/differential.json",
+      "m5_runtime_evidence": "evidence/m5/runtime-comparison.json"
     },
     {
       "entry": "0x00131810",
@@ -33293,9 +33309,13 @@
       "calls": [
         "0x00119ac8"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "not-individually-breakpoint-observed",
+      "analyst_name": "hg_actor_data_init",
+      "milestone": "M5",
+      "evidence": "evidence/m5/differential.json",
+      "m5_runtime_evidence": "evidence/m5/runtime-comparison.json"
     },
     {
       "entry": "0x0018c270",
@@ -128590,5 +128610,13 @@
       "byte_matching": "not-tested",
       "gameplay_runtime_verification": "not-tested"
     }
-  ]
+  ],
+  "raw_resource_function_evidence": {
+    "packet": "analysis/area_lifecycle/area1-functions.json",
+    "entry": "0x00a8a070",
+    "name": "hg_area1_actor",
+    "source_resource": "/AREA1/A1_B00.BIN",
+    "runtime_status": "debugger-observed-state1-publication-and-reuse",
+    "included_in_resident_inventory_count": false
+  }
 }

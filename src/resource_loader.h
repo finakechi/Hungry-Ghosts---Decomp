@@ -29,6 +29,10 @@ void hg_resource_request(HGResourceEnv *, uint32_t, uint32_t);   /* 00130170 */
 void hg_resource_worker(HGResourceEnv *);                       /* 00130220 */
 uint32_t hg_pack_special_step(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 001303e0 */
 void hg_pack_bootstrap(HGResourceEnv *, uint32_t);                /* 001306a0 */
+void hg_pack_general(HGResourceEnv *, uint32_t);                  /* 00130900 */
+void hg_pack_alternative(HGResourceEnv *, uint32_t);              /* 00131420 */
+void hg_resource_clear_dynamic_handles(HGResourceEnv *);         /* 0012fb30 */
+void hg_resource_clear_selected_handles(HGResourceEnv *);        /* 0012fb90 */
 uint32_t hg_area_index(HGResourceEnv *);                         /* 0012fbc0 */
 uint32_t hg_area_read_step(HGResourceEnv *, uint32_t);            /* 00131810 */
 void hg_area_finalize(HGResourceEnv *, uint32_t, uint32_t);       /* 00131dd0 */
@@ -38,6 +42,22 @@ void hg_area_finalize(HGResourceEnv *, uint32_t, uint32_t);       /* 00131dd0 */
  * Invalid phase values keep yielding, matching the original nonprogress loop.
  * This helper is not counted as another reconstructed retail function. */
 uint32_t hg_pack_bootstrap_step(HGResourceEnv *, uint32_t);
+/* Host-only split of 00130900: prepare is called ONCE per invocation; step
+ * returns 1 at the original return, otherwise 0 at its SleepThread boundary.
+ * Repeating prepare while a load is pending repeats original entry effects. */
+void hg_pack_general_prepare(HGResourceEnv *, uint32_t);
+uint32_t hg_pack_general_step(HGResourceEnv *, uint32_t);
+uint32_t hg_pack_alternative_step(HGResourceEnv *, uint32_t);
+/* A1_B00 AREA entry. This callback uses original fixed addresses after its
+ * bytes are loaded at a87800; dependencies remain explicit bus calls.
+ * The extra host callback is REQUIRED for resident 0018a330's six defined EE
+ * arguments, including t0/t1=0. It uses resources->user; the existing M1-M4
+ * HGResourceEnv layout and its four-argument seam are unchanged. No generic
+ * AREA dispatch, graphics/actor dependency implementation, or FPU is implied. */
+typedef uint32_t (*HGArea1Call6)(void *, uint32_t entry, uint32_t a0, uint32_t a1,
+                               uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
+void hg_area1_actor(HGResourceEnv *, uint32_t, HGArea1Call6);      /* 00a8a070 */
+void hg_actor_data_init(HGResourceEnv *, uint32_t, uint32_t);     /* 0018c220 */
 /* 001385b0: linked rebasing; the combined adapter resolves 001389d0. */
 void hg_resource_rebase(HGResourceEnv *, uint32_t, uint32_t);
 /* M4 original functions. Extra frame arguments are host adapters for the
@@ -50,7 +70,9 @@ uint32_t hg_flk5_count(HGResourceEnv *, uint32_t);                 /* 00138b70 *
 uint32_t hg_flk5_size(HGResourceEnv *, uint32_t);                  /* 00138b90 */
 void hg_flk5_disable(HGResourceEnv *, uint32_t, uint32_t);         /* 00138560 */
 uint32_t hg_resource_base_delta(HGResourceEnv *, uint32_t, uint32_t); /* 001385a0 */
-/* Combined M2 loading/publication -> M4 fixup -> M3 rebasing operation.
+/* Combined M2 worker/bootstrap and general/alternative PACK/AREA loading,
+ * handle invalidation and publication,
+ * followed by M4 fixup -> M3 rebasing where directed by the PACK header.
  * frame must be 16-byte aligned and reserve [frame-0x70, frame+0x240)
  * of guest scratch, away from resources and live state. */
 void hg_resource_worker_fixed(HGResourceEnv *, uint32_t frame);

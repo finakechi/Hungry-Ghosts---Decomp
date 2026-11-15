@@ -1,0 +1,106 @@
+{
+  "schema": "hg-m5-negative-controls/v1",
+  "result": "passed",
+  "controls": [
+    {
+      "case": "general-reserve",
+      "result": "passed",
+      "source_sha256": "1c56ac0f80d962c5c26f8ed34b4ec23028862b3484085ee86b9177460f1e4318",
+      "mutant_sha256": "1fe78a74e40abcddc4b00e459ecdf0940a64d282209d31a10252b991c38564e9",
+      "mutation": {
+        "from": "w32(e,0x3f4d54,end);w32(e,0x3f4d5c,end+0x50000u);",
+        "to": "w32(e,0x3f4d54,end);w32(e,0x3f4d5c,end+0x60000u);"
+      },
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "local/extracted/japan/SCPS_150.46",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "local/references/PS2DInfo",
+        "--source",
+        "local/m5/resume/general-reserve.c",
+        "--output",
+        "local/m5/resume/general-reserve-unexpected.json"
+      ],
+      "returncode": 1,
+      "diagnostic": "AssertionError: general: memory differs at 003f4d5e: C cb000000000000000000000000000000, EE ca000000000000000000000000000000"
+    },
+    {
+      "case": "alternative-rounding",
+      "result": "passed",
+      "source_sha256": "1c56ac0f80d962c5c26f8ed34b4ec23028862b3484085ee86b9177460f1e4318",
+      "mutant_sha256": "126446cc68d861e600d69d8ee6dfd829b774c494a729b4d8e269b3b076892638",
+      "mutation": {
+        "from": "uint32_t end=r32(e,task+0x48)+(bulk?r32(e,0x3f3b14):0);",
+        "to": "uint32_t end=align_sector(r32(e,task+0x48)+(bulk?r32(e,0x3f3b14):0));"
+      },
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "local/extracted/japan/SCPS_150.46",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "local/references/PS2DInfo",
+        "--source",
+        "local/m5/resume/alternative-rounding.c",
+        "--output",
+        "local/m5/resume/alternative-rounding-unexpected.json"
+      ],
+      "returncode": 1,
+      "diagnostic": "AssertionError: alternative: memory differs at 003f4d54: C 000800000000c7000100050000000000, EE 010000000000c7000100050000000000"
+    },
+    {
+      "case": "actor-publication",
+      "result": "passed",
+      "source_sha256": "1c56ac0f80d962c5c26f8ed34b4ec23028862b3484085ee86b9177460f1e4318",
+      "mutant_sha256": "c9df6be04ccd121740f1e064550207d068aa091cf65ea77af4350630f41dd48a",
+      "mutation": {
+        "from": "w32(e,0x3eb05c,r32(e,actor+0x2bc));",
+        "to": "w32(e,0x3eb05c,r32(e,actor+0x2c0));"
+      },
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "local/extracted/japan/SCPS_150.46",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "local/references/PS2DInfo",
+        "--only-area-code",
+        "--image",
+        "../Hungry Ghosts (Japan).iso",
+        "--area-code-exports",
+        "local/m5/area1-observed-export",
+        "--actor-dependency-exports",
+        "local/m5/actor-dependency-export",
+        "--source",
+        "local/m5/resume/actor-publication.c",
+        "--output",
+        "local/m5/resume/actor-publication-unexpected.json"
+      ],
+      "returncode": 1,
+      "diagnostic": "AssertionError: area1_actor: memory differs at 003eb05c: C 3ad600cf00000000416ed88900000000, EE 14fff3e000000000416ed88900000000"
+    }
+  ]
+}

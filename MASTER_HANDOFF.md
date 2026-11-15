@@ -1,5 +1,55 @@
 # Hungry Ghosts — master handoff
 
+## M5 current result — 2026-11-14
+
+**Selected AREA1 transition verified locally; private Drive delivery is blocked.**
+The interrupted work was recovered on `research/m5-area-lifecycle`, based on merged
+M4/main `28a5873`, with all partial source, tests, exports and captures preserved.
+The still-paused original-game emulator was resumed at general loader `130900`;
+the milestone was not restarted. [M5 report](docs/M5.md) records the stopping point,
+exact commands, evidence classes and continuation gates.
+
+Request kind 2 / directory c6 selects AREA index 10 and reads A1_B00.BIN into
+`a87800`, replacing bytes independently verified as the original A0_B09.BIN.
+The entire **30,720-byte** AREA1 file matches original disc bytes at finalization,
+FlushCache(2), callback execution and later reuse. Callback `a8a070`, actor state 1,
+publishes actor/data pointers `4d8150/4d8420`. A later kind-1/directory-69 request
+completes while retaining AREA1, then its callback executes and publishes again.
+This is observed retention/reuse; no free or unload is inferred.
+
+Six original functions add **1,092 words / 4,368 bytes** (five resident bodies and
+one raw AREA callback), bringing M1–M5 to **30 functions / 2,507 words / 10,028
+bytes**. All 1,897 new instruction comparisons pass and execute all recorded new
+addresses. **120 synthetic tests**, M1–M4 differentials, original-byte/structure
+checks, ASan/UBSan and compiled negative controls pass.
+[Runtime comparison](evidence/m5/runtime-comparison.json) binds 19 debugger pairs
+and separates recovered captures from fresh resumed observations.
+
+PACKc6's 13 marked fixups remain mocked for its loader-state comparison; their
+payload transformations, actor construction/dispatch, resident18c280, rendering,
+and retail state-0 initialization are not claimed reconstructed/runtime-equivalent.
+The later menu-consumed PACK has three reported downstream word changes with no
+assigned call semantics. These limits do not change the measured AREA1 bytes.
+There is no whole-game, compiler-byte-match or final-port claim.
+
+The API session lacks a Drive connector, its browser host is unavailable, and
+rclone/configuration are absent. Local preservation and restore results are in
+[evidence/m5/preservation.json](evidence/m5/preservation.json). No independent M5
+Drive backup, push or PR is claimed. Finish the private upload/download/restore
+gate and publication audit before the authorized normal branch push and PR to
+main. Leave the PR open; do not merge. Current M4 history is already merged via
+PR #2; older no-publication claims below are historical.
+
+Implementation commit: `2609da9751bbcdb83a68f05b714ce3c95df2525d` (local).
+An additive local snapshot passed full member verification, isolated restore,
+recovered Git clone and fsck: **1,323 files / 404,833,472 bytes**, including **328
+private M5 files**. Restored HEAD equals that implementation commit. Original
+media/BIOS/extraction inventory matches the previous M4 snapshot. This is a
+same-disk recovery result, **not** an independently downloaded Drive backup. The
+later preservation-only handoff commit is outside this immutable snapshot.
+The implementation publication audit found zero heuristic findings. No push/PR
+or M5 remote CI was attempted while the Drive gate remains blocked.
+
 ## M4 current result — 2026-11-14
 
 **M4 complete for the selected bootstrap FLK5 resource.** The combined
