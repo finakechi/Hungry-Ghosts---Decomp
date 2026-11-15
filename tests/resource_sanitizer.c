@@ -4,14 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-typedef struct { unsigned char *ram; unsigned char disk[6144]; unsigned ticks,reads,rejects; } Test;
+typedef struct {
+    unsigned char *ram;
+    unsigned char disk[0x84800],area[4096],scratch[0x4000];
+    unsigned ticks,reads,rejects;
+} Test;
 static uint32_t load(void *u,uint32_t a,uint32_t n) {
-    Test *t=u;assert(a<0x2000000 && n<=4 && a+n<=0x2000000);
-    uint32_t v=0;for(uint32_t i=0;i<n;i++)v|=(uint32_t)t->ram[a+i]<<(8*i);return v;
+    Test *t=u;unsigned char *bytes=t->ram;uint32_t limit=0x2000000;
+    if(a>=0x70000000){a-=0x70000000;bytes=t->scratch;limit=sizeof t->scratch;}
+    assert(a<limit && n<=4 && a+n<=limit);
+    uint32_t v=0;for(uint32_t i=0;i<n;i++)v|=(uint32_t)bytes[a+i]<<(8*i);return v;
 }
 static void store(void *u,uint32_t a,uint32_t n,uint32_t v) {
-    Test *t=u;assert(a<0x2000000 && n<=4 && a+n<=0x2000000);
-    for(uint32_t i=0;i<n;i++)t->ram[a+i]=(unsigned char)(v>>(8*i));
+    Test *t=u;unsigned char *bytes=t->ram;uint32_t limit=0x2000000;
+    if(a>=0x70000000){a-=0x70000000;bytes=t->scratch;limit=sizeof t->scratch;}
+    assert(a<limit && n<=4 && a+n<=limit);
+    for(uint32_t i=0;i<n;i++)bytes[a+i]=(unsigned char)(v>>(8*i));
 }
 static uint32_t read32(void *u,uint32_t a) { return load(u,a,4); }
 static int32_t sync_read(void *u,int32_t arg) { (void)u;assert(arg==1);return 0; }
@@ -20,8 +28,14 @@ static int32_t error(void *u) { (void)u;return 0; }
 static int32_t read_disc(void *u,uint32_t lba,uint32_t count,uint32_t dst,const uint8_t *mode) {
     Test *t=u;assert(mode[0]==0 && mode[1]==1 && mode[2]==0);
     if(t->rejects){t->rejects--;return 0;}
-    assert(lba>=1000 && lba+count<=1003 && dst+count*2048u<0x2000000);
-    memcpy(t->ram+dst,t->disk+(lba-1000)*2048,count*2048u);t->reads++;return 1;
+    assert(dst+count*2048u<0x2000000);
+    if(lba==2000) {
+        assert(count==2);memcpy(t->ram+dst,t->area,count*2048u);
+    }else {
+        assert(lba>=1000 && (lba-1000+count)*2048u<=sizeof t->disk);
+        memcpy(t->ram+dst,t->disk+(lba-1000)*2048,count*2048u);
+    }
+    t->reads++;return 1;
 }
 static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
     Test *t=u;(void)d;
@@ -30,12 +44,27 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
     case 0x103d60:assert(a==0x3f8e00);return 17;
     case 0x103d80:assert(a==17 && b==0);return 0;
     case 0x103da0:return 0;
+    case 0x130020:case 0x12fe90:assert(a==0x3f8e00);return 0;
     case 0x1434e0:assert(++t->ticks<100);return 0;
     case 0x137ed0:return a+32;
     case 0x1389d0:return 0;
     case 0x1041e0:assert(a==2);return 0;
+    case 0x1235c0:assert(a==0x5f0090 && b==5);return 0;
+    case 0x123660:assert(a==0x5f0090 && b==1);return 0;
+    case 0x144340:assert(a==0x5f0050 && b==0x5f0030 && c==0x5f0040);return 0;
+    case 0x139c90:
+        assert(a==0x5f0000 && b==0x70000b90);
+        assert(load(u,b,4)==0x41c00000 && load(u,b+12,4)==0x3f800000);return 0;
+    case 0x18c280:
+        assert(a==1 && load(u,0x3eb058,4)==0x5f0000 && load(u,0x3eb05c,4)==0x5f02d0);return 0;
+    case 0x142e90:assert(a==0x5f0000);return 0;
     default:assert(!"Unexpected external operation");return 0;
     }
+}
+static uint32_t actor_setup(void *u,uint32_t pc,uint32_t a,uint32_t b,
+                            uint32_t c,uint32_t d,uint32_t e,uint32_t f) {
+    (void)u;assert(pc==0x18a330 && a==0x5f0000);
+    assert(b==0x1000000 && c==0x9000001 && d==0 && e==0 && f==0);return 0;
 }
 static void disk_word(Test *t,uint32_t a,uint32_t v) {
     for(unsigned i=0;i<4;i++)t->disk[a+i]=(unsigned char)(v>>(i*8));
@@ -68,5 +97,62 @@ int main(void) {
     assert(load(&t,0xb00008,4)==0x1d00 && load(&t,0x3f4558,4)==0xb00000);
     store(&t,0x1ff05bf,1,0xfe);
     assert(hg_resource_map_address(&e,0xffffffff,0x1ff05c0)==0xfffffffe);
-    free(t.ram);puts("PASS: synthetic request/worker/PACK/CDVD and AREA finalization under sanitizers");return 0;
+    /* Kind 1 / directory 0x102 is the general loader's AREA mode. Keep the
+     * existing M1 bus and M4 texture processing connected through the worker. */
+    memcpy(t.disk+0x81000,t.disk,2048);memcpy(t.disk+0x81800,t.disk+2048,4096);
+    disk_word(&t,0x8100c,0x81800);disk_word(&t,0x81010,0x81800);
+    disk_word(&t,0x81040,0x81800);disk_word(&t,0x81050,0x82000);
+    memcpy(t.area,"MWo3",4);t.area[0x14]=37;
+    store(&t,0x3dff04,4,0xa87800);store(&t,0x3fa1b0,1,1);store(&t,0x3fa1b1,1,2);
+    store(&t,0x3e01b4,4,3);store(&t,0x3f3a58,4,2000);store(&t,0x3f3a5c,4,2049);
+    store(&t,0x3f4d50,4,0xc00000);store(&t,0x3f4d3c,4,0x12345678);
+    store(&t,0x3f4d38,4,0x87654321);store(&t,0x3f4d3c+4,4,0x11223344);
+    memset(t.ram+0xa88001,0xff,37);memcpy(t.ram+0xc02000,"RETAINED",8);
+    unsigned before=t.reads;
+    hg_resource_request_raw(&e,1,0x102);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(t.reads==before+3 && load(&t,0x3f8e30,2)==0 && load(&t,0x3eacec,1)==0);
+    assert(memcmp(t.ram+0xa87800,"MWo3",4)==0);
+    for(unsigned i=0;i<37;i++)assert(t.ram[0xa88001+i]==0);
+    assert(load(&t,0xc00028,4)==0x1e00 && load(&t,0x3f4558,4)==0xc00000);
+    assert(load(&t,0x3f4d3c,4)==0x12345678 && load(&t,0x3f4d40,4)==0x11223344);
+    assert(load(&t,0x3f4d50,4)==0xc00000 && load(&t,0x3f4d54,4)==0xc01000);
+    assert(load(&t,0x3f4d5c,4)==0xc51000 && load(&t,0x3f4d38,4)==0);
+    assert(memcmp(t.ram+0xc02000,"RETAINED",8)==0);
+    hg_resource_request_raw(&e,1,0x102);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(load(&t,0x3f4558,4)==0xc00000 && load(&t,0x3f4d50,4)==0xc00000);
+    /* Kind 2 loads AREA and a first PACK, then the same worker changes to kind
+     * 3 and appends another PACK. Downstream 130020/12fe90 stay explicit. */
+    memcpy(t.disk+0x2000,t.disk+2048,4096);memcpy(t.disk+0x3000,t.disk+0x2000,4096);
+    memcpy(t.disk+0x1000,t.disk,2048);memcpy(t.disk+0x1800,t.disk,2048);
+    disk_word(&t,0x100c,0x2000);disk_word(&t,0x1010,0x2000);
+    disk_word(&t,0x1040,0x2000);disk_word(&t,0x1050,0x2800);
+    disk_word(&t,0x180c,0x3000);disk_word(&t,0x1810,0x3000);
+    disk_word(&t,0x1840,0x3000);disk_word(&t,0x1850,0x3800);disk_word(&t,0x1848,0x97);
+    store(&t,0x3fa1b0,1,0);store(&t,0x3fa1b1,1,0);store(&t,0x3fa1b2,1,0);
+    store(&t,0x3e01b0,4,5);store(&t,0x3f4d4c,4,0xc00000);
+    before=t.reads;t.ticks=0;
+    hg_resource_request_raw(&e,2,2);hg_resource_worker_fixed(&e,0x1ff05c0);
+    assert(t.reads==before+5 && load(&t,0x3f8e30,2)==0 && load(&t,0x3eacec,1)==0);
+    assert(load(&t,0x3f8e32,2)==3 && load(&t,0x3f8e44,4)==3 && load(&t,0x3eace0,1)==1);
+    assert(load(&t,0x3f4558,4)==0xc00000 && load(&t,0x3f455c,4)==0xc01000);
+    assert(load(&t,0xc00028,4)==0x1e00 && load(&t,0xc01028,4)==0x3200);
+    assert(load(&t,0x3f4d50,4)==0xc01000 && load(&t,0x3f4d54,4)==0xc02000);
+    assert(load(&t,0x3f4d5c,4)==0xc52000);
+    /* Invoke the reconstructed AREA1 actor callback with synthetic actor state.
+     * Resident actor/matrix operations stay explicit mocked boundaries. */
+    memset(t.ram+0x5f0000,0xa5,0x400);store(&t,0x5f0018,1,0);
+    store(&t,0x5f02d0,4,0x80000001);
+    hg_area1_actor(&e,0x5f0000,actor_setup);
+    assert(load(&t,0x5f0000,1)==0xa5 && load(&t,0x5f0018,1)==1);
+    assert(load(&t,0x5f02d0,4)==0x24 && load(&t,0x5f002a,2)==0x233);
+    assert(load(&t,0x5f0004,4)==8 && load(&t,0x5f02bc,4)==0x5f02d0);
+    assert(load(&t,0x5f00dc,4)==0x3f800000 && load(&t,0x5f00a8,4)==0x5f0300);
+    assert(load(&t,0x5f02d4,4)==0x3f800000 && load(&t,0x5f02f0,4)==0x3f800000);
+    assert(load(&t,0x5f0300,4)==0 && load(&t,0x5f0308,4)==0xbecccccd && load(&t,0x5f030c,4)==0);
+    hg_area1_actor(&e,0x5f0000,actor_setup);
+    assert(load(&t,0x3eb058,4)==0x5f0000 && load(&t,0x3eb05c,4)==0x5f02d0);
+    store(&t,0x5f0018,1,2);hg_area1_actor(&e,0x5f0000,actor_setup);
+    assert(load(&t,0x5f0018,1)==3);hg_area1_actor(&e,0x5f0000,actor_setup);
+    assert(memcmp(t.ram+0xa87800,t.area,2049)==0);
+    free(t.ram);puts("PASS: synthetic M1-M5 request/worker/PACK/AREA/fixup and retained arenas under sanitizers");return 0;
 }

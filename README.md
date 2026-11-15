@@ -6,13 +6,14 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
-M1 establishes verified build identities and four disc-read functions. M2 adds
-11 scheduler/request/PACK/AREA functions, including a complete bootstrap loading
-operation with explicit dependencies. M3 adds a connected rebasing dependency, bringing coverage to 16 functions /
-4,080 original bytes. The current suite has 81 synthetic tests, instruction differential checks,
-sanitizers and negative controls. PCSX2 captures substantiate actual bootstrap
-loading and code/data identity. Full-game equivalence and byte matching remain
-untested. No final rebuild/port track has been selected.
+M1–M4 establish disc reads, resource scheduling/loading and selected FLK5 fixup.
+M5 reconstructs the connected AREA/PACK loaders and one AREA1 actor callback: the
+original game replaces a previous AREA, executes/publishes the loaded callback,
+and retains/reuses it across a later resource request. Coverage is 30 functions /
+10,028 original instruction bytes, with 120 synthetic tests and bounded original
+instruction/runtime comparisons. [M5](docs/M5.md) describes explicit engine/fixup
+boundaries and the pending private-backup delivery gate. Whole-game equivalence
+and compiler byte matching remain untested; no final rebuild/port track is selected.
 
 ```sh
 python -m unittest discover -s tests -v

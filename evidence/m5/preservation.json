@@ -1,0 +1,11 @@
+{
+  "schema": "hg-m5-preservation/v1",
+  "result": "pending-local-archive",
+  "remote_result": "blocked",
+  "blocker": "API session has no Drive connector; browser host unavailable; rclone executable and configuration absent.",
+  "github_branch_pushed": false,
+  "pull_request": null,
+  "ci": "not run; branch remains local",
+  "media": "Read-only authenticated original inputs; extraction payloads excluded from backup archive",
+  "previous_backups": "Unchanged; additive snapshot will use existing configuration destination"
+}

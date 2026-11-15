@@ -267,3 +267,13 @@ Use `hg_resource_worker_fixed(env, frame)` to resolve fixup/helper boundaries
 through the existing bus; reserve aligned guest scratch as specified in the API.
 The old worker retains M2's isolated external seam for regressions. New packets
 are under `analysis/resource_fixup/` and results under `evidence/m4/`.
+
+## M5: AREA1 loading, execution and retention
+
+[docs/M5.md](docs/M5.md) gives the recovered stopping point, exact original-byte,
+differential, runtime reanalysis and sanitizer commands. The M5 runner keeps the
+resident ELF packet separate from its raw AREA1 instruction packet. Runtime
+reanalysis uses the recovered isolated profile, 19 manually transcribed debugger
+pairs and the resumed retention/reuse captures; it never infers PCs from PINE.
+The Drive transport gate is unresolved in this API session. Preserve the local
+source/backup and complete independent remote verification before branch delivery.

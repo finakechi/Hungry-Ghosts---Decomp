@@ -205,6 +205,218 @@ void hg_pack_bootstrap(HGResourceEnv *e,uint32_t task) {
     while(hg_pack_bootstrap_step(e,task)==0)call(e,0x1434e0,0,0,0,0);
 }
 
+/* 0012fb30 clears handles 0x96..0x28e inclusive. The unrolled original loop
+ * runs through 0x28d, then its return delay slot clears the final handle. */
+void hg_resource_clear_dynamic_handles(HGResourceEnv *e) {
+    for(uint32_t id=0x96;id<=0x28e;id++)w32(e,0x3f4300+id*4,0);
+}
+void hg_resource_clear_selected_handles(HGResourceEnv *e) {
+    w32(e,0x3f45f8,0);w32(e,0x3f4c84,0);w32(e,0x3f4c88,0);
+    w32(e,0x3f4c8c,0);w32(e,0x3f460c,0);
+}
+
+/* 00130900 entry through 00131080. The original chooses an arena before
+ * entering its resumable loop. Clearing a handle does not free its data. */
+void hg_pack_general_prepare(HGResourceEnv *e,uint32_t task) {
+    uint32_t id=r32(e,task+0x44),dst,mode;
+    switch(id) {
+    case 0x6c:case 0x68:case 0x67:dst=r32(e,0x3f4d4c);mode=2;break;
+    case 0x6a:case 0x54:case 0x4b:case 0x53:case 0x52:case 0x51:case 0x50:
+        dst=0x1e00000;mode=1;break;
+    case 0xf:case 0xe:case 0xd:case 0xc:case 0xb:dst=r32(e,0x3f4d58);mode=2;break;
+    case 0x4f:case 0x4e:dst=r32(e,0x3f4d50);mode=2;break;
+    case 3:case 0x69:case 0x62:case 0x61:case 0x60:case 0x5f:case 0x5e:case 0x5d:
+    case 0x57:case 0x56:case 0x5c:case 0x5b:case 0x58:case 0x63:case 0x59:case 0x55:
+    case 0x5a:case 0x66:case 0x65:case 0x64:case 0x12:
+        dst=r32(e,0x3f4d5c);mode=1;break;
+    case 0x76:case 0x75:case 0x74:case 0x73:case 0x72:case 0x71:case 0x70:case 0x6f:case 0x6e:
+        dst=r32(e,0x3f4d44)+0x60000u;mode=3;break;
+    case 0x91:case 0x90:case 0x8f:case 0x8e:case 0x8d:case 0x8c:case 0x8b:
+    case 0x8a:case 0x89:case 0x88:case 0x87:case 0x86:case 0x85:
+        dst=r32(e,0x3f4d44);mode=0x10;break;
+    case 0x4d:case 0x4c:case 0x49:case 0x48:case 0x47:case 0x46:case 0x45:
+    case 0x44:case 0x43:case 0x42:case 0x41:case 0x40:case 0x3f:
+        dst=r32(e,0x3f4d48);mode=4;break;
+    case 0x11:case 0x10:dst=r32(e,0x3f4d48);mode=2;break;
+    case 0x4a:case 0x6b:dst=r32(e,0x3f4d44)+0x91000u;mode=5;break;
+    case 0x110:case 0x10f:case 0x10e:case 0x10d:case 0x10c:case 0x10b:case 0x10a:
+    case 0x109:case 0x108:case 0x107:case 0x106:case 0x105:case 0x104:case 0x103:case 0x102:
+        hg_resource_clear_dynamic_handles(e);hg_resource_clear_selected_handles(e);
+        dst=r32(e,0x3f4d50);mode=8;break;
+    case 0xa:case 9:dst=r32(e,0x3f4d40);mode=6;break;
+    case 6:case 5:dst=r32(e,0x3f4d50);mode=7;break;
+    case 8:case 7: {
+        uint32_t end,middle;
+        w32(e,task+0x48,r32(e,0x3f4d40));
+        dst=r32(e,task+0x48);end=dst+0x400000u;middle=end+0x2f8000u;
+        uint32_t context=r32(e,0x700000c4);
+        w32(e,0x3f4d48,end+0x91000u);w32(e,0x3f4d44,end);
+        w32(e,0x3f4d4c,middle);w32(e,0x3f4d50,middle);
+        if((context==1 && r32(e,0x3f4d5c)==0) || context==2) {
+            w32(e,0x3f4d54,middle);w32(e,0x3f4d5c,end+0x348000u);
+        }
+        w16(e,task+0x3e,9);return;
+    }
+    case 1:hg_resource_clear_dynamic_handles(e); /* falls through */
+    case 4:dst=r32(e,0x3f4d3c);mode=0;break;
+    default:
+        if((id>=0x13 && id<0x3f) || (id>=0x77 && id<0x85)) {
+            uint32_t variant=r16(e,0x46e136),offset=task;
+            /* Outside 0/1/2 the original retains the task argument in a0 and
+             * does not store the allocation-mode halfword. */
+            if(variant<3) {
+                w16(e,task+0x3e,0x11u+variant);offset=0x30000u+variant*0x10000u;
+            }
+            w32(e,task+0x48,r32(e,0x3f4d44)+offset);return;
+        }
+        dst=r32(e,0x3f4d5c);mode=1;break;
+    }
+    w32(e,task+0x48,dst);w16(e,task+0x3e,mode);
+}
+
+/* 00131088..0013141c. Phase 0 falls directly into AREA phase 1 for mode 8;
+ * all other pending cases return to SleepThread before another iteration. */
+uint32_t hg_pack_general_step(HGResourceEnv *e,uint32_t task) {
+    uint32_t header=0x3f3b00;
+    switch(r8(e,task+0x39)) {
+    case 0:
+        if(r16(e,task+0x3e)!=8) {w8(e,task+0x39,2);break;}
+        w8(e,task+0x39,1);w8(e,task+0x3a,0);
+        /* falls through */
+    case 1:
+        if(hg_area_read_step(e,task)!=0) {
+            w8(e,task+0x39,r8(e,task+0x39)+1);w8(e,task+0x3a,0);
+        }break;
+    case 2:
+        read_setup(e,0x3ead20,header,r32(e,task+0x44)<<11,0x800);
+        w8(e,task+0x39,r8(e,task+0x39)+1);break;
+    case 3:case 6:
+        if(read_poll(e)!=0)w8(e,task+0x39,r8(e,task+0x39)+1);
+        break;
+    case 4:
+        if(r32(e,header+4)==0)return 1;
+        if(hg_pack_special_step(e,task,header,header)!=0)w8(e,task+0x39,r8(e,task+0x39)+1);
+        break;
+    case 5:
+        read_setup(e,0x3ead20,r32(e,task+0x48),r32(e,header+0x10),r32(e,header+0x14));
+        w8(e,task+0x39,r8(e,task+0x39)+1);break;
+    case 7: {
+        uint32_t remaining=r32(e,header+0x20),i=0;
+        if(r32(e,header+8)!=0)do {
+            uint32_t cursor=r32(e,task+0x4c),id=r32(e,cursor+8);
+            w32(e,0x3f4300+id*4,r32(e,task+0x48)+(r32(e,cursor)-r32(e,header+0x10)));
+            if(remaining!=0) {
+                remaining--;call(e,0x137ed0,r32(e,0x3f4300+id*4),0,id,0);
+            }
+            i++;w32(e,task+0x4c,r32(e,task+0x4c)+0x10);
+        }while(i<r32(e,header+8));
+        uint32_t mode=r16(e,task+0x3e);
+        if(mode==0 || mode==6) {
+            uint32_t end=align_sector(r32(e,task+0x48)+r32(e,header+0x14));
+            /* Preserve store order as well as the original retained arenas. */
+            w32(e,0x3f4d48,end+0x91000u);
+            if(mode==0) {
+                w32(e,0x3f4d5c,end+0x348000u);w32(e,0x3f4d3c,end);w32(e,0x3f4d40,end);
+                w32(e,0x3f4d44,end);
+            }else {
+                w32(e,0x3f4d44,end);w32(e,0x3f4d5c,end+0x348000u);
+            }
+            w32(e,0x3f4d4c,end+0x2f8000u);w32(e,0x3f4d50,end+0x2f8000u);
+            w32(e,0x3f4d54,end+0x2f8000u);
+        }else if(mode==5)w32(e,0x3f4d48,align_sector(r32(e,0x3f4444)));
+        else if(mode==7)w32(e,0x3f4d50,align_sector(r32(e,task+0x48)+r32(e,header+0x14)));
+        else if(mode==8) {
+            uint32_t end=align_sector(r32(e,task+0x48)+r32(e,header+0x14));
+            w32(e,0x3f4d54,end);w32(e,0x3f4d5c,end+0x50000u);
+        }
+        return 1;
+    }
+    default:break;
+    }
+    return 0;
+}
+void hg_pack_general(HGResourceEnv *e,uint32_t task) {
+    hg_pack_general_prepare(e,task);
+    while(hg_pack_general_step(e,task)==0)call(e,0x1434e0,0,0,0,0);
+}
+
+/* 00131420's non-kind-2 tail. The empty and bulk cases both retain an
+ * unrounded end. The exceptional state reserves two consecutive ranges;
+ * storing an arena pointer is not an inferred allocation/free operation. */
+static void alternative_tail(HGResourceEnv *e,uint32_t task,uint32_t bulk) {
+    uint32_t state=r8(e,0x3fa1b0);
+    uint32_t end=r32(e,task+0x48)+(bulk?r32(e,0x3f3b14):0);
+    w32(e,0x3f4d54,end);
+    if(state==0 && r8(e,0x3fa1b1)==2 && r8(e,0x3fa1b2)==1) {
+        end=r32(e,task+0x48)+(bulk?r32(e,0x3f3b14):0);
+        w32(e,0x3f4d58,end+0x50000u);
+        w32(e,0x3f4d5c,r32(e,0x3f4d58)+0x200000u);
+    }else {
+        end=r32(e,task+0x48)+(bulk?r32(e,0x3f3b14):0);
+        w32(e,0x3f4d5c,end+0x50000u);
+    }
+}
+uint32_t hg_pack_alternative_step(HGResourceEnv *e,uint32_t task) {
+    uint32_t header=0x3f3b00;
+    switch(r8(e,task+0x39)) {
+    case 0:
+        if(r16(e,task+0x32)!=2) {w8(e,task+0x39,2);break;}
+        w8(e,task+0x39,1);w8(e,task+0x3a,0);
+        /* falls through */
+    case 1:
+        if(hg_area_read_step(e,task)!=0) {
+            w8(e,task+0x39,r8(e,task+0x39)+1);w8(e,task+0x3a,0);
+        }break;
+    case 2:
+        if(r16(e,task+0x32)==2) {
+            hg_resource_clear_dynamic_handles(e);w32(e,task+0x48,r32(e,0x3f4d4c));
+        }else {
+            hg_resource_clear_selected_handles(e);w32(e,task+0x48,r32(e,0x3f4d50));
+        }
+        read_setup(e,0x3ead20,header,r32(e,task+0x44)<<11,0x800);
+        w8(e,task+0x39,r8(e,task+0x39)+1);break;
+    case 3:
+        if(read_poll(e)!=0)w8(e,task+0x39,r8(e,task+0x39)+1);
+        break;
+    case 4:
+        if(r32(e,header+4)==0) {
+            if(r16(e,task+0x32)==2)w32(e,0x3f4d50,r32(e,task+0x48));
+            else {alternative_tail(e,task,0);w8(e,0x3eace0,1);}
+            return 1;
+        }
+        if(hg_pack_special_step(e,task,header,header)!=0)w8(e,task+0x39,r8(e,task+0x39)+1);
+        break;
+    case 5:
+        read_setup(e,0x3ead20,r32(e,task+0x48),r32(e,header+0x10),r32(e,header+0x14));
+        w8(e,task+0x39,r8(e,task+0x39)+1);break;
+    case 6:
+        if(read_poll(e)!=0) {
+            if(r16(e,task+0x32)==3)w8(e,0x3eace0,1);
+            w8(e,task+0x39,r8(e,task+0x39)+1);
+        }break;
+    case 7: {
+        uint32_t remaining=r32(e,header+0x20),i=0;
+        if(r32(e,header+8)!=0)do {
+            uint32_t cursor=r32(e,task+0x4c),id=r32(e,cursor+8);
+            w32(e,0x3f4300+id*4,r32(e,task+0x48)+(r32(e,cursor)-r32(e,header+0x10)));
+            if(remaining!=0) {
+                remaining--;call(e,0x137ed0,r32(e,0x3f4300+id*4),0,id,0);
+            }
+            i++;w32(e,task+0x4c,r32(e,task+0x4c)+0x10);
+        }while(i<r32(e,header+8));
+        if(r16(e,task+0x32)==2)
+            w32(e,0x3f4d50,r32(e,task+0x48)+r32(e,header+0x14));
+        else alternative_tail(e,task,1);
+        return 1;
+    }
+    default:break;
+    }
+    return 0;
+}
+void hg_pack_alternative(HGResourceEnv *e,uint32_t task) {
+    while(hg_pack_alternative_step(e,task)==0)call(e,0x1434e0,0,0,0,0);
+}
+
 uint32_t hg_area_index(HGResourceEnv *e) {
     return r32(e,0x3e01b0+r8(e,0x3fa1b0)*4)+r8(e,0x3fa1b1);
 }
@@ -226,6 +438,41 @@ uint32_t hg_area_read_step(HGResourceEnv *e,uint32_t task) {
         w8(e,task+0x3a,r8(e,task+0x3a)+1);
     }
     return 0;
+}
+
+/* A1_B00.BIN code at its observed fixed load address. An actor callback,
+ * not a fabricated general AREA activation operation. The resident game
+ * invokes this entry with an actor pointer in a0. */
+void hg_area1_actor(HGResourceEnv *e,uint32_t actor,HGArea1Call6 setup) {
+    uint32_t state=r8(e,actor+0x18),data=actor+0x2d0;
+    switch(state) {
+    case 0:
+        w16(e,actor+0x2a,0x233);w32(e,actor+4,8);
+        hg_actor_data_init(e,actor,data);w32(e,data,0x24);
+        setup(e->user,0x18a330,actor,0x1000000,0x9000001,0,0,0);
+        call(e,0x144340,actor+0x50,actor+0x30,actor+0x40,0);
+        call(e,0x119ac8,data+0x30,0,0x10,0);
+        w32(e,actor+0xa8,data+0x30);
+        call(e,0x1235c0,actor+0x90,5,0,0);call(e,0x123660,actor+0x90,1,0,0);
+        w32(e,actor+0xdc,0x3f800000);w32(e,data+0x38,0xbecccccd);
+        w32(e,data+0x3c,0);w32(e,0x70000b9c,0x3f800000);
+        w32(e,0x70000b90,0x41c00000);w32(e,0x70000b94,0x41c00000);
+        w32(e,0x70000b98,0x41c00000);
+        call(e,0x139c90,actor,0x70000b90,0,0);
+        w8(e,actor+0x18,r8(e,actor+0x18)+1);break;
+    case 1:
+        call(e,0x119ac8,0x3eb058,0,0xc,0);
+        w32(e,0x3eb058,actor);w32(e,0x3eb05c,r32(e,actor+0x2bc));
+        call(e,0x18c280,1,0,0,0);break;
+    case 2:w8(e,actor+0x18,3);break;
+    case 3:call(e,0x142e90,actor,0,0,0);break;
+    default:break;
+    }
+}
+void hg_actor_data_init(HGResourceEnv *e,uint32_t actor,uint32_t data) {
+    call(e,0x119ac8,data,0,0x30,0);
+    w32(e,data+4,0x3f800000);w32(e,data+0x20,0x3f800000);
+    w32(e,data+0x1c,0x3f800000);w32(e,actor+0x2bc,data);
 }
 
 /* 001385b0. Rebase header +08/+0c, call the discarded-result address permutation,
@@ -359,7 +606,8 @@ uint32_t hg_resource_fixup(HGResourceEnv *e,uint32_t block,uint32_t index,uint32
 }
 
 /* Host-only composition adapter. The M2 boundary remains usable in isolation;
- * this entry wires it to M4 and M3 using the SAME bus and disc environment.
+ * this entry resolves both general/alternative PACK/AREA loading and M4/M3 using the
+ * SAME bus and disc environment.
  * Original fixup frame: caller sp-0x240; rebase/helper consume another 0x50.
  * Callers reserve scratch away from resource, loader and disc state. */
 typedef struct { HGResourceEnv *outer; HGResourceEnv env; uint32_t frame; } HGProcessing;
@@ -371,6 +619,8 @@ static void process_store(void *user,uint32_t a,uint32_t n,uint32_t v) {
 }
 static uint32_t process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
     HGProcessing *p=user;
+    if(pc==0x130900) {hg_pack_general(&p->env,a);return 0;}
+    if(pc==0x131420) {hg_pack_alternative(&p->env,a);return 0;}
     if(pc==0x137ed0)return hg_resource_fixup(&p->env,a,b,c,p->frame);
     if(pc==0x1389d0)return hg_resource_map_address(&p->env,a,p->frame-0x50);
     return p->outer->call(p->outer->user,pc,a,b,c,d);

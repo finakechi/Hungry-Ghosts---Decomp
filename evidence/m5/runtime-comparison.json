@@ -1,0 +1,488 @@
+{
+  "area_index": 10,
+  "area_sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+  "area_bytes_compared": 30720,
+  "previous_area": {
+    "iso_path": "/AREA0/A0_B09.BIN",
+    "bytes_compared": 16384,
+    "sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935"
+  },
+  "zero_tail_size": 0,
+  "cache_argument": 2,
+  "resident_runtime_words": 998,
+  "raw_area_byte_check": {
+    "schema": "hg-area-raw-byte-check/v1",
+    "result": "passed",
+    "raw_sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+    "instructions_verified": 94,
+    "instructions_unknown": 0,
+    "mapping": {
+      "iso_path": "/AREA1/A1_B00.BIN",
+      "lba": 1402368,
+      "size_bytes": 30720,
+      "destination": "0x00a87800",
+      "file_offset_at_destination": 0
+    },
+    "scope": "Selected raw file offsets only; no ELF claim, semantic equivalence or retail execution promotion."
+  },
+  "retained_observations": [
+    "finalize",
+    "cache",
+    "alternative_return",
+    "worker_exit",
+    "actor",
+    "publication",
+    "later_request",
+    "later_worker",
+    "later_general",
+    "later_complete",
+    "later_exit",
+    "reused_actor",
+    "republication"
+  ],
+  "initial_read_ranges": [
+    [
+      1402368,
+      15,
+      11040768
+    ],
+    [
+      1402778,
+      1,
+      4143872
+    ],
+    [
+      1517213,
+      600,
+      19333120
+    ]
+  ],
+  "initial_pack_fixup_boundaries": [
+    [
+      1277648,
+      19333120,
+      0,
+      157
+    ],
+    [
+      1277648,
+      19434112,
+      0,
+      514
+    ],
+    [
+      1277648,
+      20185344,
+      0,
+      160
+    ],
+    [
+      1277648,
+      20225792,
+      0,
+      163
+    ],
+    [
+      1277648,
+      20236416,
+      0,
+      344
+    ],
+    [
+      1277648,
+      20251264,
+      0,
+      165
+    ],
+    [
+      1277648,
+      20269952,
+      0,
+      166
+    ],
+    [
+      1277648,
+      20290048,
+      0,
+      555
+    ],
+    [
+      1277648,
+      20311936,
+      0,
+      171
+    ],
+    [
+      1277648,
+      20313600,
+      0,
+      561
+    ],
+    [
+      1277648,
+      20402304,
+      0,
+      562
+    ],
+    [
+      1277648,
+      20412288,
+      0,
+      185
+    ],
+    [
+      1277648,
+      20494848,
+      0,
+      186
+    ]
+  ],
+  "first_pack_control_comparison": "passed; 13 fixup bodies mocked, PACK payload not compared",
+  "actor_publication": [
+    "0x4d8150",
+    "0x4d8420",
+    "0x0"
+  ],
+  "reused_actor_publication": [
+    "0x4d8150",
+    "0x4d8420",
+    "0x0"
+  ],
+  "later_read_ranges": [
+    [
+      1402685,
+      1,
+      4143872
+    ],
+    [
+      1432277,
+      145,
+      24383936
+    ]
+  ],
+  "later_bulk_bytes_inspected": 295040,
+  "later_bulk_sha256": "acce3aa91896b4131c5fa95d088c0a050a98cea53a995ea5aa5297d9186531c0",
+  "later_bulk_comparison": "Observed after menu consumption; downstream mutations unassigned; no payload equivalence claim",
+  "later_bulk_changed_words": [
+    {
+      "offset": "0x8",
+      "loaded": "0x0",
+      "observed": "0x2800"
+    },
+    {
+      "offset": "0xc",
+      "loaded": "0x477",
+      "observed": "0x2c77"
+    },
+    {
+      "offset": "0x34",
+      "loaded": "0x40000",
+      "observed": "0x42800"
+    }
+  ],
+  "lifecycle": "AREA1 loaded, cache prepared, callback executed/published; retained and reused across later PACK69 request",
+  "release_observed": false,
+  "schema": "hg-m5-runtime-comparison/v1",
+  "result": "passed",
+  "evidence_level": "saved-debugger-observation-reanalysis",
+  "debugger_sequence": [
+    {
+      "event": "request",
+      "pc": "0x130150",
+      "registers": {
+        "a0": "0x2",
+        "a1": "0xc6"
+      }
+    },
+    {
+      "event": "schedule",
+      "pc": "0x143360",
+      "registers": {
+        "a0": "0x2",
+        "a1": "0xc6",
+        "a2": "0x130220"
+      }
+    },
+    {
+      "event": "worker",
+      "pc": "0x130220",
+      "registers": {}
+    },
+    {
+      "event": "alternative",
+      "pc": "0x131420",
+      "registers": {
+        "a0": "0x3f8e00"
+      }
+    },
+    {
+      "event": "selection",
+      "pc": "0x131810",
+      "registers": {
+        "a0": "0x3f8e00"
+      }
+    },
+    {
+      "event": "read_context",
+      "pc": "0x131810",
+      "registers": {
+        "a0": "0x3f8e00"
+      }
+    },
+    {
+      "event": "finalize",
+      "pc": "0x131dd0",
+      "registers": {
+        "a0": "0xa87800",
+        "a1": "0x7800"
+      }
+    },
+    {
+      "event": "cache",
+      "pc": "0x1041e0",
+      "registers": {
+        "a0": "0x2"
+      }
+    },
+    {
+      "event": "alternative_return",
+      "pc": "0x1317fc",
+      "registers": {}
+    },
+    {
+      "event": "worker_exit",
+      "pc": "0x103da0",
+      "registers": {}
+    },
+    {
+      "event": "actor",
+      "pc": "0xa8a070",
+      "registers": {
+        "a0": "0x4d8150"
+      }
+    },
+    {
+      "event": "publication",
+      "pc": "0x18c280",
+      "registers": {
+        "a0": "0x1"
+      }
+    },
+    {
+      "event": "later_request",
+      "pc": "0x130150",
+      "registers": {
+        "a0": "0x1",
+        "a1": "0x69"
+      }
+    },
+    {
+      "event": "later_worker",
+      "pc": "0x130220",
+      "registers": {}
+    },
+    {
+      "event": "later_general",
+      "pc": "0x130900",
+      "registers": {
+        "a0": "0x3f8e00"
+      }
+    },
+    {
+      "event": "later_complete",
+      "pc": "0x1434f0",
+      "registers": {}
+    },
+    {
+      "event": "later_exit",
+      "pc": "0x103da0",
+      "registers": {}
+    },
+    {
+      "event": "reused_actor",
+      "pc": "0xa8a070",
+      "registers": {
+        "a0": "0x4d8150"
+      }
+    },
+    {
+      "event": "republication",
+      "pc": "0x18c280",
+      "registers": {
+        "a0": "0x1"
+      }
+    }
+  ],
+  "binding": {
+    "schema": "hg-verification-binding/v1",
+    "level": "saved-runtime",
+    "result": "passed",
+    "source": {
+      "revision": "28a58736cbdd33f1169589a9f3c22dd38a48086e",
+      "files": {
+        "ghidra_scripts/HGAnnotate.java": "c54f53b4e1651f11b8db691fe1cf488b437cd8d3854e7cf55090bdf8693ac6ee",
+        "ghidra_scripts/HGAnnotateM2.java": "cbd6003f6639d237e0920cf02867990d3a232e5139d0af90a95727d3aa6c6911",
+        "ghidra_scripts/HGDiscoverM2.java": "d7509cff61b2459888005ae6d3cdee6ad67b02d239deee63660843a6881fcd6b",
+        "ghidra_scripts/HGExport.java": "c3991d5b2aeeff8c2f548849acdc204ed8d4fd7e075682b1ccaf2945bff7eadb",
+        "ghidra_scripts/HGExportSet.java": "7537560791c8dec4c4d1bf56d61438b71b7674c6216d74bc853ab1143689b7ba",
+        "ghidra_scripts/HGMap.java": "47d81d94a7ad40e6803dec438575f0f2516fbca6c2d80900015436696eb71926",
+        "ghidra_scripts/HGRefs.java": "78576179bd57554bfedb8595f64c4a97e601a1d40d0d6de64a10944be173b860",
+        "src/disc_read.c": "8bd355a99e772cabaa72aaddd27f92e46c6c2e9fa58d6b00bd6329dda890d3d2",
+        "src/disc_read.h": "1bbaf53de50bd64857ee01ec9bce7b44da0efad008a88e3f9e584b1f8a026878",
+        "src/resource_loader.c": "1c56ac0f80d962c5c26f8ed34b4ec23028862b3484085ee86b9177460f1e4318",
+        "src/resource_loader.h": "857c21c8fb387bfb5e7a95d989bedc27e55a502d38109e5a695dfeaa5efcf52d",
+        "tests/disc_harness.py": "a0d1969d3b0db5c2f997f2411bd9c9cc5bf9dba3a19454377a1853bc5ed1cbe2",
+        "tests/resource_harness.py": "aba83fdefb7b3e7edef1c9b6502c27cf858a15952b81a60d36d6d03b299b28b4",
+        "tests/resource_sanitizer.c": "971dce51fd243a5256226f1c16190f5010dc3652b7bd253d31b02c111232a482",
+        "tests/test_area_lifecycle.py": "420e28342d246ff3a53b0ab0277b98eb461b8f9c36d3446178b88b0927329596",
+        "tests/test_area_runtime.py": "1bc635a074df56448c9c39b18d7c23b5dcdb18c49c6bfab5c411f62e37866f93",
+        "tests/test_backup.py": "bb39e4b6cca11b89d2df9b0c0caadbf363c42976bf67ade5d42ae7ffb83566e9",
+        "tests/test_disc_read.py": "5c3b207a5c61f021866f1808f7ee6e0fa167031fb3d877ba710b126e4714eddc",
+        "tests/test_ee_subset.py": "fd886418eb4c987b6ae9bc7a9076e11e8527b5da40630d7580591fae5aa22c5c",
+        "tests/test_evidence_safety.py": "17434a649c1cc015f64301a753858a5b577b8c3019c71448fd0a696602fdc14a",
+        "tests/test_fixup_runtime.py": "2688ffb369f3aac29dffc3a5ba0a94dc6f68de4fc500b69fd99b067202ee15e5",
+        "tests/test_inputs.py": "e5c8224c7c3e6a67b3842ceb28553d3c503657588e5cb24fd558a70b82e873fc",
+        "tests/test_pine.py": "c11b9640f4ae1abe599fbdf91ff476c057425d7d7afa07933031212d133c6f88",
+        "tests/test_resource_fixup.py": "b39953c638cc8535ea0cbcf9c57e5c62347cd0aca23ddd03ad57b918b9a5a407",
+        "tests/test_resource_loader.py": "2a2f2c744db83fab9008ce89cd183dc00437c65120caeee98b3095a09319d2bd",
+        "tests/test_resource_rebase.py": "916c710313653301caeba9172b8f187a951fc82aaf2c96590f9b28cf54db1289",
+        "tools/ee_subset.py": "3d32887e2c605ef455e1e400e230e7a43e34984bb6e963799bd527abba7d2acb",
+        "tools/hg_backup.py": "493ec157db91d27fd4062993bc15c2c4035cfb1fd81d2e55efcf0a07deba912d",
+        "tools/hg_check_binding.py": "854d9705db5cc83d8ddc23818210a00dbbf15e0e707d5544befbd1c0e9ffa5b8",
+        "tools/hg_compare_builds.py": "1086a0c75fb2faaf6d5cae5115c32d0ec2865c1f408aa84205bd048360731e41",
+        "tools/hg_context.py": "e946be1214b4450362cc3ce82d9dd3111072361fc22c99cd1d40247ff71447c7",
+        "tools/hg_evidence.py": "9b733774246592269f83583e0885d058663088aefe2c2fc8acb7b26b885b4ffe",
+        "tools/hg_evidence_safety.py": "e324225da26fcd43798950f92984ed8c078b30f0ba7bda72c78d4cfd97a5a640",
+        "tools/hg_identify.py": "c8e004fac00f1dfc972ac7a7fe217c81e7fa003576ba2ba3546fd019c5439f02",
+        "tools/hg_loading_capture.py": "93d94aa90d529c6d6aeca30f632c4e5a484b585cdd8bfd4b1d54937598f77834",
+        "tools/hg_loading_code_check.py": "297f4763ee588ad41e4f72e57dc2b1c25b45040be78cbce6df73fb0f2c0032a4",
+        "tools/hg_m2_context.py": "e8370fdf422b39211a5a9cf79a86740b1efbc4b559d72367c2b8d21676820909",
+        "tools/hg_m2_evidence.py": "98189c61f9a767b0a243222d92bfe8e7c18c99f6bc692f1dd41ceb2924057934",
+        "tools/hg_m2_inventory.py": "a8066f4ab839105ccfbfbb63713c13d4f4c2bd8e0166cb96521c8295bd34a86c",
+        "tools/hg_m2_negative_controls.py": "ab1f56d31b7e7f2c4816db392fad9188ce6bd08554a41be2bfc856647aaf1f0b",
+        "tools/hg_overlay_scan.py": "f5c86dcb8be16c08d7671c68fe1eff8fffd83ff5a0b8534010508133719f0bf5",
+        "tools/hg_pack_scan.py": "a77166b05383527f7deae0a8cdf0483aa470814c19e0667b27307be2f663a092",
+        "tools/hg_pine_read.py": "504d0172385a067bd603139d87502b04363e43fe880a030d42ba61529fe13ddd",
+        "tools/hg_publication_audit.py": "2bbc2f673f07ae6c46e46e6405d24e1efb54f9f4ca2f1f64298f8cc1af3d12da",
+        "tools/hg_runtime_verify.py": "e5f0a94e6a0fbd1bf753f1fc9f09e2d6366baa1da0e8ae0e3b35f87f09c34b90",
+        "tools/verify_area_lifecycle.py": "242e4160474279c1540cddbc7e04bea9617992eae0f36381ac522a59a933ad4f",
+        "tools/verify_area_runtime.py": "9bd88f8d241f32194eb8a009f74060abed747a8628f6bf87e92ddb54b25ccd74",
+        "tools/verify_disc_read.py": "d76bc956c347c90a44b8e0095bdd7d653c59f8f4c52cd1bc4cdceabec6a55be7",
+        "tools/verify_elf_evidence.py": "3a4cb0c038299db848f4842a5e37cb03eb3574a6ca53cddd961b700ad5ac38fd",
+        "tools/verify_fixup_runtime.py": "888560d0b3eeee398f1f360a9c0f64e174d5b4534e15a93cae95c45726b8977a",
+        "tools/verify_loading_runtime.py": "15906f174a2588b4c47d62bb54637787ab64fd97ab57f9167d72c2da9cdeaa37",
+        "tools/verify_resource_fixup.py": "84703670e1445dfd29e029a30c3c312c771ce5f0e42df51dd8e23900b3092182",
+        "tools/verify_resource_loader.py": "a831c3d674d9b99dff6278af95957f0aaa0befc8a92db3342cd4d5b660462904",
+        "tools/verify_resource_rebase.py": "e69a2ac177a2576183b54563ae65e4f636f82d45759c2705899e625cde6d2e5e"
+      },
+      "dirty_files": [
+        " M DEVELOPMENT.md",
+        " M MASTER_HANDOFF.md",
+        " M README.md",
+        " M START_HERE.md",
+        " M analysis/function-inventory.json",
+        " M src/resource_loader.c",
+        " M src/resource_loader.h",
+        " M tests/resource_sanitizer.c",
+        "?? analysis/area_lifecycle/README.md",
+        "?? analysis/area_lifecycle/area1-functions.json",
+        "?? analysis/area_lifecycle/functions.json",
+        "?? docs/M5.md",
+        "?? tests/test_area_lifecycle.py",
+        "?? tests/test_area_runtime.py",
+        "?? tools/verify_area_lifecycle.py",
+        "?? tools/verify_area_runtime.py"
+      ]
+    },
+    "inputs": {
+      "elf": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+      "image": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+      "emulator": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+      "profile": "9292531686a3fa2d72d61d121d3f04ab86026cfe7771c6c78d9c20d699dbbb7a",
+      "raw": "f0957311f1c916dabe990b20aed0d4d5c23e9cb9ae092588643dc177c8c5d1ce",
+      "post": "de52fe3ee74296d464d9f441629804cb39cd93368151086a7e8b9749ec92aae7",
+      "observation": "bb95a0dcd4792e51a7348da4ac346475ce5ad8fbabf649c4fd0a319144dc3625",
+      "request-next.png": "b28ca743eaa7776d43b9b910aa655968df72877a79a508746b9a6a14416ab750",
+      "request-c6.json": "b9e2fa4c434203c91ee5a6f7dbe68b2773deefeee9262e4c4f626f2d06cf7f6b",
+      "schedule-c6.png": "d5589be18fea8c027c0a1ee1edae2d3f2ebd8160d4c3b6326aec7ccfcf81f6b9",
+      "schedule-c6.json": "dfe3c77a040ef1789ec4b153c99dc655c77f224e438cc67b3e08638d2486382d",
+      "worker-c6.png": "ed3a0c3fec53ecf7059ad22e3c04de23b2de5cb55aa434a2c27d15a02331110d",
+      "worker-c6.json": "17268f90615b867532668517e6c9a0ef94490bd3f4748c931cbfc78884aead08",
+      "alternative-c6.png": "917ac426a2ebfe68be2afa0a3645a7c43265927b87acd4bd10d98b9e8bdc9d06",
+      "alternative-c6.json": "83dfbea2d0044ce594acd60d66e26d22ea6530fbd5889d50c6b24f7a63b8bc9e",
+      "area-request-c6.png": "1d205ad74725800028d3179953527ba4e7184b962852c719a52aa733a224b14a",
+      "area-request-c6.json": "82d2affcc0d23b1a791463571ba867db120b585e8d785c18e3ac927f92d20b3e",
+      "read-setup-c6.png": "e56411a58abcc853f182cbf865da1b36afb351bbebe1247159c246c00ebef662",
+      "read-setup-c6.json": "d92151080cecc22e10118213891d7cf3b50c9ac4c786d94f0cb5039d9be9c923",
+      "area1-finalizer-stable.png": "8ded350709b1c57e9b3dd2525e2a369e9b9bc292b30846e7b4c5504f1f075836",
+      "area1-finalizer.json": "f0957311f1c916dabe990b20aed0d4d5c23e9cb9ae092588643dc177c8c5d1ce",
+      "cache-area1.png": "8b312911068d57b932948d4c4668ba590041ba9a496e27cbb0c29d3835fe5b10",
+      "cache-area1.json": "a769fd64a8cec30ec4b4eed461096184f817dc299b3b4ba5d007bb905c38a9a3",
+      "pack-return-area1.png": "ed4265e5fb7efff3234aa255083086bc2150dae212eeb9ce3f6b880a66478a2a",
+      "pack-return-area1.json": "cbdf6498a523f5808e3b0b19a472b627271bf8f28f1472b9cc692e2bf17592c4",
+      "worker-exit.png": "cebef235ef3e4fe4fcd5a7905f6d34bd94a5da8e5001bd2d1fbd87ef516a2108",
+      "worker-exit.json": "96f6825454d4c3862275746937f1e7fff108e02d7a8d6585118b296d62b38a84",
+      "area1-exec-candidate.png": "5fd9ca721eb45df5832dc5db63905ab4106fa609dffc7100a61465723e9bff4e",
+      "area1-execution.json": "49e2c3701ced5777036b95b4dbfc29d0171a2d772637817cad28c7aea51b3870",
+      "actor-published.png": "f6a71f1ed1800565413420eccfec1b4f9dcca04f1caffaa298a610d80820612f",
+      "actor-published.json": "50c1e70c33841064f28086b829556fbb645d4fb80b940550ff54703999baf141",
+      "post-use-request.png": "cca1244d68295fbac8ec5ad1acca17936dc57f8e306051455ee7f556365db365",
+      "post-use-request.json": "16a28ab8f6e136f8a73652b1e78864e35b9c849eba2f90eaf3ca45a484cd6a96",
+      "post-use-worker.png": "8c6ae3805ab839b20f67a2ca1aa7d6e088f59ad06eb2e078339289b1f44831e0",
+      "post-use-worker.json": "26b89e4df8e009245e56d0130c55b5a357304042dff4d8481c635a07f875eb10",
+      "resume-stop.png": "bb116da2153ae025b3ac80c7aedbbc9412eac1c1ce238ad97717a418a1d15cb1",
+      "resume-general-entry.json": "3f5914d26c782606e321bd7a7557e8f279e71609b31636af18ad2f7559379645",
+      "resume-next-stop.png": "841821b547989307948de9cf543700cc6f83bd9ce22a6176996e973b19eb7019",
+      "resume-general-completed.json": "a7a77591307acbdbf585b2c0db1c9a62af318eef71114f22178e7c600f2f3913",
+      "resume-general-exit.png": "5800d61349b8f22d9eb1ef92d287ea3131671a5ea9d5a411d995765030f2c88b",
+      "resume-general-exit.json": "88937c96b7f16dfd11649829f8fe991099f1aa1b349ffebe5dff9c4470a7809d",
+      "resume-reexecuted.png": "ba5b1da7c888954b33960ee3b4015a5a5c69afe6abda3132d3c7a7d2e4258177",
+      "resume-reexecuted-actor.json": "1ed445402400fea7aa908330c8e30f6840e7ed71a2769f6c1d5d1efc3e9edf6b",
+      "resume-republished.png": "cf0525e40695ec1618800655724f0956fb370115bd7856b2361606ff9e57dade",
+      "resume-republished.json": "de52fe3ee74296d464d9f441629804cb39cd93368151086a7e8b9749ec92aae7",
+      "resume-retained-bulk.json": "6f14bbce54652b0a2a2360d28d97f50a5a3c8658a119806382f3229b3bc177a0"
+    },
+    "python_version": "3.14.9",
+    "command": [
+      "verify_area_runtime.py"
+    ],
+    "limitations": [
+      "Pre-interruption captures were recovered with no contemporaneous binding receipt; their hashes are first bound on resumption. Profile is the recovered configuration frozen on resumption, not proof of every historical setting.",
+      "Breakpoint snapshots with manually transcribed PCs/registers; not exhaustive call/instruction tracing.",
+      "AREA1 state1 publication/reuse observed; state0 initialization has instruction-model evidence only.",
+      "Initial PACKc6 has 13 mocked fixups: no geometry/upload or full PACK payload equivalence claim.",
+      "Actor construction/dispatch and resident18c280 remain explicit engine boundaries.",
+      "Kernel/CDVD timing modeled; no concurrent-memory equivalence, memory free or other AREA variant claim."
+    ],
+    "runtime": {
+      "before": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "after": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "post_before": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      },
+      "post_after": {
+        "version": "PCSX2 v2.8.2",
+        "title": "HUNGRY GHOSTS",
+        "serial": "SCPS-15046",
+        "uuid": "91aa4b28",
+        "status": 1
+      }
+    }
+  }
+}
