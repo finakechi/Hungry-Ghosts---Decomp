@@ -1,5 +1,57 @@
 # Hungry Ghosts — master handoff
 
+## M6 selected PACK processing — 2026-11-14
+
+**All 13 marked PACKc6 members now use real reconstructed processing.**
+Four new functions add **241 words / 964 bytes**, bringing M1–M6 to **34 functions /
+2,748 words / 10,992 original bytes**. The existing HGResourceEnv/bus/worker
+composition resolves geometry/material preparation, descriptor addressing and
+finite-normal radius calculation; linked texture rebasing and publication reuse
+M1–M5. Upload is not reached by this operation.
+
+Fresh original-game debugger observations independently match **1,184,000 bytes
+across all 13 transformed members**, the complete **1,228,800-byte** bulk read at
+loader return, 2,600 handle-table bytes and 36 arena bytes. All 13 handles and the
+1,227,648-byte logical buffer survive worker completion; the sector-read tail is
+legitimately reused by the next allocation. Fresh AREA1 state-1 publication and
+reuse across a later kind-1/directory-69 request also pass. No captured output is
+used to calculate the selected transformation.
+
+**126 synthetic tests**, **565 new instruction comparisons**, all 241 new
+instruction addresses, M1–M5 regressions, strict C, ASan/UBSan, original-byte and
+evidence checks pass. Three compiled M6 defects and altered instruction evidence
+are detected. [M6 report](docs/M6.md) gives exact commands, member classifications,
+hashes, provenance (including the separately corroborated first-call arguments),
+engine/FP boundaries and the continuation point. Private recovery and review
+receipts are recorded in the milestone PR, avoiding a source/backup reference cycle.
+Later engine loaders, exceptional FP/VU flags/timing, general rendering and
+whole-game equivalence remain outside this result. The old M5 mock-based PACK
+comparison stays explicitly labeled as a historical/regression measurement.
+
+
+## M5 delivery addendum — 2026-11-14 (America/New_York)
+
+The delivery-blocked statements below describe the original session and are
+retained as contemporary evidence. Later delivery is verified:
+[PR #3](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/3) merged as
+`071dedb19879b3cd2625e08456e689adaab57e7b`, containing final M5 commit
+`a8e6e312a2c1695de0fff1930fad386efb08c5ee`. A fresh origin fetch confirms the
+merge is the current main HEAD. All four M5 CI jobs passed (Python 3.10/3.14,
+push and pull request; workflow runs 43667224422 and 43667301683).
+
+Independent private snapshot `20261115T022539Z-b6831f1d96c0` was uploaded,
+downloaded and restored, as recorded in the PR delivery receipt. This session
+reverified the retained downloaded copy: **1,323 files / 404,840,629 bytes**,
+then performed another exclusive isolated restore, cloned its complete-history
+Git bundle and passed `git fsck --full`; the final M5 commit is present.
+Archive SHA-256:
+`1c7fefd694c8d4d4778336734e36c1255f1c7833c06becd20adee40688957b98`;
+manifest SHA-256:
+`c13be9d0170f38f57951abbb004e53a71aa8445a4bb3e5c3006714c9cd1fec56`.
+The transport receipt is historical; this session's recheck used the retained
+download and does not claim another fresh Drive download.
+
+
 ## M5 current result — 2026-11-14
 
 **Selected AREA1 transition verified locally; private Drive delivery is blocked.**

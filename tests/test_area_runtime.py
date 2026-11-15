@@ -8,10 +8,20 @@ import unittest
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from hg_evidence_safety import digest
-from verify_area_runtime import EVENTS, EXPECTED, IMAGE, load_observation
+from verify_area_runtime import EVENTS, EXPECTED, IMAGE, load_observation, pack_event_order
 
 
 class AreaRuntimeIntegrity(unittest.TestCase):
+    def test_m6_requires_every_processing_call_and_geometry_group(self):
+        members=[dict(geometry=[{}]*(2 if i in (0,1,11) else 1)) for i in range(13)]
+        sequence=pack_event_order(members)
+        self.assertEqual(len(sequence),54)
+        self.assertEqual(sum(pc==0x137ed0 for _,pc in sequence),13)
+        self.assertEqual(sum(pc==0x1386e0 for _,pc in sequence),16)
+        with self.assertRaisesRegex(ValueError,'13 fixups'):pack_event_order(members[:-1])
+        members[11]['geometry'].pop()
+        with self.assertRaisesRegex(ValueError,'16 observed'):pack_event_order(members)
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

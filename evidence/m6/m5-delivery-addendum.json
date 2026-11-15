@@ -1,0 +1,42 @@
+{
+  "schema": "hg-m5-delivery-addendum/v1",
+  "date": "2026-11-14 America/New_York",
+  "pr": "https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/3",
+  "merged": true,
+  "merge_commit": "071dedb19879b3cd2625e08456e689adaab57e7b",
+  "final_commit": "a8e6e312a2c1695de0fff1930fad386efb08c5ee",
+  "snapshot_id": "20261115T022539Z-b6831f1d96c0",
+  "transport": "Historical PR receipt records independent Drive upload/download/restore; retained downloaded bytes freshly reverified here",
+  "download_reverification": {
+    "result": "passed",
+    "snapshot_id": "20261115T022539Z-b6831f1d96c0",
+    "files_verified": 1323,
+    "bytes_verified": 404840629,
+    "manifest_sha256": "c13be9d0170f38f57951abbb004e53a71aa8445a4bb3e5c3006714c9cd1fec56",
+    "archive_sha256": "1c7fefd694c8d4d4778336734e36c1255f1c7833c06becd20adee40688957b98"
+  },
+  "isolated_restore": "passed; complete 1323-file archive restored to new destination",
+  "restored_git_bundle": "clone and fsck passed; final M5 commit present",
+  "ci": [
+    {
+      "link": "https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43667301683/job/132669426067",
+      "name": "synthetic (3.10)",
+      "state": "SUCCESS"
+    },
+    {
+      "link": "https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43667301683/job/132669425868",
+      "name": "synthetic (3.14)",
+      "state": "SUCCESS"
+    },
+    {
+      "link": "https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43667224422/job/132669185514",
+      "name": "synthetic (3.10)",
+      "state": "SUCCESS"
+    },
+    {
+      "link": "https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43667224422/job/132669185820",
+      "name": "synthetic (3.14)",
+      "state": "SUCCESS"
+    }
+  ]
+}

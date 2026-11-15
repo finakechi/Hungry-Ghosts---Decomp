@@ -6,8 +6,8 @@
   "count": 4558,
   "status_counts": {
     "analyzed-partial-byte-checked": 11,
-    "auto-discovered-unreviewed": 4518,
-    "reconstructed-model-differential-tested": 29
+    "auto-discovered-unreviewed": 4514,
+    "reconstructed-model-differential-tested": 33
   },
   "functions": [
     {
@@ -16093,9 +16093,14 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "selected-PACKc6-output-and-live-instruction-bytes",
+      "analyst_name": "hg_resource_material_next",
+      "milestone": "M6",
+      "evidence": "analysis/pack_finalization/functions.json",
+      "m6_runtime_evidence": "evidence/m6/runtime-comparison.json",
+      "scope": "Selected finite-normal geometry/material path; exceptional FP/VU flags and timing excluded."
     },
     {
       "entry": "0x001386e0",
@@ -16124,9 +16129,14 @@
         "0x00138a80",
         "0x00143530"
       ],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "selected-PACKc6-output-and-live-instruction-bytes",
+      "analyst_name": "hg_resource_geometry",
+      "milestone": "M6",
+      "evidence": "analysis/pack_finalization/functions.json",
+      "m6_runtime_evidence": "evidence/m6/runtime-comparison.json",
+      "scope": "Selected finite-normal geometry/material path; exceptional FP/VU flags and timing excluded."
     },
     {
       "entry": "0x001389d0",
@@ -16159,9 +16169,14 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "selected-PACKc6-output-and-live-instruction-bytes",
+      "analyst_name": "hg_resource_descriptor_address",
+      "milestone": "M6",
+      "evidence": "analysis/pack_finalization/functions.json",
+      "m6_runtime_evidence": "evidence/m6/runtime-comparison.json",
+      "scope": "Selected finite-normal geometry/material path; exceptional FP/VU flags and timing excluded."
     },
     {
       "entry": "0x00138af0",
@@ -19155,9 +19170,14 @@
         }
       ],
       "calls": [],
-      "status": "auto-discovered-unreviewed",
+      "status": "reconstructed-model-differential-tested",
       "byte_matching": "not-tested",
-      "gameplay_runtime_verification": "not-tested"
+      "gameplay_runtime_verification": "selected-PACKc6-output-and-live-instruction-bytes",
+      "analyst_name": "hg_resource_sqrt",
+      "milestone": "M6",
+      "evidence": "analysis/pack_finalization/functions.json",
+      "m6_runtime_evidence": "evidence/m6/runtime-comparison.json",
+      "scope": "Selected finite-normal geometry/material path; exceptional FP/VU flags and timing excluded."
     },
     {
       "entry": "0x00143560",

@@ -277,3 +277,15 @@ reanalysis uses the recovered isolated profile, 19 manually transcribed debugger
 pairs and the resumed retention/reuse captures; it never infers PCs from PINE.
 The Drive transport gate is unresolved in this API session. Preserve the local
 source/backup and complete independent remote verification before branch delivery.
+
+## M6: real selected PACK processing
+
+[docs/M6.md](docs/M6.md) gives the complete verified commands and capture sequence.
+Extend the existing fixup runner with `--geometry-exports local/m6/geometry-export`
+and `--image "$HG_JAPAN_ISO"`; its M4 mock-based cases stay separate from 565 new
+M6 real-processing comparisons. Extend the existing AREA runtime runner with
+`--pack-runtime local/m6/captures2 --pack-profile local/m6/capture2-profile.ini`.
+That private observation set validates all 13 actual fixups, complete payload,
+publication and fresh AREA1 reuse. Runtime and original-data checks are local
+only; synthetic CI uses neither media nor captures. Snapshot/review delivery is
+recorded separately in the PR; preserve all prior snapshots.

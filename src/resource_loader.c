@@ -526,6 +526,100 @@ static int64_t signed_word(uint32_t v) {
 }
 static int positive_word(uint32_t v) { return v!=0 && (v&0x80000000u)==0; }
 
+/* Selected finite, normal radius arithmetic. Each original multiply/add/root
+ * rounds toward zero. Integer significands avoid host rounding and libm.
+ * Exceptional FPU/VU flags and non-finite inputs are outside this path. */
+static uint32_t radius_encode(uint64_t m,int exponent) {
+    if(m==0)return 0;
+    unsigned top=0;uint64_t copy=m;
+    while((copy>>=1)!=0)top++;
+    int field=exponent+(int)top+127;
+    if(field<=0)return 0;
+    if(field>=255)return 0x7f7fffffu;
+    uint64_t fraction=top>23?m>>(top-23):m<<(23-top);
+    return ((uint32_t)field<<23)|((uint32_t)fraction&0x7fffffu);
+}
+static uint32_t radius_square(uint32_t value) {
+    uint32_t field=(value>>23)&255u;
+    if(field==0)return 0;
+    uint64_t m=(value&0x7fffffu)|0x800000u;
+    return radius_encode(m*m,2*((int)field-150));
+}
+static uint32_t radius_add(uint32_t a,uint32_t b) {
+    if(a<b) {uint32_t swap=a;a=b;b=swap;}
+    if(b==0)return a;
+    unsigned difference=(a>>23)-(b>>23);
+    if(difference>31)return a;
+    uint64_t sum=((uint64_t)((a&0x7fffffu)|0x800000u)<<31)
+        +((uint64_t)((b&0x7fffffu)|0x800000u)<<(31-difference));
+    return radius_encode(sum,(int)(a>>23)-181);
+}
+/* 00143530: f12 -> VU0 Q -> f0, adapted to raw bits. Q latency, flags and
+ * untouched vector lanes are not outputs of this host API. */
+uint32_t hg_resource_sqrt(uint32_t value) {
+    uint32_t field=(value>>23)&255u;
+    if(field==0)return 0;
+    uint64_t m=(value&0x7fffffu)|0x800000u;
+    int exponent=(int)field-150;
+    if(exponent%2!=0) {m<<=1;exponent--;}
+    uint64_t remainder=m<<26,root=0,bit=UINT64_C(1)<<62;
+    while(bit>remainder)bit>>=2;
+    while(bit!=0) {
+        if(remainder>=root+bit) {remainder-=root+bit;root=(root>>1)+bit;}
+        else root>>=1;
+        bit>>=2;
+    }
+    return radius_encode(root,exponent/2-13);
+}
+/* 00138690: scan words until a material tag or terminal packet. */
+uint32_t hg_resource_material_next(HGResourceEnv *e,uint32_t cursor) {
+    for(;;cursor+=4) {
+        uint32_t tag=r32(e,cursor);
+        if((tag&0xe0000000u)==0x60000000u)return cursor+4;
+        if((tag&0xff000000u)==0x13000000u)return 0;
+    }
+}
+/* 00138a80: sign extend the wrapped word sums BEFORE the 64-bit ORs.
+ * Do not remask to 14 bits: overflow can affect other descriptor fields. */
+uint64_t hg_resource_descriptor_address(uint64_t descriptor,uint32_t delta) {
+    uint32_t low=((uint32_t)descriptor&0x3fffu)+delta;
+    uint32_t high=((uint32_t)(descriptor>>37)&0x3fffu)+delta;
+    return (descriptor&UINT64_C(0xfff8001fffffc000))
+        |(uint64_t)signed_word(low)|((uint64_t)signed_word(high)<<37);
+}
+static void material_address(HGResourceEnv *e,uint32_t address,uint32_t delta) {
+    uint64_t value=r32(e,address);
+    value|=(uint64_t)r32(e,address+4)<<32;
+    value=hg_resource_descriptor_address(value&UINT64_C(0xffffffe7ffffffff),delta);
+    w32(e,address,(uint32_t)value);w32(e,address+4,(uint32_t)(value>>32));
+}
+/* 001386e0. Radius uses max absolute X/Z bounds. Kinds 0/3/4 traverse tagged
+ * descriptors; kind 2 uses fixed records. Header fields reload after writes.
+ * Selected finite-normal FP effects are reconstructed; exceptional flags and
+ * arbitrary aliases into omitted original stack-save slots are not claimed. */
+void hg_resource_geometry(HGResourceEnv *e,uint32_t block,uint32_t delta) {
+    uint32_t x=r32(e,block+0x14)&0x7fffffffu,z=r32(e,block+0x1c)&0x7fffffffu;
+    uint32_t other=r32(e,block+0x24)&0x7fffffffu;
+    if(other>=x)x=other;
+    other=r32(e,block+0x2c)&0x7fffffffu;
+    if(other>=z)z=other;
+    w32(e,block+0x20,hg_resource_sqrt(radius_add(radius_square(x),radius_square(z))));
+    uint32_t kind=r8(e,block+0x10),cursor=block+0x40;
+    if(kind==2) {
+        for(uint32_t i=0;positive_word(r32(e,block)) && i<r32(e,block);i++,cursor+=0x80)
+            material_address(e,cursor+0xc,delta);
+    }else if(kind==0 || kind==3 || kind==4) {
+        while((cursor=hg_resource_material_next(e,cursor))!=0) {
+            material_address(e,cursor,delta);
+            uint32_t count=r32(e,cursor+8);
+            kind=r8(e,block+0x10);
+            cursor+=0x24+count*0x24u;
+            if(kind==4)cursor+=8+r8(e,block+0x11)*count*16u;
+            else if(kind==3)cursor+=8+r8(e,block+0x11)*count*12u;
+        }
+    }
+}
+
 /* 001389d0: signed quotient/remainder address permutation, not allocation.
  * frame is the original helper's adjusted sp. Negative inputs can read BEFORE
  * its 32-byte table: use the caller-provided guest scratch, never a host array.
@@ -544,8 +638,8 @@ uint32_t hg_resource_map_address(HGResourceEnv *e,uint32_t address,uint32_t fram
  * [frame,frame+0x240) available. Keeping original stack slots in the existing
  * bus preserves word wrap, table aliasing and malformed indices without host
  * array overflows. ABI register saves are interpreter concerns, not C locals.
- * 001386e0 (geometry/material processing) and 00152ae0 (upload) stay explicit
- * external operations; neither is exercised by the selected bootstrap member. */
+ * This isolated seam retains geometry/upload calls; the composition adapter
+ * resolves geometry. Upload 00152ae0 remains external. */
 uint32_t hg_resource_fixup(HGResourceEnv *e,uint32_t block,uint32_t index,uint32_t id,uint32_t frame) {
     uint32_t textures=0,models=0,model_cursor=frame+0x140,texture_cursor=frame+0x100;
     w32(e,frame+0xfc,index);
@@ -622,6 +716,7 @@ static uint32_t process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32
     if(pc==0x130900) {hg_pack_general(&p->env,a);return 0;}
     if(pc==0x131420) {hg_pack_alternative(&p->env,a);return 0;}
     if(pc==0x137ed0)return hg_resource_fixup(&p->env,a,b,c,p->frame);
+    if(pc==0x1386e0) {hg_resource_geometry(&p->env,a,b);return 0;}
     if(pc==0x1389d0)return hg_resource_map_address(&p->env,a,p->frame-0x50);
     return p->outer->call(p->outer->user,pc,a,b,c,d);
 }

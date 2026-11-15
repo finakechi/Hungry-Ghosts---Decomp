@@ -6,14 +6,14 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
-M1–M4 establish disc reads, resource scheduling/loading and selected FLK5 fixup.
-M5 reconstructs the connected AREA/PACK loaders and one AREA1 actor callback: the
-original game replaces a previous AREA, executes/publishes the loaded callback,
-and retains/reuses it across a later resource request. Coverage is 30 functions /
-10,028 original instruction bytes, with 120 synthetic tests and bounded original
-instruction/runtime comparisons. [M5](docs/M5.md) describes explicit engine/fixup
-boundaries and the pending private-backup delivery gate. Whole-game equivalence
-and compiler byte matching remain untested; no final rebuild/port track is selected.
+M1–M6 connect disc reads, PACK/AREA loading, real resource processing and a
+selected AREA1 actor callback. M6 independently verifies all 13 marked startup
+PACKc6 members (1,184,000 transformed member bytes and a complete 1,228,800-byte
+postprocessing buffer), publication, worker completion and AREA1 reuse. Coverage
+is 34 functions / 10,992 original instruction bytes, with 126 synthetic tests.
+[M6](docs/M6.md) records exact evidence levels, commands and remaining engine,
+upload and numerical boundaries. Whole-game equivalence, compiler byte matching
+and a final rebuild/port target remain unclaimed.
 
 ```sh
 python -m unittest discover -s tests -v
