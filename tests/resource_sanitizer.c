@@ -8,6 +8,7 @@ typedef struct {
     unsigned char *ram;
     unsigned char disk[0x84800],area[4096],scratch[0x4000];
     unsigned ticks,reads,rejects;
+    unsigned player_trace[128],player_calls,player_timer_finishes,player_animation_selects;
 } Test;
 static uint32_t load(void *u,uint32_t a,uint32_t n) {
     Test *t=u;unsigned char *bytes=t->ram;uint32_t limit=0x2000000;
@@ -51,7 +52,17 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
     case 0x1389d0:return 0;
     case 0x1041e0:assert(a==2);return 0;
     case 0x1235c0:assert(a==0x5f0090 && b==5);return 0;
-    case 0x123660:assert(a==0x5f0090 && b==1);return 0;
+    case 0x123660:assert(a==0x5f0090 && b<=1);return 0;
+    case 0x1330f0:store(u,a+0x18,1,b);return 0;
+    case 0x143e60:return 0; /* explicit synthetic quaternion boundary */
+    case 0x18b6c0:case 0x18c120:
+        assert(a==0x5f0000 && b==0x5f02d0);return pc==0x18b6c0;
+    case 0x15e0c0:assert(a==0x5f0000);return 0;
+    case 0x13a050:assert(a==0x3f800000 && b==0x5f0090);return 0;
+    case 0x15fe00:case 0x188650:case 0x15bf30:case 0x159380:
+    case 0x158e20:case 0x158ce0:assert(a==0x5f0000);return 0;
+    case 0x161110:assert(a==0x5f0000 && b==0);return 0;
+    case 0x15e190:assert(a==0 && b==0x5f0000 && c==0x6000000);return 0;
     case 0x144340:assert(a==0x5f0050 && b==0x5f0030 && c==0x5f0040);return 0;
     case 0x139c90:
         assert(a==0x5f0000 && b==0x70000b90);
@@ -64,6 +75,102 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
         store(u,a+0x24,4,0);return 0;
     default:assert(!"Unexpected external operation");return 0;
     }
+}
+/* Synthetic player engine/math boundaries on the same RAM/scratch bus. The
+ * actual C resolver owns resource lookup, nodes, state transitions and spawned
+ * actor/list effects. These leaves calculate no result from retail captures. */
+static uint32_t player_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    Test *t=u;const uint32_t actor=0x3f92d0;
+    assert(t->player_calls<sizeof t->player_trace/sizeof t->player_trace[0]);
+    t->player_trace[t->player_calls++]=pc;
+    switch(pc) {
+    case 0x119ac8:case 0x1330f0:return external(u,pc,a,b,c,d);
+    case 0x119910:
+        assert(a+c<0x2000000 && b+c<0x2000000);memmove(t->ram+a,t->ram+b,c);return a;
+    case 0x139ff0:
+        assert(a==actor+0x90 && b==0x600000 && c==0x06000000);
+        store(u,a+0x26,2,c);return 0;
+    case 0x13a060:
+        assert(a==0 && (b==0 || b==0x41200000) && c==actor+0x90);
+        store(u,c+0x26,2,d);t->player_animation_selects++;return 0;
+    case 0x1b7f00:assert(a==actor+0x30);return 3;
+    case 0x196ad0:assert((a==0x31 || a==0xaa || a==0xe8) && b==0);return 0;
+    case 0x144340:
+        assert(a==actor+0x50 && b==actor+0x30 && c==actor+0x40);
+        for(unsigned i=0;i<16;i++)store(u,a+i*4,4,i%5==0?0x3f800000u:0);
+        memcpy(t->ram+a+0x30,t->ram+b,16);return 0;
+    case 0x13a240:
+        assert(a==actor+0x90 && b==actor+0x50 && c==0);
+        for(unsigned i=0;i<load(u,a+0x54,4);i++) {
+            uint32_t node=load(u,load(u,a+0x58,4)+i*4,4);
+            assert(node+64<0x2000000);memcpy(t->ram+node,t->ram+b,64);
+        }
+        return 0;
+    case 0x267450:assert(a==actor);return 0;
+    case 0x13a050:assert(a==0x3f800000 && b==actor+0x90);return 0;
+    case 0x15fe00:assert(a==actor && b<=1);return 0;
+    case 0x15d770:case 0x188650:case 0x15bf30:assert(a==actor);return 0;
+    case 0x161110:case 0x174900:assert(a==actor && b==0);return 0;
+    case 0x120830:assert(a==actor+0x30 && b==actor+0x390);return 0x3f800001;
+    case 0x188550:assert(a==0x41af3333 && b==actor);return 0;
+    case 0x17d930:assert(a==0 && b==0 && c==1);return 0;
+    case 0x120490:assert(a==0x720000 && b==actor);return 0;
+    case 0x1cc5b0:
+        assert(a==0 && b==0x70000b80 && c==0x70000b80);t->player_timer_finishes++;return 0;
+    default:assert(!"Unexpected player engine boundary");return 0;
+    }
+}
+static void player_composition(Test *t,HGResourceEnv *original) {
+    const uint32_t actor=0x3f92d0,block=0x600000,model=0x601000,frame=0x1ff0790;
+    HGResourceEnv e=*original;e.call=player_external;
+    for(unsigned edge=0;edge<=128;edge+=128) {
+        memset(t->ram,0,0x2000000);memset(t->scratch,0,sizeof t->scratch);
+        t->player_calls=0;t->player_timer_finishes=0;t->player_animation_selects=0;
+        store(t,0x3f43fc,4,block);store(t,block,4,0x354b4c46);store(t,block+4,4,214);
+        store(t,block+16+211*4,4,0x01001000);store(t,block+16+213*4,4,0x09002000);
+        store(t,model+8,4,3);store(t,model+0x34,4,0x3000);
+        store(t,0x4d8140,4,0x70000c);store(t,0x4d8144,4,3);
+        for(unsigned i=0;i<3;i++)store(t,0x700000+i*4,4,0x710200-i*0x100);
+        store(t,0x37b9a0+8,4,0x10203040);
+        store(t,actor+0x30,4,0x3f800000);store(t,actor+0x34,4,0x40000000);
+        store(t,actor+0x38,4,0x40400000);store(t,actor+0x3c,4,0x3f800000);
+        store(t,0x3fa201,1,1);store(t,0x3fa202,1,255);
+        store(t,0x3eaec8,2,32);store(t,0x3eaed0,2,128);
+        store(t,0x539430,4,0x720000);store(t,0x53943c,4,1);
+        store(t,0x46d90c,4,2);
+        hg_player_initialize_fixed(&e,actor);
+        assert(load(t,actor+0xa0,4)==model && load(t,actor+0xa4,4)==0x602000);
+        assert(load(t,actor+0xe4,4)==3 && load(t,0x4d8144,4)==0);
+        assert(load(t,actor+0x350+0x30,4)==0x3f800000);
+        assert(load(t,actor+0x449,1)==255 && load(t,actor+0x44a,1)==0);
+        assert(load(t,actor+0xe0,4)==0x10203040 && load(t,actor+0x9d,1)==1);
+        hg_player_active_update_fixed(&e,actor,frame);
+        hg_player_active_update_fixed(&e,actor,frame);
+        assert(load(t,actor+0x19,1)==1 && load(t,actor+0x1a,1)==1);
+        assert(load(t,0x46d90c,4)==0 && t->player_timer_finishes==1);
+        store(t,0x3eaf04,2,edge);hg_player_active_update_fixed(&e,actor,frame);
+        assert(load(t,actor+0x448,1)==(edge!=0) && load(t,actor+0x449,1)==255);
+        assert(load(t,actor+0x19,1)==(edge?0u:1u));
+        assert(load(t,actor+0x450,4)==0 && load(t,0x53943c,4)==1);
+        store(t,0x3eaf04,2,0);hg_player_active_update_fixed(&e,actor,frame);
+        assert(load(t,actor+0x19,1)==1 && load(t,actor+0x4f8,4)==0x3f800001);
+        if(edge) {
+            assert(load(t,actor+0x450,4)==0x720000 && load(t,0x539430,4)==0);
+            assert(load(t,0x53943c,4)==0 && load(t,0x539450,4)==0x720000);
+            assert(load(t,0x72001c,4)==0x16b0f0 && load(t,0x720002,1)==1);
+            assert(load(t,0x720000,1)==2 && load(t,0x720010,4)==1);
+            assert(load(t,0x72003c,4)==0x3f800000 && load(t,actor+0xb6,2)==0x75);
+            assert(t->player_animation_selects==2);
+            unsigned calls=t->player_calls;
+            assert(hg_player_equipment_enter(&e,actor)==0 && t->player_calls==calls);
+        } else {
+            assert(load(t,actor+0x450,4)==0 && load(t,0x539430,4)==0x720000);
+            assert(load(t,0x53943c,4)==1 && t->player_animation_selects==0);
+        }
+    }
+    store(t,0x46d894,4,0x400);assert(hg_player_flag_status(&e,0x80)==0);
+    assert(hg_player_flag_status(&e,0x400)==1);
+    store(t,0x3f9f08,4,0x400);assert(hg_player_flag_status(&e,0x400)==2);
 }
 static uint32_t actor_setup(void *u,uint32_t pc,uint32_t a,uint32_t b,
                             uint32_t c,uint32_t d,uint32_t e,uint32_t f) {
@@ -238,5 +345,39 @@ int main(void) {
     store(&t,0x500829,1,2);store(&t,0x500890,4,0x12345678);
     assert(hg_actor_allocate(&e,0x82,9,0x100100)==0x500800);
     assert(load(&t,0x539460,4)==0x500800 && load(&t,0x500890,4)==0x12345678);
-    free(t.ram);puts("PASS: synthetic M1-M7 workers and M8 actor pools/lists under sanitizers");return 0;
+    /* Connected real setup/lookup/node allocation, then the active dispatcher.
+     * Quaternion, transform and render consumers remain declared boundaries. */
+    memset(t.ram+0x5f0000,0,0x400);
+    store(&t,0x3f4300+0x233*4,4,0x600000);
+    store(&t,0x600000,4,0x354b4c46);store(&t,0x600004,4,2);
+    store(&t,0x600010,4,0x01001000);store(&t,0x600014,4,0x09002000);
+    store(&t,0x601008,4,2);store(&t,0x60100c,4,0x40);
+    store(&t,0x4d8140,4,0x700008);store(&t,0x4d8144,4,2);
+    store(&t,0x700000,4,0x710100);store(&t,0x700004,4,0x710000);
+    store(&t,0x37b9a0+20,4,0x12345678);
+    hg_area1_actor_fixed(&e,0x5f0000);
+    assert(load(&t,0x5f0018,1)==1 && load(&t,0x5f00a0,4)==0x601000);
+    assert(load(&t,0x5f00f0,4)==0x710000 && load(&t,0x5f00f4,4)==0x710100);
+    assert(load(&t,0x4d8144,4)==0 && load(&t,0x5f0274,4)==0);
+    hg_area1_actor_fixed(&e,0x5f0000);
+    store(&t,0x3fa067,1,0);store(&t,0x3f9fee,1,16);
+    store(&t,0x3eaf1c,4,0xbf400000);
+    assert(hg_player_input_transitions(&e,0x5f0000)==0);
+    assert(load(&t,0x5f04a4,1)==1 && load(&t,0x5f04a8,2)==40);
+    assert(hg_player_input_transitions(&e,0x5f0000)==0);
+    assert(load(&t,0x5f04a4,1)==1 && load(&t,0x5f04a8,2)==39);
+    store(&t,0x3eaf1c,4,0);store(&t,0x3eaf04,2,0x20);
+    assert(hg_player_input_transitions(&e,0x5f0000)==1);
+    store(&t,0x5f0019,1,1);store(&t,0x5f001a,1,1);store(&t,0x5f0449,1,255);
+    store(&t,0x3eaee8,1,0);store(&t,0x3f9e3f,1,0);store(&t,0x5f04ad,1,0);
+    store(&t,0x3eaec8,2,32);store(&t,0x3eaed0,2,128);store(&t,0x3eaf04,2,0);
+    hg_player_ordinary_update(&e,0x5f0000);assert(load(&t,0x5f0449,1)==255);
+    store(&t,0x3eaf04,2,128);hg_player_ordinary_update(&e,0x5f0000);
+    assert(load(&t,0x5f0449,1)==1);
+    store(&t,0x3f9f38,4,0xaabbccdd);hg_player_apply_transition(&e,0x5f0000);
+    assert(load(&t,0x3f9f38,4)==0xaabbcc00);
+    hg_player_reset_transition(&e,0x5f0000);
+    assert(load(&t,0x5f0449,1)==255 && load(&t,0x5f0019,1)==0);
+    player_composition(&t,&e);
+    free(t.ram);puts("PASS: synthetic M1-M7 workers and connected M8 player composition under sanitizers");return 0;
 }

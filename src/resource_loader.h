@@ -64,6 +64,64 @@ typedef uint32_t (*HGArea1Call6)(void *, uint32_t entry, uint32_t a0, uint32_t a
                                uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
 void hg_area1_actor(HGResourceEnv *, uint32_t, HGArea1Call6);      /* 00a8a070 */
 void hg_actor_data_init(HGResourceEnv *, uint32_t, uint32_t);     /* 0018c220 */
+/* M8 isolated setup entries retain original-address call seams. The fixed
+ * adapters resolve lookup, binding, node allocation, palette/mode, default pose
+ * and attachment orchestration on the same bus. Math leaves, nonzero animation
+ * sequence selection and attachment allocators remain external. */
+void hg_actor_setup(HGResourceEnv *, uint32_t actor, uint32_t model,
+                    uint32_t animation, uint32_t attachment,
+                    uint32_t mode, uint32_t sequence);           /* 0018a330 */
+void hg_actor_setup_resources(HGResourceEnv *, uint32_t, uint32_t, uint32_t, uint32_t); /* 0018a4c0 */
+void hg_actor_setup_animation(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 0018a5b0 */
+void hg_actor_set_mode(HGResourceEnv *, uint32_t, uint32_t);      /* 00139fc0 */
+void hg_actor_set_palette(HGResourceEnv *, uint32_t, uint32_t);   /* 001235c0 */
+/* Active publication dispatcher; transform/visibility and render consumers
+ * remain bus dependencies. Comparisons cover finite normal values and zero. */
+void hg_actor_active(HGResourceEnv *, uint32_t);                 /* 0018c280 */
+/* Same AREA1 callback with setup and active dispatch resolved. Quaternion math,
+ * animation selection, transform/visibility and render work remain external. */
+void hg_area1_actor_fixed(HGResourceEnv *, uint32_t actor);
+void hg_actor_setup_fixed(HGResourceEnv *, uint32_t, uint32_t, uint32_t,
+                          uint32_t, uint32_t, uint32_t);
+/* Player input transition counter (00159570 calls this on actor flag +49f&1).
+ * Finite normal/zero analog values; original 0015e0c0 remains a bus call. */
+uint32_t hg_player_input_transitions(HGResourceEnv *, uint32_t actor); /* 0015de80 */
+/* Ordinary player path, observed at +448==0. Dependencies retain address seams;
+ * raw FP call arguments use the existing bus convention. */
+void hg_player_ordinary_update(HGResourceEnv *, uint32_t);        /* 00159ad0 */
+void hg_player_apply_transition(HGResourceEnv *, uint32_t);      /* 00159380 */
+void hg_player_reset_transition(HGResourceEnv *, uint32_t);      /* 00158d30 */
+/* Host-only split of 159ad0 after its eligibility checks; original transition
+ * callees remain external. Not counted as an additional original function. */
+void hg_player_ordinary_input_stage(HGResourceEnv *, uint32_t);
+void hg_player_initialize(HGResourceEnv *, uint32_t);           /* 00158a10 */
+void hg_actor_set_animation_flag(HGResourceEnv *, uint32_t, uint32_t); /* 00139fe0 */
+void hg_player_unlink_effects(HGResourceEnv *, uint32_t, uint32_t); /* 00158ce0 */
+/* Raw f12 blend bits precede original actor and sequence arguments. */
+uint32_t hg_player_select_animation(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 0015e190 */
+void hg_actor_copy_node_matrix(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 0013a2a0 */
+/* frame is the original guest sp after its 0x70-byte frame allocation. The
+ * input save/restore uses frame+0x30; no host pointer enters the EE bus. */
+void hg_player_active_update(HGResourceEnv *, uint32_t, uint32_t frame); /* 00159570 */
+/* Host split of 175190's state-0 path. Returns 0 without effects for another
+ * entry state; callers must supply that unreconstructed state via the bus. */
+uint32_t hg_player_equipment_enter(HGResourceEnv *, uint32_t);
+/* 158e20 sound-denial branch currently verifies finite [0,1] volume under
+ * the bounded chop model. Bus 156ad0's fifth argument is the constant 1. */
+void hg_player_equipment_transition(HGResourceEnv *, uint32_t);  /* 00158e20 */
+void hg_player_condition_timer(HGResourceEnv *);                 /* 001594f0 */
+uint32_t hg_player_flag_status(HGResourceEnv *, uint32_t);       /* 0015b260 */
+uint32_t hg_player_spawn_equipment(HGResourceEnv *, uint32_t);   /* 0015c160 */
+void hg_player_ordinary_transition(HGResourceEnv *, uint32_t);   /* 00158d90 */
+void hg_player_initialize_fixed(HGResourceEnv *, uint32_t);
+void hg_player_active_update_fixed(HGResourceEnv *, uint32_t, uint32_t frame);
+void hg_player_equipment_transition_fixed(HGResourceEnv *, uint32_t);
+uint32_t hg_actor_resource_lookup(HGResourceEnv *, uint32_t, uint32_t); /* 00138370 */
+uint32_t hg_actor_allocate_nodes(HGResourceEnv *, uint32_t, uint32_t); /* 00141e40 */
+uint32_t hg_actor_take_node(HGResourceEnv *);                    /* 00141de0 */
+void hg_actor_bind_resources(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 00139d20 */
+void hg_actor_default_pose(HGResourceEnv *, uint32_t);            /* 0013a0a0 */
+void hg_actor_bind_attachment(HGResourceEnv *, uint32_t, uint32_t); /* 00267300 */
 /* M8 actor pool/list primitives. Callback bodies remain explicit bus calls.
  * register_list takes the original list-base argument, normally 004d8150. */
 void hg_actor_register_list(HGResourceEnv *, uint32_t actor, uint32_t base, uint32_t priority); /* 00142810 */

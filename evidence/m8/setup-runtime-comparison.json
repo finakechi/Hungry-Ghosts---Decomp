@@ -1,0 +1,81 @@
+{
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "captures": {
+    "setup_entry_sha256": "74ce48a645f47039043e34bc97504926f4db47c9ba03f3175da07ece4b0bb007",
+    "setup_return_sha256": "dce078b3fca8d559a2a8d1f6293d838850239317fd53e3a347d67efbba2f018c"
+  },
+  "compared_ranges": [
+    {
+      "address": "0x4d8150",
+      "size_bytes": 976,
+      "sha256": "9629acb2c13e76516b9f3615395818b8baa100a2f20339109045611cef115005"
+    },
+    {
+      "address": "0x4d8140",
+      "size_bytes": 8,
+      "sha256": "27bc2d455e015180c465790b903a44102283cce5092aea5dd7276a2382fa9892"
+    },
+    {
+      "address": "0x4d3970",
+      "size_bytes": 256,
+      "sha256": "9c6c797d8a2ae23d20be51085f959ea608d7e59c50998fca98204e3d8f43a34e"
+    },
+    {
+      "address": "0x4d38a0",
+      "size_bytes": 256,
+      "sha256": "f7e6a302ff647cb04859c2bba267e221af297806a0a1f4cd9fe344deffb044f2"
+    }
+  ],
+  "external_calls": [
+    [
+      "0x1330f0",
+      "0x4d8200",
+      "0x1"
+    ],
+    [
+      "0x143e60",
+      "0x4d39f0",
+      "0x163a9c0"
+    ],
+    [
+      "0x143e60",
+      "0x4d3920",
+      "0x163aa10"
+    ]
+  ],
+  "limitations": [
+    "Recovered independently observed original-game captures, not fresh resumed execution.",
+    "Setup reconstructed C with original-instruction-modeled 1330f0 and 143e60 math leaves; not all-C equivalence.",
+    "Only selected setup call and compared ranges; input/active-update runtime equivalence not established."
+  ],
+  "verification_sources": {
+    "src/resource_loader.c": "30d3b172482dbe82dd08e253e8802d497a918e1723088eeb6841840b5e6182a4",
+    "src/resource_loader.h": "fb302ec66267551198993c32f8cfee23ab5f432ed9f707082e841017cf99989d",
+    "tools/ee_subset.py": "bce0affc274bfafcb8188060180ead7f140d5085fe22200944d215a04c62c7f2",
+    "tools/verify_actor_setup_runtime.py": "ed988e530609de4cbba047a43f7804318659617bc9cf44fb7bd2f30ad59d645c",
+    "analysis/actor_setup/functions.json": "4feed236a7ac8ed264a50ecdf5501c5a526bb4f804dba623c850c36a53f7b60b",
+    "analysis/actor_setup/math-dependencies.json": "df7ec2c66942d8449e9c96eaeaa55d4d5f17a330e4481547b4b79df07cab2191"
+  },
+  "screenshot_review": {
+    "entry": {
+      "pc": "0x0018a330",
+      "defined_arguments": [
+        "0x004d8150",
+        "0x01000000",
+        "0x09000001",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ]
+    },
+    "returned": {
+      "pc": "0x00a8a0f8",
+      "interpretation": "Caller instruction immediately after jal 0018a330 and its delay slot"
+    },
+    "screenshots": {
+      "setup-entry": "9d82b366a6d03ea644695229ed2e58092d8860c5e241b9f7718e50207f7d2139",
+      "setup-return": "92956c287d173db10c54534ec6491ccd42b9f1cd207d445d015b0f725e202639"
+    }
+  }
+}

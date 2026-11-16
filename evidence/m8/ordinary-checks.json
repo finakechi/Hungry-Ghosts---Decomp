@@ -1,0 +1,414 @@
+{
+  "schema": "hg-m8-ordinary-checks/v1",
+  "milestone_status": "incomplete",
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/00.log",
+      "log_sha256": "15b0519df3ea9ab6e21d191507ee7e0e339d716f834b205b76ead11aa745c79c",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_disc_read.py",
+        "--elf",
+        "$HG_ELF",
+        "--output",
+        "local/m8/ordinary-regressions/m1.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/01.log",
+      "log_sha256": "97364a40f14e4a8efd4628204a873e268a7552bb0b62b5283e976ff4c41e72e3",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_loader.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/m2.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/02.log",
+      "log_sha256": "944e7487b0cdf31724f36feee0583e67b9dcd671827e8739b396aee7734df781",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_rebase.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m3/fixup-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/m3.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/03.log",
+      "log_sha256": "70c871142b25df98ac705fb75f3bdd79e257a4bd06cc31e4c96efd295713b024",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_fixup.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m4/fixup-export",
+        "--geometry-exports",
+        "local/m6/geometry-export",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/m4-m6.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/04.log",
+      "log_sha256": "44a65d3834903b5ddaf2ec849709044298f2cb2050261ff5bdf183c4b311ec51",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "$HG_ELF",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--area-code-exports",
+        "local/m5/area1-observed-export",
+        "--actor-dependency-exports",
+        "local/m5/actor-dependency-export",
+        "--output",
+        "local/m8/ordinary-regressions/m5.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/05.log",
+      "log_sha256": "13087902e2d790c7a3b01085e80ab4ec0f96978ce586e3d1b066e736f32c1e95",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "compileall",
+        "-q",
+        "tools",
+        "tests"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/06.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/07.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_preparation.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/m7-instructions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/08.log",
+      "log_sha256": "c972352e4392d34a9f14677eded7f16580168c3a0c6b380e7aa55b4d3f26a60a",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_lists.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/actor-lists.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/09.log",
+      "log_sha256": "14baba3ffeeaa9706a8afbe4a65275a184c71771b8ec10077d03797cceb655db",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/actor_lists/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/10.log",
+      "log_sha256": "469c9c584947c35b824522c91aba4c9c318ee43e18ffe20e053686e1aabc71e4",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_fixup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m4/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m4/runtime/capture-profile.ini",
+        "--output",
+        "local/m8/ordinary-regressions/m4-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/11.log",
+      "log_sha256": "d47e4993c5cd8c9eae24aa7c5766f61d5e12a68ca34f5a3a4a37c0d0a05e6068",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m5/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m5/resume/capture-profile.ini",
+        "--pack-runtime",
+        "local/m6/captures2",
+        "--pack-profile",
+        "local/m6/capture2-profile.ini",
+        "--output",
+        "local/m8/ordinary-regressions/runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/12.log",
+      "log_sha256": "b6991b40177068e813e181b2a1781eb9ba8c4ee4fe0ca309dc0a015518cccbd9",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/check_local_inputs.py",
+        "--manifest",
+        "evidence/local-inputs.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/13.log",
+      "log_sha256": "58c7b13b8485282220866187e627ebc2078d608a918d81a15e110c8a02ef4728",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m7",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m7/capture-profile.ini",
+        "--contract-profile",
+        "local/m7/contract-profile.ini",
+        "--output",
+        "local/m8/ordinary-regressions/m7-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/14.log",
+      "log_sha256": "e3b86cb7bfb190ab9b28dacf8c957d7cd4650c8121577b2964c7ab8fcc292049",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/ordinary-regressions/setup-instructions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/15.log",
+      "log_sha256": "4b02caecc3229f87876360ea6370d646623499961498caffaade9036c3872962",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--entry",
+        "local/m8/captures/setup-entry.json",
+        "--returned",
+        "local/m8/captures/setup-return.json",
+        "--output",
+        "local/m8/ordinary-regressions/setup-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/16.log",
+      "log_sha256": "ee64508fdf0b98e935e4adad73d6781e1ee6e3e4d20b23cd10ef4b081db24238",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-Isrc",
+        "tests/resource_sanitizer.c",
+        "src/resource_loader.c",
+        "src/disc_read.c",
+        "-o",
+        "local/m8/ordinary-regressions/sanitizer"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/17.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "local/m8/ordinary-regressions/sanitizer"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/18.log",
+      "log_sha256": "0b58689cabdb1e96109990fc2c25f06a2d0e44cfbb2e642763e8455712ea9d17",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/references/PS2DInfo/tools/validate_evidence.py",
+        "analysis/player_ordinary/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/ordinary-regressions/19.log",
+      "log_sha256": "e78d084e4f7585b959947bab10fd4849afb8b43e72caa52fbdffe87bf48a50a5",
+      "expected_result": "exit 0",
+      "evidence_class": "regression"
+    }
+  ]
+}

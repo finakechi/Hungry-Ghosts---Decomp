@@ -76,5 +76,23 @@ class SubsetTests(unittest.TestCase):
         m=self.run_words([0x0085102b,0x03e00008,0]);m.reg[4]=(1<<64)-1;m.reg[5]=1
         self.assertEqual(m.run(0x1000),0)
 
+    def test_finite_scalar_arithmetic_rounding_and_sign(self):
+        # add/sub/mul chop; div.S rounds to nearest (PCSX2 default EE division
+        # rounding, confirmed by M8 captures). No retail instruction words.
+        cases=[(0,0x3f800000,0xbfc00000,0xbf000000),
+               (1,0x3f800000,0x3fc00000,0xbf000000),
+               (2,0xbfc00000,0x40000000,0xc0400000),
+               (3,0xbf800000,0x40400000,0xbeaaaaab),  # -1/3 rounds away from chop
+               (3,0x40a00000,0x40400000,0x3fd55555),  # 5/3 nearest equals chop
+               (0,0x3f800000,0x33800000,0x3f800000)]
+        for fn,x,y,want in cases:
+            m=self.run_words([(0x11<<26)|(16<<21)|(2<<16)|(1<<11)|(3<<6)|fn,0x03e00008,0])
+            m.fpr[1]=x;m.fpr[2]=y;m.run(0x1000)
+            self.assertEqual(m.fpr[3],want)
+        for x,y in ((0x7f800000,0x3f800000),(0x3f800000,0)):
+            m=self.run_words([(0x11<<26)|(16<<21)|(2<<16)|(1<<11)|(3<<6)|3])
+            m.fpr[1]=x;m.fpr[2]=y
+            with self.assertRaises(ValueError):m.run(0x1000)
+
 
 if __name__=='__main__':unittest.main()

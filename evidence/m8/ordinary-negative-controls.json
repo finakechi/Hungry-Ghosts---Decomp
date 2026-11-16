@@ -1,0 +1,26 @@
+[
+  {
+    "control": "held-instead-of-edge",
+    "result": "rejected",
+    "compiled": true,
+    "source_sha256": "cca2e14994117ab7bb07790cec0e8d640528a2812f70b6f65fa1430000f71d1d",
+    "test": "test_edge_control_and_priority",
+    "reason": "255 != 1"
+  },
+  {
+    "control": "wide-global-clear",
+    "result": "rejected",
+    "compiled": true,
+    "source_sha256": "649aa8043b5afea6d671be5ce078aa994347d4df46b76858e18e90625a50ab63",
+    "test": "test_dispatch_keeps_neighboring_bytes_and_actor",
+    "reason": "0 != 2864434176"
+  },
+  {
+    "control": "lost-actor-transition",
+    "result": "rejected",
+    "compiled": true,
+    "source_sha256": "2070ebc129c01dbffd0e6e667c8e26ee8f1b96da9900754026ba68cf6136fb19",
+    "test": "test_dispatch_keeps_neighboring_bytes_and_actor",
+    "reason": "Lists differ: [('call', 1412496, 0)] != [('call', 1412496, 5242880)]\n\nFirst differing element 0:\n('call', 1412496, 0)\n('call', 1412496, 5242880)\n\n- [('call', 1412496, 0)]\n+ [('call', 1412496, 5242880)"
+  }
+]

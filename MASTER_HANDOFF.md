@@ -1,25 +1,31 @@
 # Hungry Ghosts — master handoff
 
-## M8 continuation checkpoint — in progress
+## M8 connected gameplay result — 2026-11-16
 
-M8 is **incomplete**. Recovery found a clean public tree at merged M7
-`0503053ee077489b233fca644661df19acf03add` on
-`research/m8-first-gameplay-slice`, with substantial preserved private M8 exports
-and captures but no M8 implementation commits. This continuation adds eight
-verified actor pool/list functions (**266 words / 1,064 bytes**) and `jalr` model
-support. **142 synthetic tests**, **1,280 new instruction comparisons**, all 266
-new instruction addresses, M1–M7 instruction regressions, strict C and ASan/UBSan
-pass. Fresh read-only PCSX2 verifies code presence only; recovered Start/pause
-captures do not yet establish an actor input consumer or C behavioral equivalence.
+**The connected gameplay operation is implemented and verified against the
+original game. Private Drive delivery and publication are still pending.** Branch
+`research/m8-first-gameplay-slice`. Global player 003f92d0 is compared, with
+0 differing bytes over 33,423,360 EE RAM bytes per stop, across:
+initializer 158a10, Square-edge update 159570 (+448/+44a 0→1), the C state at
+the native 158e20 transition stop, the following update and its 175190 consumer
+stop. A no-input control and a changed-input control pass. Five compiled C
+defects and chop-rounded `DIV.S` are rejected by the original-game comparison.
 
-[docs/M8.md](docs/M8.md) contains the exact Resume here checkpoint, private input
-identifiers, test commands, remaining dependencies and delivery gates. Changes
-remain uncommitted. Setup `18a330` and active `18c280` remain external in C.
-Resume their recovered dependency analysis, checking selected data flags 0x24
-before expanding VU alternatives; independently establish the actor input path.
-No completed-M8 backup, push, PR or remote CI is claimed. Current user instructions
-authorize publication **after** all completion and private-backup gates pass.
-Historical M7 publication restrictions below are superseded by that authorization.
+Recovery repaired an invalid evidence reference encoding (it had stopped the
+interrupted regressions), a measured `DIV.S` rounding-model error (PCSX2
+default: Nearest), and an undeclared libpad IOP-DMA buffer, now an explicit
+external domain. Interrupted files are hash-preserved in
+`local/m8/recovery-20261116T171425Z/`. 11 new functions add 880 words; M8 totals
+35 functions / 2,251 words / 9,004 bytes. 191 synthetic tests, all instruction
+models, M1–M7 regressions, compiled controls and ASan/UBSan pass.
+Hybrid limits (modeled math/engine leaves, out-of-scope inter-frame writers,
+one control's seeded 64-byte camera matrix) are in [docs/M8.md](docs/M8.md).
+
+Delivery: implementation committed locally, with a local snapshot. **The Drive
+upload/fresh download/isolated restore is blocked** (no Drive connector or rclone
+in this session), so there is no push, PR or CI yet. One next action: attach the
+Google Drive connector (or configure rclone), upload and verify the snapshot,
+then push normally and open the PR to main.
 
 ## M7 resource preparation — 2026-11-15
 

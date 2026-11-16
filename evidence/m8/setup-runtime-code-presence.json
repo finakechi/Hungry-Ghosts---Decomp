@@ -1,0 +1,29 @@
+{
+  "schema": "hg-m8-live-code/v1",
+  "result": "passed",
+  "metadata_before": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 1
+  },
+  "metadata_after": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 1
+  },
+  "verified": {
+    "schema": "ps2-elf-byte-check/v1",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "endianness": "little",
+    "segments": 1,
+    "instructions_verified": 915,
+    "instructions_unknown": 0,
+    "scope": "file-backed PT_LOAD bytes only; no semantic or runtime verification"
+  },
+  "private_capture_sha256": "4feed236a7ac8ed264a50ecdf5501c5a526bb4f804dba623c850c36a53f7b60b",
+  "limitation": "Code presence only at preserved paused checkpoint; no fresh behavioral execution or retail equivalence claimed."
+}

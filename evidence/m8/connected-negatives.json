@@ -1,0 +1,39 @@
+{
+  "result": "passed",
+  "baseline": "passed",
+  "controls": [
+    {
+      "control": "wrong-square-edge-source",
+      "result": "rejected",
+      "compiled": true,
+      "source_sha256": "4f59d87fded40d5c48a76e03f398ae207f848f83eb1305b6547bd411a3896232",
+      "test": "test_integrated_setup_square_and_following_update_with_control",
+      "reason": "0 != 1"
+    },
+    {
+      "control": "lost-transition-actor",
+      "result": "rejected",
+      "compiled": true,
+      "source_sha256": "4f1e82448649aac3bfc93adf7d65f5e4031f1fd8542e06c2a0409d7e640b0937",
+      "test": "test_integrated_setup_square_and_following_update_with_control",
+      "reason": "0 != 255"
+    },
+    {
+      "control": "wrong-subsequent-update-state",
+      "result": "rejected",
+      "compiled": true,
+      "source_sha256": "ab9678b73fa429f93fa318a260852462247502fb334eab4c0f06b5798d38dc7f",
+      "test": "test_integrated_setup_square_and_following_update_with_control",
+      "reason": "2 != 1"
+    }
+  ],
+  "sources": {
+    "src/resource_loader.c": "6b91ec37595dea574547dfedc6ff82a41a8f217686c4b0bd786c87750e62cbf8",
+    "src/resource_loader.h": "2437e74f5cca09a1ac57ffb9c402bb1ac8abedf77b68f75ec3795670778dc0f9",
+    "tests/test_player_connected.py": "8b1a70b1a50aa78e73f2e7124f9a7b2d7417ee32800eccebc6d1c614069901c2",
+    "tools/verify_player_connected.py": "b5ddc91f6974db4e9febf11ae769cbd52b053ad99a7809d37e6d6fbb2c7c29fa"
+  },
+  "limitations": [
+    "Compiled synthetic integrated controls; no retail equivalence."
+  ]
+}

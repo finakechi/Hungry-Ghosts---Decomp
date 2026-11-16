@@ -1,0 +1,6 @@
+{
+  "control": "changed-setup-instruction",
+  "result": "rejected",
+  "reason": "byte mismatch at 0x0018A330 (file +0x8AB30)",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+}

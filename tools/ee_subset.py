@@ -43,6 +43,48 @@ def sx(value, bits):
     return value - (1 << bits) if value & (1 << (bits - 1)) else value
 
 
+def fp_signed_chop(value):
+    """Finite signed arithmetic with zero flushed as in the bounded oracle."""
+    bits = fp_chop(abs(value))
+    return bits | (0x80000000 if value < 0 and bits else 0)
+
+
+def fp_signed_nearest(value):
+    """Finite signed round-to-nearest-even, used only for EE DIV.S.
+
+    The comparison reference is PCSX2 v2.8.2 with default settings, whose EE
+    division rounding mode (Nearest) differs from its other FPU operations
+    (Chop). M8 retail captures of quaternion normalization 001440c0 confirm it.
+    """
+    magnitude = abs(value)
+    low = fp_chop(magnitude)
+    if low < 0x7f7fffff and magnitude != fp_value(low):
+        below, above = magnitude - fp_value(low), fp_value(low + 1) - magnitude
+        if above < below or (above == below and low & 1):
+            low += 1
+    if low < 0x800000:
+        low = 0  # denormal results flush to zero in the captured profile
+    return low | (0x80000000 if value < 0 and low else 0)
+
+
+def fp_ee_add(left, right, subtract=False):
+    """Finite EE addition with one alignment guard bit, then chop rounding.
+
+    EE cancellation differs from IEEE single precision: discarded alignment
+    bits must not reappear when a difference is normalized. This is functional
+    arithmetic only; exceptional values and FCR31 flags remain unsupported.
+    """
+    fp_value(left);fp_value(right)  # fail closed before masking an operand
+    difference=((left >> 23)&255)-((right >> 23)&255)
+    shift=abs(difference)
+    if shift:
+        mask=0x80000000 if shift>=25 else (0xffffffff << (shift-1))&0xffffffff
+        if difference>0:right&=mask
+        else:left&=mask
+    x,y=fp_value(left),fp_value(right)
+    return fp_signed_chop(x-y if subtract else x+y)
+
+
 class Machine:
     def __init__(self):
         self.mem = {}
@@ -58,6 +100,7 @@ class Machine:
         self.fp_condition = False
         self.vf = [0] * 32
         self.vf[0] = 0x3f800000 << 96
+        self.vacc = [0] * 4
         self.q = 0
 
     def put(self, address, data):
@@ -104,12 +147,19 @@ class Machine:
             imm = sx(word & 0xffff, 16)
             a, b = self.reg[rs] & MASK64, self.reg[rt] & MASK64
             target = None
+            annul_delay = False
             def wordreg(n, value):
                 self.setreg(n, sx(value, 32))
             if op == 0:
                 if fn == 0: wordreg(rd, b << sa)
                 elif fn == 2: wordreg(rd, (b & 0xffffffff) >> sa)
                 elif fn == 3: wordreg(rd, sx(b,32) >> sa)
+                elif fn == 4: wordreg(rd,b << (a&31))
+                elif fn == 6: wordreg(rd,(b&0xffffffff) >> (a&31))
+                elif fn == 7: wordreg(rd,sx(b,32) >> (a&31))
+                elif fn == 0x14:self.setreg(rd,b << (a&63))
+                elif fn == 0x16:self.setreg(rd,b >> (a&63))
+                elif fn == 0x17:self.setreg(rd,sx(b,64) >> (a&63))
                 elif fn == 0x3c: self.setreg(rd,b << (sa+32))
                 elif fn == 0x3e: self.setreg(rd,b >> (sa+32))
                 elif fn == 0x3f: self.setreg(rd,sx(b,64) >> (sa+32))
@@ -118,6 +168,8 @@ class Machine:
                 elif fn == 9:  # jalr: target is read before writing link (rd may equal rs)
                     target = a
                     self.setreg(rd,pc+8)
+                elif fn in (0x0a,0x0b):  # movz / movn
+                    if (b == 0) == (fn == 0x0a):self.setreg(rd,a)
                 elif fn == 0x18:
                     product = sx(a,32) * sx(b,32)
                     self.lo, self.hi = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
@@ -130,19 +182,34 @@ class Machine:
                 elif fn == 0x2b: self.setreg(rd,int(a<b))
                 elif fn == 0x2d: self.setreg(rd,a+b)
                 else: raise ValueError(f'unsupported SPECIAL {word:08x} at {pc:08x}')
-            elif op == 1 and rt == 1:
-                target = pc + 4 + imm*4 if sx(a,64) >= 0 else pc + 8
+            elif op == 1 and rt in (0,1):  # bltz / bgez
+                take = sx(a,64) < 0 if rt == 0 else sx(a,64) >= 0
+                target = pc + 4 + imm*4 if take else pc + 8
+            elif op in (6,7) and rt == 0:  # blez / bgtz
+                take = sx(a,64) <= 0 if op == 6 else sx(a,64) > 0
+                target = pc + 4 + imm*4 if take else pc + 8
             elif op in (2,3):
                 target = ((pc+4) & 0xf0000000) | ((word & 0x3ffffff) << 2)
                 if op == 3:self.setreg(31,pc+8)
             elif op in (4,5):
                 take = a == b if op == 4 else a != b
                 target = pc+4+imm*4 if take else pc+8
-            elif op == 9: wordreg(rt,a+imm)
+            elif op in (0x14,0x15,0x16,0x17):  # branch-likely annuls untaken delay
+                if op == 0x14:take=a==b
+                elif op == 0x15:take=a!=b
+                elif rt != 0:raise ValueError('invalid signed branch-likely encoding')
+                else:take=sx(a,64)<=0 if op==0x16 else sx(a,64)>0
+                if take:target=pc+4+imm*4
+                else:annul_delay=True
+            elif op in (8,9):  # addi / addiu, verified non-overflowing domain
+                if op == 8 and not -(1 << 31) <= sx(a,32)+imm < (1 << 31):
+                    raise ValueError('ADDI overflow outside investigated subset')
+                wordreg(rt,a+imm)
             elif op == 10: self.setreg(rt,int(sx(a,64)<imm))
             elif op == 11: self.setreg(rt, int(a < (imm & MASK64)))
             elif op == 12:self.setreg(rt,a & (word&0xffff))
             elif op == 13:self.setreg(rt,a | (word&0xffff))
+            elif op == 14:self.setreg(rt,a ^ (word&0xffff))
             elif op == 15: wordreg(rt,(word & 0xffff)<<16)
             elif op == 0x1c and fn == 9 and sa == 14:  # pcpyld
                 if rd:self.reg[rd] = (a << 64) | b
@@ -150,6 +217,12 @@ class Machine:
                 address = (a + imm) & 0xffffffff
                 if op == 0x31:self.fpr[rt] = self.load(address,4)
                 else:self.store(address,self.fpr[rt],4)
+            elif op in (0x36,0x3e):  # lqc2 / sqc2
+                address = (a + imm) & 0xffffffff
+                if op == 0x36:
+                    value=self.load(address,16)
+                    if rt:self.vf[rt] = value
+                else:self.store(address,self.vf[rt],16)
             elif op == 0x11:  # investigated COP1 operations only
                 fs, ft, fd = rd, rt, sa
                 if rs == 0:wordreg(rt,self.fpr[fs])
@@ -158,25 +231,88 @@ class Machine:
                     take = self.fp_condition == bool(rt)
                     target = pc+4+imm*4 if take else pc+8
                 elif rs == 16:
-                    if fn == 6:self.fpr[fd] = self.fpr[fs]
-                    elif fn == 7:self.fpr[fd] = self.fpr[fs] ^ 0x80000000
-                    elif fn in (0x34,0x36):
+                    if fn in (0,1,2,3):
                         x,y = fp_value(self.fpr[fs]),fp_value(self.fpr[ft])
-                        self.fp_condition = x < y if fn == 0x34 else x <= y
-                    elif fn in (0x1a,0x1c):
-                        product = fp_chop(fp_value(self.fpr[fs])*fp_value(self.fpr[ft]))
+                        if fn in (0,1):
+                            self.fpr[fd]=fp_ee_add(self.fpr[fs],self.fpr[ft],fn==1)
+                            value=None
+                        elif fn == 2:value = x*y
+                        elif y != 0:
+                            self.fpr[fd]=fp_signed_nearest(x/y)  # see fp_signed_nearest
+                            value=None
+                        else:raise ValueError('FP division by zero outside investigated subset')
+                        if value is not None:
+                            magnitude = fp_chop(abs(value))
+                            self.fpr[fd] = magnitude | (0x80000000 if value < 0 and magnitude else 0)
+                    elif fn == 6:self.fpr[fd] = self.fpr[fs]
+                    elif fn == 7:self.fpr[fd] = self.fpr[fs] ^ 0x80000000
+                    elif fn == 0x24:  # cvt.w.s in the captured chop profile
+                        value = int(fp_value(self.fpr[fs]))
+                        if not -(1 << 31) <= value < (1 << 31):
+                            raise ValueError('FP conversion overflow outside investigated subset')
+                        self.fpr[fd] = value & 0xffffffff
+                    elif fn in (0x32,0x34,0x36):
+                        x,y = fp_value(self.fpr[fs]),fp_value(self.fpr[ft])
+                        self.fp_condition = x == y if fn == 0x32 else (x < y if fn == 0x34 else x <= y)
+                    elif fn in (0x18,0x19):  # adda.s / suba.s
+                        self.acc = fp_ee_add(self.fpr[fs],self.fpr[ft],fn==0x19)
+                    elif fn in (0x1a,0x1c,0x1d,0x1e,0x1f):
+                        product = fp_signed_chop(fp_value(self.fpr[fs])*fp_value(self.fpr[ft]))
                         if fn == 0x1a:self.acc = product
-                        else:self.fpr[fd] = fp_chop(fp_value(product)+fp_value(self.acc))
+                        else:
+                            value = fp_ee_add(self.acc,product,fn in (0x1d,0x1f))
+                            if fn in (0x1e,0x1f):self.acc = value
+                            else:self.fpr[fd] = value
                     else:raise ValueError(f'unsupported COP1 {word:08x} at {pc:08x}')
+                elif rs == 20 and fn == 0x20:  # cvt.s.w
+                    value = sx(self.fpr[fs],32)
+                    self.fpr[fd] = fp_chop(abs(value)) | (0x80000000 if value < 0 else 0)
                 else:raise ValueError(f'unsupported COP1 {word:08x} at {pc:08x}')
-            elif op == 0x12:  # bounded macro VU sequence at 00143530
-                if rs == 5:self.vf[rd] = self.reg[rt]  # qmtc2
+            elif op == 0x12:  # bounded functional VU macro subset, no flags/timing
+                if rs == 5:
+                    if rd:self.vf[rd] = self.reg[rt]  # qmtc2
                 elif rs == 1:
                     if rt:self.reg[rt] = self.vf[rd]  # qmfc2 (full 128 bits)
                 elif word == 0x4a0403bd:self.q = fp_chop(abs(fp_value(self.vf[4]&0xffffffff)),root=True)
                 elif word == 0x4a0003bf:pass  # vwaitq: functional result already available
                 elif word == 0x4b000120:
                     self.vf[4] = (self.vf[4] & ~0xffffffff) | self.q  # vf0.x + Q
+                elif rs >= 16:
+                    fs,ft,fd,mask = rd,rt,sa,(word >> 21) & 15
+                    left=[(self.vf[fs] >> (32*i)) & 0xffffffff for i in range(4)]
+                    right=[(self.vf[ft] >> (32*i)) & 0xffffffff for i in range(4)]
+                    dest=fd;out=None;accum=False
+                    if fn in (0x3c,0x3d) and sa == 12:  # vmove / vmr32
+                        dest=ft;out=left if fn == 0x3c else left[1:]+left[:1]
+                    elif fn >= 0x3c and sa in (2,6):  # vmadda / vmula bc
+                        product=[fp_signed_chop(fp_value(x)*fp_value(right[fn&3])) if mask&(8>>i) else 0 for i,x in enumerate(left)]
+                        out=product if sa == 6 else [fp_signed_chop(fp_value(x)+fp_value(y)) if mask&(8>>i) else 0 for i,(x,y) in enumerate(zip(self.vacc,product))]
+                        accum=True
+                    elif fn == 0x3d and sa == 14:  # vsqrt
+                        self.q=fp_chop(abs(fp_value(right[(word>>23)&3])),root=True)
+                        out=[]
+                    elif fn in tuple(range(0x00,0x0c))+tuple(range(0x18,0x1c))+(0x20,0x28,0x29,0x2a,0x2c):
+                        if fn < 0x1c:other=[right[fn&3]]*4
+                        elif fn == 0x20:other=[self.q]*4
+                        else:other=right
+                        out=[]
+                        for lane,(x,y) in enumerate(zip(left,other)):
+                            if not mask&(8>>lane):
+                                out.append(0);continue
+                            x,y=fp_value(x),fp_value(y)
+                            if fn in range(4) or fn in (0x20,0x28):v=x+y
+                            elif fn in range(4,8) or fn == 0x2c:v=x-y
+                            else:
+                                product=fp_signed_chop(x*y)
+                                v=fp_value(product)
+                                if fn in range(8,12) or fn == 0x29:v+=fp_value(self.vacc[lane])
+                            out.append(fp_signed_chop(v))
+                    else:raise ValueError(f'unsupported COP2 {word:08x} at {pc:08x}')
+                    if out:
+                        for lane,value in enumerate(out):
+                            if mask & (8 >> lane):
+                                if accum:self.vacc[lane]=value
+                                elif dest:self.vf[dest]=(self.vf[dest]&~(0xffffffff<<(32*lane)))|(value<<(32*lane))
                 else:raise ValueError(f'unsupported COP2 {word:08x} at {pc:08x}')
             elif op in (0x20,0x24,0x21,0x25,0x23,0x37,0x1e):
                 address = (a+imm) & 0xffffffff
@@ -194,6 +330,6 @@ class Machine:
                     raise ValueError('branch in delay slot unsupported')
                 self.pc, self.pending = self.pending, None
             else:
-                self.pc, self.pending = pc+4, target
+                self.pc, self.pending = (pc+8,None) if annul_delay else (pc+4,target)
             self.reg[0] = 0
         return sx(self.reg[2],32)

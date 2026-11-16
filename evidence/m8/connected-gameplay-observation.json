@@ -1,0 +1,390 @@
+{
+  "schema": "hg-native-observation/v1",
+  "observation": "M8-CONNECTED-GAMEPLAY-001",
+  "runtime": {
+    "emulator": "PCSX2 v2.8.2",
+    "serial": "SCPS-15046",
+    "crc": "91aa4b28",
+    "pine_slot": 28054,
+    "rounding": "PCSX2 defaults (no GameDB override for SCPS-15046)"
+  },
+  "input_method": "GUI keyboard Square (Keyboard/J) in the PCSX2 Pad1 profile",
+  "observations": [
+    {
+      "capture": "local/m8/captures/native-player-init-entry-001.json",
+      "capture_sha256": "e83c3812de91a160b3908186f25b3b42a02a6589dea30159e624e10cea7dcc5b",
+      "timestamp_utc": "2026-11-16T02:52:55.844505+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158a10",
+        "registers": {
+          "a0": "0x3f92d0"
+        },
+        "screenshot": "local/m8/native-init-stop-check.png",
+        "screenshot_sha256": "bf7d06eee40960762061989f2bd81c28b9dd629a62f977c3910753bcdb4e0eb6",
+        "reviewed": "2026-11-16"
+      },
+      "role": "player initializer entry",
+      "libpad_counters": [
+        "0xde6c",
+        "0xde6d"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/native-player-init-return-001.json",
+      "capture_sha256": "98cefaad03b9ea754a035e83ae4730a329056c08387cceb44a19246e8e51f3db",
+      "timestamp_utc": "2026-11-16T02:53:43.416655+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        }
+      ],
+      "native_stop": {
+        "pc": "0x1585c8",
+        "registers": {},
+        "screenshot": "local/m8/native-player-init-return.png",
+        "screenshot_sha256": "f895990b1046a521465fc63f28b35965153d8872568d600964978e513603f376",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return to 158560 state 0 after jal 158a10",
+      "libpad_counters": [
+        "0xde6c",
+        "0xde6d"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-ready-neutral-entry-001.json",
+      "capture_sha256": "9b70168f99a03919034b6771e08381914de3f3429c2de91004a4bc75115e82af",
+      "timestamp_utc": "2026-11-16T03:15:10.700392+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {},
+        "screenshot": "local/m8/resume-ready-entry.png",
+        "screenshot_sha256": "b822ea870d3373105cf2d3011f7f5bc884e569a7593e5890af2f54cfdf5e6b00",
+        "reviewed": "2026-11-16"
+      },
+      "role": "no-input update entry (no scratchpad sample)",
+      "libpad_counters": [
+        "0xe73c",
+        "0xe73b"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-ready-neutral-return-001.json",
+      "capture_sha256": "5ee4ac212e5b9ded0fbde5e5c51517249aec91e7b5202ebc2969d509630b35fc",
+      "timestamp_utc": "2026-11-16T03:15:57.319589+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m8/resume-ready-neutral-return.png",
+        "screenshot_sha256": "4b5c5ec9ed694ae421ec581d8b369f00f35e0391c3141f5af9df1a01d49ed94c",
+        "reviewed": "2026-11-16"
+      },
+      "role": "no-input update return",
+      "libpad_counters": [
+        "0xe73c",
+        "0xe73d"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-ready-square-entry-001.json",
+      "capture_sha256": "9913f30ae63a3ea7ceb6f5bbd9d241e274357559bf8cf7a8ef8b499a672dd47e",
+      "timestamp_utc": "2026-11-16T03:16:44.953092+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "a0": "0x3f92d0",
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m8/resume-ready-square-entry.png",
+        "screenshot_sha256": "7b60d9a1f7b925f5ecd270ea7c613298e5b160fa672eccdc15050c8b2e4cca30",
+        "reviewed": "2026-11-16"
+      },
+      "role": "later no-input update entry",
+      "libpad_counters": [
+        "0xe73c",
+        "0xe73d"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-square-edge-entry-001.json",
+      "capture_sha256": "d131225762f4d4b030935f99e0e32ecb7702ebd7de5e0cb54a32ded74db91ffe",
+      "timestamp_utc": "2026-11-16T03:19:05.156363+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "a0": "0x3f92d0",
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m8/resume-square-edge-entry.png",
+        "screenshot_sha256": "5bcdc33d729059da202533eca8b6dfb5b46cb40f797a6a78b3c59510a5488723",
+        "reviewed": "2026-11-16"
+      },
+      "role": "update entry with Square edge 0080",
+      "libpad_counters": [
+        "0xe740",
+        "0xe73f"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-transition-entry-001.json",
+      "capture_sha256": "ffd11e74285bbe885a233bbdd9e8abf6ee2d4830139421d12f68db267595a886",
+      "timestamp_utc": "2026-11-16T03:19:41.919334+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158e20",
+        "registers": {
+          "a0": "0x3f92d0",
+          "ra": "0x1593d8"
+        },
+        "screenshot": "local/m8/resume-equipment-transition-entry.png",
+        "screenshot_sha256": "1b5469008a5b838921b0f075ec061e40e2cfccc9a7248a38256eb2e03f97afdc",
+        "reviewed": "2026-11-16"
+      },
+      "role": "transition entry called from 159380",
+      "libpad_counters": [
+        "0xe740",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-transition-return-001.json",
+      "capture_sha256": "74ebfd47d3d78af37ac0545e15f3add25fa9f759fde88691094dc005a7d467d5",
+      "timestamp_utc": "2026-11-16T03:20:47.039199+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x1593d8",
+        "registers": {},
+        "screenshot": "local/m8/resume-equipment-transition-return.png",
+        "screenshot_sha256": "e770347c4233cd91cf36e778ff32f79f22a0e9b23d9850fe3d8c7369b9d8a906",
+        "reviewed": "2026-11-16"
+      },
+      "role": "transition return",
+      "libpad_counters": [
+        "0xe740",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-square-update-return-001.json",
+      "capture_sha256": "5f44d23f950b52b1326f0ce3abf642e156c74ead072208e4a68ca81ff819c13f",
+      "timestamp_utc": "2026-11-16T03:23:46.758981+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m8/resume-square-update-return.png",
+        "screenshot_sha256": "452277beaef34a4c2c389683c2552345be4682445bc7376f178ef729bf362002",
+        "reviewed": "2026-11-16"
+      },
+      "role": "Square update return",
+      "libpad_counters": [
+        "0xe740",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-next-entry-001.json",
+      "capture_sha256": "44a1a040fecb7c8e03b19baf1cb079ddc1e275c0f6edffd2b9394c098dc7cf67",
+      "timestamp_utc": "2026-11-16T03:24:23.011391+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {},
+        "screenshot": "local/m8/resume-equipment-next-entry.png",
+        "screenshot_sha256": "d91782276b0b65de0ca7d139ca28d6d8aba2abf9f43952b8fc24bbbd7a40cfbe",
+        "reviewed": "2026-11-16"
+      },
+      "role": "following update entry",
+      "libpad_counters": [
+        "0xe740",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-consumer-entry-001.json",
+      "capture_sha256": "01b0f58f0cb72abc94ad6a5146e1a7ae16506eaa3960a421734ff19d31e04fa7",
+      "timestamp_utc": "2026-11-16T03:25:51.861531+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x175190",
+        "registers": {
+          "a0": "0x3f92d0",
+          "ra": "0x1596fc"
+        },
+        "screenshot": "local/m8/resume-equipment-consumer-entry.png",
+        "screenshot_sha256": "aea8fd01a2c60eb870f58b451d70fd15b4ca0f46fe122b722edcde7bcfc1d0b9",
+        "reviewed": "2026-11-16"
+      },
+      "role": "mode-1 consumer entry",
+      "libpad_counters": [
+        "0xe740",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-consumer-return-001.json",
+      "capture_sha256": "62e26f643f2918eb2fcd2f6ea96617b4fc2adfcf45e3709cf0e966843b1b9011",
+      "timestamp_utc": "2026-11-16T03:27:19.550108+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x1596fc",
+        "registers": {},
+        "screenshot": "local/m8/resume-equipment-consumer-return.png",
+        "screenshot_sha256": "30c307f1173ba0d413b4af21dd36b45bfb0c88e75b3cb90f10ae73ade8133032",
+        "reviewed": "2026-11-16"
+      },
+      "role": "mode-1 consumer return",
+      "libpad_counters": [
+        "0xe742",
+        "0xe741"
+      ]
+    },
+    {
+      "capture": "local/m8/captures/resume-equipment-next-return-001.json",
+      "capture_sha256": "68d8459c4033e4710254c9f8d9561a18262c912e1be5978246142483dcfb093a",
+      "timestamp_utc": "2026-11-16T03:27:51.372125+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m8/resume-equipment-next-return.png",
+        "screenshot_sha256": "4fc3fcc25cf990efef48872311281c87b671eed1cf94f3b7b44f83a273dec7a0",
+        "reviewed": "2026-11-16"
+      },
+      "role": "following update return",
+      "libpad_counters": [
+        "0xe742",
+        "0xe741"
+      ]
+    }
+  ],
+  "frame_adjacency": {
+    "method": "libpad IOP frame counters at 95e398/95e418 advance once per frame; none between Square update return and following entry",
+    "square_return": [
+      "0xe740",
+      "0xe741"
+    ],
+    "next_entry": [
+      "0xe740",
+      "0xe741"
+    ]
+  },
+  "limitations": [
+    "Captures are private owner inputs; only names and digests are public.",
+    "PCs and registers come from reviewed native debugger screenshots; PINE reads alone do not establish execution.",
+    "resume-ready-neutral-entry-001 predates scratchpad sampling.",
+    "Captures come from one emulator process with non-decreasing libpad frame counters; intermediate frames were not all captured."
+  ],
+  "run_continuity": {
+    "method": "newest libpad frame counter (max of 95e398/95e418) is non-decreasing in capture order",
+    "non_decreasing": true,
+    "first": "0xde6d",
+    "last": "0xe742"
+  }
+}

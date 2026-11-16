@@ -529,6 +529,291 @@ void hg_actor_data_init(HGResourceEnv *e,uint32_t actor,uint32_t data) {
     w32(e,data+0x1c,0x3f800000);w32(e,actor+0x2bc,data);
 }
 
+void hg_actor_setup(HGResourceEnv *e,uint32_t actor,uint32_t model,uint32_t animation,
+                    uint32_t attachment,uint32_t mode,uint32_t sequence) {
+    hg_actor_setup_resources(e,actor,model,animation,attachment);
+    hg_actor_setup_animation(e,actor,mode,sequence);
+}
+uint32_t hg_actor_resource_lookup(HGResourceEnv *e,uint32_t block,uint32_t id) {
+    uint32_t count=call(e,0x138b70,block,0,0,0);
+    if(count==0xffff)return 0;
+    uint32_t type=id&0xff000000u,wanted=type;
+    if(type==0x2000000 || type==0x3000000 || type==0x4000000 || type==0x5000000)wanted=0x1000000;
+    uint32_t entry=call(e,0x138af0,block,id,0,0);
+    if(call(e,0x138b30,block,id,0,0)!=wanted) {
+        uint32_t i=0;
+        if(count!=0 && count<0x80000000u) {
+            for(;i<count;i++) {
+                if(call(e,0x138b30,block,i,0,0)==wanted) {
+                    entry=call(e,0x138af0,block,i,0,0);break;
+                }
+            }
+        }
+        if(i==count)return 0;
+    }
+    if(entry!=0) {
+        uint32_t offset;
+        switch(type) {
+        case 0x2000000:offset=0x30;break;
+        case 0x3000000:offset=0x34;break;
+        case 0x4000000:offset=0x38;break;
+        case 0x5000000:offset=0xc;break;
+        default:return entry;
+        }
+        uint32_t relative=r32(e,entry+offset);
+        entry=relative!=0?entry+relative:0;
+    }
+    return entry;
+}
+uint32_t hg_actor_allocate_nodes(HGResourceEnv *e,uint32_t object,uint32_t count) {
+    if(count==0 || (count^0x80000000u)>(r32(e,0x4d8144)^0x80000000u))return 0;
+    if(count<0x80000000u) {
+        for(uint32_t i=0;i<count;i++) {
+            uint32_t node=call(e,0x141de0,0,0,0,0);
+            w32(e,object+(r32(e,object+0x54)+i)*4+0x60,node);
+        }
+    }
+    return count;
+}
+uint32_t hg_actor_take_node(HGResourceEnv *e) {
+    uint32_t top=r32(e,0x4d8140);
+    w32(e,0x4d8144,r32(e,0x4d8144)-1);
+    w32(e,0x4d8140,top-4);
+    return r32(e,top-4);
+}
+/* Exact power-of-two scaling for the verified finite-normal/zero domain,
+ * excluding overflow. No host float conversion or rounding is involved. */
+static uint32_t actor_scale_128(uint32_t bits) {
+    return (bits&0x7fffffffu)==0?0:bits+0x03800000u;
+}
+void hg_actor_bind_resources(HGResourceEnv *e,uint32_t actor,uint32_t model,uint32_t animation) {
+    uint32_t object=actor+0x90;
+    uint32_t count=call(e,0x141e40,object,r32(e,model+8),0,0);
+    w32(e,object+0x58,object+r32(e,object+0x54)*4+0x60);
+    w32(e,object+0x54,count);
+    uint32_t offset=r32(e,model+0x38),record=model+offset;
+    if(offset==0) {
+        if(r8(e,actor+2)==4)call(e,0x120490,actor,0x3f92d0,0,0);
+    }else if(r32(e,record)!=0 && r32(e,record+0x10)==1) {
+        for(uint32_t i=0;i<3;i++)w32(e,actor+0x220+i*4,r32(e,record+0x20+i*4));
+        for(uint32_t i=0;i<3;i++)w32(e,actor+0x22c+i*4,actor_scale_128(r32(e,record+0x30+i*4)));
+        uint32_t value=r32(e,record+0x40);
+        w32(e,actor+0x238,value);
+        if((value&0x80000000u)!=0 || value<0x3dcccccdu)w32(e,actor+0x238,0x3dcccccd);
+        else if(value>0x42480000u)w32(e,actor+0x238,0x42480000);
+        w32(e,actor+0x23c,r8(e,actor+2)==2 && r32(e,actor+4)==2?0x40800000u:0x40000000u);
+    }
+    w32(e,object+0x10,model);w32(e,object+0x14,animation);
+    for(uint32_t off=0x40;off<=0x4c;off+=4)w32(e,object+off,0x3f800000);
+    w8(e,object+0xf,0);call(e,0x1330f0,object+0x20,1,0,0);
+    for(uint32_t i=0;r32(e,model+8)<0x80000000u && i<r32(e,model+8);i++) {
+        for(uint32_t off=0x40;off<=0x6c;off+=4) {
+            uint32_t node=r32(e,r32(e,object+0x58)+i*4);
+            w32(e,node+off,off==0x4c || off>=0x5c?0x3f800000u:0u);
+        }
+    }
+}
+void hg_actor_default_pose(HGResourceEnv *e,uint32_t object) {
+    w8(e,object+0x39,r8(e,object+0x39)|1);
+    uint32_t model=r32(e,object+0x10),record=model+r32(e,model+0xc);
+    w32(e,object+0x20,0);w16(e,object+0x24,r32(e,model+8));
+    uint32_t i=0;
+    while(r16(e,object+0x24)<0x8000u && i<r16(e,object+0x24)) {
+        call(e,0x143e60,r32(e,r32(e,object+0x58)+i*4)+0x80,record+0x10,0,0);
+        if((r8(e,object+0x38)&1)!=0) {
+            for(uint32_t off=0;off<12;off+=4) {
+                uint32_t value=r32(e,record+0x40+off);
+                w32(e,r32(e,r32(e,object+0x58)+i*4)+0x90+off,value);
+            }
+            for(uint32_t off=0x9c;off<=0xa4;off+=4)w32(e,r32(e,r32(e,object+0x58)+i*4)+off,0x3f800000);
+            uint32_t value=r32(e,record+4);
+            w32(e,r32(e,r32(e,object+0x58)+i*4)+0x70,value);
+        }
+        i++;record+=0x50;
+    }
+}
+void hg_actor_bind_attachment(HGResourceEnv *e,uint32_t object,uint32_t resource) {
+    w32(e,object+0x24,resource);
+    if(resource==0)return;
+    for(uint32_t off=0x10;off<=0x20;off+=4)w32(e,object+off,0);
+    uint32_t buffer;
+    if(r16(e,resource)!=0 && (buffer=call(e,0x266850,0,0,0,0))!=0) {
+        w32(e,object+0x10,buffer);
+        w32(e,object+0x14,buffer+r32(e,resource+0xc)-r32(e,resource+8));
+        w32(e,object+0x18,buffer+r32(e,resource+0x14)-r32(e,resource+8));
+        uint32_t begin=r32(e,resource+8),end=r32(e,resource+0x10);
+        call(e,0x119910,buffer,resource+begin,end-begin,0);
+        call(e,0x119910,object+0x28,resource+0x2c,12,0);
+    }
+    if(r16(e,resource+2)!=0 && (buffer=call(e,0x266a20,object,0,0,0))!=0) {
+        w32(e,object+0x1c,buffer);
+        call(e,0x119910,buffer,resource+r32(e,resource+0x18),r16(e,resource+2)*32,0);
+        call(e,0x119910,object+0x34,resource+0x38,12,0);
+    }
+    if(r16(e,resource+4)!=0 && (buffer=call(e,0x266c40,object,0,0,0))!=0) {
+        w32(e,object+0x20,buffer);
+        call(e,0x119910,buffer,resource+r32(e,resource+0x1c),r16(e,resource+4)*80,0);
+        call(e,0x119910,object+0x40,resource+0x44,12,0);
+    }
+}
+void hg_actor_setup_resources(HGResourceEnv *e,uint32_t actor,uint32_t model,
+                             uint32_t animation,uint32_t attachment) {
+    uint32_t handle=r32(e,0x3f4300+r16(e,actor+0x2a)*4);
+    uint32_t first=0,second=0,third=0;
+    if(model)first=call(e,0x138370,handle,model,0,0);
+    if(animation)second=call(e,0x138370,handle,animation,0,0);
+    if(attachment)third=call(e,0x138370,handle,attachment,0,0);
+    call(e,0x139d20,actor,first,second,0);
+    call(e,0x1235c0,actor+0x90,0,0,0);
+    call(e,0x267300,actor+0x250,third,0,0);
+}
+void hg_actor_setup_animation(HGResourceEnv *e,uint32_t actor,uint32_t mode,uint32_t sequence) {
+    uint32_t handle=r32(e,0x3f4300+r16(e,actor+0x2a)*4);
+    call(e,0x139fc0,actor+0x90,mode,0,0);
+    if(sequence)call(e,0x139ff0,actor+0x90,handle,sequence,0);
+    else call(e,0x13a0a0,actor+0x90,0,0,0);
+}
+void hg_actor_set_mode(HGResourceEnv *e,uint32_t object,uint32_t mode) {
+    w8(e,object+0xc,mode);
+}
+void hg_actor_set_palette(HGResourceEnv *e,uint32_t object,uint32_t index) {
+    uint32_t palette=r32(e,0x37b9a0+index*4);
+    w32(e,object+0x50,palette);
+    w32(e,object+0x40,0x3f800000);w32(e,object+0x44,0x3f800000);
+    w32(e,object+0x48,0x3f800000);w32(e,object+0x4c,0x3f800000);
+}
+/* Compare raw finite-normal/zero single precision with 1.0, without host
+ * floating-point rounding or aliasing. Exceptional PS2 FP behavior is outside
+ * this entry's currently verified input domain. */
+static int actor_less_than_one(uint32_t bits) {
+    return (bits&0x80000000u)!=0 || bits<0x3f800000u;
+}
+/* Ordinary player update. Resource/animation, movement, collision and selected
+ * transition bodies remain explicit original-address dependencies. */
+/* Host-only stage boundary, original 159c44..159ce0. Entry requires the caller's
+ * +4ad==0 and successful 15fe00 checks. Useful for original paused comparisons;
+ * it is not another reconstructed retail function. */
+void hg_player_ordinary_input_stage(HGResourceEnv *e,uint32_t a) {
+    if(r8(e,0x3eaee8)!=0)w8(e,a+0x449,4);
+    else {
+        uint32_t edge=r16(e,0x3eaf04);
+        if((edge&r16(e,0x3eaec8))!=0 || r8(e,0x3f9e3f)!=0) {
+            uint32_t target=call(e,0x187e10,a,0,0,0);
+            if(target!=0) {call(e,0x15b1e0,a,target,0,0);w8(e,a+0x44b,2);}
+        } else if((edge&r16(e,0x3eaed0))!=0)w8(e,a+0x449,1);
+    }
+    if(r8(e,a+0x449)!=255)call(e,0x159380,a,0,0,0);
+}
+void hg_player_ordinary_update(HGResourceEnv *e,uint32_t a) {
+    uint32_t status=call(e,0x13a050,0x3f800000,a+0x90,0,0);
+    w32(e,a+0x428,status);
+    uint32_t state=r8(e,a+0x19);
+    if(state==2) {call(e,0x159d00,a,0,0,0);return;}
+    if(state==0) {
+        w8(e,a+0x44b,0);
+        call(e,0x15e190,0,a,0x06000000,0);
+        w8(e,a+0x19,r8(e,a+0x19)+1u);w8(e,a+0x1a,0);
+        return;
+    }
+    if(state!=1)return;
+    uint32_t substate=r8(e,a+0x1a);
+    if(substate==0) {
+        w8(e,a+0x464,0);
+        if(r8(e,0x3eaee8)!=0) {
+            w8(e,a+0x449,4);call(e,0x159380,a,0,0,0);
+        } else if(r8(e,0x3eaeb0)==0) {
+            if(call(e,0x15fe00,a,0,0,0)==0)w8(e,a+0x1a,r8(e,a+0x1a)+1u);
+            else {w32(e,a+0x4cc,r32(e,a+0x18));w8(e,a+0x19,2);w8(e,a+0x1a,0);}
+        }
+        return;
+    }
+    if(substate!=1)return;
+    uint32_t blocked=call(e,0x15fe00,a,0,0,0);
+    if(blocked==0)call(e,0x161110,a,0,0,0);
+    else {w32(e,a+0x4cc,r32(e,a+0x18));w8(e,a+0x19,2);w8(e,a+0x1a,0);}
+    call(e,0x188650,a,0,0,0);call(e,0x15bf30,a,0,0,0);
+    if(r8(e,a+0x4ad)!=0 || blocked!=0)return;
+    hg_player_ordinary_input_stage(e,a);
+}
+/* The original keeps a0 live through these calls, despite omitted decompiler
+ * arguments. No state-specific transition body is implied by this dispatcher. */
+void hg_player_apply_transition(HGResourceEnv *e,uint32_t a) {
+    w8(e,0x3f9f38,0);
+    uint32_t state=r8(e,a+0x449),pc=0x158d90;
+    if(state==4)pc=0x159350;
+    else if(state==3)pc=0x158dc0;
+    else if(state==2 || state==1)pc=0x158e20;
+    call(e,pc,a,0,0,0);
+}
+void hg_player_reset_transition(HGResourceEnv *e,uint32_t a) {
+    call(e,0x158ce0,a,0,0,0);
+    w8(e,a+0x19,0);w8(e,a+0x1a,0);w8(e,a+0x1b,0);
+    w8(e,a+0x44d,0);w8(e,a+0x4ac,0);w8(e,a+0x449,255);w8(e,a+0x44b,0);
+    call(e,0x15e190,0,a,0x06000000,0);
+}
+uint32_t hg_player_input_transitions(HGResourceEnv *e,uint32_t actor) {
+    if(r8(e,0x3fa067)!=0) {w8(e,0x3f9fee,0x10);return 0x80000000u;}
+    for(uint32_t i=0;i<2;i++) {
+        uint32_t input=i==0?0x3eaf1c:0x3eaf0c;
+        uint32_t x=r32(e,input)&0x7fffffffu,y=r32(e,input+4)&0x7fffffffu;
+        uint32_t magnitude=x>y?x:y;
+        uint32_t timer=actor+0x4a8+i*2,phase=actor+0x4a4+i;
+        uint32_t remaining=r16(e,timer);
+        if(remaining==0) {
+            w8(e,phase,0);
+            if(i==0)w8(e,actor+0x4a6,0);
+        }else w16(e,timer,remaining-1);
+        uint32_t state=r8(e,phase);
+        if(((state&1)==0 && magnitude>0x3f000000u) ||
+           ((state&1)!=0 && magnitude<=0x3f000000u)) {
+            w16(e,timer,0x28);w8(e,phase,r8(e,phase)+1);
+        }
+    }
+    if((r16(e,0x3eaf04)&0xf0)!=0) {
+        w16(e,actor+0x4a8,0x28);w8(e,actor+0x4a6,r8(e,actor+0x4a6)+1);
+    }
+    uint32_t total=r8(e,actor+0x4a4)+r8(e,actor+0x4a5)+r8(e,actor+0x4a6);
+    uint32_t result=total>2?1u:0u;
+    if(total>=r8(e,0x3f9fee)) {result|=0x80000000u;w8(e,0x3f9fee,0x10);}
+    call(e,0x15e0c0,actor,0,0,0);
+    return result;
+}
+void hg_actor_active(HGResourceEnv *e,uint32_t mode) {
+    uint32_t actor=r32(e,0x3eb058);
+    if(actor==0)return;
+    uint32_t data=r32(e,0x3eb05c);
+    if(data==0) {
+        call(e,0x13a240,actor+0x90,actor+0x50,0,0);
+        call(e,0x267450,actor,0,0,0);
+        if(call(e,0x18c9c0,actor,0,0,0)==1)call(e,0x120110,actor,0,0,0);
+        return;
+    }
+    uint32_t flags=r8(e,data+0x2b);
+    if((flags&0x20)==0 && (r32(e,data)&0x800000)==0) {
+        if(actor_less_than_one(r32(e,actor+0xdc)) || actor_less_than_one(r32(e,data+0x1c))) {
+            if((r32(e,actor+0xe0)&0x1000000)!=0) {
+                if((flags&0xf0)==0x10)call(e,0x1235f0,actor+0x90,1,0,0);
+                else if((flags&0xf0)==0)call(e,0x123660,actor+0x90,1,0,0);
+            }
+        }else if((r32(e,actor+0xe0)&0x1000000)==0)call(e,0x123660,actor+0x90,0,0,0);
+    }
+    if(mode!=0 && mode!=1 && mode!=2)return;
+    actor=r32(e,0x3eb058);
+    uint32_t deferred=mode!=0 && (r32(e,actor+0xe0)&0x1000000)!=0;
+    if(call(e,0x18b6c0,actor,r32(e,0x3eb05c),0,0)==0)return;
+    if(mode==2)call(e,0x18c1c0,r32(e,0x3eb058),r32(e,0x3eb05c),0,0);
+    else if(deferred) {
+        uint32_t count=r32(e,0x3eb054);
+        /* slti is signed, including the original malformed negative-index
+         * behavior. All address arithmetic remains wrapped guest words. */
+        if(count>=0x400 && count<0x80000000u)return;
+        uint32_t slot=0x9e75e0+count*4;
+        w32(e,slot,0x9e85e0+count*12);
+        call(e,0x119910,r32(e,slot),0x3eb058,12,0);
+        w32(e,0x3eb054,r32(e,0x3eb054)+1);
+    }else call(e,0x18c120,r32(e,0x3eb058),r32(e,0x3eb05c),0,0);
+}
+
 /* 00142810: reload tail after actor stores; aliases can change it. */
 void hg_actor_register_list(HGResourceEnv *e,uint32_t actor,uint32_t base,uint32_t priority) {
     uint32_t head=base+(r8(e,actor+0x29)==2 ? 0x61308u : 0x612f8u);
@@ -842,4 +1127,347 @@ void hg_resource_prepare_engine_fixed(HGResourceEnv *e,uint32_t task,uint32_t fr
     p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
     hg_resource_prepare_retained(&p.env,task);
     hg_resource_prepare_context(&p.env,task);
+}
+
+static uint32_t actor_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x138370)return hg_actor_resource_lookup(&p->env,a,b);
+    if(pc==0x138b70)return hg_flk5_count(&p->env,a);
+    if(pc==0x138af0)return hg_flk5_entry(&p->env,a,b);
+    if(pc==0x138b30)return hg_flk5_type(&p->env,a,b);
+    if(pc==0x139d20) {hg_actor_bind_resources(&p->env,a,b,c);return 0;}
+    if(pc==0x141e40)return hg_actor_allocate_nodes(&p->env,a,b);
+    if(pc==0x141de0)return hg_actor_take_node(&p->env);
+    if(pc==0x267300) {hg_actor_bind_attachment(&p->env,a,b);return 0;}
+    if(pc==0x13a0a0) {hg_actor_default_pose(&p->env,a);return 0;}
+    if(pc==0x1235c0) {hg_actor_set_palette(&p->env,a,b);return 0;}
+    if(pc==0x139fc0) {hg_actor_set_mode(&p->env,a,b);return 0;}
+    if(pc==0x18c280) {hg_actor_active(&p->env,a);return 0;}
+    return p->outer->call(p->outer->user,pc,a,b,c,d);
+}
+static uint32_t actor_process_setup(void *user,uint32_t pc,uint32_t a,uint32_t b,
+                                    uint32_t c,uint32_t d,uint32_t mode,uint32_t sequence) {
+    HGProcessing *p=user;
+    (void)pc; /* Sole defined six-argument seam: resident 0018a330. */
+    hg_actor_setup(&p->env,a,b,c,d,mode,sequence);return 0;
+}
+void hg_area1_actor_fixed(HGResourceEnv *e,uint32_t actor) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=actor_process_call;
+    hg_area1_actor(&p.env,actor,actor_process_setup);
+}
+void hg_actor_setup_fixed(HGResourceEnv *e,uint32_t actor,uint32_t model,uint32_t animation,
+                          uint32_t attachment,uint32_t mode,uint32_t sequence) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=actor_process_call;
+    hg_actor_setup(&p.env,actor,model,animation,attachment,mode,sequence);
+}
+
+void hg_player_initialize(HGResourceEnv *e,uint32_t a) { /* 00158a10 */
+    w16(e,a+0x2a,0x3f);
+    uint32_t model=call(e,0x138370,r32(e,0x3f4300+r16(e,a+0x2a)*4),0x010000d3,0,0);
+    uint32_t animation=call(e,0x138370,r32(e,0x3f4300+r16(e,a+0x2a)*4),0x090000d5,0,0);
+    uint32_t attachment=call(e,0x138370,r32(e,0x3f4300+r16(e,a+0x2a)*4),0x030000d3,0,0);
+    call(e,0x139d20,a,model,animation,0);
+    call(e,0x139fc0,a+0x90,5,0,0);
+    call(e,0x1235c0,a+0x90,2,0,0);
+    call(e,0x267300,a+0x250,attachment,0,0);
+    call(e,0x139ff0,a+0x90,r32(e,0x3f4300+r16(e,a+0x2a)*4),0x06000000,0);
+    w16(e,a+0x2b2,r32(e,0x3fa1d0));w8(e,a+0x50c,0);
+    if(r8(e,0x46e12d)==2 && r8(e,0x3fa202)!=255) {
+        w8(e,0x3fa206,2);w8(e,a+0x47b,2);w8(e,a+0x463,r8(e,0x3fa202));
+        w8(e,a+0x462,255);w8(e,a+0x4a3,255);
+    } else if(r8(e,0x46e12d)==1) {
+        w8(e,a+0x462,r8(e,0x3fa200));w8(e,a+0x4a3,r8(e,0x3fa201));
+        w8(e,a+0x47b,255);w8(e,a+0x463,255);
+    } else {
+        w8(e,a+0x462,r8(e,0x3fa200));w8(e,a+0x4a3,r8(e,0x3fa201));
+        w8(e,a+0x47b,255);w8(e,a+0x463,255);
+        w8(e,0x46e12d,0);w8(e,0x46e12e,0);
+    }
+    w32(e,a+0x450,0);w32(e,a+0x454,0);w8(e,a,1);w8(e,a+0x44b,0);
+    w16(e,a+0x45a,0);w16(e,a+0x4d8,0);w16(e,a+0x4f0,0);
+    w8(e,a+1,0);w8(e,a+0x46e,0);w8(e,a+0x46f,0);
+    uint32_t position[4];
+    for(uint32_t i=0;i<4;i++)position[i]=r32(e,a+0x30+i*4);
+    for(uint32_t i=0;i<4;i++)w32(e,a+0x390+i*4,position[i]);
+    w16(e,a+0x47c,0);w16(e,a+0x47e,0);w8(e,a+0x480,0);w8(e,a+0x481,0);w8(e,a+0x483,0);
+    w8(e,a+0x482,call(e,0x1b7f00,a+0x30,0,0,0));
+    call(e,0x196ad0,0x31,0,0,0);call(e,0x196ad0,0xaa,0,0,0);
+    w32(e,a+0x4e4,call(e,0x196ad0,0xe8,0,0,0));
+    w8(e,a+0x4a2,0);call(e,0x144340,a+0x50,a+0x30,a+0x40,0);
+    call(e,0x13a240,a+0x90,a+0x50,0,0);call(e,0x267450,a,0,0,0);
+    call(e,0x13a2a0,a+0x90,a+0x350,2,0);call(e,0x139fe0,a+0x90,1,0,0);
+    w8(e,a+0x449,r8(e,0x46e12d));w8(e,a+0x448,0);w8(e,a+0x44a,0);
+    w8(e,a+0x45f,r8(e,0x46e12e));call(e,0x159380,a,0,0,0);
+}
+void hg_actor_set_animation_flag(HGResourceEnv *e,uint32_t object,uint32_t value) { /* 00139fe0 */
+    w8(e,object+0x0d,value);
+}
+void hg_player_unlink_effects(HGResourceEnv *e,uint32_t a,uint32_t retain) { /* 00158ce0 */
+    uint32_t effect=r32(e,a+0x450);
+    if(effect!=0) {w8(e,effect+0x18,3);w32(e,a+0x450,0);}
+    effect=r32(e,a+0x454);
+    if(effect!=0) {w8(e,effect+0x18,3);w8(e,effect+0x19,0);w32(e,a+0x454,0);}
+    w8(e,a+0x49e,0);w16(e,a+0x4d0,0);w8(e,a+0x4d3,0);
+    if(retain==0)w8(e,a+0x46d,0);
+}
+/* Host seam: raw f12 bits precede original integer a0/a1. Outgoing 13a060
+ * carries raw f12=0, raw f13=blend, then integer a0=object. Its original a1
+ * carries sequence, preserved across this leaf. */
+uint32_t hg_player_select_animation(HGResourceEnv *e,uint32_t blend,uint32_t a,uint32_t sequence) { /* 0015e190 */
+    uint32_t current=r16(e,a+0xb6);
+    if((current&0x8000u)!=0)current|=0xffff0000u;
+    if(current==(sequence&0xffffu))return 0;
+    call(e,0x13a060,0,blend,a+0x90,sequence);return 1;
+}
+
+/* One lq/sq pair per 16-byte block: retain the original overlap behavior. */
+void hg_actor_copy_node_matrix(HGResourceEnv *e,uint32_t object,uint32_t output,uint32_t index) { /* 0013a2a0 */
+    uint32_t input=r32(e,r32(e,object+0x58)+(index<<2));
+    for(uint32_t block=0;block<4;block++) {
+        uint32_t lane[4];
+        for(uint32_t i=0;i<4;i++)lane[i]=r32(e,input+block*16+i*4);
+        for(uint32_t i=0;i<4;i++)w32(e,output+block*16+i*4,lane[i]);
+    }
+}
+
+/* 00159570. Float arguments on the address bus are raw bits before integer
+ * arguments. 00120830 returns raw f0 bits through the same uint32_t seam.
+ * Input scratch is an explicit guest-frame address, as in loader adapters. */
+void hg_player_active_update(HGResourceEnv *e,uint32_t a,uint32_t frame) {
+    if((r32(e,0x3eaef0)&0x3fu)==0)w8(e,a+0x482,call(e,0x1b7f00,a+0x30,0,0,0));
+    call(e,0x15d770,a,0,0,0);
+    uint32_t event=r8(e,0x3f9e3a);
+    if((event&0x80u)==0 && r8(e,a+0x2c3)!=0 && event!=0 && r8(e,a+0x448)!=3) {
+        w8(e,a,2);w8(e,a+0x18,2);w8(e,a+0x19,0);
+        if(r8(e,0x3f9e3a)!=11)w8(e,0x3eaed4,0);
+        return;
+    }
+    if(r8(e,0x3eaee8)!=0 || r16(e,a+0x45a)!=0 || r8(e,a+0x49f)!=0) {
+        call(e,0x119910,frame+0x30,0x3eaf00,0x3c,0);
+        call(e,0x119ac8,0x3eaf00,0,0x3c,0);
+    }
+    switch(r8(e,a+0x448)) {
+    case 0:call(e,0x1594f0,0,0,0,0);call(e,0x159ad0,a,0,0,0);break;
+    case 1:
+        call(e,0x1594f0,0,0,0,0);w32(e,0x95e57c,1);
+        if(r8(e,0x3fa200)==6)call(e,0x32b3c0,a,0,0,0);
+        else if(r8(e,0x3fa200)<3)call(e,0x175190,a,0,0,0);
+        else call(e,0x176fb0,a,0,0,0);
+        break;
+    case 2:call(e,0x1594f0,0,0,0,0);w32(e,0x95e57c,1);call(e,0x1bcd00,a,0,0,0);break;
+    case 3:
+        call(e,0x1e5060,a,0,0,0);
+        if(r8(e,a+0x514)!=0)w8(e,a+0x4a2,r8(e,a+0x514));
+        break;
+    case 4:call(e,0x15a0d0,a,0,0,0);break;
+    default:break;
+    }
+    if(r8(e,0x3eaee8)!=0 || r16(e,a+0x45a)!=0 || r8(e,a+0x49f)!=0) {
+        call(e,0x119910,0x3eaf00,frame+0x30,0x3c,0);w8(e,a+0x464,0);
+        uint32_t flags=r8(e,a+0x49f);
+        if((flags&1)!=0) {
+            w32(e,0x70000ba4,0);w32(e,0x70000ba0,0x42800000);
+            w32(e,0x70000bac,0x42000000);w32(e,0x70000ba8,0);
+            call(e,0x17fad0,0x70000ba0,0,0,0);w8(e,0x3f9f38,0);
+            w16(e,a+0x45a,2);w8(e,a+1,0);
+            if((call(e,0x15de80,a,0,0,0)&0x80000000u)!=0) {
+                w8(e,a+0x49f,r8(e,a+0x49f)&0xfeu);
+                if((r8(e,0x3eaed4)&6)==0) {
+                    w16(e,a+0x45a,1);w8(e,a,r8(e,a)|4);
+                    w16(e,a+0x4d8,r16(e,0x3e0738+r32(e,0x46d908)*2));
+                } else {
+                    w8(e,a+0x49f,r8(e,a+0x49f)|4);
+                    call(e,0x15c410,0x3d567750,r32(e,a+0x44),a,0);
+                    call(e,0x15c540,0,a,0x70000b80,0);
+                }
+            }
+        } else if((flags&8)!=0) {
+            if(r8(e,a+0x4fe)==0)w8(e,a+0x49f,flags&0xf7u);
+            else w8(e,a+0x4fe,r8(e,a+0x4fe)-1u);
+        }
+        if((r8(e,a+0x49f)&4)!=0) {
+            w8(e,0x3f9f38,0);
+            uint32_t first=call(e,0x12c030,0x3ecccccd,0x3f9940,0x3f9860,3);
+            uint32_t second=call(e,0x12c030,0x3ecccccd,0x3f9950,0x3f9870,3);
+            if(first==7 && second==7) {
+                w8(e,a+0x49f,r8(e,a+0x49f)&0xfbu);
+                w8(e,0x3eaed4,r8(e,0x3eaed4)&0xf9u);w8(e,a,r8(e,a)|4);
+                w16(e,a+0x4d8,r16(e,0x3e0738+r32(e,0x46d908)*2));w16(e,a+0x45a,1);
+            } else w16(e,a+0x45a,2);
+        }
+        if((r8(e,a+0x49f)&2)!=0) {
+            if(r16(e,a+0x414)==0) {
+                w8(e,a+0x49f,r8(e,a+0x49f)&0xfdu);
+                if(r8(e,a)!=2)w8(e,a,r8(e,a)&0xfdu);
+            } else w16(e,a+0x414,r16(e,a+0x414)-1u);
+        }
+        if(r16(e,a+0x45a)!=0)w16(e,a+0x45a,r16(e,a+0x45a)-1u);
+    }
+    if(r16(e,a+0x4d8)!=0) {
+        w16(e,a+0x4d8,r16(e,a+0x4d8)-1u);
+        if(r16(e,a+0x4d8)==0)w8(e,a,r8(e,a)&0xfbu);
+    }
+    if(r16(e,a+0x4f0)!=0) {
+        w16(e,a+0x4f0,r16(e,a+0x4f0)-1u);
+        if(r16(e,a+0x4f0)==0 && r8(e,a)!=2)w8(e,a,r8(e,a)&0xfdu);
+    }
+    if(r16(e,a+0x416)!=0)w16(e,a+0x416,r16(e,a+0x416)-1u);
+    w32(e,0x3f9f78,0);
+    if(r8(e,a+0x464)!=0 && r32(e,a+0x420)!=0 && (r32(e,a+0x420)&0x80000000u)==0)
+        w32(e,0x3f9f78,r32(e,a+0x420));
+    w32(e,a+0x4f8,call(e,0x120830,a+0x30,a+0x390,0,0));
+}
+
+/* Selected state-0 execution of 00175190. This includes its common entry
+ * callbacks and the observed next-update mutation. Other states are deliberately
+ * left to the caller, not silently modeled as a no-op. */
+uint32_t hg_player_equipment_enter(HGResourceEnv *e,uint32_t a) {
+    if(r8(e,a+0x19)!=0)return 0;
+    call(e,0x188550,0x41af3333,a,0,0);
+    call(e,0x188650,a,0,0,0);call(e,0x15bf30,a,0,0,0);
+    /* These callees must preserve state 0 for this selected split. */
+    call(e,0x17d930,(r32(e,0x3eaef0)&4)!=0?0x43700000u:0u,
+         r8(e,0x3fa200),r8(e,0x3fa201),0);
+    w8(e,a+0x48e,0);w8(e,a+0x464,0);
+    if(call(e,0x15fe00,a,1,0,0)!=0) {
+        w32(e,a+0x4cc,r32(e,a+0x18));w8(e,a+0x19,11);w8(e,a+0x1a,0);
+    } else if((r8(e,a+0x462)==r8(e,0x3fa200) && r8(e,a+0x4a3)==r8(e,0x3fa201)) || r8(e,0x3eacec)==0) {
+        w8(e,a+0x462,r8(e,0x3fa200));w8(e,a+0x4a3,r8(e,0x3fa201));
+        call(e,0x15c160,a,0,0,0);call(e,0x174900,a,0,0,0);w8(e,0x46e12f,0);
+        call(e,0x15e190,0,a,0x0600007f,0);call(e,0x15e190,0x41200000,a,0x06000075,0);
+        w8(e,a+0x19,1);
+    }
+    return 1;
+}
+
+/* 00158e20, finite sound-volume domain [0,1]. This host entry uses the
+ * bounded chop model for MUL.S / CVT.W.S. For nonnegative values in this
+ * range, floor(chop_float(127*v)) equals floor(127*v), computed below
+ * directly from the original single-precision bits. Exceptional FP modes and
+ * values outside this domain have not been verified. */
+static uint32_t player_sound_volume_127(uint32_t bits) {
+    uint32_t exponent=(bits>>23)&255u;
+    if(exponent==0)return 0;
+    uint32_t product=((bits&0x7fffffu)|0x800000u)*127u;
+    uint32_t shift=150u-exponent;
+    return shift<32u?product>>shift:0u;
+}
+void hg_player_equipment_transition(HGResourceEnv *e,uint32_t a) {
+    if(r8(e,a+0x50c)!=0 && r8(e,a+0x448)==r8(e,a+0x449)) {
+        w8(e,a+0x50c,0);
+        uint32_t old=r8(e,a+0x448);
+        if(old==2) {
+            if(r16(e,0x46da32+r8(e,a+0x50b)*2u)!=0) {
+                w8(e,a+0x45f,1);w8(e,0x3fa202,r8(e,a+0x50b));
+            }
+        } else if(old==1) {
+            w8(e,a+0x45f,0);w8(e,0x3fa200,r8(e,a+0x509));
+            w8(e,0x3fa201,r8(e,a+0x50a));
+        }
+    }
+    if(r8(e,a+0x45f)!=0 && r8(e,0x3fa202)!=255) {
+        w8(e,a+0x45f,0);call(e,0x159140,a,0,0,0);return;
+    }
+    w8(e,a+0x45f,1);
+    uint32_t kind=r8(e,0x3fa200),mask=0,message=0;
+    if(kind>=3 && kind<6) {mask=0x80;message=0x26070026;}
+    else {
+        uint32_t sub=r8(e,0x3fa201);
+        if(sub==1) {mask=0x400;message=0x260a0026;}
+        else if(sub==2) {mask=0x40;message=0x26060026;}
+    }
+    if(mask!=0 && call(e,0x15b260,mask,0,0,0)!=0) {
+        call(e,0x1676f0,message,0,0,0);call(e,0x15b6b0,mask,2,0,0);
+        /* The original-address host sound seam has four variable integer
+         * slots; this call's fifth R5900 argument t0 is fixed at 1. A driver
+         * resolving 156ad0 for this entry must supply that explicit constant. */
+        call(e,0x156ad0,0x36,0x1000,player_sound_volume_127(r32(e,0x3eaa78)),0x40);
+        call(e,0x158d90,a,0,0,0);return;
+    }
+    w8(e,a+0x448,1);w8(e,0x46e12d,1);w8(e,0x46e12e,0);
+    w8(e,a+0x44a,r8(e,a+0x448));call(e,0x158d30,a,0,0,0);
+    kind=r8(e,0x3fa200);
+    if(kind<3 || kind>=6 || r8(e,0x46e12f)==1)w8(e,0x46e12f,0);
+    if(r8(e,0x3fa200)!=r8(e,a+0x462) || r8(e,0x3fa201)!=r8(e,a+0x4a3))
+        call(e,0x130150,4,0,0,0);
+}
+/* 001594f0: conditional countdown; read back after its store as in the EE. */
+void hg_player_condition_timer(HGResourceEnv *e) {
+    if((r8(e,0x3eaee8)&1u)!=0)return;
+    uint32_t count=r32(e,0x46d90c);
+    if((count&0x80000000u)!=0 || r8(e,0x3f9fcc)!=0 || r8(e,0x3f9f3c)!=0 || count==0)return;
+    w32(e,0x46d90c,count-1u);
+    if(r32(e,0x46d90c)==0)call(e,0x1cc5b0,0,0x70000b80,0x70000b80,0);
+}
+/* 0015b260. Only the low word is relevant to these two AND tests. */
+uint32_t hg_player_flag_status(HGResourceEnv *e,uint32_t mask) {
+    if((r32(e,0x46d894)&mask)==0)return 0;
+    return (r32(e,0x3f9f08)&mask)!=0?2u:1u;
+}
+/* 0015c160: allocate and bind the equipment actor chosen by player fields. */
+uint32_t hg_player_spawn_equipment(HGResourceEnv *e,uint32_t a) {
+    uint32_t object=call(e,0x1429b0,0x80,1,0x16b0f0,0);
+    if(object==0)return 0;
+    uint32_t kind=r8(e,a+0x462);
+    if(kind==6) {w32(e,object+4,5);w32(e,object+0x1c,0x173f50);}
+    else if(kind<3) {w32(e,object+4,0);w32(e,object+0x1c,0x16b0f0);}
+    else {w32(e,object+4,1);w32(e,object+0x1c,0x173900);}
+    w32(e,object+8,r8(e,a+0x462));w32(e,object+0x10,r8(e,a+0x4a3));
+    call(e,0x120490,object,0x3f92d0,0,0);
+    for(uint32_t off=0x30;off<=0x4c;off+=4)w32(e,object+off,off==0x3c || off==0x4c?0x3f800000u:0);
+    w32(e,a+0x450,object);return 1;
+}
+
+void hg_player_ordinary_transition(HGResourceEnv *e,uint32_t a) { /* 00158d90 */
+    w8(e,a+0x448,0);w8(e,0x46e12d,0);w8(e,0x46e12e,r8(e,a+0x45f));
+    w8(e,a+0x44a,r8(e,a+0x448));call(e,0x158d30,a,0,0,0);
+}
+
+/* Host composition of the observed player operation, sharing the established
+ * resource/node/list bus. Engine/animation/math dependencies are forwarded to
+ * the owner's bus. Only state 0 of 175190 is resolved here. */
+static uint32_t player_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    switch(pc) {
+    case 0x158a10:hg_player_initialize(&p->env,a);return 0;
+    case 0x139fe0:hg_actor_set_animation_flag(&p->env,a,b);return 0;
+    case 0x158ce0:hg_player_unlink_effects(&p->env,a,b);return 0;
+    case 0x15e190:return hg_player_select_animation(&p->env,a,b,c);
+    case 0x13a2a0:hg_actor_copy_node_matrix(&p->env,a,b,c);return 0;
+    case 0x159570:hg_player_active_update(&p->env,a,p->frame);return 0;
+    case 0x159ad0:hg_player_ordinary_update(&p->env,a);return 0;
+    case 0x159380:hg_player_apply_transition(&p->env,a);return 0;
+    case 0x158d30:hg_player_reset_transition(&p->env,a);return 0;
+    case 0x158d90:hg_player_ordinary_transition(&p->env,a);return 0;
+    case 0x158e20:hg_player_equipment_transition(&p->env,a);return 0;
+    case 0x1594f0:hg_player_condition_timer(&p->env);return 0;
+    case 0x15b260:return hg_player_flag_status(&p->env,a);
+    case 0x15c160:return hg_player_spawn_equipment(&p->env,a);
+    case 0x175190:
+        if(hg_player_equipment_enter(&p->env,a)!=0)return 0;
+        break;
+    case 0x1429b0:return hg_actor_allocate(&p->env,a,b,c);
+    case 0x1428f0:hg_actor_construct(&p->env,a,b,c,d);return 0;
+    case 0x142970:hg_actor_construct_short(&p->env,a,b,c,d);return 0;
+    case 0x142810:hg_actor_register_list(&p->env,a,b,c);return 0;
+    default:break;
+    }
+    return actor_process_call(user,pc,a,b,c,d);
+}
+void hg_player_initialize_fixed(HGResourceEnv *e,uint32_t actor) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=player_process_call;
+    hg_player_initialize(&p.env,actor);
+}
+void hg_player_active_update_fixed(HGResourceEnv *e,uint32_t actor,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=player_process_call;
+    hg_player_active_update(&p.env,actor,frame);
+}
+void hg_player_equipment_transition_fixed(HGResourceEnv *e,uint32_t actor) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=player_process_call;
+    hg_player_equipment_transition(&p.env,actor);
 }
