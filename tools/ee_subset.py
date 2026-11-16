@@ -115,6 +115,9 @@ class Machine:
                 elif fn == 0x3f: self.setreg(rd,sx(b,64) >> (sa+32))
                 elif fn == 0x38: self.setreg(rd,b << sa)
                 elif fn == 8: target = a
+                elif fn == 9:  # jalr: target is read before writing link (rd may equal rs)
+                    target = a
+                    self.setreg(rd,pc+8)
                 elif fn == 0x18:
                     product = sx(a,32) * sx(b,32)
                     self.lo, self.hi = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64

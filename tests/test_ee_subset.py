@@ -29,6 +29,15 @@ class SubsetTests(unittest.TestCase):
         m=self.run_words([0x24420001,0x00021043,0x03e00008,0]);m.reg[2]=0x7fffffff
         self.assertEqual(m.run(0x1000),-0x40000000)
 
+    def test_jalr_reads_target_before_overlapping_link_and_runs_delay(self):
+        # jalr t0,t0; delay slot copies the new link. The target is the old t0.
+        m=self.run_words([(8<<21)|(8<<11)|9, (8<<21)|(4<<11)|0x2d,
+                          0x03e00008, 0])
+        m.reg[8]=0x2000
+        m.put(0x2000,struct.pack('<II',(8<<21)|8,0))
+        m.run(0x1000)
+        self.assertEqual(m.reg[4],0x1008)
+
     def test_quadword_preserves_upper_lane(self):
         m=self.run_words([0x7c820000,0x78830000,0x03e00008,0])
         m.reg[4]=0x8000;m.reg[2]=(0x123456789abcdef0<<64)|0xdeadbeef

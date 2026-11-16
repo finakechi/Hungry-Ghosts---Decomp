@@ -1,0 +1,209 @@
+{
+  "schema": "hg-m8-recovered-observations/v1",
+  "provenance": "Private captures recovered from interrupted session; internal lengths, hashes and paused identity verified during continuation. No fresh behavior execution claimed.",
+  "limitations": [
+    "Capture filenames are inherited checkpoint labels; exact PCs require screenshot review.",
+    "Start changes global gameplay mode; this does not establish an input-consuming actor path.",
+    "No reconstruction/runtime behavioral comparison has been completed for M8."
+  ],
+  "observations": [
+    {
+      "id": "area1-published",
+      "timestamp_utc": "2026-11-15T23:34:15.184102+00:00",
+      "capture_sha256": "848bb3f4de265c0fd637f6ec98b06863724179f397d71814e79a4b9ee9263329",
+      "screenshot_sha256": "9738375351b5f6a9f61a48e52e357b95e0ccde0f3296379fa00a511763e687a1",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "area1-state0-return",
+      "timestamp_utc": "2026-11-15T23:33:29.747308+00:00",
+      "capture_sha256": "c409834910e67b7882506a5a4ce7501f33b8482ed6ea150fe2fb640ccc36f46d",
+      "screenshot_sha256": "5a0335271f713968aba32c58b648af1d0df08e2f76a2ae38620debb1cb23079c",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 0
+    },
+    {
+      "id": "area1-state0",
+      "timestamp_utc": "2026-11-15T23:33:10.507550+00:00",
+      "capture_sha256": "4357ad5cd2cef4eb1864d701df904da978f5b947ef8431f4fcecb20ee5be07bd",
+      "screenshot_sha256": "355ed306c0b3cfb6c80a59f20584e9a9a6c530feeb257db79fcdc187c69e4650",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 0
+    },
+    {
+      "id": "area1-state1",
+      "timestamp_utc": "2026-11-15T23:34:13.907624+00:00",
+      "capture_sha256": "18078398f61cddb973c3a42a101ad89daf87caba0061a59c5965f524d1c38c5b",
+      "screenshot_sha256": "b9f62c468cdc0ce3a47c825c36994f684af63764dbea13871a2e1700e1f4e3a8",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "neutral-ready",
+      "timestamp_utc": "2026-11-15T23:39:53.802184+00:00",
+      "capture_sha256": "77d785183d3d23b4438898a613161be1319cbad0b3b32333ec9b27e1d32ae42d",
+      "screenshot_sha256": "07f50dbddf820bef9a42e4d4170121ba32a0d360e523b10eb0b3d30530b93af9",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "neutral-return",
+      "timestamp_utc": "2026-11-15T23:34:05.664802+00:00",
+      "capture_sha256": "726796e6f45f19d769323a5f4c3793b6a0d55381ba2b300d8193c1796f086611",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "pad-read-entry",
+      "timestamp_utc": "2026-11-15T23:40:06.708305+00:00",
+      "capture_sha256": "3683509fb9ffb2e77bf8d62353ac788729026b5c7c3939ce9abdcdd11bddda0a",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "pause-retained",
+      "timestamp_utc": "2026-11-15T23:42:07.063647+00:00",
+      "capture_sha256": "6d6a1eb7058e4b548eb4a72a419e548acc0ef9b8e42a4ce3617f2c539810ee2c",
+      "screenshot_sha256": "05858f54351e7565dd1a0f144c4ba2fe32d2ab32cb5bf95a71986f23c7eccaea",
+      "mode_pointer": "0x003ead30",
+      "mode": 2,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "pause-transition",
+      "timestamp_utc": "2026-11-15T23:41:57.241470+00:00",
+      "capture_sha256": "2a6f298ccf108a4c439c6ba123f1cd09e36622fee4976c5b18ae01b5fe2bd6b0",
+      "screenshot_sha256": "1a669e3390d5759a26ed7f303600e1cca2b3e9fd4634772693cc7873e62d5732",
+      "mode_pointer": "0x003ead30",
+      "mode": 2,
+      "substate": 0,
+      "input_edge": "0x0800",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "post-init-next-stop",
+      "timestamp_utc": "2026-11-15T23:33:52.164977+00:00",
+      "capture_sha256": "db5febed62857577cabf416cc020d8f2347cf4cc525e33bc8ecb4349603574b6",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "publication-return",
+      "timestamp_utc": "2026-11-15T23:34:31.892321+00:00",
+      "capture_sha256": "81bcb9942a9c4bceadfc20f00ae5232904b6c713498fc315dc3b7fefa4e049e3",
+      "screenshot_sha256": "53c7a116ec50d307a80524a54922169fef34ca6d2efca701abf0447a1f517ac8",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "setup-entry",
+      "timestamp_utc": "2026-11-15T23:33:19.314741+00:00",
+      "capture_sha256": "74ce48a645f47039043e34bc97504926f4db47c9ba03f3175da07ece4b0bb007",
+      "screenshot_sha256": "9d82b366a6d03ea644695229ed2e58092d8860c5e241b9f7718e50207f7d2139",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 0
+    },
+    {
+      "id": "setup-return",
+      "timestamp_utc": "2026-11-15T23:33:28.831419+00:00",
+      "capture_sha256": "dce078b3fca8d559a2a8d1f6293d838850239317fd53e3a347d67efbba2f018c",
+      "screenshot_sha256": "92956c287d173db10c54534ec6491ccd42b9f1cd207d445d015b0f725e202639",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 0
+    },
+    {
+      "id": "start-edge-gate",
+      "timestamp_utc": "2026-11-15T23:41:55.194336+00:00",
+      "capture_sha256": "60bf9a534c1bd6effc13fe0706dc99850b5b875b10abdeb78a516c5e0a95751f",
+      "screenshot_sha256": "08514f095bfa8edea3a413d0bb8fa262a87d316e5c8772c6d453bed8d7066a19",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0800",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "start-edge-return",
+      "timestamp_utc": "2026-11-15T23:41:55.957851+00:00",
+      "capture_sha256": "047b38351ffe85e2256e3473a048f8123d2ee54a6e917df5ec89b616b362e5bc",
+      "screenshot_sha256": "aadd042af74bd2e0f3f733759d81b1eba5246cea9d69ed10733aa788c4f37f5b",
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0800",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "start-gate",
+      "timestamp_utc": "2026-11-15T23:40:18.789581+00:00",
+      "capture_sha256": "a3bffb3a4b5b93a177a081d3891cae2238110d52c377a06b649315d54850aa7e",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "start-return",
+      "timestamp_utc": "2026-11-15T23:40:51.646249+00:00",
+      "capture_sha256": "518f58c34c2c0a9a55d79ac606b69deed8f222a10065ec358a6a8e7161e36911",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    },
+    {
+      "id": "state0-end-confirmed",
+      "timestamp_utc": "2026-11-15T23:33:41.299741+00:00",
+      "capture_sha256": "68248fddc0df2abffd1dabe8aaba28c3af758e6ed7d5e9326c38bc10d8cc645d",
+      "screenshot_sha256": null,
+      "mode_pointer": "0x003ead30",
+      "mode": 1,
+      "substate": 0,
+      "input_edge": "0x0000",
+      "area1_actor_state": 1
+    }
+  ]
+}

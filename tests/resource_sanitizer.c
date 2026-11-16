@@ -59,6 +59,9 @@ static uint32_t external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,ui
     case 0x18c280:
         assert(a==1 && load(u,0x3eb058,4)==0x5f0000 && load(u,0x3eb05c,4)==0x5f02d0);return 0;
     case 0x142e90:assert(a==0x5f0000);return 0;
+    case 0x100100:
+        assert(a==0x500000 || a==0x500400);
+        store(u,a+0x24,4,0);return 0;
     default:assert(!"Unexpected external operation");return 0;
     }
 }
@@ -219,5 +222,21 @@ int main(void) {
     unsigned reads=t.reads;
     hg_resource_request_raw(&e,8,0);hg_resource_worker_fixed(&e,0x1ff05c0);
     assert(t.reads==reads && load(&t,0xc91800,4)==0x12345679);
-    free(t.ram);puts("PASS: synthetic M1-M7 workers, resource preparation and retained arenas under sanitizers");return 0;
+    /* M8 pool construction into the ordinary list, then callbacks which sever
+     * their own links. Both must run because NEXT is prefetched in a delay slot. */
+    memset(t.ram+0x539430,0,56);
+    store(&t,0x539430,4,0x500000);store(&t,0x53943c,4,2);
+    store(&t,0x500024,4,0x500400);
+    assert(hg_actor_allocate(&e,0,7,0x100100)==0x500000);
+    assert(hg_actor_allocate(&e,0,8,0x100100)==0x500400);
+    assert(hg_actor_allocate(&e,0,8,0x100100)==0);
+    assert(load(&t,0x500424,4)==0 && load(&t,0x500420,4)==0x500000);
+    hg_actor_update_main(&e);assert(load(&t,0x3eaed8,2)==2);
+    hg_actor_update_priority(&e);assert(load(&t,0x3eaed8,2)==0);
+    hg_actor_update_type2(&e);hg_actor_update_type2_priority(&e);
+    store(&t,0x539438,4,0x500800);store(&t,0x539444,4,1);
+    store(&t,0x500829,1,2);store(&t,0x500890,4,0x12345678);
+    assert(hg_actor_allocate(&e,0x82,9,0x100100)==0x500800);
+    assert(load(&t,0x539460,4)==0x500800 && load(&t,0x500890,4)==0x12345678);
+    free(t.ram);puts("PASS: synthetic M1-M7 workers and M8 actor pools/lists under sanitizers");return 0;
 }

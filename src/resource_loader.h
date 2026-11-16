@@ -64,6 +64,16 @@ typedef uint32_t (*HGArea1Call6)(void *, uint32_t entry, uint32_t a0, uint32_t a
                                uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
 void hg_area1_actor(HGResourceEnv *, uint32_t, HGArea1Call6);      /* 00a8a070 */
 void hg_actor_data_init(HGResourceEnv *, uint32_t, uint32_t);     /* 0018c220 */
+/* M8 actor pool/list primitives. Callback bodies remain explicit bus calls.
+ * register_list takes the original list-base argument, normally 004d8150. */
+void hg_actor_register_list(HGResourceEnv *, uint32_t actor, uint32_t base, uint32_t priority); /* 00142810 */
+void hg_actor_construct(HGResourceEnv *, uint32_t actor, uint32_t kind, uint32_t callback, uint32_t priority); /* 001428f0 */
+void hg_actor_construct_short(HGResourceEnv *, uint32_t actor, uint32_t kind, uint32_t callback, uint32_t priority); /* 00142970 */
+uint32_t hg_actor_allocate(HGResourceEnv *, uint32_t pool, uint32_t kind, uint32_t callback); /* 001429b0 */
+void hg_actor_update_main(HGResourceEnv *);                       /* 001430a0 */
+void hg_actor_update_priority(HGResourceEnv *);                   /* 00143100 */
+void hg_actor_update_type2(HGResourceEnv *);                      /* 00143150 */
+void hg_actor_update_type2_priority(HGResourceEnv *);             /* 001431a0 */
 /* 001385b0: linked rebasing; the combined adapter resolves 001389d0. */
 void hg_resource_rebase(HGResourceEnv *, uint32_t, uint32_t);
 /* M4 original functions. Extra frame arguments are host adapters for the

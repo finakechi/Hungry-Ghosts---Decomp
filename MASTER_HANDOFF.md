@@ -1,5 +1,26 @@
 # Hungry Ghosts — master handoff
 
+## M8 continuation checkpoint — in progress
+
+M8 is **incomplete**. Recovery found a clean public tree at merged M7
+`0503053ee077489b233fca644661df19acf03add` on
+`research/m8-first-gameplay-slice`, with substantial preserved private M8 exports
+and captures but no M8 implementation commits. This continuation adds eight
+verified actor pool/list functions (**266 words / 1,064 bytes**) and `jalr` model
+support. **142 synthetic tests**, **1,280 new instruction comparisons**, all 266
+new instruction addresses, M1–M7 instruction regressions, strict C and ASan/UBSan
+pass. Fresh read-only PCSX2 verifies code presence only; recovered Start/pause
+captures do not yet establish an actor input consumer or C behavioral equivalence.
+
+[docs/M8.md](docs/M8.md) contains the exact Resume here checkpoint, private input
+identifiers, test commands, remaining dependencies and delivery gates. Changes
+remain uncommitted. Setup `18a330` and active `18c280` remain external in C.
+Resume their recovered dependency analysis, checking selected data flags 0x24
+before expanding VU alternatives; independently establish the actor input path.
+No completed-M8 backup, push, PR or remote CI is claimed. Current user instructions
+authorize publication **after** all completion and private-backup gates pass.
+Historical M7 publication restrictions below are superseded by that authorization.
+
 ## M7 resource preparation — 2026-11-15
 
 **The selected downstream resource branch is implemented and independently

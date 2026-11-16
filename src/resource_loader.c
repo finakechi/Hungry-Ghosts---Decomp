@@ -529,6 +529,56 @@ void hg_actor_data_init(HGResourceEnv *e,uint32_t actor,uint32_t data) {
     w32(e,data+0x1c,0x3f800000);w32(e,actor+0x2bc,data);
 }
 
+/* 00142810: reload tail after actor stores; aliases can change it. */
+void hg_actor_register_list(HGResourceEnv *e,uint32_t actor,uint32_t base,uint32_t priority) {
+    uint32_t head=base+(r8(e,actor+0x29)==2 ? 0x61308u : 0x612f8u);
+    if(priority!=0)head+=8;
+    uint32_t tail=head+4;
+    w32(e,actor+0x20,r32(e,tail));w32(e,actor+0x24,0);
+    uint32_t previous=r32(e,tail);
+    if(previous==0)w32(e,head,actor);
+    else w32(e,previous+0x24,actor);
+    w32(e,tail,actor);
+}
+void hg_actor_construct_short(HGResourceEnv *e,uint32_t actor,uint32_t kind,uint32_t callback,uint32_t priority) {
+    hg_actor_register_list(e,actor,0x4d8150,priority);
+    w8(e,actor,2);w8(e,actor+2,kind);w8(e,actor+0x28,priority);
+    w32(e,actor+0x1c,callback);
+}
+void hg_actor_construct(HGResourceEnv *e,uint32_t actor,uint32_t kind,uint32_t callback,uint32_t priority) {
+    hg_actor_construct_short(e,actor,kind,callback,priority);
+    call(e,0x119ac8,actor+0x90,0,0x1c0,0);
+    w32(e,actor+0x23c,0);w8(e,actor+0xad,0);w8(e,actor+0x245,0xff);
+    w32(e,actor+0x24c,0x3e4ccccd);w8(e,actor+0x29c,0xff);
+}
+uint32_t hg_actor_allocate(HGResourceEnv *e,uint32_t pool,uint32_t kind,uint32_t callback) {
+    uint32_t index=pool&0x7fu,priority=pool&0x80u;
+    if(index>1)index=2;
+    uint32_t head=0x539430+index*4,count=head+12;
+    uint32_t actor=r32(e,head);
+    if(actor==0)return 0;
+    w32(e,count,r32(e,count)-1);w32(e,head,r32(e,actor+0x24));
+    if(index==2)hg_actor_construct_short(e,actor,kind,callback,priority);
+    else hg_actor_construct(e,actor,kind,callback,priority);
+    return actor;
+}
+static void actor_update_list(HGResourceEnv *e,uint32_t head) {
+    uint32_t actor=r32(e,head);
+    w16(e,0x3eaed8,0);
+    while(actor!=0) {
+        uint32_t callback=r32(e,actor+0x1c),next=r32(e,actor+0x24);
+        call(e,callback,actor,0,0,0);
+        w16(e,0x3eaed8,r16(e,0x3eaed8)+1);
+        actor=next;
+    }
+}
+void hg_actor_update_main(HGResourceEnv *e) {
+    actor_update_list(e,0x539448);w8(e,0x3f9772,0);
+}
+void hg_actor_update_priority(HGResourceEnv *e) { actor_update_list(e,0x539450); }
+void hg_actor_update_type2(HGResourceEnv *e) { actor_update_list(e,0x539458); }
+void hg_actor_update_type2_priority(HGResourceEnv *e) { actor_update_list(e,0x539460); }
+
 /* 001385b0. Rebase header +08/+0c, call the discarded-result address permutation,
  * then update each
  * linked record's +34 address. No inferred format checks or bounds are added.
