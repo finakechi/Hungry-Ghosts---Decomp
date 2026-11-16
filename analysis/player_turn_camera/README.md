@@ -59,7 +59,7 @@ The rules follow M8. Comparisons are exact over 32 MiB of EE RAM (excluding the
 guest stack and the libpad SIF-DMA receive buffers) **and all 16 KiB of
 scratchpad**. Math, rotation, look-at, strafe and node leaves execute the
 original instructions in the bounded `ee_subset` model. M9 added VRSQRT, VDIV
-(x/0 gives ±FLT_MAX, as in PCSX2 microVU), VOPMULA/VOPMSUB, VNOP, vmulq, the
+(chop; a zero divisor was never observed and fails closed), VOPMULA/VOPMSUB, VNOP, vmulq, the
 MMI pextlw/pextuw/pcpyud forms, `xor` and `nor`. Each was required by an
 observed instruction.
 

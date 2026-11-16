@@ -219,16 +219,14 @@ C_DEFECTS=(
         ':r32(e,player+0x440);\n    for(uint32_t i=0;i<64;i+=16)copy_quad(e,0x70000500+i'),
     ('camera-skips-view-yaw','call(e,0x143d30,r32(e,camera+0xd4),0x70000000,0x70000000,0);',''),
     ('camera-eye-height','0x41840000u','0x41800000u'),
-    ('ee-add-without-guard','case 0:case 1:return fp_add_bits(a,b,op==1,1,fault);',
-        'case 0:case 1:return fp_add_bits(a,b,op==1,0,fault);'),
     ('vu-add-with-ee-guard','acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[12+lane],v[3]));',
         'acc[lane]=fp_op(e,0,acc[lane],fmul(e,m[12+lane],v[3]));'))
 MODEL_DEFECTS=(
     ('model-vopmsub-wrong-order','order=((1,2),(2,0),(0,1))\n                        out=[]',
         'order=((2,1),(0,2),(1,0))\n                        out=[]'),
     ('model-ee-add-without-guard','    if shift:\n        mask=','    if False:\n        mask='),
-    ('model-vdiv-zero-raises','self.q=((dividend ^ divisor) & 0x80000000) | 0x7f7fffff',
-        "raise ValueError('VDIV by zero')"))
+    ('model-vdiv-nearest','self.q=fp_signed_chop(fp_value(dividend)/fp_value(divisor))',
+        'self.q=fp_signed_nearest(fp_value(dividend)/fp_value(divisor))'))
 
 
 def rejected(lib,captures):

@@ -170,6 +170,8 @@ DEFECTS=(
     ('swapped-brake-branch','if(!fle(e,current,0)) {w32(e,field,fadd(e,current,fmul(e,step,brake)));return 0;}',
         'if(!fle(e,current,0)) {w32(e,field,fsub(e,current,fmul(e,step,brake)));return 0;}'),
     ('camera-target-depth','w32(e,0x70000708,0x41a00000u)','w32(e,0x70000708,0x41a80000u)'),
+    ('ee-add-without-guard','case 0:case 1:return fp_add_bits(a,b,op==1,1,fault);',
+        'case 0:case 1:return fp_add_bits(a,b,op==1,0,fault);'),
     ('vu-add-with-ee-guard','acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[12+lane],v[3]));',
         'acc[lane]=fp_op(e,0,acc[lane],fmul(e,m[12+lane],v[3]));'))
 

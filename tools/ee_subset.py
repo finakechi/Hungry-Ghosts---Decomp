@@ -316,11 +316,9 @@ class Machine:
                         out=[]
                     elif fn == 0x3c and sa == 14:  # vdiv Q, fs.fsf, ft.ftf (M9 camera), VU0 Chop
                         dividend,divisor=left[(word>>21)&3],right[(word>>23)&3]
-                        if fp_value(divisor) == 0:
-                            # PCSX2 microVU: x/0 and 0/0 give +/-FLT_MAX with sign(fs) xor sign(ft);
-                            # the D/I status flags it also sets are not modeled.
-                            self.q=((dividend ^ divisor) & 0x80000000) | 0x7f7fffff
-                        else:self.q=fp_signed_chop(fp_value(dividend)/fp_value(divisor))
+                        # A zero divisor was never observed in the M9 captures; fail closed.
+                        if fp_value(divisor) == 0:raise ValueError('VDIV by zero outside investigated subset')
+                        self.q=fp_signed_chop(fp_value(dividend)/fp_value(divisor))
                         out=[]
                     elif fn == 0x3d and sa == 14:  # vsqrt
                         self.q=fp_chop(abs(fp_value(right[(word>>23)&3])),root=True)
