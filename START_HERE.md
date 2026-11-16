@@ -2,16 +2,18 @@
 
 ## M8 connected gameplay result — 2026-11-16 (delivery addendum, same day)
 
-**Resume here.** M8 is implemented and compared against the original game; its
-private Drive backup is reported complete; PR
-[#7](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/7) is published,
-open and **unmerged**. Branch `research/m8-first-gameplay-slice`, published head
-`9fc0eb33afa712e2726a4bd26148739396c33f7f` (base `main` `0503053`), implementation
-commit `0fd81f60a75163528730adcf8b0163c8b4ffd00a`. Retail inputs (original
-SCPS-15046 image/ELF, PS2DInfo, PCSX2 captures under ignored `local/m8/`) are
-owner-private and absent from CI. **Blockers:** none for the backup. The PR has
-no reviews. **ONE next action:** Noah reviews PR #7 and decides whether to merge;
-do not repeat the backup or start M9 without that decision.
+**Resume here.** M8 is implemented and compared against the original game, and its
+private Drive backup is project-reported complete. PR
+[#7](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/7) is **merged into
+`main`** as merge commit `4034189bd84df9c1d89c99b63300d9a08f58f8ef`. Its former
+branch head `9fc0eb33afa712e2726a4bd26148739396c33f7f` is an ancestor of that merge,
+not the merge commit. M8 implementation commit:
+`0fd81f60a75163528730adcf8b0163c8b4ffd00a`. Retail inputs (original SCPS-15046
+image/ELF, PS2DInfo, PCSX2 captures under ignored `local/m8/`) are owner-private and
+absent from CI. **Blockers:** none known. **No M9 or final technical objective is
+selected.** **ONE next action:** after the administrative documentation is on `main`,
+Noah chooses the next development direction. Do not repeat the backup or start M9
+before that choice.
 
 Evidence levels (see [docs/M8.md](docs/M8.md)):
 
@@ -25,7 +27,7 @@ Evidence levels (see [docs/M8.md](docs/M8.md)):
   ([connected-checks.json](evidence/m8/connected-checks.json)) passed when
   recorded. The 191 synthetic tests were re-run at the documentation-cleanup
   stage (Python 3.14, GCC, JDK 21): pass. The 52-check inventory and original-game
-  captures were not re-run. PR CI (Python 3.10/3.14) succeeded at the published head.
+  captures were not re-run. PR CI (Python 3.10/3.14) succeeded at the PR #7 head before merge.
 - **Private backup (project-reported complete; partly independently inspected):**
   snapshot `20261116T180057Z-544f2b16d903` (3,429 files / 2,750,856,008 bytes) at
   implementation `0fd81f6`. The project handoff reports it was uploaded through the
@@ -36,7 +38,7 @@ Evidence levels (see [docs/M8.md](docs/M8.md)):
   match the manifest, and the bundle verifies as complete history with HEAD
   `0fd81f6`. It found **no local Drive transport receipt** and did not contact Drive,
   so the upload and the download's Drive origin rest on the owner/project report.
-  The snapshot predates the later documentation commits (`9fc0eb3` onward).
+  The snapshot predates `9fc0eb3` and every later commit, including the merge.
 - **Limits:** hybrid reconstruction with modeled math/engine leaves; not
   whole-game equivalence, all-C, static recompilation or byte matching. 175190 is
   reconstructed for state 0 only; one control's 64-byte camera matrix comes from a

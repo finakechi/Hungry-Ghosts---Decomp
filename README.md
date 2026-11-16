@@ -28,7 +28,7 @@ for prerequisite checks, and the later sections for owner-local verification.
 No game, BIOS, extracted assets or patch payload is distributed here. External
 research sources and reuse limits are listed in [docs/sources.md](docs/sources.md).
 
-M8 (PR #7, open and unmerged) adds a connected player-gameplay operation compared
+M8 (merged via PR #7) adds a connected player-gameplay operation compared
 against the original game; the figures above are the M6 summary. See
 [START_HERE.md](START_HERE.md) and [docs/M8.md](docs/M8.md) for current status.
 
