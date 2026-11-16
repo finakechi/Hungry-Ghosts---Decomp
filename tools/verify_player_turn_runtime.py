@@ -222,21 +222,24 @@ C_DEFECTS=(
     ('vu-add-with-ee-guard','acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[12+lane],v[3]));',
         'acc[lane]=fp_op(e,0,acc[lane],fmul(e,m[12+lane],v[3]));'))
 MODEL_DEFECTS=(
-    ('model-vopmsub-wrong-order','order=((1,2),(2,0),(0,1))\n                        out=[]',
-        'order=((2,1),(0,2),(1,0))\n                        out=[]'),
+    ('model-vopmsub-adds','out.append(fp_signed_chop(fp_value(self.vacc[lane])-fp_value(product)))',
+        'out.append(fp_signed_chop(fp_value(self.vacc[lane])+fp_value(product)))'),
     ('model-ee-add-without-guard','    if shift:\n        mask=','    if False:\n        mask='),
     ('model-vdiv-nearest','self.q=fp_signed_chop(fp_value(dividend)/fp_value(divisor))',
         'self.q=fp_signed_nearest(fp_value(dividend)/fp_value(divisor))'))
 
 
-def rejected(lib,captures):
+def outcome(lib,captures):
+    """'rejected' only when the whole comparison ran and measured a failed stage,
+    handoff or operation check. Any exception (C bus error, domain fault, model
+    error, verifier defect) is 'error': it is never counted as a rejection."""
     try:
         stages,handoffs,drivers=sequence(lib,captures);checks,_=operation_checks(drivers,captures)
-        failed=[s['stage'] for s in stages if s['result']!='passed']+[h['frame']+'-handoff' for h in handoffs if h['result']!='passed']
-        bad=[k for k,v in checks.items() if not v]
-        return bool(failed or bad),dict(failed_stages=failed,failed_checks=bad)
     except Exception as error:
-        return True,dict(execution_error=type(error).__name__,detail=str(error)[:200])
+        return 'error',dict(execution_error=type(error).__name__,detail=str(error)[:200])
+    failed=[s['stage'] for s in stages if s['result']!='passed']+[h['frame']+'-handoff' for h in handoffs if h['result']!='passed']
+    bad=[k for k,v in checks.items() if not v]
+    return ('rejected' if failed or bad else 'ESCAPED'),dict(failed_stages=failed,failed_checks=bad)
 
 
 def negative_controls(captures,folder,baseline):
@@ -248,19 +251,17 @@ def negative_controls(captures,folder,baseline):
             if mutated.count(old)!=1:raise AssertionError(f'{name}: mutation target must be unique')
             mutated=mutated.replace(old,new)
         path=folder/(name+'.c');path.open('x').write(mutated)
-        ok,reason=rejected(library(source=path,output=folder/(name+'.so')),captures)
-        rows.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),
-            result='rejected' if ok else 'ESCAPED',**reason))
+        result,reason=outcome(library(source=path,output=folder/(name+'.so')),captures)
+        rows.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),result=result,**reason))
     model=(ROOT/'tools/ee_subset.py').read_text();saved=V.Machine
     for name,old,new in MODEL_DEFECTS:
         if model.count(old)!=1:raise AssertionError(f'{name}: model mutation target must be unique')
         path=folder/(name.replace('-','_')+'.py');path.open('x').write(model.replace(old,new))
         spec=importlib.util.spec_from_file_location(path.stem,path);module=importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module);V.Machine=module.Machine
-        try:ok,reason=rejected(baseline,captures)
+        try:result,reason=outcome(baseline,captures)
         finally:V.Machine=saved
-        rows.append(dict(control=name,compiled=False,mutated_model_sha256=digest(path),
-            result='rejected' if ok else 'ESCAPED',**reason))
+        rows.append(dict(control=name,compiled=False,mutated_model_sha256=digest(path),result=result,**reason))
     return rows
 
 

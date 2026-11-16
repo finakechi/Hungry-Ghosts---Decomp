@@ -386,15 +386,17 @@ def runtime_negative_controls(elfdata,segments,capture_dir,folder,baseline_lib):
     for name,old,new in RUNTIME_DEFECTS:
         if source.count(old)!=1:raise AssertionError(f'{name}: mutation target must be unique')
         path=folder/(name+'.c');path.open('x').write(source.replace(old,new))
+        # M9 hardening: only a completed comparison with failed stages/checks is a
+        # rejection; an exception is 'error' and fails the run instead.
         try:
             outcome=run_connected(library(source=path,output=folder/(name+'.so')),elfdata,segments,capture_dir)
             failed=[s['stage'] for s in outcome['stages'] if s['result']!='passed']
             checks=[k for k,v in outcome['gameplay_checks'].items() if not v]
-            rejected=outcome['result']=='failed';reason=dict(failed_stages=failed,failed_checks=checks)
+            result='rejected' if outcome['result']=='failed' else 'ESCAPED'
+            reason=dict(failed_stages=failed,failed_checks=checks)
         except Exception as error:
-            rejected=True;reason=dict(execution_error=type(error).__name__)
-        controls.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),
-            result='rejected' if rejected else 'ESCAPED',**reason))
+            result='error';reason=dict(execution_error=type(error).__name__,detail=str(error)[:200])
+        controls.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),result=result,**reason))
     # Model control: the measured EE DIV.S rounding is required; chop must fail.
     saved=ee_subset.fp_signed_nearest
     ee_subset.fp_signed_nearest=ee_subset.fp_signed_chop

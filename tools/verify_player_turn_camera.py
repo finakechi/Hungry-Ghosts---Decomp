@@ -97,6 +97,13 @@ def setup(rng,data,segments,entry,case):
     return mem,args
 
 
+class Mismatch(AssertionError):
+    """A measured C/original divergence: call trace, memory, return or saved registers.
+
+    Only this counts as a negative-control rejection. Driver errors, domain
+    faults on compared paths, coverage gaps and any other exception do not."""
+
+
 def execute(lib,entry,args,mem):
     name,n,returns=FUNCTIONS[entry]
     cd=SlotDriver(clone(mem));md=SlotDriver(clone(mem))
@@ -121,11 +128,13 @@ def execute(lib,entry,args,mem):
     saved.update({28:m.reg[28],29:m.reg[29]})
     for i,value in saved.items():m.reg[i]=value
     model=m.run(entry,limit=200000)
-    if any(m.reg[i]!=value for i,value in saved.items()):raise AssertionError(f'{name}: callee-saved registers')
+    if any(m.reg[i]!=value for i,value in saved.items()):raise Mismatch(f'{name}: callee-saved registers')
+    if cd.errors or md.errors:raise AssertionError(f'{name}{args}: driver errors {cd.errors} {md.errors}')
     if returns:
         expected=m.fpr[0] if fresult else model&0xffffffff
-        if result!=expected:raise AssertionError(f'{name}{args}: return C {result:#x} EE {expected:#x}')
-    compare(cd,md,f'{name}/{[hex(x) for x in args]}')
+        if result!=expected:raise Mismatch(f'{name}{args}: return C {result:#x} EE {expected:#x}')
+    try:compare(cd,md,f'{name}/{[hex(x) for x in args]}')
+    except AssertionError as exc:raise Mismatch(str(exc)) from None  # errors were excluded above
     return m.executed
 
 
@@ -183,7 +192,9 @@ def negative_controls(data,segments,packet,folder,cases):
         path=folder/(name+'.c');path.open('x').write(source.replace(old,new))
         lib=configure(library(source=path,output=folder/(name+'.so')))
         try:run(lib,data,segments,packet,cases,coverage_required=False);outcome='ESCAPED';reason=''
-        except AssertionError as exc:outcome='rejected';reason=str(exc).split('\n')[0][:200]
+        except Mismatch as exc:outcome='rejected';reason=str(exc).split('\n')[0][:200]
+        except Exception as exc:  # never a rejection: the control did not measure a divergence
+            outcome='error';reason=f'{type(exc).__name__}: {str(exc)[:200]}'
         rows.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),result=outcome,reason=reason))
     return rows
 
