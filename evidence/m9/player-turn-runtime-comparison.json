@@ -1,0 +1,1761 @@
+{
+  "schema": "hg-player-turn-runtime/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "stages": [
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x2b87",
+            "expected": "0x2b89"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "neutral-update",
+      "entry": "s3-neutral-update-entry",
+      "entry_sha256": "135d8210973cfb7da3e3fb839a649f60929658e761d511fdf0a104f3264bc4c5",
+      "expected": "s3-neutral-update-return",
+      "expected_sha256": "f8f2269811b51aa317f237c5e8e7e9ddd5d118c6035b4b5ecb57667350ee4490",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2342,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-neutral-turn-entry",
+        "capture_sha256": "4b41107074513f519c0d47d98660016c89bbecbdaf6cf46f5360355960fd7e76",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "neutral-camera",
+      "entry": "s3-neutral-camera-entry",
+      "entry_sha256": "e5b0e4fea96ca0884aae7185e9aa06b6489342cf12b51858f74c427bf4152327",
+      "expected": "s3-neutral-camera-return",
+      "expected_sha256": "46f556d6acbb92147a00f92e314f5dfaa9735c782f9f55f94a98c492cf5d3dcc",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1730,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 2,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e3c4",
+            "actual": "0x7f7f7f7f",
+            "expected": "0x7f007f7f"
+          },
+          {
+            "address": "0x95e418",
+            "actual": "0x2b89",
+            "expected": "0x2b8b"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "turn1-update",
+      "entry": "s3-turn1-update-entry",
+      "entry_sha256": "8326d0dc132fe006301e39057d1a0a1e327c1184e06ecaf725b2b053639cfa7f",
+      "expected": "s3-turn1-update-return",
+      "expected_sha256": "eaf73bbf7f71d7dd9ee91a11fe0a02f588c94a207ec97aa282fe83b8a3eb4f74",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2363,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc92997",
+        "rate_440": "0xba4de32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc92997",
+        "rate_440": "0xba4de32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e6",
+        "camera_yaw_d4": "0x3fc90fdb"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-turn1-turn-entry",
+        "capture_sha256": "7ec0b004a67e37a0f5ff0bbcd127970a3f0893527e866df3d8824aae11c42d74",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "turn1-camera",
+      "entry": "s3-turn1-camera-entry",
+      "entry_sha256": "6a3277598824d28bbee449bdc15a1f9cca8f65d52a08f3670b7e15b6fc1550e4",
+      "expected": "s3-turn1-camera-return",
+      "expected_sha256": "0e5bfbbcc11d1b3a7db55cbd960bfd583a2b28d34dd6e6ffc2f5e947cd96d2df",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc92997",
+        "rate_440": "0xba4de32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc92997",
+        "rate_440": "0xba4de32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fc92997"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fc92997"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x2b8a",
+            "expected": "0x2b8c"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "turn2-update",
+      "entry": "s3-turn2-update-entry",
+      "entry_sha256": "7ddfb82d45ebb0d69e5d9dc5542cf72f1cb6800d59e023f84abfd6b12c1a143d",
+      "expected": "s3-turn2-update-return",
+      "expected_sha256": "870718f0b231296f8a49446d0f1783c0bf9bf9541d731d2178c5f593761e1f87",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2509,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc95d0f",
+        "rate_440": "0xbacde32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc95d0f",
+        "rate_440": "0xbacde32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fc92997"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fc92997"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-turn2-turn-entry",
+        "capture_sha256": "847d93fc97a78acc699f8a01215359d587bff8c29447bbaea5cb5a490f6242cd",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "turn2-camera",
+      "entry": "s3-turn2-camera-entry",
+      "entry_sha256": "d3202fbc2f19f9a97839ca2bb37c00fd0840d38e1c660cb28e468b43dbdc6efe",
+      "expected": "s3-turn2-camera-return",
+      "expected_sha256": "de9fcab0e3000df04f497aa14ee7c6df82d767c4840ceef205887a5c3770a9d4",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc95d0f",
+        "rate_440": "0xbacde32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc95d0f",
+        "rate_440": "0xbacde32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc95d10"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc95d10"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x2b8b",
+            "expected": "0x2b8d"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release1-update",
+      "entry": "s3-release1-update-entry",
+      "entry_sha256": "b7479e92ce1c116178e81165429b38867eb74e6fa6dc317978137c8d031456d9",
+      "expected": "s3-release1-update-return",
+      "expected_sha256": "27900e51de7270a265850f5228b4d0863dc496fc7cd5c2ee4f0f96ad0825054d",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2363,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc9aa44",
+        "rate_440": "0xbb1a6a62",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc9aa44",
+        "rate_440": "0xbb1a6a62",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc95d10"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc95d10"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-release1-turn-entry",
+        "capture_sha256": "abdec4edd9a67038007869e6480d6c87f41a73d4f11b173c2e2df0b6bcd0bb89",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release1-camera",
+      "entry": "s3-release1-camera-entry",
+      "entry_sha256": "c9cceff8a2782496f700d7e6963ce14a7271535fc7e4bf2db0d94c3d573aa918",
+      "expected": "s3-release1-camera-return",
+      "expected_sha256": "fa1b3f6b5f3f178aad8103c2277689d918fd81480e5030ea00c0163317fe53ca",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fc9aa44",
+        "rate_440": "0xbb1a6a62",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fc9aa44",
+        "rate_440": "0xbb1a6a62",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc9aa45"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc9aa45"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x2b8c",
+            "expected": "0x2b8e"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release2-update",
+      "entry": "s3-release2-update-entry",
+      "entry_sha256": "d712921cf19e8ef85a35db1c0b61ac95bbc289287c06850be8fd81c720d149de",
+      "expected": "s3-release2-update-return",
+      "expected_sha256": "e8f9c8c1755c52aac1d7d5f70ed7b770bbed2e0d9a0a7c9ba53dd05901edc70e",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2509,
+      "player_reconstructed": {
+        "yaw_44": "0x3fca1135",
+        "rate_440": "0xbb4de32d",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fca1135",
+        "rate_440": "0xbb4de32d",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc9aa45"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fc9aa45"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-release2-turn-entry",
+        "capture_sha256": "912ba0a2987b8a07131f9f7a9a3a503c8f6f5e43bb11f67129bdbaee4cc62291",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release2-camera",
+      "entry": "s3-release2-camera-entry",
+      "entry_sha256": "7b5ed2b591a2b497d25dc869e6452e6f794717e73e030032f943af5bd3094232",
+      "expected": "s3-release2-camera-return",
+      "expected_sha256": "1b672e6d91c395aad7b5e48e6b9498107d03526c4d8855a43a1017da4fcf00d5",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fca1135",
+        "rate_440": "0xbb4de32d",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fca1135",
+        "rate_440": "0xbb4de32d",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca1136"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca1136"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 2,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e3c4",
+            "actual": "0x7f007f7f",
+            "expected": "0x7f7f7f7f"
+          },
+          {
+            "address": "0x95e418",
+            "actual": "0x2b8d",
+            "expected": "0x2b8f"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release3-update",
+      "entry": "s3-release3-update-entry",
+      "entry_sha256": "9069c5b90837e136f96cdb3837a669f8c9933877dd5f14a669fc489ad26cbf50",
+      "expected": "s3-release3-update-return",
+      "expected_sha256": "47a42088667ed3b37f5f9a21c36e0504dfc178c0c5bfbd8468b9a48080b86b46",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2363,
+      "player_reconstructed": {
+        "yaw_44": "0x3fca91e2",
+        "rate_440": "0xbb80adfc",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fca91e2",
+        "rate_440": "0xbb80adfc",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca1136"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca1136"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-release3-turn-entry",
+        "capture_sha256": "e8c9001bb97db16feee48a33f42288ded9a05a7c9098999dff80ebcbfca1e5a5",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release3-camera",
+      "entry": "s3-release3-camera-entry",
+      "entry_sha256": "f8e7e2f2c280aa95f208b589e177cb8a9d8146b3a6cf698b3d94ccda2ab3670b",
+      "expected": "s3-release3-camera-return",
+      "expected_sha256": "81709d1ac5755295c762eac1e37811d0d9e79876d2f6440b6e420577f27f754d",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fca91e2",
+        "rate_440": "0xbb80adfc",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fca91e2",
+        "rate_440": "0xbb80adfc",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca91e5"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca91e5"
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 2,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e344",
+            "actual": "0x7f007f7f",
+            "expected": "0x7f7f7f7f"
+          },
+          {
+            "address": "0x95e398",
+            "actual": "0x2b8e",
+            "expected": "0x2b90"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release4-update",
+      "entry": "s3-release4-update-entry",
+      "entry_sha256": "910e3ef6206763abb5cb7fbf09acf3e99233ce8e63cf1c10b152d5ede2869041",
+      "expected": "s3-release4-update-return",
+      "expected_sha256": "4cab4c3afb2cd5b7415937fba75d928e0e70a825074c677fa5e9e2b484a317db",
+      "modeled_leaves": 13,
+      "modeled_addresses": 2509,
+      "player_reconstructed": {
+        "yaw_44": "0x3fcabcc6",
+        "rate_440": "0xbaab92a4",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fcabcc6",
+        "rate_440": "0xbaab92a4",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca91e5"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e7",
+        "camera_yaw_d4": "0x3fca91e5"
+      },
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "capture": "s3-release4-turn-entry",
+        "capture_sha256": "1ab333b3c51e83fcb59ab9dc8a1f64dffd0f9d8c171fb767322b19833243b022",
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      },
+      "stage": "release4-camera",
+      "entry": "s3-release4-camera-entry",
+      "entry_sha256": "421fd2757f4264ca561b9b9cf8399295a9a7921037553c68421f4964add62320",
+      "expected": "s3-release4-camera-return",
+      "expected_sha256": "4d34889c87e4836928c64674da1e280ec3a8a8100592e081138fa5e0d06e4da7",
+      "modeled_leaves": 11,
+      "modeled_addresses": 1738,
+      "player_reconstructed": {
+        "yaw_44": "0x3fcabcc6",
+        "rate_440": "0xbaab92a4",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "player_original": {
+        "yaw_44": "0x3fcabcc6",
+        "rate_440": "0xbaab92a4",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "camera_reconstructed": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fcabcce"
+      },
+      "camera_original": {
+        "camera_pitch_d0": "0x3d5675e5",
+        "camera_yaw_d4": "0x3fcabcce"
+      }
+    },
+    {
+      "stage": "release5-update",
+      "expected": "no return stop (condition false)",
+      "turn_entry_hits": 1,
+      "turn_entry_probe": {
+        "result": "passed",
+        "different_bytes": 0,
+        "scratch_different_bytes": 0
+      },
+      "player_reconstructed": {
+        "yaw_44": "0x3fcabcc6",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      },
+      "stick": "0x0",
+      "result": "passed"
+    }
+  ],
+  "handoffs": [
+    {
+      "frame": "neutral",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "turn1",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "turn2",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "release1",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "release2",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "release3",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    },
+    {
+      "frame": "release4",
+      "update_to_camera": [],
+      "update_to_next_frame": [],
+      "camera_to_next_frame": [],
+      "actor_bytes_changed_outside_scope": [
+        "0x42b"
+      ],
+      "result": "passed"
+    }
+  ],
+  "operation_checks": {
+    "stick_held_turn1_to_release3": true,
+    "neutral_rate_stays_zero": true,
+    "rate_ramps_negative_while_held": true,
+    "rate_decays_after_release": true,
+    "yaw_is_entry_minus_rate": true,
+    "level_3_while_held": true,
+    "camera_yaw_follows_turn": true,
+    "view_row0_rotates": true
+  },
+  "operation_values": {
+    "rates": [
+      0.0,
+      -0.0007853981805965304,
+      -0.0015707963611930609,
+      -0.0023561944253742695,
+      -0.003141592489555478,
+      -0.003926990553736687,
+      -0.0013089966960251331,
+      0.0
+    ],
+    "yaw_in": [
+      1.5707963705062866,
+      1.5707963705062866,
+      1.5715817213058472,
+      1.5731524229049683,
+      1.5755085945129395,
+      1.5786501169204712,
+      1.5825769901275635,
+      1.583885908126831
+    ],
+    "yaw_out": [
+      1.5707963705062866,
+      1.5715817213058472,
+      1.5731524229049683,
+      1.5755085945129395,
+      1.5786501169204712,
+      1.5825769901275635,
+      1.583885908126831,
+      1.583885908126831
+    ],
+    "camera_yaw": [
+      1.5707963705062866,
+      1.5715817213058472,
+      1.5731525421142578,
+      1.575508713722229,
+      1.5786502361297607,
+      1.5825773477554321,
+      1.5838868618011475
+    ]
+  },
+  "input_counterfactuals": [
+    {
+      "control": "turn1-stick-zero",
+      "mutation": {
+        "0x3eaf0c": "0x0"
+      },
+      "different_bytes": 9,
+      "scratch_different_bytes": 0,
+      "expected_behavior_observed": true,
+      "result": "passed",
+      "player_reconstructed": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0x0",
+        "level_504": "0x0",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      }
+    },
+    {
+      "control": "turn1-stick-flipped",
+      "mutation": {
+        "0x3eaf0c": "0x3f800000"
+      },
+      "different_bytes": 5,
+      "scratch_different_bytes": 0,
+      "expected_behavior_observed": true,
+      "result": "passed",
+      "player_reconstructed": {
+        "yaw_44": "0x3fc8f61f",
+        "rate_440": "0x3a4de32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      }
+    },
+    {
+      "control": "release4-stick-held",
+      "mutation": {
+        "0x3eaf0c": "0xbf800000"
+      },
+      "different_bytes": 10,
+      "scratch_different_bytes": 0,
+      "expected_behavior_observed": true,
+      "result": "passed",
+      "player_reconstructed": {
+        "yaw_44": "0x3fcb2c4c",
+        "rate_440": "0xbb9a6a61",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      }
+    },
+    {
+      "control": "turn2-camera-neutral-yaw",
+      "mutation": {
+        "0x3f9314": "0x3fc90fdb"
+      },
+      "different_bytes": 1162,
+      "scratch_different_bytes": 40,
+      "expected_behavior_observed": true,
+      "result": "passed",
+      "player_reconstructed": {
+        "yaw_44": "0x3fc90fdb",
+        "rate_440": "0xbacde32e",
+        "level_504": "0x3",
+        "pitch_3c0": "0x3d567750",
+        "pitch_rate_43c": "0x0",
+        "side_434": "0x0",
+        "forward_438": "0x0",
+        "walk_level_45c": "0x0",
+        "x_30": "0x42420000",
+        "y_34": "0x42182ea0",
+        "z_38": "0x43848000"
+      }
+    }
+  ],
+  "original_camera_model": [
+    {
+      "frame": "neutral",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33480
+    },
+    {
+      "frame": "turn1",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    },
+    {
+      "frame": "turn2",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    },
+    {
+      "frame": "release1",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    },
+    {
+      "frame": "release2",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    },
+    {
+      "frame": "release3",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    },
+    {
+      "frame": "release4",
+      "result": "passed",
+      "different_bytes": 0,
+      "scratch_different_bytes": 0,
+      "instructions": 33595
+    }
+  ],
+  "negative_controls": [
+    {
+      "control": "gate-a1-zero",
+      "compiled": true,
+      "mutated_source_sha256": "d8181639afabff37938e8cd3052272e1f64fd5cd92ecef8d24ac7bbd4122dddc",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-update",
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "release4-update",
+        "release5-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": [
+        "rate_ramps_negative_while_held",
+        "rate_decays_after_release",
+        "yaw_is_entry_minus_rate",
+        "level_3_while_held"
+      ]
+    },
+    {
+      "control": "wrong-stick-source",
+      "compiled": true,
+      "mutated_source_sha256": "f2c2542e813301094b069ed695a1748877252d789917ea470e414de3801e402c",
+      "result": "rejected",
+      "failed_stages": [
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff"
+      ],
+      "failed_checks": [
+        "rate_ramps_negative_while_held",
+        "rate_decays_after_release",
+        "level_3_while_held"
+      ]
+    },
+    {
+      "control": "missing-sign-negation",
+      "compiled": true,
+      "mutated_source_sha256": "4b89f9a85341f9fe1063d678cfd7231c791b11d9859bd203443ec6a192978348",
+      "result": "rejected",
+      "failed_stages": [
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff"
+      ],
+      "failed_checks": [
+        "rate_ramps_negative_while_held",
+        "rate_decays_after_release"
+      ]
+    },
+    {
+      "control": "skipped-yaw-write",
+      "compiled": true,
+      "mutated_source_sha256": "5f2460cef32c16a3f4607a408bbbe21589c59ab68a88a1eafaad55a614a67f9e",
+      "result": "rejected",
+      "failed_stages": [
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "release4-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": [
+        "yaw_is_entry_minus_rate"
+      ]
+    },
+    {
+      "control": "yaw-adds-rate",
+      "compiled": true,
+      "mutated_source_sha256": "99cd711fd8a635ad37f56fb5a81284971623ede9b1f73ee6adeba698c5cbcd26",
+      "result": "rejected",
+      "failed_stages": [
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "release4-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": [
+        "yaw_is_entry_minus_rate"
+      ]
+    },
+    {
+      "control": "wrong-turn-scale",
+      "compiled": true,
+      "mutated_source_sha256": "a017a5510b88fda9533614afafa3e1388ac583bd86f449471d80c89c5b5ebc08",
+      "result": "rejected",
+      "failed_stages": [
+        "turn1-update",
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "release4-update",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": []
+    },
+    {
+      "control": "wrong-limit-column",
+      "compiled": true,
+      "mutated_source_sha256": "169a57d01ad516366ed06ca2c29c29355846864121c536881e71bd234b40584b",
+      "result": "rejected",
+      "failed_stages": [
+        "turn2-update",
+        "release1-update",
+        "release2-update",
+        "release3-update",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff"
+      ],
+      "failed_checks": [
+        "rate_ramps_negative_while_held",
+        "rate_decays_after_release"
+      ]
+    },
+    {
+      "control": "camera-heading-from-rate",
+      "compiled": true,
+      "mutated_source_sha256": "158f4f8a0d02d88b19dc1c4cd7b83658ebee0cb2c48b9ce8f3a62627f4ff3e3b",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera",
+        "neutral-handoff",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": []
+    },
+    {
+      "control": "camera-skips-view-yaw",
+      "compiled": true,
+      "mutated_source_sha256": "641934af31f37c0e40f2fa35580ae6af40303b477794149401d59547be68735d",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera"
+      ],
+      "failed_checks": [
+        "view_row0_rotates"
+      ]
+    },
+    {
+      "control": "camera-eye-height",
+      "compiled": true,
+      "mutated_source_sha256": "2efa0623a0c59b2e9845c12625de7740d5a3e214a409322c31f9fef2863f9116",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera"
+      ],
+      "failed_checks": []
+    },
+    {
+      "control": "vu-add-with-ee-guard",
+      "compiled": true,
+      "mutated_source_sha256": "ffeb70e7dd26fba3c10a7b96e8e99879d68abf33d27022d7e960f7e8e7d724b4",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera",
+        "neutral-handoff",
+        "turn1-handoff",
+        "turn2-handoff",
+        "release1-handoff",
+        "release2-handoff",
+        "release3-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": []
+    },
+    {
+      "control": "model-vopmsub-wrong-order",
+      "compiled": false,
+      "mutated_model_sha256": "c29883e3caadb01f0051e0a0c56d7dd12b2bef1bb98e4a0c8c6f66dd2591080d",
+      "result": "rejected",
+      "execution_error": "AssertionError",
+      "detail": "[\"ValueError('VDIV by zero outside investigated subset')\"]"
+    },
+    {
+      "control": "model-ee-add-without-guard",
+      "compiled": false,
+      "mutated_model_sha256": "cdf374b8171f6c6b1557820b7dba307745d6fb544684e91a41d3e51cfc6b8d68",
+      "result": "rejected",
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera",
+        "turn1-handoff",
+        "release4-handoff"
+      ],
+      "failed_checks": []
+    },
+    {
+      "control": "model-vdiv-nearest",
+      "compiled": false,
+      "mutated_model_sha256": "8a338ae13e0365856fbaf6b8dde0ff27115c34a929568776faf7e5babf899b51",
+      "result": "rejected",
+      "failed_stages": [
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera"
+      ],
+      "failed_checks": []
+    }
+  ],
+  "result": "passed",
+  "verification_sources": {
+    "src/resource_loader.c": "09c627d070be5f9dc3c4ea8422185fd4bc7e9f330243705573fed8fc3d9b463d",
+    "src/resource_loader.h": "17372b05f8f865c1f3887fd090a33fd3fb857fb939b64c0eb3ee322cd6963a89",
+    "tools/ee_subset.py": "7743b19b0afad6b64df6fe5e6eb2df04199bde8904b6122ac4e7ae2f16787b04",
+    "tools/verify_player_connected_runtime.py": "2b20dc531aa54b5b7659cadb47d4d944bc29baaf05b87f31c71bf9c78b6b9e73",
+    "tools/verify_player_turn_runtime.py": "0c9006ec31b03a32ebd15008213c1fd06989063295c2cd9a984f67069bc4af9c"
+  },
+  "captures": {
+    "s3-neutral-camera-entry": "e5b0e4fea96ca0884aae7185e9aa06b6489342cf12b51858f74c427bf4152327",
+    "s3-neutral-camera-return": "46f556d6acbb92147a00f92e314f5dfaa9735c782f9f55f94a98c492cf5d3dcc",
+    "s3-neutral-turn-entry": "4b41107074513f519c0d47d98660016c89bbecbdaf6cf46f5360355960fd7e76",
+    "s3-neutral-update-entry": "135d8210973cfb7da3e3fb839a649f60929658e761d511fdf0a104f3264bc4c5",
+    "s3-neutral-update-return": "f8f2269811b51aa317f237c5e8e7e9ddd5d118c6035b4b5ecb57667350ee4490",
+    "s3-release1-camera-entry": "c9cceff8a2782496f700d7e6963ce14a7271535fc7e4bf2db0d94c3d573aa918",
+    "s3-release1-camera-return": "fa1b3f6b5f3f178aad8103c2277689d918fd81480e5030ea00c0163317fe53ca",
+    "s3-release1-turn-entry": "abdec4edd9a67038007869e6480d6c87f41a73d4f11b173c2e2df0b6bcd0bb89",
+    "s3-release1-update-entry": "b7479e92ce1c116178e81165429b38867eb74e6fa6dc317978137c8d031456d9",
+    "s3-release1-update-return": "27900e51de7270a265850f5228b4d0863dc496fc7cd5c2ee4f0f96ad0825054d",
+    "s3-release2-camera-entry": "7b5ed2b591a2b497d25dc869e6452e6f794717e73e030032f943af5bd3094232",
+    "s3-release2-camera-return": "1b672e6d91c395aad7b5e48e6b9498107d03526c4d8855a43a1017da4fcf00d5",
+    "s3-release2-turn-entry": "912ba0a2987b8a07131f9f7a9a3a503c8f6f5e43bb11f67129bdbaee4cc62291",
+    "s3-release2-update-entry": "d712921cf19e8ef85a35db1c0b61ac95bbc289287c06850be8fd81c720d149de",
+    "s3-release2-update-return": "e8f9c8c1755c52aac1d7d5f70ed7b770bbed2e0d9a0a7c9ba53dd05901edc70e",
+    "s3-release3-camera-entry": "f8e7e2f2c280aa95f208b589e177cb8a9d8146b3a6cf698b3d94ccda2ab3670b",
+    "s3-release3-camera-return": "81709d1ac5755295c762eac1e37811d0d9e79876d2f6440b6e420577f27f754d",
+    "s3-release3-turn-entry": "e8c9001bb97db16feee48a33f42288ded9a05a7c9098999dff80ebcbfca1e5a5",
+    "s3-release3-update-entry": "9069c5b90837e136f96cdb3837a669f8c9933877dd5f14a669fc489ad26cbf50",
+    "s3-release3-update-return": "47a42088667ed3b37f5f9a21c36e0504dfc178c0c5bfbd8468b9a48080b86b46",
+    "s3-release4-camera-entry": "421fd2757f4264ca561b9b9cf8399295a9a7921037553c68421f4964add62320",
+    "s3-release4-camera-return": "4d34889c87e4836928c64674da1e280ec3a8a8100592e081138fa5e0d06e4da7",
+    "s3-release4-turn-entry": "1ab333b3c51e83fcb59ab9dc8a1f64dffd0f9d8c171fb767322b19833243b022",
+    "s3-release4-update-entry": "910e3ef6206763abb5cb7fbf09acf3e99233ce8e63cf1c10b152d5ede2869041",
+    "s3-release4-update-return": "4cab4c3afb2cd5b7415937fba75d928e0e70a825074c677fa5e9e2b484a317db",
+    "s3-release5-turn-entry": "b216330c430b2b69a573bec611258149761b485d952e03a59fd52b8538a8f975",
+    "s3-release5-update-entry": "edb553834c725658305c8b1f8ead084aac2c7b5899680ec2966f3b81919db1e2",
+    "s3-turn1-camera-entry": "6a3277598824d28bbee449bdc15a1f9cca8f65d52a08f3670b7e15b6fc1550e4",
+    "s3-turn1-camera-return": "0e5bfbbcc11d1b3a7db55cbd960bfd583a2b28d34dd6e6ffc2f5e947cd96d2df",
+    "s3-turn1-turn-entry": "7ec0b004a67e37a0f5ff0bbcd127970a3f0893527e866df3d8824aae11c42d74",
+    "s3-turn1-update-entry": "8326d0dc132fe006301e39057d1a0a1e327c1184e06ecaf725b2b053639cfa7f",
+    "s3-turn1-update-return": "eaf73bbf7f71d7dd9ee91a11fe0a02f588c94a207ec97aa282fe83b8a3eb4f74",
+    "s3-turn2-camera-entry": "d3202fbc2f19f9a97839ca2bb37c00fd0840d38e1c660cb28e468b43dbdc6efe",
+    "s3-turn2-camera-return": "de9fcab0e3000df04f497aa14ee7c6df82d767c4840ceef205887a5c3770a9d4",
+    "s3-turn2-turn-entry": "847d93fc97a78acc699f8a01215359d587bff8c29447bbaea5cb5a490f6242cd",
+    "s3-turn2-update-entry": "7ddfb82d45ebb0d69e5d9dc5542cf72f1cb6800d59e023f84abfd6b12c1a143d",
+    "s3-turn2-update-return": "870718f0b231296f8a49446d0f1783c0bf9bf9541d731d2178c5f593761e1f87"
+  },
+  "limitations": [
+    "Hybrid: C turn/camera chain with original-instruction-modeled math, strafe, look-at and node leaves.",
+    "Exact comparison over 32 MiB EE RAM and 16 KiB scratchpad; guest stack and libpad DMA buffers excluded as in M8.",
+    "Finite functional FP model of PCSX2 v2.8.2 defaults; no FP flags, timing or hardware.",
+    "Code between update return and camera entry is outside scope; handoffs check the turn fields only.",
+    "12c790 and 12bd00 are reconstructed for their observed branches; others fail closed."
+  ]
+}

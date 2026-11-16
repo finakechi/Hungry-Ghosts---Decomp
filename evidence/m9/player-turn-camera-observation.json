@@ -1,0 +1,1506 @@
+{
+  "schema": "hg-native-observation/v1",
+  "observation": "M9-PLAYER-TURN-CAMERA-001",
+  "runtime": {
+    "emulator": "PCSX2 v2.8.2",
+    "serial": "SCPS-15046",
+    "crc": "91aa4b28",
+    "pine_slot": 28059,
+    "rounding": "PCSX2 defaults (no GameDB override for SCPS-15046)"
+  },
+  "input_method": "PCSX2 Pad1 analog keyboard binding: key A = left stick left (3eaf0c = -1.0). Held from save-state slot 1 via synthetic X11 KeyPress; released by an XTEST KeyRelease. One frame of input latency: frames release1-release3 still had the stick held.",
+  "stop_condition": "Five execute breakpoints (159570, 160510, 158778, 12c790, 12f8d4), each conditioned ([46e118,4]==0x752)|[3eaf0c,4]|[3f9710,4]: one neutral frame, then every frame with stick or rate nonzero.",
+  "continuity": "One continuous run; captures taken in the listed order without loading a state between stops.",
+  "release5_note": "Only update-entry and turn-entry stopped in release5: the rate reached 0 inside that update and the stick was 0, so the later stop conditions were false.",
+  "observations": [
+    {
+      "capture": "local/m9/captures/s3-neutral-update-entry.json",
+      "capture_sha256": "135d8210973cfb7da3e3fb839a649f60929658e761d511fdf0a104f3264bc4c5",
+      "timestamp_utc": "2026-11-16T22:11:29.387742+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "33fef64d5e6d19ad120bce13cdd2b7879196a8324a82cd835dd8a5e23affa65b"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "cd0b9c4fbbc98ad9e35bf12a334cfd64e9b06f44af41456a3ec893267026c0ca"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-neutral-update-entry.png",
+        "screenshot_sha256": "33f3a2f81cf9c50c877bbcd5d6fdf3fcfb68fd756fc76570f5309bb40996fc3a",
+        "after_screenshot": "local/m9/stops/s3-neutral-update-entry-after.png",
+        "after_screenshot_sha256": "33f3a2f81cf9c50c877bbcd5d6fdf3fcfb68fd756fc76570f5309bb40996fc3a",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "neutral",
+      "frame_counter_46e118": "0x752",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-neutral-turn-entry.json",
+      "capture_sha256": "4b41107074513f519c0d47d98660016c89bbecbdaf6cf46f5360355960fd7e76",
+      "timestamp_utc": "2026-11-16T22:11:32.784626+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "2171fbedd009c157a4731dcca3ed48dd6581e35d0af234b593d065561a49ca23"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "09b9a0749488542b93e97f50084fcfd8575227b553ef06b12ebbb2d68538f22a"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-neutral-turn-entry.png",
+        "screenshot_sha256": "ad2415155af8f413b122183eeb3f05bbb9267853ae21214a6f733310954858a1",
+        "after_screenshot": "local/m9/stops/s3-neutral-turn-entry-after.png",
+        "after_screenshot_sha256": "ad2415155af8f413b122183eeb3f05bbb9267853ae21214a6f733310954858a1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "neutral",
+      "frame_counter_46e118": "0x752",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-neutral-update-return.json",
+      "capture_sha256": "f8f2269811b51aa317f237c5e8e7e9ddd5d118c6035b4b5ecb57667350ee4490",
+      "timestamp_utc": "2026-11-16T22:11:36.103932+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "81dd84fa9273ff0e03f957e7ea13b00d7a9ba1ce8c77e6c1e11fd555aaec6d3f"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "2567744fd42994f6cf901958272e208ef14ce84e6e228d3b64fd28d6f4b1bbf6"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-neutral-update-return.png",
+        "screenshot_sha256": "5e698c2f903a00160f3ae4a3efe7f1acca27a2b838b02165eaa9d50917db8d44",
+        "after_screenshot": "local/m9/stops/s3-neutral-update-return-after.png",
+        "after_screenshot_sha256": "9ee701c4e6778b0f3bb881d995b3b8f62a62f33380830ced5468f2f964ae9320",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "neutral",
+      "frame_counter_46e118": "0x752",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-neutral-camera-entry.json",
+      "capture_sha256": "e5b0e4fea96ca0884aae7185e9aa06b6489342cf12b51858f74c427bf4152327",
+      "timestamp_utc": "2026-11-16T22:11:39.387592+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "27490bbf7fbe66d409d7c22870d602678fc8d6288961dff0e99ffe597ba8c767"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "2567744fd42994f6cf901958272e208ef14ce84e6e228d3b64fd28d6f4b1bbf6"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-neutral-camera-entry.png",
+        "screenshot_sha256": "15229bae16f65f7b84377bcf2085cb78ae5c3b9c104daaa2f179d1460d0d9342",
+        "after_screenshot": "local/m9/stops/s3-neutral-camera-entry-after.png",
+        "after_screenshot_sha256": "15229bae16f65f7b84377bcf2085cb78ae5c3b9c104daaa2f179d1460d0d9342",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "neutral",
+      "frame_counter_46e118": "0x752",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-neutral-camera-return.json",
+      "capture_sha256": "46f556d6acbb92147a00f92e314f5dfaa9735c782f9f55f94a98c492cf5d3dcc",
+      "timestamp_utc": "2026-11-16T22:11:42.659087+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "7d6a122af0e42be1aa2f8c2cce9d11e51070ffb097ad7bca3fd1f8fc56395a79"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "42e284aab9110029a97b418c75cc8fd27cdee19d9c7d03260d01d4508c2b3f55"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-neutral-camera-return.png",
+        "screenshot_sha256": "8f14a1d761e9adfea69b0d2487608163ffb3719b04fc0e9fada33bfd7de2dcd1",
+        "after_screenshot": "local/m9/stops/s3-neutral-camera-return-after.png",
+        "after_screenshot_sha256": "8f14a1d761e9adfea69b0d2487608163ffb3719b04fc0e9fada33bfd7de2dcd1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "neutral",
+      "frame_counter_46e118": "0x752",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn1-update-entry.json",
+      "capture_sha256": "8326d0dc132fe006301e39057d1a0a1e327c1184e06ecaf725b2b053639cfa7f",
+      "timestamp_utc": "2026-11-16T22:11:52.002427+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "eceff5dde53da12459c3779a7c4263d9c510dd8061d39128f35baa7ee666ff6d"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "8adae5c534fca64826f5f58bc5c6ffdce2d6fb7af901be9648e1bb16ed711f41"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-turn1-update-entry.png",
+        "screenshot_sha256": "cd1258b711bc70fc080e87bf2ec0c66ab24ec4d8b31e2be5b5a0fc5dee81c17e",
+        "after_screenshot": "local/m9/stops/s3-turn1-update-entry-after.png",
+        "after_screenshot_sha256": "33f3a2f81cf9c50c877bbcd5d6fdf3fcfb68fd756fc76570f5309bb40996fc3a",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "turn1",
+      "frame_counter_46e118": "0x754",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn1-turn-entry.json",
+      "capture_sha256": "7ec0b004a67e37a0f5ff0bbcd127970a3f0893527e866df3d8824aae11c42d74",
+      "timestamp_utc": "2026-11-16T22:11:55.278715+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "f023c133b81364434d3a4207d41882def144b64ef09b9f91d189fe992a17d008"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "5fb218fa40b44e351e36f715676d54f0430d0b215eb3df5345419766f58f2da7"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-turn1-turn-entry.png",
+        "screenshot_sha256": "ad2415155af8f413b122183eeb3f05bbb9267853ae21214a6f733310954858a1",
+        "after_screenshot": "local/m9/stops/s3-turn1-turn-entry-after.png",
+        "after_screenshot_sha256": "ad2415155af8f413b122183eeb3f05bbb9267853ae21214a6f733310954858a1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "turn1",
+      "frame_counter_46e118": "0x754",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0x0",
+        "turn_rate_value": 0.0,
+        "yaw_3f9314": "0x3fc90fdb",
+        "yaw_value": 1.5707963705062866,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn1-update-return.json",
+      "capture_sha256": "eaf73bbf7f71d7dd9ee91a11fe0a02f588c94a207ec97aa282fe83b8a3eb4f74",
+      "timestamp_utc": "2026-11-16T22:11:58.510790+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "95045e748adecb2289cffdb4d5f5bb1b1af5aec940f9e59e5ba26d981a7ebe0d"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "5feae1306eec8c2068459980d93c2b68d069e34c0e6e0c6f9366e03331acbbdd"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-turn1-update-return.png",
+        "screenshot_sha256": "5e698c2f903a00160f3ae4a3efe7f1acca27a2b838b02165eaa9d50917db8d44",
+        "after_screenshot": "local/m9/stops/s3-turn1-update-return-after.png",
+        "after_screenshot_sha256": "9ee701c4e6778b0f3bb881d995b3b8f62a62f33380830ced5468f2f964ae9320",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "turn1",
+      "frame_counter_46e118": "0x754",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xba4de32e",
+        "turn_rate_value": -0.0007853981805965304,
+        "yaw_3f9314": "0x3fc92997",
+        "yaw_value": 1.5715817213058472,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn1-camera-entry.json",
+      "capture_sha256": "6a3277598824d28bbee449bdc15a1f9cca8f65d52a08f3670b7e15b6fc1550e4",
+      "timestamp_utc": "2026-11-16T22:12:01.736792+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "05951e71746616268b80e16b260ee29b611b71a1f53d12c05e839b8edc2c8671"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "5feae1306eec8c2068459980d93c2b68d069e34c0e6e0c6f9366e03331acbbdd"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-turn1-camera-entry.png",
+        "screenshot_sha256": "15229bae16f65f7b84377bcf2085cb78ae5c3b9c104daaa2f179d1460d0d9342",
+        "after_screenshot": "local/m9/stops/s3-turn1-camera-entry-after.png",
+        "after_screenshot_sha256": "15229bae16f65f7b84377bcf2085cb78ae5c3b9c104daaa2f179d1460d0d9342",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "turn1",
+      "frame_counter_46e118": "0x754",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xba4de32e",
+        "turn_rate_value": -0.0007853981805965304,
+        "yaw_3f9314": "0x3fc92997",
+        "yaw_value": 1.5715817213058472,
+        "camera_yaw_3f9934": "0x3fc90fdb",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn1-camera-return.json",
+      "capture_sha256": "0e5bfbbcc11d1b3a7db55cbd960bfd583a2b28d34dd6e6ffc2f5e947cd96d2df",
+      "timestamp_utc": "2026-11-16T22:12:04.955979+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "72e5c69c8bddfbfebaf2fd0d9815b3046327c524e2dd8fc5962c03d1076d4401"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "60488e15bd663e863fa15a3858fa9ab2fcec4ca7eb8176d8d14eb6497a473151"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-turn1-camera-return.png",
+        "screenshot_sha256": "256ad9cdfad7e953138dee00c9155a625681076b9d10c693ce0dd9c88a94a88a",
+        "after_screenshot": "local/m9/stops/s3-turn1-camera-return-after.png",
+        "after_screenshot_sha256": "256ad9cdfad7e953138dee00c9155a625681076b9d10c693ce0dd9c88a94a88a",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "turn1",
+      "frame_counter_46e118": "0x754",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xba4de32e",
+        "turn_rate_value": -0.0007853981805965304,
+        "yaw_3f9314": "0x3fc92997",
+        "yaw_value": 1.5715817213058472,
+        "camera_yaw_3f9934": "0x3fc92997",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn2-update-entry.json",
+      "capture_sha256": "7ddfb82d45ebb0d69e5d9dc5542cf72f1cb6800d59e023f84abfd6b12c1a143d",
+      "timestamp_utc": "2026-11-16T22:12:08.168059+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "6daa91db2a9c3923979d2cb1ea9b86b9daae6880e90bbf0bff22756827705065"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "66b7540effc6c3c43eada6950ea44d67a1609741efb00c4382f78808de5b9d74"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-turn2-update-entry.png",
+        "screenshot_sha256": "ab0a182ba80dc9e28f33d226a22c0526d464e6c6ec1186d6a51dbaaea3d1c14a",
+        "after_screenshot": "local/m9/stops/s3-turn2-update-entry-after.png",
+        "after_screenshot_sha256": "ab0a182ba80dc9e28f33d226a22c0526d464e6c6ec1186d6a51dbaaea3d1c14a",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "turn2",
+      "frame_counter_46e118": "0x755",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xba4de32e",
+        "turn_rate_value": -0.0007853981805965304,
+        "yaw_3f9314": "0x3fc92997",
+        "yaw_value": 1.5715817213058472,
+        "camera_yaw_3f9934": "0x3fc92997",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn2-turn-entry.json",
+      "capture_sha256": "847d93fc97a78acc699f8a01215359d587bff8c29447bbaea5cb5a490f6242cd",
+      "timestamp_utc": "2026-11-16T22:12:11.379486+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "2f86750735afc1d34916116535698b6ac9d7680e7f0014d31d638a9e53d61ccc"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "e27b525060db8e3618be4a9cb8a7eb32932e3f00638d3ee64f4713af31c300d4"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-turn2-turn-entry.png",
+        "screenshot_sha256": "3deea47c142ee56a29b5fb9a7d1d5c1ea3c20d86c6ef4c0007a9b99e1831c620",
+        "after_screenshot": "local/m9/stops/s3-turn2-turn-entry-after.png",
+        "after_screenshot_sha256": "3deea47c142ee56a29b5fb9a7d1d5c1ea3c20d86c6ef4c0007a9b99e1831c620",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "turn2",
+      "frame_counter_46e118": "0x755",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xba4de32e",
+        "turn_rate_value": -0.0007853981805965304,
+        "yaw_3f9314": "0x3fc92997",
+        "yaw_value": 1.5715817213058472,
+        "camera_yaw_3f9934": "0x3fc92997",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn2-update-return.json",
+      "capture_sha256": "870718f0b231296f8a49446d0f1783c0bf9bf9541d731d2178c5f593761e1f87",
+      "timestamp_utc": "2026-11-16T22:12:14.545840+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "8014e0159079b953c0ae81f6940d87ef8b8857b366410af4c59a4fc72142d649"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "6fc815256f8168cb2dc5fbc71195663dbe455e64acde137f3064e0532887172c"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-turn2-update-return.png",
+        "screenshot_sha256": "b36a046e3de87c7ba2f48e1baad4f3331725e4ed2075052363257578f03ea20e",
+        "after_screenshot": "local/m9/stops/s3-turn2-update-return-after.png",
+        "after_screenshot_sha256": "b2047755d7c222fcce9700083b0e92dcc8af625f0c1e7c5060fd60d0b9ba9637",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "turn2",
+      "frame_counter_46e118": "0x755",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbacde32e",
+        "turn_rate_value": -0.0015707963611930609,
+        "yaw_3f9314": "0x3fc95d0f",
+        "yaw_value": 1.5731524229049683,
+        "camera_yaw_3f9934": "0x3fc92997",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn2-camera-entry.json",
+      "capture_sha256": "d3202fbc2f19f9a97839ca2bb37c00fd0840d38e1c660cb28e468b43dbdc6efe",
+      "timestamp_utc": "2026-11-16T22:12:17.713399+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "fdc8f5ee11a9633c31c46dd18c1dba91ee0dd9160ac67a88d086726d4d57b1ff"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "6fc815256f8168cb2dc5fbc71195663dbe455e64acde137f3064e0532887172c"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-turn2-camera-entry.png",
+        "screenshot_sha256": "806198c829e019fb680624fc4f630317a223d02f6238926c61e9c7a9597a3cd7",
+        "after_screenshot": "local/m9/stops/s3-turn2-camera-entry-after.png",
+        "after_screenshot_sha256": "806198c829e019fb680624fc4f630317a223d02f6238926c61e9c7a9597a3cd7",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "turn2",
+      "frame_counter_46e118": "0x755",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbacde32e",
+        "turn_rate_value": -0.0015707963611930609,
+        "yaw_3f9314": "0x3fc95d0f",
+        "yaw_value": 1.5731524229049683,
+        "camera_yaw_3f9934": "0x3fc92997",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-turn2-camera-return.json",
+      "capture_sha256": "de9fcab0e3000df04f497aa14ee7c6df82d767c4840ceef205887a5c3770a9d4",
+      "timestamp_utc": "2026-11-16T22:12:20.926666+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "828af5f9691c0ca97407ebcd5f07ca2a3b6162b296dfdaf22e794b31282a0404"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "fba935bd7ea5c715e7e9f6c10200d8b12f9bf790f84d915fed4a4b853234e5a7"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-turn2-camera-return.png",
+        "screenshot_sha256": "88d4f7daf8ee062c75faa1a16675e12c3dd2652440d619a5e21952a82aa66883",
+        "after_screenshot": "local/m9/stops/s3-turn2-camera-return-after.png",
+        "after_screenshot_sha256": "88d4f7daf8ee062c75faa1a16675e12c3dd2652440d619a5e21952a82aa66883",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "turn2",
+      "frame_counter_46e118": "0x755",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbacde32e",
+        "turn_rate_value": -0.0015707963611930609,
+        "yaw_3f9314": "0x3fc95d0f",
+        "yaw_value": 1.5731524229049683,
+        "camera_yaw_3f9934": "0x3fc95d10",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release1-update-entry.json",
+      "capture_sha256": "b7479e92ce1c116178e81165429b38867eb74e6fa6dc317978137c8d031456d9",
+      "timestamp_utc": "2026-11-16T22:12:32.093787+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "fb5bf8a0662b14169f02d15389d57de6ae62a61061a99123db865a1d7f80b75e"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "2f5a045816ef4333ec731bcb2dab18995ab7a2e05df6714ec6f9f0056a93d72f"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-release1-update-entry.png",
+        "screenshot_sha256": "a048533062a352664cbad34ad23322eb986c1f1b092a70a30f67d23d6855d4b5",
+        "after_screenshot": "local/m9/stops/s3-release1-update-entry-after.png",
+        "after_screenshot_sha256": "bea987abf99a2202c3d8b2850b843cf5a7c14d0d23f3ec3d6fce7fd259c421d9",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "release1",
+      "frame_counter_46e118": "0x756",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbacde32e",
+        "turn_rate_value": -0.0015707963611930609,
+        "yaw_3f9314": "0x3fc95d0f",
+        "yaw_value": 1.5731524229049683,
+        "camera_yaw_3f9934": "0x3fc95d10",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release1-turn-entry.json",
+      "capture_sha256": "abdec4edd9a67038007869e6480d6c87f41a73d4f11b173c2e2df0b6bcd0bb89",
+      "timestamp_utc": "2026-11-16T22:12:35.248287+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "2029cd38f660066eccb6342126b4f00f6a965aab0a27acf93af7ac62946c6ef8"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "a51a7972b71dcb23d620b858cc648a05c789e484481bef732159a43fc66d6155"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-release1-turn-entry.png",
+        "screenshot_sha256": "66cf49e0049cebfc0100a976495558c0cc4c64cb4c78fdde17975d5175f4611c",
+        "after_screenshot": "local/m9/stops/s3-release1-turn-entry-after.png",
+        "after_screenshot_sha256": "66cf49e0049cebfc0100a976495558c0cc4c64cb4c78fdde17975d5175f4611c",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "release1",
+      "frame_counter_46e118": "0x756",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbacde32e",
+        "turn_rate_value": -0.0015707963611930609,
+        "yaw_3f9314": "0x3fc95d0f",
+        "yaw_value": 1.5731524229049683,
+        "camera_yaw_3f9934": "0x3fc95d10",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release1-update-return.json",
+      "capture_sha256": "27900e51de7270a265850f5228b4d0863dc496fc7cd5c2ee4f0f96ad0825054d",
+      "timestamp_utc": "2026-11-16T22:12:38.449409+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "d17dfb4672b5806875979c5eef28dd956f41d9484ae7ebd26b822e8f52017b65"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "b6733bd10a40cc18e3d80e75789d498ad8ee2f7d910e928923fb3ef993b6a0c0"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release1-update-return.png",
+        "screenshot_sha256": "a7ef55db285c0a36e18a8c769e76e13efaf57cba2535990e601010ef24c420c1",
+        "after_screenshot": "local/m9/stops/s3-release1-update-return-after.png",
+        "after_screenshot_sha256": "a7ef55db285c0a36e18a8c769e76e13efaf57cba2535990e601010ef24c420c1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "release1",
+      "frame_counter_46e118": "0x756",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb1a6a62",
+        "turn_rate_value": -0.0023561944253742695,
+        "yaw_3f9314": "0x3fc9aa44",
+        "yaw_value": 1.5755085945129395,
+        "camera_yaw_3f9934": "0x3fc95d10",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release1-camera-entry.json",
+      "capture_sha256": "c9cceff8a2782496f700d7e6963ce14a7271535fc7e4bf2db0d94c3d573aa918",
+      "timestamp_utc": "2026-11-16T22:12:41.626660+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "51057018abbfb8a944f42ab70d3c4f327564885ecd4639e08fabaad15e7a4a0b"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "b6733bd10a40cc18e3d80e75789d498ad8ee2f7d910e928923fb3ef993b6a0c0"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-release1-camera-entry.png",
+        "screenshot_sha256": "17104cb23a96de352b57a46221c4db1ed4f9888d6943e0d4c62be8a545e3610f",
+        "after_screenshot": "local/m9/stops/s3-release1-camera-entry-after.png",
+        "after_screenshot_sha256": "17104cb23a96de352b57a46221c4db1ed4f9888d6943e0d4c62be8a545e3610f",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "release1",
+      "frame_counter_46e118": "0x756",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb1a6a62",
+        "turn_rate_value": -0.0023561944253742695,
+        "yaw_3f9314": "0x3fc9aa44",
+        "yaw_value": 1.5755085945129395,
+        "camera_yaw_3f9934": "0x3fc95d10",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release1-camera-return.json",
+      "capture_sha256": "fa1b3f6b5f3f178aad8103c2277689d918fd81480e5030ea00c0163317fe53ca",
+      "timestamp_utc": "2026-11-16T22:12:44.783985+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "101e400c7a340f6a6a52f6ce758a9adb2956403e4ca40e1e09ce6c7863c74fa8"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "6b5393d03f5a0e8b289395bb93e2f87fd035c952419ff3f6f81af1734ddb4c2c"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release1-camera-return.png",
+        "screenshot_sha256": "7a9febb68f4830e5e346d7314788e584457bc2d267df1a10208fbb218f940f9b",
+        "after_screenshot": "local/m9/stops/s3-release1-camera-return-after.png",
+        "after_screenshot_sha256": "7a9febb68f4830e5e346d7314788e584457bc2d267df1a10208fbb218f940f9b",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "release1",
+      "frame_counter_46e118": "0x756",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb1a6a62",
+        "turn_rate_value": -0.0023561944253742695,
+        "yaw_3f9314": "0x3fc9aa44",
+        "yaw_value": 1.5755085945129395,
+        "camera_yaw_3f9934": "0x3fc9aa45",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release2-update-entry.json",
+      "capture_sha256": "d712921cf19e8ef85a35db1c0b61ac95bbc289287c06850be8fd81c720d149de",
+      "timestamp_utc": "2026-11-16T22:12:54.479853+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "db1f0062f668035cc3521f8ccf9c84b40844a7ac3552c1705f7f8dc9328bbe77"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "f1d35f677cd2ef6655eb453d0cbdef7833c445119c1549a2254f40567236c534"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-release2-update-entry.png",
+        "screenshot_sha256": "77c88c36851a20f945350583c7cc19fe480a48ea38c088b39db4da9bc0e58463",
+        "after_screenshot": "local/m9/stops/s3-release2-update-entry-after.png",
+        "after_screenshot_sha256": "0c0b33ee7603d39f63c6eecb4fe17e43e9567399795777e9e3ed7adf4f466009",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "release2",
+      "frame_counter_46e118": "0x757",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb1a6a62",
+        "turn_rate_value": -0.0023561944253742695,
+        "yaw_3f9314": "0x3fc9aa44",
+        "yaw_value": 1.5755085945129395,
+        "camera_yaw_3f9934": "0x3fc9aa45",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release2-turn-entry.json",
+      "capture_sha256": "912ba0a2987b8a07131f9f7a9a3a503c8f6f5e43bb11f67129bdbaee4cc62291",
+      "timestamp_utc": "2026-11-16T22:12:57.627957+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "94f6d92b8ed82c3ed45c01e7c86ff44779fc7a4c448fa3e617ca8d2a4b15d19d"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "a5dbfdf9d4efe2f63af8b03d1a53a3440a7640910ca191209f5fbe956b519174"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-release2-turn-entry.png",
+        "screenshot_sha256": "28e6167bb87d4153bbc84603649b11bbdeb762a055701cdd957ade98d8bff058",
+        "after_screenshot": "local/m9/stops/s3-release2-turn-entry-after.png",
+        "after_screenshot_sha256": "28e6167bb87d4153bbc84603649b11bbdeb762a055701cdd957ade98d8bff058",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "release2",
+      "frame_counter_46e118": "0x757",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb1a6a62",
+        "turn_rate_value": -0.0023561944253742695,
+        "yaw_3f9314": "0x3fc9aa44",
+        "yaw_value": 1.5755085945129395,
+        "camera_yaw_3f9934": "0x3fc9aa45",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release2-update-return.json",
+      "capture_sha256": "e8f9c8c1755c52aac1d7d5f70ed7b770bbed2e0d9a0a7c9ba53dd05901edc70e",
+      "timestamp_utc": "2026-11-16T22:13:00.789754+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "709d2acf8ee5c692bfc34a752122e91673c1094f875bcb753d2df0240a28acc7"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "b38ceccf401a44b8fe2b348503e53e7e9fa8021b20e99183a686509b180b76c2"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release2-update-return.png",
+        "screenshot_sha256": "d439de45e74296dd6affe2eb7f964076564a0451f9ad9a075b77557136e91e3b",
+        "after_screenshot": "local/m9/stops/s3-release2-update-return-after.png",
+        "after_screenshot_sha256": "d439de45e74296dd6affe2eb7f964076564a0451f9ad9a075b77557136e91e3b",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "release2",
+      "frame_counter_46e118": "0x757",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb4de32d",
+        "turn_rate_value": -0.003141592489555478,
+        "yaw_3f9314": "0x3fca1135",
+        "yaw_value": 1.5786501169204712,
+        "camera_yaw_3f9934": "0x3fc9aa45",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release2-camera-entry.json",
+      "capture_sha256": "7b5ed2b591a2b497d25dc869e6452e6f794717e73e030032f943af5bd3094232",
+      "timestamp_utc": "2026-11-16T22:13:03.968671+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "782d22f0cb5c0b959a6f1087609291607fa18a59ea6dfe61399349d374e93cb1"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "b38ceccf401a44b8fe2b348503e53e7e9fa8021b20e99183a686509b180b76c2"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-release2-camera-entry.png",
+        "screenshot_sha256": "f98d6f1030cb350c907083b5accf79375f658ca1a047acb38ea814e63c40b07d",
+        "after_screenshot": "local/m9/stops/s3-release2-camera-entry-after.png",
+        "after_screenshot_sha256": "4ea803d89b11d3d4f196a454dd537a6a28728520fc844d14154a32b67650d2f1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "release2",
+      "frame_counter_46e118": "0x757",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb4de32d",
+        "turn_rate_value": -0.003141592489555478,
+        "yaw_3f9314": "0x3fca1135",
+        "yaw_value": 1.5786501169204712,
+        "camera_yaw_3f9934": "0x3fc9aa45",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release2-camera-return.json",
+      "capture_sha256": "1b672e6d91c395aad7b5e48e6b9498107d03526c4d8855a43a1017da4fcf00d5",
+      "timestamp_utc": "2026-11-16T22:13:07.146934+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "4fd669f2cc822ab70562a3516959d866b7ec226f6b5f2e2110ca2c4b48c0c04b"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "22eb12dba44b26fbf70e7dfa6c46972a75ed55096fa345f2cb11e45a0729c841"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release2-camera-return.png",
+        "screenshot_sha256": "ab3e436bf5e6503b5b37292ac873874bc0250b1786c891d000b624ffff1b2312",
+        "after_screenshot": "local/m9/stops/s3-release2-camera-return-after.png",
+        "after_screenshot_sha256": "ab3e436bf5e6503b5b37292ac873874bc0250b1786c891d000b624ffff1b2312",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "release2",
+      "frame_counter_46e118": "0x757",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb4de32d",
+        "turn_rate_value": -0.003141592489555478,
+        "yaw_3f9314": "0x3fca1135",
+        "yaw_value": 1.5786501169204712,
+        "camera_yaw_3f9934": "0x3fca1136",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release3-update-entry.json",
+      "capture_sha256": "9069c5b90837e136f96cdb3837a669f8c9933877dd5f14a669fc489ad26cbf50",
+      "timestamp_utc": "2026-11-16T22:13:16.771581+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "36b203a14c069bf3ec08bf541cba7236debe87d9797f793add1156e66ba8d6cc"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "5e5220b598875aa852cc366f139cd3b62cdd387f4526eba7b3c74476e48cbd73"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-release3-update-entry.png",
+        "screenshot_sha256": "f92c0cb4fadd929ab088e81ad7d411af0faae75ab0310073a84a40d3c2ee527c",
+        "after_screenshot": "local/m9/stops/s3-release3-update-entry-after.png",
+        "after_screenshot_sha256": "f92c0cb4fadd929ab088e81ad7d411af0faae75ab0310073a84a40d3c2ee527c",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "release3",
+      "frame_counter_46e118": "0x758",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb4de32d",
+        "turn_rate_value": -0.003141592489555478,
+        "yaw_3f9314": "0x3fca1135",
+        "yaw_value": 1.5786501169204712,
+        "camera_yaw_3f9934": "0x3fca1136",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release3-turn-entry.json",
+      "capture_sha256": "e8c9001bb97db16feee48a33f42288ded9a05a7c9098999dff80ebcbfca1e5a5",
+      "timestamp_utc": "2026-11-16T22:13:19.930151+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "4bccfc3d2d7d5cfbfc729fe3d9349ab477fde508bc6795eb158962300bbb9953"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "214d78ff46a2b657c14c0462f6800b23e688268a3d7862fccf23a1b9677ba216"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-release3-turn-entry.png",
+        "screenshot_sha256": "bc2aa2c1eacdbc6546050f172fbf3a4448c77f27bff2dcd67a88d60d280b2de6",
+        "after_screenshot": "local/m9/stops/s3-release3-turn-entry-after.png",
+        "after_screenshot_sha256": "bc2aa2c1eacdbc6546050f172fbf3a4448c77f27bff2dcd67a88d60d280b2de6",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "release3",
+      "frame_counter_46e118": "0x758",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb4de32d",
+        "turn_rate_value": -0.003141592489555478,
+        "yaw_3f9314": "0x3fca1135",
+        "yaw_value": 1.5786501169204712,
+        "camera_yaw_3f9934": "0x3fca1136",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release3-update-return.json",
+      "capture_sha256": "47a42088667ed3b37f5f9a21c36e0504dfc178c0c5bfbd8468b9a48080b86b46",
+      "timestamp_utc": "2026-11-16T22:13:23.093399+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "3ab0768ad6b62a0f016c0f3cfff4d20fc538593f3a998c205f74ab6f1fe24afc"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "50b3ff4eaf4cd162096f40bc2525b129b088ed509fafe04602562a1dc12d0375"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release3-update-return.png",
+        "screenshot_sha256": "a01e98577cf36336a0c5da863244d9153ef81d7c2b206f109119ae455b224bd9",
+        "after_screenshot": "local/m9/stops/s3-release3-update-return-after.png",
+        "after_screenshot_sha256": "0ac67cb7b00718ba83beb9709c88805183f748edf445abb0f15c952920bc19ec",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "release3",
+      "frame_counter_46e118": "0x758",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb80adfc",
+        "turn_rate_value": -0.003926990553736687,
+        "yaw_3f9314": "0x3fca91e2",
+        "yaw_value": 1.5825769901275635,
+        "camera_yaw_3f9934": "0x3fca1136",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release3-camera-entry.json",
+      "capture_sha256": "f8e7e2f2c280aa95f208b589e177cb8a9d8146b3a6cf698b3d94ccda2ab3670b",
+      "timestamp_utc": "2026-11-16T22:13:26.262541+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "a562ab2889427c9e4552c6cb39c5ccb2e4cc2e47fe1340621a032dcab268343d"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "50b3ff4eaf4cd162096f40bc2525b129b088ed509fafe04602562a1dc12d0375"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-release3-camera-entry.png",
+        "screenshot_sha256": "576dd26b99f2019274e23c0be21bccd0c9bb4cc4b15a8a849f818330303b48ae",
+        "after_screenshot": "local/m9/stops/s3-release3-camera-entry-after.png",
+        "after_screenshot_sha256": "576dd26b99f2019274e23c0be21bccd0c9bb4cc4b15a8a849f818330303b48ae",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "release3",
+      "frame_counter_46e118": "0x758",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb80adfc",
+        "turn_rate_value": -0.003926990553736687,
+        "yaw_3f9314": "0x3fca91e2",
+        "yaw_value": 1.5825769901275635,
+        "camera_yaw_3f9934": "0x3fca1136",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release3-camera-return.json",
+      "capture_sha256": "81709d1ac5755295c762eac1e37811d0d9e79876d2f6440b6e420577f27f754d",
+      "timestamp_utc": "2026-11-16T22:13:29.394233+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "73141474ee9a9413426ac5f7da9779323b20a99adbc98b0c915ca5f23efbb153"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "be728d280e185f9bc626b78c9c11af3052a781abd52c4406c02141385e9cf686"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release3-camera-return.png",
+        "screenshot_sha256": "56c5b4de386a4ae4ea602aefe9961215c3ee82267d4f51bbc631a5252aeb80e5",
+        "after_screenshot": "local/m9/stops/s3-release3-camera-return-after.png",
+        "after_screenshot_sha256": "56c5b4de386a4ae4ea602aefe9961215c3ee82267d4f51bbc631a5252aeb80e5",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "release3",
+      "frame_counter_46e118": "0x758",
+      "state": {
+        "left_stick_x_3eaf0c": "0xbf800000",
+        "left_stick_x_value": -1.0,
+        "turn_rate_3f9710": "0xbb80adfc",
+        "turn_rate_value": -0.003926990553736687,
+        "yaw_3f9314": "0x3fca91e2",
+        "yaw_value": 1.5825769901275635,
+        "camera_yaw_3f9934": "0x3fca91e5",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release4-update-entry.json",
+      "capture_sha256": "910e3ef6206763abb5cb7fbf09acf3e99233ce8e63cf1c10b152d5ede2869041",
+      "timestamp_utc": "2026-11-16T22:14:06.287596+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "42edc367fc8175ef0ab12c6e59326d62aa7413fbaf6cd72f0804e80fcce412dd"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "99769ebbc7aa2d6391d11a6bcf28d62083ec66f825ec8ea7f247b49740bf87c8"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-release4-update-entry.png",
+        "screenshot_sha256": "fa672e5988c6759c2094efb50e694435ef2ff0e1f48d1e321fef42ab307fd587",
+        "after_screenshot": "local/m9/stops/s3-release4-update-entry-after.png",
+        "after_screenshot_sha256": "fa672e5988c6759c2094efb50e694435ef2ff0e1f48d1e321fef42ab307fd587",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "release4",
+      "frame_counter_46e118": "0x759",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbb80adfc",
+        "turn_rate_value": -0.003926990553736687,
+        "yaw_3f9314": "0x3fca91e2",
+        "yaw_value": 1.5825769901275635,
+        "camera_yaw_3f9934": "0x3fca91e5",
+        "turn_level_3f97d4": 3
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release4-turn-entry.json",
+      "capture_sha256": "1ab333b3c51e83fcb59ab9dc8a1f64dffd0f9d8c171fb767322b19833243b022",
+      "timestamp_utc": "2026-11-16T22:14:13.628142+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "f5edc1ed1a56654dcede29371c38f5cb6eed631c73fd0a0fe60797a039b10f7e"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "3531346d11809a801b8d0233bd49b9844b155f2be4c732e50d4be25b937b534a"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-release4-turn-entry.png",
+        "screenshot_sha256": "0ad639fc38a6bcc7a04b317182011d6e9979dee156fd1521980f503dc47102a0",
+        "after_screenshot": "local/m9/stops/s3-release4-turn-entry-after.png",
+        "after_screenshot_sha256": "0ad639fc38a6bcc7a04b317182011d6e9979dee156fd1521980f503dc47102a0",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "release4",
+      "frame_counter_46e118": "0x759",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbb80adfc",
+        "turn_rate_value": -0.003926990553736687,
+        "yaw_3f9314": "0x3fca91e2",
+        "yaw_value": 1.5825769901275635,
+        "camera_yaw_3f9934": "0x3fca91e5",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release4-update-return.json",
+      "capture_sha256": "4cab4c3afb2cd5b7415937fba75d928e0e70a825074c677fa5e9e2b484a317db",
+      "timestamp_utc": "2026-11-16T22:14:16.753097+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "13449ffb7ffbe6261c8a1985940bb196337e93daeed8b7da881136438ed649cb"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "38df7618aee8b350a1cc05381cc7a27f46a6f84cb7c45f1bbf863d5157bd24ca"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x158778",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release4-update-return.png",
+        "screenshot_sha256": "b589a2dd950cde40451a1c6d923af36738f48db761b055ad232b4960933170e1",
+        "after_screenshot": "local/m9/stops/s3-release4-update-return-after.png",
+        "after_screenshot_sha256": "b589a2dd950cde40451a1c6d923af36738f48db761b055ad232b4960933170e1",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 00159570 to 158560",
+      "frame": "release4",
+      "frame_counter_46e118": "0x759",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbaab92a4",
+        "turn_rate_value": -0.0013089966960251331,
+        "yaw_3f9314": "0x3fcabcc6",
+        "yaw_value": 1.583885908126831,
+        "camera_yaw_3f9934": "0x3fca91e5",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release4-camera-entry.json",
+      "capture_sha256": "421fd2757f4264ca561b9b9cf8399295a9a7921037553c68421f4964add62320",
+      "timestamp_utc": "2026-11-16T22:14:19.926110+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "dde8eae944dcf997543ed8767435e9e65620088b8711b3cfb58ae07f1d2b99d6"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "38df7618aee8b350a1cc05381cc7a27f46a6f84cb7c45f1bbf863d5157bd24ca"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12c790",
+        "registers": {
+          "ra": "0x12f8d4"
+        },
+        "screenshot": "local/m9/stops/s3-release4-camera-entry.png",
+        "screenshot_sha256": "2d302444af390bde8f90dd9e2772cf79953434bb4917dbc6e56efe616431dc77",
+        "after_screenshot": "local/m9/stops/s3-release4-camera-entry-after.png",
+        "after_screenshot_sha256": "2d302444af390bde8f90dd9e2772cf79953434bb4917dbc6e56efe616431dc77",
+        "reviewed": "2026-11-16"
+      },
+      "role": "camera update 0012c790 entry from frame function 0012f850",
+      "frame": "release4",
+      "frame_counter_46e118": "0x759",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbaab92a4",
+        "turn_rate_value": -0.0013089966960251331,
+        "yaw_3f9314": "0x3fcabcc6",
+        "yaw_value": 1.583885908126831,
+        "camera_yaw_3f9934": "0x3fca91e5",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release4-camera-return.json",
+      "capture_sha256": "4d34889c87e4836928c64674da1e280ec3a8a8100592e081138fa5e0d06e4da7",
+      "timestamp_utc": "2026-11-16T22:14:23.069934+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "91b763a5407ff3e2a12ca33a61aea53526c52769c81febc57485dbd89681d4ad"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "9022b0acc0fffdc064093161c4368947693c25e19f89a30d7f04e9f516e0deee"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x12f8d4",
+        "registers": {},
+        "screenshot": "local/m9/stops/s3-release4-camera-return.png",
+        "screenshot_sha256": "81b41ab1b8dc49a4916111943dd38ff9912ee3bb2f92af2ee97c1bb5eff8a9b6",
+        "after_screenshot": "local/m9/stops/s3-release4-camera-return-after.png",
+        "after_screenshot_sha256": "23214ae3c4a0326f69813d42a1495684c78b2a77132087e968152f0702b69a7d",
+        "reviewed": "2026-11-16"
+      },
+      "role": "return of 0012c790 to 0012f850",
+      "frame": "release4",
+      "frame_counter_46e118": "0x759",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbaab92a4",
+        "turn_rate_value": -0.0013089966960251331,
+        "yaw_3f9314": "0x3fcabcc6",
+        "yaw_value": 1.583885908126831,
+        "camera_yaw_3f9934": "0x3fcabcce",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release5-update-entry.json",
+      "capture_sha256": "edb553834c725658305c8b1f8ead084aac2c7b5899680ec2966f3b81919db1e2",
+      "timestamp_utc": "2026-11-16T22:14:26.210061+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "27c153352e749d39fc419eb92d7218e046eec5f6b9ab9347802b80c5404e91aa"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "cc501e83edbfd832752831e229f3c8e3d6ece3221c05cd625a0c2a107af1468f"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x159570",
+        "registers": {
+          "ra": "0x158778"
+        },
+        "screenshot": "local/m9/stops/s3-release5-update-entry.png",
+        "screenshot_sha256": "c037056fda09193acc5e20ff23a22fa274c719c662bcdd94836574ea0558d6e9",
+        "after_screenshot": "local/m9/stops/s3-release5-update-entry-after.png",
+        "after_screenshot_sha256": "c037056fda09193acc5e20ff23a22fa274c719c662bcdd94836574ea0558d6e9",
+        "reviewed": "2026-11-16"
+      },
+      "role": "active player update 00159570 entry (from 158560 at 158770)",
+      "frame": "release5",
+      "frame_counter_46e118": "0x75a",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbaab92a4",
+        "turn_rate_value": -0.0013089966960251331,
+        "yaw_3f9314": "0x3fcabcc6",
+        "yaw_value": 1.583885908126831,
+        "camera_yaw_3f9934": "0x3fcabcce",
+        "turn_level_3f97d4": 0
+      }
+    },
+    {
+      "capture": "local/m9/captures/s3-release5-turn-entry.json",
+      "capture_sha256": "b216330c430b2b69a573bec611258149761b485d952e03a59fd52b8538a8f975",
+      "timestamp_utc": "2026-11-16T22:14:29.384745+00:00",
+      "samples": [
+        {
+          "address": "0x00000000",
+          "size_bytes": 33554432,
+          "sha256": "86df67e9b9122c8c417fd2f98e425a2dcfc6af63808ea81a8fa315d153f2ed7f"
+        },
+        {
+          "address": "0x70000000",
+          "size_bytes": 16384,
+          "sha256": "28163d2dcb8c905befd77b41b6dbe32004a41ee820bfe20e0571c4006ad2a8fe"
+        }
+      ],
+      "native_stop": {
+        "pc": "0x160510",
+        "registers": {
+          "ra": "0x160bc8"
+        },
+        "screenshot": "local/m9/stops/s3-release5-turn-entry.png",
+        "screenshot_sha256": "56bcc221dd4ccc9163fe91041edb15fdb0570350505a113a2965a97bd88f734b",
+        "after_screenshot": "local/m9/stops/s3-release5-turn-entry-after.png",
+        "after_screenshot_sha256": "56bcc221dd4ccc9163fe91041edb15fdb0570350505a113a2965a97bd88f734b",
+        "reviewed": "2026-11-16"
+      },
+      "role": "turn 00160510 entry from walk 001608b0 (jal at 160bc0)",
+      "frame": "release5",
+      "frame_counter_46e118": "0x75a",
+      "state": {
+        "left_stick_x_3eaf0c": "0x0",
+        "left_stick_x_value": 0.0,
+        "turn_rate_3f9710": "0xbaab92a4",
+        "turn_rate_value": -0.0013089966960251331,
+        "yaw_3f9314": "0x3fcabcc6",
+        "yaw_value": 1.583885908126831,
+        "camera_yaw_3f9934": "0x3fcabcce",
+        "turn_level_3f97d4": 0
+      }
+    }
+  ]
+}
