@@ -704,6 +704,9 @@ void hg_player_ordinary_input_stage(HGResourceEnv *e,uint32_t a) {
     }
     if(r8(e,a+0x449)!=255)call(e,0x159380,a,0,0,0);
 }
+/* M9 correction: the delay slot at 00159b08 (li a1,1) always executes, so both
+ * 0015fe00 calls receive a1=1 (movement allowed). M8 passed 0, which was
+ * indistinguishable under neutral input but suppresses turning and walking. */
 void hg_player_ordinary_update(HGResourceEnv *e,uint32_t a) {
     uint32_t status=call(e,0x13a050,0x3f800000,a+0x90,0,0);
     w32(e,a+0x428,status);
@@ -722,13 +725,13 @@ void hg_player_ordinary_update(HGResourceEnv *e,uint32_t a) {
         if(r8(e,0x3eaee8)!=0) {
             w8(e,a+0x449,4);call(e,0x159380,a,0,0,0);
         } else if(r8(e,0x3eaeb0)==0) {
-            if(call(e,0x15fe00,a,0,0,0)==0)w8(e,a+0x1a,r8(e,a+0x1a)+1u);
+            if(call(e,0x15fe00,a,1,0,0)==0)w8(e,a+0x1a,r8(e,a+0x1a)+1u);
             else {w32(e,a+0x4cc,r32(e,a+0x18));w8(e,a+0x19,2);w8(e,a+0x1a,0);}
         }
         return;
     }
     if(substate!=1)return;
-    uint32_t blocked=call(e,0x15fe00,a,0,0,0);
+    uint32_t blocked=call(e,0x15fe00,a,1,0,0);
     if(blocked==0)call(e,0x161110,a,0,0,0);
     else {w32(e,a+0x4cc,r32(e,a+0x18));w8(e,a+0x19,2);w8(e,a+0x1a,0);}
     call(e,0x188650,a,0,0,0);call(e,0x15bf30,a,0,0,0);
@@ -1448,6 +1451,15 @@ static uint32_t player_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b
     case 0x175190:
         if(hg_player_equipment_enter(&p->env,a)!=0)return 0;
         break;
+    /* M9 movement/turn chain; FP operands are raw bits, first. */
+    case 0x15fe00:return hg_player_movement_gate(&p->env,a,b);
+    case 0x15fe70:return hg_player_movement(&p->env,a,b);
+    case 0x1608b0:hg_player_walk(&p->env,a);return 0;
+    case 0x160510:hg_player_turn(&p->env,a,b);return 0;
+    case 0x160420:return hg_player_rate_approach(&p->env,a,b,c,d);
+    case 0x15fcd0:return hg_player_speed_class(&p->env,a,b);
+    case 0x160c20:return hg_player_move_limit(&p->env,a);
+    case 0x1204e0:return hg_angle_wrap(&p->env,a);
     case 0x1429b0:return hg_actor_allocate(&p->env,a,b,c);
     case 0x1428f0:hg_actor_construct(&p->env,a,b,c,d);return 0;
     case 0x142970:hg_actor_construct_short(&p->env,a,b,c,d);return 0;
@@ -1470,4 +1482,375 @@ void hg_player_equipment_transition_fixed(HGResourceEnv *e,uint32_t actor) {
     HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
     p.env.load=process_load;p.env.store=process_store;p.env.call=player_process_call;
     hg_player_equipment_transition(&p.env,actor);
+}
+
+/* ===================== M9: connected turning and camera response =====================
+ * Original Japanese evidence: analysis/player_turn_camera/functions.json.
+ *
+ * Integer-exact single-precision subset shared by EE COP1 and VU0 macro code
+ * here. It mirrors tools/ee_subset.py, the arithmetic oracle measured against
+ * PCSX2 v2.8.2 default-settings retail captures: denormal operands read as zero,
+ * results round toward zero (chop), denormal results flush to +0 and overflow
+ * saturates to +/-FLT_MAX. EE add/sub first clear the smaller operand's bits
+ * below one alignment guard bit; VU adds are exact-then-chop. Non-finite
+ * operands and the unobserved branches marked below are outside the verified
+ * domain: they call HG_DOMAIN_FAULT, a host-only fail-closed bus entry that is
+ * not an original address. No FP status flags or timing are modeled. */
+#define HG_DOMAIN_FAULT 0xfffffff0u
+static void domain_fault(HGResourceEnv *e,uint32_t code) { call(e,HG_DOMAIN_FAULT,code,0,0,0); }
+static int fp_field(uint32_t b) { return (int)((b>>23)&255u); }
+static uint32_t fp_encode(uint32_t sign,uint64_t m,int e2) {
+    /* chop m*2^e2 to single precision */
+    if(m==0)return 0;
+    int msb=63;
+    while(((m>>msb)&1u)==0)msb--;
+    if(msb>23) {m>>=msb-23;e2+=msb-23;}
+    else if(msb<23) {m<<=23-msb;e2-=23-msb;}
+    int field=e2+150;
+    if(field>=255)return sign|0x7f7fffffu;
+    if(field<=0)return 0;
+    return sign|((uint32_t)field<<23)|((uint32_t)m&0x7fffffu);
+}
+static uint64_t fp_mantissa(uint32_t b) { return fp_field(b)?((b&0x7fffffu)|0x800000u):0; }
+static uint32_t fp_add_bits(uint32_t l,uint32_t r,int subtract,int ee_guard,uint32_t *fault) {
+    if(fp_field(l)==255 || fp_field(r)==255) {*fault=1;return 0;}
+    if(ee_guard) {
+        int d=fp_field(l)-fp_field(r),s=d<0?-d:d;
+        if(s!=0) {
+            uint32_t mask=s>=25?0x80000000u:(0xffffffffu<<(s-1));
+            if(d>0)r&=mask; else l&=mask;
+        }
+    }
+    if(subtract)r^=0x80000000u;
+    uint64_t ml=fp_mantissa(l),mr=fp_mantissa(r);
+    if(ml==0 && mr==0)return 0;
+    if(mr==0)return fp_encode(l&0x80000000u,ml,fp_field(l)-150);
+    if(ml==0)return fp_encode(r&0x80000000u,mr,fp_field(r)-150);
+    int el=fp_field(l),er=fp_field(r);
+    uint32_t sb,ss;uint64_t mb,ms;int eb,es;
+    if(el>er || (el==er && ml>=mr)) {sb=l&0x80000000u;mb=ml;eb=el;ss=r&0x80000000u;ms=mr;es=er;}
+    else {sb=r&0x80000000u;mb=mr;eb=er;ss=l&0x80000000u;ms=ml;es=el;}
+    int d=eb-es;uint64_t big=mb<<30,small,full=ms<<30;uint64_t sticky;
+    if(d>=54) {small=0;sticky=1;}
+    else {small=full>>d;sticky=(small<<d)!=full;}
+    uint64_t m=sb==ss?big+small:big-small-sticky;
+    return fp_encode(sb,m,eb-180);
+}
+static uint32_t fp_mul_bits(uint32_t l,uint32_t r,uint32_t *fault) {
+    if(fp_field(l)==255 || fp_field(r)==255) {*fault=1;return 0;}
+    if(fp_field(l)==0 || fp_field(r)==0)return 0;
+    return fp_encode((l^r)&0x80000000u,fp_mantissa(l)*fp_mantissa(r),fp_field(l)+fp_field(r)-300);
+}
+static int64_t fp_key(uint32_t b) {
+    int64_t m=fp_field(b)?(int64_t)(b&0x7fffffffu):0;
+    return (b&0x80000000u)?-m:m;
+}
+/* Exported for synthetic differential tests: op 0 add.s, 1 sub.s, 2 mul.s,
+ * 3 c.lt.s, 4 c.le.s, 5 c.eq.s, 6 VU add, 7 VU sub. */
+uint32_t hg_ee_fp(uint32_t op,uint32_t a,uint32_t b,uint32_t *fault) {
+    *fault=0;
+    switch(op) {
+    case 0:case 1:return fp_add_bits(a,b,op==1,1,fault);
+    case 2:return fp_mul_bits(a,b,fault);
+    case 3:case 4:case 5:
+        if(fp_field(a)==255 || fp_field(b)==255) {*fault=1;return 0;}
+        if(op==3)return fp_key(a)<fp_key(b);
+        if(op==4)return fp_key(a)<=fp_key(b);
+        return fp_key(a)==fp_key(b);
+    case 6:case 7:return fp_add_bits(a,b,op==7,0,fault);
+    default:*fault=1;return 0;
+    }
+}
+static uint32_t fp_op(HGResourceEnv *e,uint32_t op,uint32_t a,uint32_t b) {
+    uint32_t fault,v=hg_ee_fp(op,a,b,&fault);
+    if(fault)domain_fault(e,op+1);
+    return v;
+}
+static uint32_t fadd(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,0,a,b); }
+static uint32_t fsub(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,1,a,b); }
+static uint32_t fmul(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,2,a,b); }
+static int flt(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,3,a,b)!=0; }
+static int fle(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,4,a,b)!=0; }
+static int feq(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,5,a,b)!=0; }
+static uint32_t fneg(uint32_t a) { return a^0x80000000u; }
+static uint32_t fabs_ee(HGResourceEnv *e,uint32_t a) { return flt(e,a,0)?fneg(a):a; }
+static void copy_quad(HGResourceEnv *e,uint32_t dst,uint32_t src) {
+    uint32_t v[4];
+    for(int i=0;i<4;i++)v[i]=r32(e,src+i*4);
+    for(int i=0;i<4;i++)w32(e,dst+i*4,v[i]);
+}
+/* vmulax/vmadday/vmaddaz/vmaddw.xyzw then sqc2: out = M rows x vector lanes. */
+static void vu_transform(HGResourceEnv *e,uint32_t matrix,uint32_t vector,uint32_t out) {
+    uint32_t m[16],v[4],acc[4];
+    for(int i=0;i<16;i++)m[i]=r32(e,matrix+i*4);
+    for(int i=0;i<4;i++)v[i]=r32(e,vector+i*4);
+    for(int lane=0;lane<4;lane++) {
+        acc[lane]=fmul(e,m[lane],v[0]);
+        acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[4+lane],v[1]));
+        acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[8+lane],v[2]));
+        acc[lane]=fp_op(e,6,acc[lane],fmul(e,m[12+lane],v[3]));
+    }
+    for(int lane=0;lane<4;lane++)w32(e,out+lane*4,acc[lane]);
+}
+
+/* 001204e0: wrap an angle into (-pi, pi] by repeated EE subtract/add of 2*pi. */
+uint32_t hg_angle_wrap(HGResourceEnv *e,uint32_t angle) {
+    const uint32_t pi=0x40490fdbu,minus_pi=0xc0490fdbu,two_pi=0x40c90fdbu;
+    uint32_t limit=1u<<20;
+    if(!fle(e,angle,pi))
+        do {angle=fsub(e,angle,two_pi);if(--limit==0) {domain_fault(e,0x10);break;}} while(!fle(e,angle,pi));
+    if(fle(e,angle,minus_pi))
+        do {angle=fadd(e,angle,two_pi);if(--limit==0) {domain_fault(e,0x10);break;}} while(fle(e,angle,minus_pi));
+    return angle;
+}
+/* 0015fcd0: speed class 1..3; a1 bit 4 selects class 2 instead of 3. */
+uint32_t hg_player_speed_class(HGResourceEnv *e,uint32_t a,uint32_t mode) {
+    if(r8(e,a+0x4ad)!=0 || r8(e,a+0x4d4)==0)return 1;
+    if((int16_t)r16(e,a+0x416)<0x15)return 1;
+    return (mode&4)!=0?2:3;
+}
+/* 00160c20: selected actor state 2 with global 3f9ff2 = 0x68 or 0x8e. */
+uint32_t hg_player_move_limit(HGResourceEnv *e,uint32_t a) {
+    if(r8(e,a+0x2c3)!=2)return 0;
+    uint32_t v=r16(e,0x3f9ff2);
+    return v==0x68 || v==0x8e;
+}
+/* 00160420: move a rate toward limit by step; an opposite-signed rate is braked
+ * by step*brake. Both delay-slot products are evaluated as in the original. */
+uint32_t hg_player_rate_approach(HGResourceEnv *e,uint32_t step,uint32_t limit,uint32_t brake,uint32_t field) {
+    uint32_t current,value,braked;
+    if(flt(e,step,0)) {
+        current=r32(e,field);
+        if(!fle(e,current,0)) {w32(e,field,fadd(e,current,fmul(e,step,brake)));return 0;}
+        braked=fmul(e,step,brake);
+        if(flt(e,current,limit)) {
+            value=fsub(e,current,braked);w32(e,field,value);
+            if(flt(e,value,limit))return 0;
+        } else {
+            value=fadd(e,current,step);w32(e,field,value);
+            if(!fle(e,value,limit))return 0;
+        }
+        w32(e,field,limit);return 1;
+    }
+    current=r32(e,field);
+    if(flt(e,current,0)) {w32(e,field,fadd(e,current,fmul(e,step,brake)));return 0;}
+    braked=fmul(e,step,brake);
+    if(!fle(e,current,limit)) {
+        value=fsub(e,current,braked);w32(e,field,value);
+        if(!fle(e,value,limit))return 0;
+    } else {
+        value=fadd(e,current,step);w32(e,field,value);
+        if(flt(e,value,limit))return 0;
+    }
+    w32(e,field,limit);return 1;
+}
+/* Shared stick quantization at 0.4/0.6/0.8 of the absolute axis. */
+static uint32_t stick_level(HGResourceEnv *e,uint32_t magnitude) {
+    if(flt(e,magnitude,0x3ecccccdu))return 0;
+    if(flt(e,magnitude,0x3f19999au))return 1;
+    if(flt(e,magnitude,0x3f4ccccdu))return 2;
+    return 3;
+}
+/* Decay a rate toward zero by step, clamping a sign crossing to +0. */
+static void decay_rate(HGResourceEnv *e,uint32_t field,uint32_t step) {
+    uint32_t value=r32(e,field);
+    if(flt(e,value,0)) {
+        value=fadd(e,value,step);w32(e,field,value);
+        if(!fle(e,value,0))w32(e,field,0);
+    } else {
+        value=fsub(e,value,step);w32(e,field,value);
+        if(flt(e,value,0))w32(e,field,0);
+    }
+}
+/* 00160510: turn. Left-stick X (3eaf0c) selects table row 39a3f0+level*16;
+ * the rate at +440 approaches its limit (negated for a negative stick) or
+ * decays, then heading +44 becomes wrap(+44 - rate). */
+void hg_player_turn(HGResourceEnv *e,uint32_t a,uint32_t mode) {
+    uint32_t speed=call(e,0x15fcd0,a,mode,0,0);
+    uint32_t level=stick_level(e,fabs_ee(e,r32(e,0x3eaf0c)));
+    if(speed==3 && level!=0)level=3;
+    w8(e,a+0x504,level);
+    uint32_t scale=r32(e,0x3e0870+speed*4),row=0x39a3f0+level*16;
+    uint32_t brake=fmul(e,r32(e,0x39a3f4),scale);
+    uint32_t step=fmul(e,r32(e,row+8),scale),limit=fmul(e,r32(e,row+12),scale);
+    if(level!=0) {
+        if(flt(e,r32(e,0x3eaf0c),0)) {step=fneg(step);limit=fneg(limit);}
+        call(e,0x160420,step,limit,brake,a+0x440);
+    } else decay_rate(e,a+0x440,step);
+    w32(e,a+0x44,call(e,0x1204e0,fsub(e,r32(e,a+0x44),r32(e,a+0x440)),0,0,0));
+}
+/* 001608b0: forward speed from left-stick Y (3eaf10) at +438, then turn,
+ * then position +30/+38 advances by speed * sin/cos(heading). */
+void hg_player_walk(HGResourceEnv *e,uint32_t a) {
+    uint32_t axis=fabs_ee(e,r32(e,0x3eaf10));
+    uint32_t speed=call(e,0x15fcd0,a,0,0,0),level=0;
+    if(r8(e,a+0x4ad)==0) {
+        if(call(e,0x160c20,a,0,0,0)!=0) {
+            if(!flt(e,axis,0x3ecccccdu)) {level=1;speed=1;}
+        } else if(call(e,0x15b260,1,0,0,0)!=0) {
+            if(!flt(e,axis,0x3ecccccdu)) {level=1;if(speed==3)speed=2;}
+        } else {
+            level=stick_level(e,axis);
+            if(speed==3 && level!=0)level=3;
+        }
+    }
+    w8(e,a+0x45c,level);
+    uint32_t scale=r32(e,0x3e0860+speed*4),row=0x39a3b0+level*16;
+    uint32_t brake=fmul(e,r32(e,0x39a3b4),scale),step;
+    if(speed==3)step=fmul(e,0x40000000u,fmul(e,r32(e,row+8),scale));
+    else step=fmul(e,r32(e,row+8),scale);
+    uint32_t limit=fmul(e,r32(e,row+12),scale);
+    if(level!=0) {
+        if(flt(e,r32(e,0x3eaf10),0)) {step=fneg(step);limit=fneg(limit);}
+        call(e,0x160420,step,limit,brake,a+0x438);
+    } else decay_rate(e,a+0x438,step);
+    uint32_t side=fabs_ee(e,r32(e,a+0x434)),forward=fabs_ee(e,r32(e,a+0x438));
+    uint32_t larger=fle(e,side,forward)?forward:side;
+    call(e,0x160510,a,feq(e,0,larger)?4:1,0,0);
+    uint32_t heading=r32(e,a+0x44);
+    uint32_t s=call(e,0x143560,heading,0,0,0);
+    w32(e,a+0x30,fadd(e,r32(e,a+0x30),fmul(e,r32(e,a+0x438),s)));
+    heading=r32(e,a+0x44);
+    uint32_t c=call(e,0x143620,heading,0,0,0);
+    w32(e,a+0x38,fadd(e,r32(e,a+0x38),fmul(e,r32(e,a+0x438),c)));
+}
+/* 0015fe70: movement/look dispatcher. Mode bit 1 allows walking, bit 4 turns
+ * without walking and bit 8 (or held 3eaf00 bit 4) selects look mode. */
+uint32_t hg_player_movement(HGResourceEnv *e,uint32_t a,uint32_t mode) {
+    uint32_t busy=0;
+    w8(e,a+0x465,0);w16(e,a+0x49a,0);w8(e,a+0x505,0);w8(e,a+0x504,0);w8(e,a+0x45d,0);
+    w8(e,a+0x45c,0);call(e,0x160ff0,a,0,0,0);
+    if(r8(e,a+0x49f)!=0 || r8(e,a+0x449)==3 || r8(e,0x3eaeb0)!=0)return 0;
+    if(r8(e,0x3f9f3c)!=0 && call(e,0x15b260,2,0,0,0)!=0)mode=4;
+    if(r8(e,0x3eaee8)!=0)busy=1;
+    else {
+        if(r8(e,a+0x461)==0 && (r16(e,0x3eaf00)&4)==0 && (r16(e,0x3eaf04)&8)!=0) {
+            w8(e,a+0x461,1);w32(e,a+0x43c,0);
+        }
+        if(r8(e,a+0x461)!=0)call(e,0x15fd30,a,0,0,0);
+        if(r8(e,a+0x4ad)==0 && ((r16(e,0x3eaf00)&4)!=0 || (mode&8)!=0)) {
+            w8(e,a+0x465,1);
+            if(r8(e,a+0x461)==0)call(e,0x1606e0,a,mode|8,0,0);
+            call(e,0x160510,a,mode|8,0,0);busy=1;
+        } else {
+            if((mode&4)!=0) {call(e,0x160510,a,mode|4,0,0);busy=1;}
+            if(r8(e,a+0x461)==0) {
+                decay_rate(e,a+0x43c,fmul(e,r32(e,0x39a3f0),r32(e,0x3e0874)));
+                w32(e,a+0x3c0,call(e,0x1204e0,fadd(e,r32(e,a+0x3c0),r32(e,a+0x43c)),0,0,0));
+            }
+        }
+    }
+    uint32_t pitch=r32(e,a+0x3c0);
+    if(flt(e,pitch,0xbf9a25c1u)) {w32(e,a+0x3c0,0xbf9a25c1u);w32(e,a+0x43c,0);}
+    else if(!fle(e,pitch,0x3f9a25c1u)) {w32(e,a+0x3c0,0x3f9a25c1u);w32(e,a+0x43c,0);}
+    if((mode&1)!=0 && busy==0) {call(e,0x160c60,a,0,0,0);call(e,0x1608b0,a,0,0,0);}
+    else {w32(e,a+0x434,0);w32(e,a+0x438,0);}
+    uint32_t first=r8(e,a+0x504),second=r8(e,a+0x505);
+    uint32_t level=first<second?second:first;
+    first=r8(e,a+0x45c);second=r8(e,a+0x45d);
+    if(first<second)first=second;
+    if(level<first)level=first;
+    if(level==0 && (int16_t)r16(e,a+0x416)>=0x15 && r8(e,a+0x4d4)!=0) {
+        w8(e,a+0x4d4,r8(e,a+0x4d4)-1u);
+        if(r8(e,a+0x4d4)!=0)level=1;
+    }
+    if(r8(e,a+0x4ad)!=0) {w16(e,a+0x416,0);w8(e,a+0x4d4,0);}
+    else if(level!=0 && (r16(e,0x3eaf00)&(r16(e,0x3eaecc)|8))!=0) {
+        if(r8(e,a+0x4d4)==0) {
+            int16_t timer=(int16_t)r16(e,a+0x416);
+            if(timer>=0x15)w8(e,a+0x4d4,5);
+            else if(timer==0) {w16(e,a+0x416,0x8c);w8(e,a+0x4d4,5);}
+        }
+    } else {
+        int16_t timer=(int16_t)r16(e,a+0x416);
+        if(timer>=0x15) {if(timer<0x78)w16(e,a+0x416,0x14);}
+        else if(timer==0)w8(e,a+0x4d4,0);
+    }
+    uint32_t side=fabs_ee(e,r32(e,a+0x434)),forward=fabs_ee(e,r32(e,a+0x438));
+    uint32_t larger=fle(e,side,forward)?forward:side;
+    if(!flt(e,larger,0x3d872b02u)) {
+        if(r8(e,a+0x506)>=0x15)w8(e,a+0x46e,0);
+        w8(e,a+0x506,0);call(e,0x15aea0,a,1,0,0);
+    } else if(feq(e,0,larger)) {
+        w8(e,a+0x506,r8(e,a+0x506)+1u);
+        if(r8(e,a+0x506)>=0x80)w8(e,a+0x506,0x80);
+    }
+    w32(e,0x70000b80,r32(e,a+0x390));w32(e,0x70000b84,0);
+    w32(e,0x70000b88,r32(e,a+0x398));w32(e,0x70000b8c,0x3f800000u);
+    w32(e,0x70000b90,r32(e,a+0x30));w32(e,0x70000b94,0);
+    w32(e,0x70000b98,r32(e,a+0x38));w32(e,0x70000b9c,0x3f800000u);
+    uint32_t heading;
+    if(!flt(e,call(e,0x120830,0x70000b80,0x70000b90,0,0),0x3a83126fu))
+        heading=call(e,0x120580,r32(e,0x70000b90),r32(e,0x70000b98),0x70000b80,0);
+    else heading=r32(e,a+0x44);
+    uint32_t result=call(e,0x15ebc0,heading,a,0,0);
+    call(e,0x15fc10,a,0,0,0);
+    return result;
+}
+/* 0015fe00: movement gate; returns 1 while +4ad is set for a selected +2c3. */
+uint32_t hg_player_movement_gate(HGResourceEnv *e,uint32_t a,uint32_t mode) {
+    call(e,0x15fe70,a,mode,0,0);
+    if(r8(e,a+0x4ad)==0 || r8(e,a+0x2c3)==0)return 0;
+    if(r8(e,a+0x4ad)==2) {w8(e,a+0x4ad,0);return 0;}
+    return 1;
+}
+/* 0012bd00, observed +47a==0 branch: head matrix = identity rotated by pitch
+ * +3c0, heading (+44, or wrap(+44 + +4dc) when +49f bit 1), roll +48; eye
+ * from +380 (or the camera's own +e0); target = matrix x (0,0,20,1). */
+uint32_t hg_camera_head_matrix(HGResourceEnv *e,uint32_t player,uint32_t camera,uint32_t keep_eye) {
+    if(r8(e,player+0x47a)!=0) {domain_fault(e,0x20);return 0x70000500;}
+    uint32_t heading=(r8(e,player+0x49f)&1)!=0?
+        call(e,0x1204e0,fadd(e,r32(e,player+0x44),r32(e,player+0x4dc)),0,0,0):r32(e,player+0x44);
+    for(uint32_t i=0;i<64;i+=16)copy_quad(e,0x70000500+i,0x3db2b0+i);
+    call(e,0x143c60,r32(e,player+0x3c0),0x70000500,0x70000500,0);
+    call(e,0x143d30,heading,0x70000500,0x70000500,0);
+    call(e,0x143b90,r32(e,player+0x48),0x70000500,0x70000500,0);
+    copy_quad(e,0x70000530,keep_eye==0?player+0x380:camera+0xe0);
+    copy_quad(e,camera+0xe0,0x70000530);
+    w32(e,0x70000700,0);w32(e,0x70000708,0x41a00000u);w32(e,0x7000070c,0x3f800000u);w32(e,0x70000704,0);
+    vu_transform(e,0x70000500,0x70000700,camera+0xf0);
+    return 0x70000500;
+}
+/* 0012d130: follow the head matrix; without shake (12cce0 == 0) the camera's
+ * eye/target pair is replaced by the new +e0/+f0 before the look-at 12c3d0. */
+void hg_camera_follow(HGResourceEnv *e,uint32_t player,uint32_t camera) {
+    uint32_t matrix=call(e,0x12bd00,player,camera,r8(e,camera+0x140)!=0,0);
+    call(e,0x12c640,camera,matrix,0,0);
+    if(call(e,0x12cce0,camera,0,0,0)==0) {copy_quad(e,camera,camera+0xe0);copy_quad(e,camera+0x10,camera+0xf0);}
+    call(e,0x12c3d0,camera,0,0,0);
+}
+/* 0012c790, observed 3eaed4==0 branch: player node refresh, camera follow,
+ * eye at player position + 16.5 y, view rotation from camera +d0/+d4. */
+void hg_camera_update(HGResourceEnv *e) {
+    const uint32_t player=0x3f92d0,camera=0x3f9860;
+    call(e,0x15e1d0,player,0,0,0);
+    call(e,0x13a240,player+0x90,player+0x50,0,0);
+    call(e,0x13a2a0,player+0x90,player+0x2d0,6,0);
+    call(e,0x13a2a0,player+0x90,player+0x310,0x11,0);
+    call(e,0x13a2a0,player+0x90,player+0x350,2,0);
+    call(e,0x267450,player,0,0,0);
+    if(r8(e,0x3eaed4)!=0) {domain_fault(e,0x21);return;}
+    call(e,0x12d130,player,camera,0,0);
+    w32(e,0x70000040,r32(e,player+0x30));
+    w32(e,0x70000044,fadd(e,0x41840000u,r32(e,player+0x34)));
+    w32(e,0x70000048,r32(e,player+0x38));
+    for(uint32_t i=0;i<64;i+=16)copy_quad(e,0x70000000+i,0x3db2b0+i);
+    call(e,0x143c60,r32(e,camera+0xd0),0x70000000,0x70000000,0);
+    call(e,0x143d30,r32(e,camera+0xd4),0x70000000,0x70000000,0);
+    copy_quad(e,0x70000030,camera);
+    w8(e,camera+0x140,0);
+}
+static uint32_t turn_camera_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    switch(pc) {
+    case 0x12d130:hg_camera_follow(&p->env,a,b);return 0;
+    case 0x12bd00:return hg_camera_head_matrix(&p->env,a,b,c);
+    default:break;
+    }
+    return player_process_call(user,pc,a,b,c,d);
+}
+void hg_camera_update_fixed(HGResourceEnv *e) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=turn_camera_process_call;
+    hg_camera_update(&p.env);
 }

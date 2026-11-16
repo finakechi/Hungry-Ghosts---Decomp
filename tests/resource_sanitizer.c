@@ -111,7 +111,19 @@ static uint32_t player_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32
     case 0x15fe00:assert(a==actor && b<=1);return 0;
     case 0x15d770:case 0x188650:case 0x15bf30:assert(a==actor);return 0;
     case 0x161110:case 0x174900:assert(a==actor && b==0);return 0;
-    case 0x120830:assert(a==actor+0x30 && b==actor+0x390);return 0x3f800001;
+    case 0x120830:
+        /* M9: 0015fe70 measures the scratch pair 70000b80/b90 (0 = keep heading). */
+        if(a==0x70000b80) {assert(b==0x70000b90);return 0;}
+        assert(a==actor+0x30 && b==actor+0x390);return 0x3f800001;
+    case 0x160ff0:case 0x160c60:case 0x15fc10:assert(a==actor);return 0;
+    case 0x143560:case 0x143620:return 0; /* sin/cos boundary: no displacement */
+    case 0x15ebc0:assert(b==actor);return 0;
+    /* M9 camera engine/math boundaries (rotation leaves leave the matrix as is). */
+    case 0x15e1d0:assert(a==actor);return 0;
+    case 0x13a2a0:assert(a==actor+0x90);return 0;
+    case 0x143c60:case 0x143d30:case 0x143b90:assert(b==c && (b==0x70000500 || b==0x70000000));return 0;
+    case 0x12c640:assert(a==0x3f9860 && b==0x70000500);return 0;
+    case 0x12cce0:case 0x12c3d0:assert(a==0x3f9860);return 0;
     case 0x188550:assert(a==0x41af3333 && b==actor);return 0;
     case 0x17d930:assert(a==0 && b==0 && c==1);return 0;
     case 0x120490:assert(a==0x720000 && b==actor);return 0;
@@ -171,6 +183,75 @@ static void player_composition(Test *t,HGResourceEnv *original) {
     store(t,0x46d894,4,0x400);assert(hg_player_flag_status(&e,0x80)==0);
     assert(hg_player_flag_status(&e,0x400)==1);
     store(t,0x3f9f08,4,0x400);assert(hg_player_flag_status(&e,0x400)==2);
+}
+static unsigned faults;
+static uint32_t fault_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    (void)u;(void)b;(void)c;(void)d;
+    if(pc==0xfffffff0u) {assert(a==0x20 || a==0x21);faults++;}
+    return 0;
+}
+/* M9: held-then-released left stick through the real update chain, then the
+ * camera update, with synthetic tables (step 2^-10, limit 2^-5, decay 2^-9). */
+static void turn_camera_composition(Test *t,HGResourceEnv *original) {
+    const uint32_t actor=0x3f92d0,camera=0x3f9860,frame=0x1ff0790;
+    HGResourceEnv e=*original;e.call=player_external;
+    memset(t->ram,0,0x2000000);memset(t->scratch,0,sizeof t->scratch);t->player_calls=0;
+    store(t,0x3f43fc,4,0x600000);store(t,0x600000,4,0x354b4c46);store(t,0x600004,4,214);
+    store(t,0x600010+211*4,4,0x01001000);store(t,0x600010+213*4,4,0x09002000);
+    store(t,0x601008,4,3);store(t,0x601034,4,0x3000);
+    store(t,0x4d8140,4,0x70000c);store(t,0x4d8144,4,3);
+    for(unsigned i=0;i<3;i++)store(t,0x700000+i*4,4,0x710200-i*0x100);
+    store(t,0x3fa202,1,255);store(t,0x3eaec8,2,32);store(t,0x3eaed0,2,128);
+    for(uint32_t base=0x39a3b0;base<=0x39a3f0;base+=0x40) {
+        store(t,base+4,4,0x40000000);store(t,base+8,4,0x3b000000);
+        for(uint32_t level=1;level<=3;level++) {
+            store(t,base+level*16+8,4,0x3a800000);store(t,base+level*16+12,4,0x3d000000);
+        }
+    }
+    store(t,0x3e0864,4,0x3f800000);store(t,0x3e0874,4,0x3f800000);
+    hg_player_initialize_fixed(&e,actor);
+    hg_player_active_update_fixed(&e,actor,frame);hg_player_active_update_fixed(&e,actor,frame);
+    assert(load(t,actor+0x19,1)==1 && load(t,actor+0x1a,1)==1);
+    store(t,actor+0x44,4,0x3fc90fdb);
+    static const uint32_t held[]={0xba800000,0xbb000000,0xbb400000};
+    static const uint32_t yaw[]={0x3fc92fdb,0x3fc96fdb,0x3fc9cfdb};
+    store(t,0x3eaf0c,4,0xbf800000);
+    for(unsigned i=0;i<3;i++) {
+        t->player_calls=0;hg_player_active_update_fixed(&e,actor,frame);
+        assert(load(t,actor+0x440,4)==held[i] && load(t,actor+0x44,4)==yaw[i]);
+        assert(load(t,actor+0x504,1)==3);
+    }
+    store(t,0x3eaf0c,4,0);
+    t->player_calls=0;hg_player_active_update_fixed(&e,actor,frame);
+    assert(load(t,actor+0x440,4)==0xba800000 && load(t,actor+0x504,1)==0);
+    t->player_calls=0;hg_player_active_update_fixed(&e,actor,frame);
+    assert(load(t,actor+0x440,4)==0); /* decay crosses zero: clamped to +0 */
+    for(unsigned i=0;i<16;i++)store(t,0x3db2b0+i*4,4,i%5==0?0x3f800000u:0);
+    store(t,actor+0x30,4,0x40a00000);store(t,actor+0x34,4,0x3fc00000);store(t,actor+0x38,4,0xc0e00000);
+    store(t,actor+0x380,4,0x3f800000);store(t,actor+0x384,4,0x40000000);store(t,actor+0x388,4,0x40400000);
+    store(t,actor+0x38c,4,0x3f800000);store(t,camera+0x140,1,0);
+    t->player_calls=0;hg_camera_update_fixed(&e);
+    assert(load(t,0x70000040,4)==0x40a00000 && load(t,0x70000044,4)==0x41900000);
+    assert(load(t,0x70000048,4)==0xc0e00000 && load(t,camera+0x140,1)==0);
+    /* 13a2a0(+90,+350,2) refreshes the head node into +350..+38f; its row 3 is
+     * the eye. Identity rotations: target = eye + (0,0,20) by one VU add. */
+    uint32_t fault,seed=0x12c790u;
+    for(uint32_t i=0;i<16;i+=4) {
+        assert(load(t,camera+i,4)==load(t,actor+0x380+i,4));
+        assert(load(t,0x70000030+i,4)==load(t,camera+i,4));
+    }
+    assert(load(t,camera+0x10,4)==load(t,camera,4) && load(t,camera+0x14,4)==load(t,camera+4,4));
+    assert(load(t,camera+0x18,4)==hg_ee_fp(6,0x41a00000,load(t,camera+8,4),&fault) && !fault);
+    /* An unobserved branch must reach the host fault boundary, not execute. */
+    HGResourceEnv f=e;f.call=fault_external;store(t,0x3eaed4,1,1);faults=0;
+    hg_camera_update(&f);assert(faults==1);
+    store(t,0x3eaed4,1,0);store(t,actor+0x47a,1,1);
+    assert(hg_camera_head_matrix(&f,actor,camera,0)==0x70000500 && faults==2);
+    for(unsigned i=0;i<200000;i++) {
+        seed=seed*1664525u+1013904223u;uint32_t a=seed;
+        seed=seed*1664525u+1013904223u;uint32_t b=seed;
+        for(uint32_t op=0;op<9;op++)(void)hg_ee_fp(op,a,b,&fault);
+    }
 }
 static uint32_t actor_setup(void *u,uint32_t pc,uint32_t a,uint32_t b,
                             uint32_t c,uint32_t d,uint32_t e,uint32_t f) {
@@ -379,5 +460,6 @@ int main(void) {
     hg_player_reset_transition(&e,0x5f0000);
     assert(load(&t,0x5f0449,1)==255 && load(&t,0x5f0019,1)==0);
     player_composition(&t,&e);
-    free(t.ram);puts("PASS: synthetic M1-M7 workers and connected M8 player composition under sanitizers");return 0;
+    turn_camera_composition(&t,&e);
+    free(t.ram);puts("PASS: synthetic M1-M7 workers, connected M8 player and M9 turn/camera composition under sanitizers");return 0;
 }

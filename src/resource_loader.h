@@ -116,6 +116,22 @@ void hg_player_ordinary_transition(HGResourceEnv *, uint32_t);   /* 00158d90 */
 void hg_player_initialize_fixed(HGResourceEnv *, uint32_t);
 void hg_player_active_update_fixed(HGResourceEnv *, uint32_t, uint32_t frame);
 void hg_player_equipment_transition_fixed(HGResourceEnv *, uint32_t);
+/* M9 connected turning and camera response; FP values are raw single bits. */
+uint32_t hg_ee_fp(uint32_t op, uint32_t a, uint32_t b, uint32_t *fault);
+uint32_t hg_angle_wrap(HGResourceEnv *, uint32_t angle);           /* 001204e0 */
+uint32_t hg_player_speed_class(HGResourceEnv *, uint32_t, uint32_t mode); /* 0015fcd0 */
+uint32_t hg_player_move_limit(HGResourceEnv *, uint32_t);          /* 00160c20 */
+uint32_t hg_player_rate_approach(HGResourceEnv *, uint32_t step, uint32_t limit,
+                                 uint32_t brake, uint32_t field);  /* 00160420 */
+void hg_player_turn(HGResourceEnv *, uint32_t, uint32_t mode);      /* 00160510 */
+void hg_player_walk(HGResourceEnv *, uint32_t);                    /* 001608b0 */
+uint32_t hg_player_movement(HGResourceEnv *, uint32_t, uint32_t mode); /* 0015fe70 */
+uint32_t hg_player_movement_gate(HGResourceEnv *, uint32_t, uint32_t mode); /* 0015fe00 */
+uint32_t hg_camera_head_matrix(HGResourceEnv *, uint32_t player, uint32_t camera,
+                               uint32_t keep_eye);                 /* 0012bd00 */
+void hg_camera_follow(HGResourceEnv *, uint32_t player, uint32_t camera); /* 0012d130 */
+void hg_camera_update(HGResourceEnv *);                            /* 0012c790 */
+void hg_camera_update_fixed(HGResourceEnv *);
 uint32_t hg_actor_resource_lookup(HGResourceEnv *, uint32_t, uint32_t); /* 00138370 */
 uint32_t hg_actor_allocate_nodes(HGResourceEnv *, uint32_t, uint32_t); /* 00141e40 */
 uint32_t hg_actor_take_node(HGResourceEnv *);                    /* 00141de0 */
