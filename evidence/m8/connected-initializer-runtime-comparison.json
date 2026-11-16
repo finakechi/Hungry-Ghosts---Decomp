@@ -1,0 +1,164 @@
+{
+  "schema": "hg-player-connected-runtime/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "cases": [
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "player-initializer",
+      "before_sha256": "e83c3812de91a160b3908186f25b3b42a02a6589dea30159e624e10cea7dcc5b",
+      "after_sha256": "98cefaad03b9ea754a035e83ae4730a329056c08387cceb44a19246e8e51f3db",
+      "modeled_leaves": [
+        {
+          "entry": "0x1330f0",
+          "arguments": [
+            "0x3f9380",
+            "0x1",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 2,
+          "instruction_addresses": 2
+        },
+        {
+          "entry": "0x266a20",
+          "arguments": [
+            "0x3f9520",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 25,
+          "instruction_addresses": 25
+        },
+        {
+          "entry": "0x139ff0",
+          "arguments": [
+            "0x3f9360",
+            "0xda1ec0",
+            "0x6000000",
+            "0x0"
+          ],
+          "instructions": 20519,
+          "instruction_addresses": 549
+        },
+        {
+          "entry": "0x1b7f00",
+          "arguments": [
+            "0x3f9300",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 8,
+          "instruction_addresses": 8
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0x31",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0xaa",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0xe8",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x144340",
+          "arguments": [
+            "0x3f9320",
+            "0x3f9300",
+            "0x3f9310",
+            "0x0"
+          ],
+          "instructions": 364,
+          "instruction_addresses": 218
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 300,
+          "instruction_addresses": 184
+        }
+      ],
+      "modeled_addresses": 1617,
+      "actor_matches": true,
+      "node_pool_matches": true
+    }
+  ],
+  "verification_sources": {
+    "src/resource_loader.c": "6b91ec37595dea574547dfedc6ff82a41a8f217686c4b0bd786c87750e62cbf8",
+    "src/resource_loader.h": "2437e74f5cca09a1ac57ffb9c402bb1ac8abedf77b68f75ec3795670778dc0f9",
+    "tools/ee_subset.py": "5569851df96e646cebe09a042f9b6f1a0e45d4d625713ce333879e8fb5c90957",
+    "tools/verify_player_connected_runtime.py": "8b3d7370ad6127a5ada3fbfb4b9268dcf714c6c7064b6fac3327863ff02d08b3"
+  },
+  "limitations": [
+    "Hybrid C control/resource orchestration with original-instruction-modeled engine/math leaves; not all-C equivalence.",
+    "Paused RAM samples do not establish PCs; native debugger screenshots bind observations separately.",
+    "Exact comparison, no FP tolerance or expected-output replay. All reported mismatches remain failures.",
+    "Finite functional math model omits exceptional FP behavior, flags, timing and hardware.",
+    "Explicit guest transient stack interval omitted; scratchpad is used only when captured or computed."
+  ]
+}

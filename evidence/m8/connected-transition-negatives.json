@@ -1,0 +1,47 @@
+{
+  "schema": "hg-player-transition-negatives/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "original_bytes": {
+    "schema": "ps2-elf-byte-check/v1",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "endianness": "little",
+    "segments": 1,
+    "instructions_verified": 305,
+    "instructions_unknown": 0,
+    "scope": "file-backed PT_LOAD bytes only; no semantic or runtime verification"
+  },
+  "compiled_source_sha256": "6b91ec37595dea574547dfedc6ff82a41a8f217686c4b0bd786c87750e62cbf8",
+  "sources": {
+    "src/resource_loader.h": "2437e74f5cca09a1ac57ffb9c402bb1ac8abedf77b68f75ec3795670778dc0f9",
+    "tools/ee_subset.py": "5569851df96e646cebe09a042f9b6f1a0e45d4d625713ce333879e8fb5c90957",
+    "tools/verify_player_transition.py": "3f017732e26b6522a15d125b7067a7565608e3e7c6cb55a26f87e2be83992500",
+    "tests/test_player_transition.py": "2912a9481257d3f6512f19ba1264922370e022997874aae0f8d00f5c2bd74021",
+    "analysis/player_connected/functions.json": "825002b3b6a2500e9712cb01cc9735876e980a91ce8e4e6fd968fc00e172462b"
+  },
+  "limitations": [
+    "Synthetic external dependencies; these checks do not establish retail equivalence.",
+    "Sound volume finite [0,1], bounded chop FP model; original fifth sound argument fixed at 1.",
+    "Guest stack scratch excluded from memory comparison."
+  ],
+  "controls": [
+    {
+      "control": "wrong-mode",
+      "result": "rejected-as-required",
+      "reason": "wrong-mode: memory differs at 00500448: C 02ff0200000000000000000000000000, EE 01ff0100000000000000000000000000",
+      "mutated_source_sha256": "bc9b2d2bb5065923cdd67b3d913f3086e905a59af3a04feceee9130c9cb17e20"
+    },
+    {
+      "control": "wrong-equipment-callback",
+      "result": "rejected-as-required",
+      "reason": "wrong-equipment-callback: memory differs at 0070001c: C f0b01600000000000000000000000000, EE 503f1700000000000000000000000000",
+      "mutated_source_sha256": "d17ef687904d51bc3439aa8b830dedc353417c8b6b5d1710413116eef9d8b1b0"
+    },
+    {
+      "control": "missing-timer-decrement",
+      "result": "rejected-as-required",
+      "reason": "missing-timer-decrement: external call trace differs\nC=[]\nEE=[('call', 1885616, 0, 1879051136, 1879051136)]",
+      "mutated_source_sha256": "cdcecaba4521f2f2244bfe677e8256184ccc7d5960f25c01a2426797abfb0d95"
+    }
+  ]
+}

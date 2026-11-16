@@ -1,0 +1,448 @@
+{
+  "schema": "hg-m8-setup-checks/v1",
+  "milestone_status": "incomplete",
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/00.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_disc_read.py",
+        "--elf",
+        "$HG_ELF",
+        "--output",
+        "local/m8/setup-regressions/m1.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/01.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_loader.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-regressions/m2.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/02.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_rebase.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m3/fixup-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-regressions/m3.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/03.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_fixup.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m4/fixup-export",
+        "--geometry-exports",
+        "local/m6/geometry-export",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-regressions/m4-m6.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/04.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "$HG_ELF",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--area-code-exports",
+        "local/m5/area1-observed-export",
+        "--actor-dependency-exports",
+        "local/m5/actor-dependency-export",
+        "--output",
+        "local/m8/setup-regressions/m5.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/05.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "compileall",
+        "-q",
+        "tools",
+        "tests"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/06.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/07.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_preparation.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-regressions/m7-instructions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/08.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_lists.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-regressions/actor-lists.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/09.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/actor_lists/functions.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-regressions/10.log",
+      "evidence_class": "regression"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_fixup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m4/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m4/runtime/capture-profile.ini",
+        "--output",
+        "local/m8/setup-saved-runtime-regressions/m4-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-saved-runtime-regressions/00.log",
+      "evidence_class": "saved-runtime"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m5/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m5/resume/capture-profile.ini",
+        "--pack-runtime",
+        "local/m6/captures2",
+        "--pack-profile",
+        "local/m6/capture2-profile.ini",
+        "--output",
+        "local/m8/setup-saved-runtime-regressions/runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-saved-runtime-regressions/01.log",
+      "evidence_class": "saved-runtime"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/check_local_inputs.py",
+        "--manifest",
+        "evidence/local-inputs.json"
+      ],
+      "result": "failed",
+      "returncode": 2,
+      "log": "local/m8/setup-saved-runtime-regressions/02.log",
+      "evidence_class": "saved-runtime"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m7",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m7/capture-profile.ini",
+        "--contract-profile",
+        "local/m7/contract-profile.ini",
+        "--output",
+        "local/m8/setup-saved-runtime-regressions/m7-runtime.json"
+      ],
+      "result": "passed",
+      "returncode": 0,
+      "log": "local/m8/setup-saved-runtime-regressions/03.log",
+      "evidence_class": "saved-runtime"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m8/setup-checkpoint-diff.json"
+      ],
+      "result": "passed",
+      "evidence_class": "differential",
+      "log": "local/m8/setup-checkpoint-diff.log",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--entry",
+        "local/m8/captures/setup-entry.json",
+        "--returned",
+        "local/m8/captures/setup-return.json",
+        "--output",
+        "local/m8/setup-bound-final-runtime.json"
+      ],
+      "result": "passed",
+      "evidence_class": "hybrid saved-runtime",
+      "log": "local/m8/setup-bound-final-runtime.log"
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-Isrc",
+        "tests/resource_sanitizer.c",
+        "src/resource_loader.c",
+        "src/disc_read.c",
+        "-o",
+        "local/m8/setup-final-sanitizer"
+      ],
+      "result": "passed",
+      "evidence_class": "strict build"
+    },
+    {
+      "command": [
+        "local/m8/setup-final-sanitizer"
+      ],
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+        "UBSAN_OPTIONS": "halt_on_error=1"
+      },
+      "result": "passed",
+      "execution": "unsandboxed, following the established LeakSanitizer requirement",
+      "evidence_class": "synthetic sanitizer"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/m8/setup-negative-controls.py"
+      ],
+      "result": "passed",
+      "evidence_class": "compiled synthetic negative controls",
+      "output": "evidence/m8/setup-negative-controls.json"
+    },
+    {
+      "command": [
+        "python",
+        "local/m8/check-setup-live-code.py"
+      ],
+      "result": "passed",
+      "evidence_class": "paused original-game code presence",
+      "output": "evidence/m8/setup-runtime-code-presence.json"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/references/PS2DInfo/tools/check_local_inputs.py",
+        "--manifest",
+        "evidence/local-inputs.json"
+      ],
+      "environment": {
+        "HG_ELF": "local/extracted/japan/SCPS_150.46",
+        "HG_JAPAN_ISO": "owner original image"
+      },
+      "result": "passed",
+      "evidence_class": "authenticated local inputs",
+      "log": "local/m8/setup-inputs-checked.log",
+      "note": "Corrected the runner literal $HG_PS2DINFO path in the failed earlier invocation above; both ELF and 4,389,568,512-byte original ISO verified."
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/references/PS2DInfo/tools/validate_evidence.py",
+        "analysis/actor_setup/functions.json"
+      ],
+      "result": "passed",
+      "evidence_class": "structure"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/references/PS2DInfo/tools/validate_evidence.py",
+        "analysis/actor_setup/math-dependencies.json"
+      ],
+      "result": "passed",
+      "evidence_class": "structure"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "result": "passed",
+      "evidence_class": "synthetic",
+      "log": "local/m8/setup-checkpoint-synthetic.log",
+      "note": "Rechecked after repairing standalone test-module tool imports; the prior full 150-test suite also passed.",
+      "returncode": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "result": "passed",
+      "evidence_class": "whitespace"
+    }
+  ],
+  "limitations": [
+    "Recorded passes apply to their actual source contexts; no completed-M8 publication gate is claimed.",
+    "Independent original-game input/state/subsequent-update comparison remains blocked by debugger control and unfinished connected dependencies."
+  ]
+}

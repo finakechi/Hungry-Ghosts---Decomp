@@ -1,0 +1,22 @@
+{
+  "schema": "hg-m8-negative-controls/v1",
+  "result": "passed",
+  "controls": [
+    {
+      "control": "late-next",
+      "compile": "passed",
+      "behavioral_rejection": "passed",
+      "reason": "hg_actor_update_main/1: external call trace differs\nC=[('actor_callback', 1048832, 5242880)]\nEE=[('actor_callback', 1048832, 5242880), ('actor_callback', 1049088, 5243904)]",
+      "source_sha256": "71d9d3bdcc54c5836e9557c5759660f08ce9100b39ec77fed7f51255f23cdc85"
+    },
+    {
+      "control": "counter-overwrite",
+      "compile": "passed",
+      "behavioral_rejection": "passed",
+      "reason": "hg_actor_update_main/1: memory differs at 003eaed8: C 01000000000000000000000000000000, EE 08000000000000000000000000000000",
+      "source_sha256": "a2d9a618bbd6d5f5d2425690ba5c7cc4ee08184cdb82fe86310329a85f872d04"
+    }
+  ],
+  "limitation": "Instruction-model comparisons with synthetic callbacks, not retail behavioral evidence.",
+  "altered_instruction_rejected": "byte mismatch at 0x00142810 (file +0x43010)"
+}

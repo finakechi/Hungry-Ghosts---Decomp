@@ -1,0 +1,226 @@
+[
+  {
+    "command": [
+      "python",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "00.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_disc_read.py",
+      "--elf",
+      "$HG_ELF",
+      "--output",
+      "local/m8/continuation-checks/m1.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "01.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_resource_loader.py",
+      "--elf",
+      "$HG_ELF",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--output",
+      "local/m8/continuation-checks/m2.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "02.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_resource_rebase.py",
+      "--elf",
+      "$HG_ELF",
+      "--exports",
+      "local/m3/fixup-export",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--output",
+      "local/m8/continuation-checks/m3.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "03.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_resource_fixup.py",
+      "--elf",
+      "$HG_ELF",
+      "--exports",
+      "local/m4/fixup-export",
+      "--geometry-exports",
+      "local/m6/geometry-export",
+      "--image",
+      "$HG_JAPAN_ISO",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--output",
+      "local/m8/continuation-checks/m4-m6.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "04.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_area_lifecycle.py",
+      "--elf",
+      "$HG_ELF",
+      "--general-exports",
+      "local/m2/exports/connected",
+      "--alternative-exports",
+      "local/m5/alternative-export",
+      "--area-exports",
+      "local/m5/area-export",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--image",
+      "$HG_JAPAN_ISO",
+      "--area-code-exports",
+      "local/m5/area1-observed-export",
+      "--actor-dependency-exports",
+      "local/m5/actor-dependency-export",
+      "--output",
+      "local/m8/continuation-checks/m5.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "05.log"
+  },
+  {
+    "command": [
+      "cc",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-Isrc",
+      "tests/resource_sanitizer.c",
+      "src/resource_loader.c",
+      "src/disc_read.c",
+      "-o",
+      "local/m8/continuation-checks/resource_sanitizer"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "06.log"
+  },
+  {
+    "command": [
+      "local/m8/continuation-checks/resource_sanitizer"
+    ],
+    "result": "failed",
+    "returncode": 1,
+    "log": "07.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "-m",
+      "compileall",
+      "-q",
+      "tools",
+      "tests"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "08.log"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "09.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_engine_preparation.py",
+      "--elf",
+      "$HG_ELF",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--output",
+      "local/m8/continuation-checks/m7-instructions.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "10.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "tools/verify_actor_lists.py",
+      "--elf",
+      "$HG_ELF",
+      "--ps2dinfo",
+      "$HG_PS2DINFO",
+      "--output",
+      "local/m8/continuation-checks/actor-lists.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "11.log"
+  },
+  {
+    "command": [
+      "python",
+      "-B",
+      "$HG_PS2DINFO/tools/validate_evidence.py",
+      "analysis/actor_lists/functions.json"
+    ],
+    "result": "passed",
+    "returncode": 0,
+    "log": "12.log"
+  },
+  {
+    "command": [
+      "local/m8/continuation-checks/resource_sanitizer"
+    ],
+    "environment": {
+      "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+      "UBSAN_OPTIONS": "halt_on_error=1"
+    },
+    "execution": "outside sandbox after LeakSanitizer ptrace failure",
+    "result": "passed",
+    "returncode": 0,
+    "output": "PASS: synthetic M1-M7 workers and M8 actor pools/lists under sanitizers"
+  }
+]

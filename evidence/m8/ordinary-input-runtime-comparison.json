@@ -1,0 +1,41 @@
+{
+  "schema": "hg-player-input-runtime/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "cases": [
+    {
+      "case": "neutral-control",
+      "result": "passed",
+      "edge_mask": 0,
+      "before_sha256": "b0cb9b4e645456e1814eb34862ffea9e09df90f62897fdb4a7e6864d443e6d9d",
+      "after_sha256": "3198294bb6eb547c174ad5d1514a04ac9f38bbca48570413482ff71e3d363762",
+      "compared_bytes": 1808,
+      "transition_calls": []
+    },
+    {
+      "case": "square-edge",
+      "result": "passed",
+      "edge_mask": 128,
+      "before_sha256": "2cfc0a9e214d98887c6ea63016ce04476a34681e5bf879fc40ddd43a4582dbb2",
+      "after_sha256": "8c10a4fdf1b3e185996b2707815447aa2fda87c0e4e279689409a04b5f338b6b",
+      "compared_bytes": 1808,
+      "transition_calls": [
+        [
+          "0x159380",
+          "0x3f92d0"
+        ]
+      ]
+    }
+  ],
+  "sources": {
+    "src/resource_loader.c": "66eff922ae1fcd54368bab6938bc02bcaf7502ae25369deda46cf3b6c5c9fc86",
+    "src/resource_loader.h": "1c4c4a7560df1b71efada78e214d2399fe155627a072b25aa6f39d777ca2a736",
+    "tools/verify_player_input_runtime.py": "299fcc0f62230884a6ee45bc375c249862bfbda9a40087a9a31488d12c805cb0"
+  },
+  "limitations": [
+    "Independent paused original input-stage comparison only.",
+    "159380 outgoing call checked; its body is outside this comparison.",
+    "Earlier setup, movement/animation dependencies and following update are not reconstructed by this check.",
+    "Native screenshots establish PCs separately; PINE alone does not establish execution."
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "schema": "hg-m8-native-input-observation/v1",
+  "observation_id": "M8-NATIVE-INPUT-001",
+  "evidence_class": "native-debugger-stops-correlated-with-paused-PINE",
+  "original_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "runtime": {
+    "version": "PCSX2 v2.8.2",
+    "serial": "SCPS-15046",
+    "crc": "91aa4b28"
+  },
+  "actor": "0x003f92d0",
+  "input": {
+    "binding": "Keyboard/J -> Square",
+    "delivery": "GUI key down while paused, native Run until next player entry, GUI key up",
+    "held": "0x0080",
+    "previous": "0x0000",
+    "edge": "0x0080"
+  },
+  "stages": [
+    {
+      "order": 1,
+      "stage": "player-entry",
+      "native_pc_visually_reviewed": "0x00159570",
+      "capture": "native-player-entry-001.json",
+      "capture_sha256": "4247d66ad4459d1a5f4966a22869b6c9565b4356d6d34d8ac244fe179eff7b8d",
+      "screenshot": "native-confirmed-159570.png",
+      "screenshot_sha256": "2191eed56249032106f4ac33206187958c376e055b3415c92b02834de6f17bf0",
+      "timestamp_utc": "2026-11-16T02:28:20.809160+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 2,
+      "stage": "neutral-input-branch",
+      "native_pc_visually_reviewed": "0x00159c58",
+      "capture": "native-ordinary-branch-001.json",
+      "capture_sha256": "b0cb9b4e645456e1814eb34862ffea9e09df90f62897fdb4a7e6864d443e6d9d",
+      "screenshot": "native-ordinary-branch-stop.png",
+      "screenshot_sha256": "6ef8b9ddcfa317341e77c50fd9b2507039cd89202e301951449721476ac3908a",
+      "timestamp_utc": "2026-11-16T02:28:55.525261+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 3,
+      "stage": "neutral-branch-return",
+      "native_pc_visually_reviewed": "0x00159ce4",
+      "capture": "native-neutral-consumed-001.json",
+      "capture_sha256": "3198294bb6eb547c174ad5d1514a04ac9f38bbca48570413482ff71e3d363762",
+      "screenshot": "native-neutral-branch-return.png",
+      "screenshot_sha256": "c4ae69b3669feba5f7995abb2095920c67221aebb9c936770d3c2ebce7192bb2",
+      "timestamp_utc": "2026-11-16T02:29:20.594541+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 4,
+      "stage": "neutral-next-update",
+      "native_pc_visually_reviewed": "0x00159570",
+      "capture": "native-neutral-next-entry-001.json",
+      "capture_sha256": "c463fb0dde23ea30ae03e325db20c9f51f794b4da2c12cae94f3621bb3e80411",
+      "screenshot": "native-neutral-next-entry.png",
+      "screenshot_sha256": "b9bd47e715e06fcb619ec86805c882d696335057545156aa46c0d5af06945e88",
+      "timestamp_utc": "2026-11-16T02:29:28.478989+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 5,
+      "stage": "square-input-entry",
+      "native_pc_visually_reviewed": "0x00159570",
+      "capture": "native-square-entry-001.json",
+      "capture_sha256": "32f47d10b990dbd3e1629ff347fbe0b4d579aff838a287fe66241f530ee5bebc",
+      "screenshot": "native-square-entry.png",
+      "screenshot_sha256": "82b529d4e63fa3cb10591ca7ed2779128097b8a25e832d6a98d4ddd19a53be27",
+      "timestamp_utc": "2026-11-16T02:29:42.179370+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 6,
+      "stage": "square-input-branch",
+      "native_pc_visually_reviewed": "0x00159c58",
+      "capture": "native-square-branch-001.json",
+      "capture_sha256": "2cfc0a9e214d98887c6ea63016ce04476a34681e5bf879fc40ddd43a4582dbb2",
+      "screenshot": "native-square-branch.png",
+      "screenshot_sha256": "f92f5fafdb9e724834cad29b0562ba0c9d7fb7f432c3b486601bad70a26aa984",
+      "timestamp_utc": "2026-11-16T02:29:52.294828+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 255,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 7,
+      "stage": "square-field-written",
+      "native_pc_visually_reviewed": "0x00159cb4",
+      "capture": "native-square-mutated-001.json",
+      "capture_sha256": "36081e9ae9651475538c248c9573d5909337d065a13218e47a29da745def3fc7",
+      "screenshot": "native-square-mutated.png",
+      "screenshot_sha256": "8befee59d21c6442a06efb09f76244906ec353b6fa76ce177ceb92d25c87a97b",
+      "timestamp_utc": "2026-11-16T02:29:59.820454+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 1,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 8,
+      "stage": "square-transition-entry",
+      "native_pc_visually_reviewed": "0x00159380",
+      "capture": "native-square-helper-entry-001.json",
+      "capture_sha256": "8c10a4fdf1b3e185996b2707815447aa2fda87c0e4e279689409a04b5f338b6b",
+      "screenshot": "native-transition-helper-entry.png",
+      "screenshot_sha256": "9161dc6f1be5ec4a3604fed17fb8bba52889225331105eb39b1902740c3e42aa",
+      "timestamp_utc": "2026-11-16T02:30:15.762147+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 1,
+        "0x448": 0,
+        "0x449": 1,
+        "0x44a": 0,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 9,
+      "stage": "square-transition-return",
+      "native_pc_visually_reviewed": "0x00159cd0",
+      "capture": "native-square-helper-return-001.json",
+      "capture_sha256": "87b0223e489d5482cfa82415c47f1b9273e61912d5491ceb8d8c57070c8f42a1",
+      "screenshot": "native-square-helper-return.png",
+      "screenshot_sha256": "596c65f323714a7ef72230162548b93e9974c7867e6a79cf8558c921b694695f",
+      "timestamp_utc": "2026-11-16T02:30:36.485517+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 0,
+        "0x1a": 0,
+        "0x448": 1,
+        "0x449": 255,
+        "0x44a": 1,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 10,
+      "stage": "square-next-update",
+      "native_pc_visually_reviewed": "0x00159570",
+      "capture": "native-square-next-entry-001.json",
+      "capture_sha256": "37b90063daaa52aa3251f0d32531fd97138fa0b12f1f5c0f6e0f2e218043b4e6",
+      "screenshot": "native-square-next-entry.png",
+      "screenshot_sha256": "18abc5c51b3b5edf1e4212707858b9e4f7cee8a864edac38131584e564de5e43",
+      "timestamp_utc": "2026-11-16T02:30:51.237364+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 0,
+        "0x1a": 0,
+        "0x448": 1,
+        "0x449": 255,
+        "0x44a": 1,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 11,
+      "stage": "square-next-consumer",
+      "native_pc_visually_reviewed": "0x00175190",
+      "capture": "native-square-next-consumer-001.json",
+      "capture_sha256": "29fe240f72a447961e9aaef677e91966cc44570379ad0630614adbbe890674bd",
+      "screenshot": "native-subsequent-consumer.png",
+      "screenshot_sha256": "ad9c01b5b0757ee9202dfddc10f78bd4fc6f53dd7b90dea3e3ed7b45a41b59a2",
+      "timestamp_utc": "2026-11-16T02:31:04.030587+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 0,
+        "0x1a": 0,
+        "0x448": 1,
+        "0x449": 255,
+        "0x44a": 1,
+        "0x49f": 0
+      }
+    },
+    {
+      "order": 12,
+      "stage": "square-next-consumed",
+      "native_pc_visually_reviewed": "0x001596fc",
+      "capture": "native-square-next-consumed-001.json",
+      "capture_sha256": "f911ce75e593236a0179cdb34451c9fdd53b2cbd18c0bba91c4832613fa99c60",
+      "screenshot": "native-next-return.png",
+      "screenshot_sha256": "5674cc1dc38c8ad7b150eacf57480b1d633085b9c4f70f2e7a342927533a9141",
+      "timestamp_utc": "2026-11-16T02:32:23.538651+00:00",
+      "actor_fields": {
+        "0x18": 1,
+        "0x19": 1,
+        "0x1a": 0,
+        "0x448": 1,
+        "0x449": 255,
+        "0x44a": 1,
+        "0x49f": 0
+      }
+    }
+  ],
+  "limits": [
+    "Native screenshot PCs were visually reviewed; PINE supplies no PC trace.",
+    "Selected event is ordinary player mode transition; visual action name remains unassigned.",
+    "Initialization of this global player actor has not been captured at function entry/return.",
+    "Following original update observed; corresponding C implementation is not yet integrated.",
+    "First smaller captures do not include every equipment/engine global used by transition bodies."
+  ]
+}

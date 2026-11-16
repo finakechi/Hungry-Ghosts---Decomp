@@ -1,0 +1,1583 @@
+{
+  "schema": "hg-player-connected-runtime/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "cases": [
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "player-initializer",
+      "before_sha256": "e83c3812de91a160b3908186f25b3b42a02a6589dea30159e624e10cea7dcc5b",
+      "after_sha256": "98cefaad03b9ea754a035e83ae4730a329056c08387cceb44a19246e8e51f3db",
+      "modeled_leaves": [
+        {
+          "entry": "0x1330f0",
+          "arguments": [
+            "0x3f9380",
+            "0x1",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 2,
+          "instruction_addresses": 2
+        },
+        {
+          "entry": "0x266a20",
+          "arguments": [
+            "0x3f9520",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 25,
+          "instruction_addresses": 25
+        },
+        {
+          "entry": "0x139ff0",
+          "arguments": [
+            "0x3f9360",
+            "0xda1ec0",
+            "0x6000000",
+            "0x0"
+          ],
+          "instructions": 20519,
+          "instruction_addresses": 549
+        },
+        {
+          "entry": "0x1b7f00",
+          "arguments": [
+            "0x3f9300",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 8,
+          "instruction_addresses": 8
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0x31",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0xaa",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x196ad0",
+          "arguments": [
+            "0xe8",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 122,
+          "instruction_addresses": 122
+        },
+        {
+          "entry": "0x144340",
+          "arguments": [
+            "0x3f9320",
+            "0x3f9300",
+            "0x3f9310",
+            "0x0"
+          ],
+          "instructions": 364,
+          "instruction_addresses": 218
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 300,
+          "instruction_addresses": 184
+        }
+      ],
+      "modeled_addresses": 1617,
+      "actor_matches": true,
+      "node_pool_matches": true
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "transition",
+      "before_sha256": "ffd11e74285bbe885a233bbdd9e8abf6ee2d4830139421d12f68db267595a886",
+      "after_sha256": "74ebfd47d3d78af37ac0545e15f3add25fa9f759fde88691094dc005a7d467d5",
+      "modeled_leaves": [],
+      "modeled_addresses": 0,
+      "actor_matches": true,
+      "node_pool_matches": true,
+      "input": {
+        "edge_3eaf00": "0x80",
+        "held_3eaf04": "0x80",
+        "word_3eaf06": "0x80",
+        "block_sha256": "4fbfecff165be5362949bfe17933a452d14fa6043b0b38a32ae40fbda869db22"
+      },
+      "gameplay_entry": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0x1",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_reconstructed": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "gameplay_original": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "probe_hits": {}
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0xe73f",
+            "expected": "0xe741"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "square",
+      "before_sha256": "d131225762f4d4b030935f99e0e32ecb7702ebd7de5e0cb54a32ded74db91ffe",
+      "after_sha256": "5f44d23f950b52b1326f0ce3abf642e156c74ead072208e4a68ca81ff819c13f",
+      "modeled_leaves": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 9783,
+          "instruction_addresses": 478
+        },
+        {
+          "entry": "0x15fe00",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 66221,
+          "instruction_addresses": 1814
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 35,
+          "instruction_addresses": 35
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        }
+      ],
+      "modeled_addresses": 2569,
+      "actor_matches": true,
+      "node_pool_matches": true,
+      "input": {
+        "edge_3eaf00": "0x80",
+        "held_3eaf04": "0x80",
+        "word_3eaf06": "0x80",
+        "block_sha256": "4fbfecff165be5362949bfe17933a452d14fa6043b0b38a32ae40fbda869db22"
+      },
+      "gameplay_entry": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_reconstructed": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "gameplay_original": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "probe_hits": {}
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 3,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e340",
+            "actual": "0x7fff7900",
+            "expected": "0xffff7900"
+          },
+          {
+            "address": "0x95e34c",
+            "actual": "0xff000000",
+            "expected": "0x0"
+          },
+          {
+            "address": "0x95e398",
+            "actual": "0xe740",
+            "expected": "0xe742"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "next",
+      "before_sha256": "44a1a040fecb7c8e03b19baf1cb079ddc1e275c0f6edffd2b9394c098dc7cf67",
+      "after_sha256": "68d8459c4033e4710254c9f8d9561a18262c912e1be5978246142483dcfb093a",
+      "modeled_leaves": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x188550",
+          "arguments": [
+            "0x41af3333",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3093,
+          "instruction_addresses": 618
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x17d930",
+          "arguments": [
+            "0x43700000",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3528,
+          "instruction_addresses": 1279
+        },
+        {
+          "entry": "0x15fe00",
+          "arguments": [
+            "0x3f92d0",
+            "0x1",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 66804,
+          "instruction_addresses": 2187
+        },
+        {
+          "entry": "0x120490",
+          "arguments": [
+            "0x4d9460",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 17,
+          "instruction_addresses": 17
+        },
+        {
+          "entry": "0x174900",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3364,
+          "instruction_addresses": 222
+        },
+        {
+          "entry": "0x13a060",
+          "arguments": [
+            "0x0",
+            "0x0",
+            "0x3f9360",
+            "0x600007f"
+          ],
+          "instructions": 13071,
+          "instruction_addresses": 523
+        },
+        {
+          "entry": "0x13a060",
+          "arguments": [
+            "0x0",
+            "0x41200000",
+            "0x3f9360",
+            "0x6000075"
+          ],
+          "instructions": 28679,
+          "instruction_addresses": 845
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        }
+      ],
+      "modeled_addresses": 4876,
+      "actor_matches": true,
+      "node_pool_matches": true,
+      "input": {
+        "edge_3eaf00": "0x0",
+        "held_3eaf04": "0x0",
+        "word_3eaf06": "0x0",
+        "block_sha256": "d5bdd2bb7b17ea4308eee1e7786b1952676167875bac15a793e8cf22ebcbb35c"
+      },
+      "gameplay_entry": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "gameplay_reconstructed": {
+        "state_19": "0x1",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x4d9460",
+        "flag_45f": "0x1"
+      },
+      "gameplay_original": {
+        "state_19": "0x1",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x4d9460",
+        "flag_45f": "0x1"
+      },
+      "probe_hits": {}
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0xe73b",
+            "expected": "0xe73d"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "case": "neutral",
+      "before_sha256": "9b70168f99a03919034b6771e08381914de3f3429c2de91004a4bc75115e82af",
+      "after_sha256": "5ee4ac212e5b9ded0fbde5e5c51517249aec91e7b5202ebc2969d509630b35fc",
+      "modeled_leaves": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 9783,
+          "instruction_addresses": 478
+        },
+        {
+          "entry": "0x15fe00",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 66221,
+          "instruction_addresses": 1814
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 35,
+          "instruction_addresses": 35
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        }
+      ],
+      "modeled_addresses": 2569,
+      "actor_matches": true,
+      "node_pool_matches": true,
+      "input": {
+        "edge_3eaf00": "0x0",
+        "held_3eaf04": "0x0",
+        "word_3eaf06": "0x0",
+        "block_sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+      },
+      "gameplay_entry": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_reconstructed": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_original": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "probe_hits": {
+        "transition_entry": 0
+      },
+      "scratch_seed": {
+        "scratch_range": [
+          "0x70000000",
+          "0x70000040"
+        ],
+        "source": "resume-square-edge-entry-001.json",
+        "source_sha256": "d131225762f4d4b030935f99e0e32ecb7702ebd7de5e0cb54a32ded74db91ffe",
+        "bytes_sha256": "d227056e1c9b480ffa55aff51c7f7a59576aa3e2d1e112a911dbd8ad9b8d9dc2",
+        "written_by_update": false,
+        "same_frame_return_equal": true,
+        "scene_variants": 2,
+        "scene_captures": [
+          "resume-ready-neutral-return-001",
+          "resume-ready-square-entry-001",
+          "resume-square-edge-entry-001",
+          "resume-equipment-transition-entry-001",
+          "resume-square-update-return-001",
+          "resume-equipment-next-entry-001",
+          "resume-equipment-consumer-entry-001",
+          "resume-equipment-next-return-001"
+        ],
+        "alternative_value_runs": [
+          {
+            "source": "resume-ready-square-entry-001",
+            "different_bytes": 2,
+            "differences": [
+              {
+                "address": "0x3f9674",
+                "actual": "0x424fb6eb",
+                "expected": "0x424fb70b"
+              }
+            ]
+          }
+        ],
+        "limitation": "Entry scratchpad not captured; supplied from an independent capture of the same scene."
+      },
+      "gameplay_unchanged": true
+    },
+    {
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 9,
+      "different_words": 6,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0xe73f",
+            "expected": "0xe741"
+          }
+        ]
+      },
+      "differences": [
+        {
+          "address": "0x3eaf00",
+          "actual": "0x0",
+          "expected": "0x80"
+        },
+        {
+          "address": "0x3eaf04",
+          "actual": "0x0",
+          "expected": "0x800080"
+        },
+        {
+          "address": "0x3f92e8",
+          "actual": "0x10101",
+          "expected": "0x1"
+        },
+        {
+          "address": "0x3f9718",
+          "actual": "0xff00",
+          "expected": "0x1ff01"
+        },
+        {
+          "address": "0x3f972c",
+          "actual": "0x0",
+          "expected": "0x1000000"
+        },
+        {
+          "address": "0x46e12c",
+          "actual": "0x0",
+          "expected": "0x100"
+        }
+      ],
+      "differences_truncated": false,
+      "case": "changed-input-control",
+      "before_sha256": "d131225762f4d4b030935f99e0e32ecb7702ebd7de5e0cb54a32ded74db91ffe",
+      "after_sha256": "5f44d23f950b52b1326f0ce3abf642e156c74ead072208e4a68ca81ff819c13f",
+      "modeled_leaves": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 9783,
+          "instruction_addresses": 478
+        },
+        {
+          "entry": "0x15fe00",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 66221,
+          "instruction_addresses": 1814
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 35,
+          "instruction_addresses": 35
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        }
+      ],
+      "modeled_addresses": 2569,
+      "actor_matches": false,
+      "node_pool_matches": true,
+      "input": {
+        "edge_3eaf00": "0x0",
+        "held_3eaf04": "0x0",
+        "word_3eaf06": "0x0",
+        "block_sha256": "5dcc1b5872dd9ff1c234501f1fefda01f664164e1583c3e1bb3dbea47588ab31"
+      },
+      "gameplay_entry": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_reconstructed": {
+        "state_19": "0x1",
+        "state_1a": "0x1",
+        "mode_448": "0x0",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x0",
+        "equipment_450": "0x0",
+        "flag_45f": "0x0"
+      },
+      "gameplay_original": {
+        "state_19": "0x0",
+        "state_1a": "0x0",
+        "mode_448": "0x1",
+        "request_449": "0xff",
+        "mode_copy_44a": "0x1",
+        "equipment_450": "0x0",
+        "flag_45f": "0x1"
+      },
+      "probe_hits": {
+        "transition_entry": 0
+      },
+      "input_mutation": {
+        "0x3eaf00": [
+          "0x80",
+          "0x0"
+        ],
+        "0x3eaf01": [
+          "0x0",
+          "0x0"
+        ],
+        "0x3eaf04": [
+          "0x80",
+          "0x0"
+        ],
+        "0x3eaf05": [
+          "0x0",
+          "0x0"
+        ],
+        "0x3eaf06": [
+          "0x80",
+          "0x0"
+        ],
+        "0x3eaf07": [
+          "0x0",
+          "0x0"
+        ]
+      },
+      "control_expectation": "must differ from original output"
+    },
+    {
+      "case": "connected-gameplay-sequence",
+      "result": "passed",
+      "stages": [
+        {
+          "stage": "initializer",
+          "result": "passed",
+          "different_bytes": 0,
+          "actor_matches": true
+        },
+        {
+          "stage": "square-update",
+          "result": "passed",
+          "compared_bytes": 33423360,
+          "different_bytes": 0,
+          "different_words": 0,
+          "stack_excluded": {
+            "start": "0x1fe0000",
+            "end_exclusive": "0x2000000"
+          },
+          "external_dma": {
+            "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+            "buffers": [
+              {
+                "port": 0,
+                "slot": 0,
+                "start": "0x95e340",
+                "end_exclusive": "0x95e440"
+              }
+            ],
+            "different_bytes": 1,
+            "modeled_accesses": [],
+            "differences": [
+              {
+                "address": "0x95e418",
+                "actual": "0xe73f",
+                "expected": "0xe741"
+              }
+            ]
+          },
+          "differences": [],
+          "differences_truncated": false,
+          "before_sha256": "d131225762f4d4b030935f99e0e32ecb7702ebd7de5e0cb54a32ded74db91ffe",
+          "after_sha256": "5f44d23f950b52b1326f0ce3abf642e156c74ead072208e4a68ca81ff819c13f",
+          "modeled_addresses": 2569,
+          "actor_matches": true,
+          "node_pool_matches": true,
+          "input": {
+            "edge_3eaf00": "0x80",
+            "held_3eaf04": "0x80",
+            "word_3eaf06": "0x80",
+            "block_sha256": "4fbfecff165be5362949bfe17933a452d14fa6043b0b38a32ae40fbda869db22"
+          },
+          "gameplay_entry": {
+            "state_19": "0x1",
+            "state_1a": "0x1",
+            "mode_448": "0x0",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x0",
+            "equipment_450": "0x0",
+            "flag_45f": "0x0"
+          },
+          "gameplay_reconstructed": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "gameplay_original": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "probe_hits": {
+            "transition_entry": 1
+          }
+        },
+        {
+          "stage": "square-transition-entry",
+          "result": "passed",
+          "compared_bytes": 33423360,
+          "different_bytes": 0,
+          "different_words": 0,
+          "stack_excluded": {
+            "start": "0x1fe0000",
+            "end_exclusive": "0x2000000"
+          },
+          "external_dma": {
+            "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+            "buffers": [
+              {
+                "port": 0,
+                "slot": 0,
+                "start": "0x95e340",
+                "end_exclusive": "0x95e440"
+              }
+            ],
+            "different_bytes": 1,
+            "modeled_accesses": [],
+            "differences": [
+              {
+                "address": "0x95e418",
+                "actual": "0xe73f",
+                "expected": "0xe741"
+              }
+            ]
+          },
+          "differences": [],
+          "differences_truncated": false,
+          "probe": "transition_entry",
+          "capture": "resume-equipment-transition-entry-001.json",
+          "capture_sha256": "ffd11e74285bbe885a233bbdd9e8abf6ee2d4830139421d12f68db267595a886",
+          "hits": 1,
+          "gameplay_reconstructed": {
+            "state_19": "0x1",
+            "state_1a": "0x1",
+            "mode_448": "0x0",
+            "request_449": "0x1",
+            "mode_copy_44a": "0x0",
+            "equipment_450": "0x0",
+            "flag_45f": "0x0"
+          },
+          "gameplay_original": {
+            "state_19": "0x1",
+            "state_1a": "0x1",
+            "mode_448": "0x0",
+            "request_449": "0x1",
+            "mode_copy_44a": "0x0",
+            "equipment_450": "0x0",
+            "flag_45f": "0x0"
+          }
+        },
+        {
+          "stage": "next-update",
+          "result": "passed",
+          "compared_bytes": 33423360,
+          "different_bytes": 0,
+          "different_words": 0,
+          "stack_excluded": {
+            "start": "0x1fe0000",
+            "end_exclusive": "0x2000000"
+          },
+          "external_dma": {
+            "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+            "buffers": [
+              {
+                "port": 0,
+                "slot": 0,
+                "start": "0x95e340",
+                "end_exclusive": "0x95e440"
+              }
+            ],
+            "different_bytes": 3,
+            "modeled_accesses": [],
+            "differences": [
+              {
+                "address": "0x95e340",
+                "actual": "0x7fff7900",
+                "expected": "0xffff7900"
+              },
+              {
+                "address": "0x95e34c",
+                "actual": "0xff000000",
+                "expected": "0x0"
+              },
+              {
+                "address": "0x95e398",
+                "actual": "0xe740",
+                "expected": "0xe742"
+              }
+            ]
+          },
+          "differences": [],
+          "differences_truncated": false,
+          "before_sha256": "44a1a040fecb7c8e03b19baf1cb079ddc1e275c0f6edffd2b9394c098dc7cf67",
+          "after_sha256": "68d8459c4033e4710254c9f8d9561a18262c912e1be5978246142483dcfb093a",
+          "modeled_addresses": 4876,
+          "actor_matches": true,
+          "node_pool_matches": true,
+          "input": {
+            "edge_3eaf00": "0x0",
+            "held_3eaf04": "0x0",
+            "word_3eaf06": "0x0",
+            "block_sha256": "d5bdd2bb7b17ea4308eee1e7786b1952676167875bac15a793e8cf22ebcbb35c"
+          },
+          "gameplay_entry": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "gameplay_reconstructed": {
+            "state_19": "0x1",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x4d9460",
+            "flag_45f": "0x1"
+          },
+          "gameplay_original": {
+            "state_19": "0x1",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x4d9460",
+            "flag_45f": "0x1"
+          },
+          "probe_hits": {
+            "consumer_entry": 1,
+            "transition_entry": 0
+          }
+        },
+        {
+          "stage": "square-to-next-handoff",
+          "gameplay_produced": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "gameplay_observed_by_next": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "actor_bytes_changed_outside_scope": [
+            "0x304",
+            "0x344",
+            "0x384",
+            "0x42b"
+          ],
+          "result": "passed"
+        },
+        {
+          "stage": "next-consumer-entry",
+          "result": "passed",
+          "compared_bytes": 33423360,
+          "different_bytes": 0,
+          "different_words": 0,
+          "stack_excluded": {
+            "start": "0x1fe0000",
+            "end_exclusive": "0x2000000"
+          },
+          "external_dma": {
+            "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+            "buffers": [
+              {
+                "port": 0,
+                "slot": 0,
+                "start": "0x95e340",
+                "end_exclusive": "0x95e440"
+              }
+            ],
+            "different_bytes": 0,
+            "modeled_accesses": [],
+            "differences": []
+          },
+          "differences": [],
+          "differences_truncated": false,
+          "probe": "consumer_entry",
+          "capture": "resume-equipment-consumer-entry-001.json",
+          "capture_sha256": "01b0f58f0cb72abc94ad6a5146e1a7ae16506eaa3960a421734ff19d31e04fa7",
+          "hits": 1,
+          "gameplay_reconstructed": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          },
+          "gameplay_original": {
+            "state_19": "0x0",
+            "state_1a": "0x0",
+            "mode_448": "0x1",
+            "request_449": "0xff",
+            "mode_copy_44a": "0x1",
+            "equipment_450": "0x0",
+            "flag_45f": "0x1"
+          }
+        }
+      ],
+      "gameplay_checks": {
+        "square_edge_consumed": true,
+        "transition_called_once": true,
+        "mode_entered": true,
+        "next_sees_mode": true,
+        "next_consumer_called_once": true,
+        "next_not_retransitioned": true,
+        "next_state_19_set": true
+      },
+      "modeled_leaves": {
+        "square": [
+          {
+            "entry": "0x15d770",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 33,
+            "instruction_addresses": 33
+          },
+          {
+            "entry": "0x13a050",
+            "arguments": [
+              "0x3f800000",
+              "0x3f9360",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 9783,
+            "instruction_addresses": 478
+          },
+          {
+            "entry": "0x15fe00",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 66221,
+            "instruction_addresses": 1814
+          },
+          {
+            "entry": "0x161110",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 35,
+            "instruction_addresses": 35
+          },
+          {
+            "entry": "0x188650",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 6164,
+            "instruction_addresses": 720
+          },
+          {
+            "entry": "0x15bf30",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 3443,
+            "instruction_addresses": 650
+          },
+          {
+            "entry": "0x120830",
+            "arguments": [
+              "0x3f9300",
+              "0x3f9660",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 31,
+            "instruction_addresses": 31
+          }
+        ],
+        "next": [
+          {
+            "entry": "0x15d770",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 33,
+            "instruction_addresses": 33
+          },
+          {
+            "entry": "0x188550",
+            "arguments": [
+              "0x41af3333",
+              "0x3f92d0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 3093,
+            "instruction_addresses": 618
+          },
+          {
+            "entry": "0x188650",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 6164,
+            "instruction_addresses": 720
+          },
+          {
+            "entry": "0x15bf30",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 3443,
+            "instruction_addresses": 650
+          },
+          {
+            "entry": "0x17d930",
+            "arguments": [
+              "0x43700000",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 3528,
+            "instruction_addresses": 1279
+          },
+          {
+            "entry": "0x15fe00",
+            "arguments": [
+              "0x3f92d0",
+              "0x1",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 66804,
+            "instruction_addresses": 2187
+          },
+          {
+            "entry": "0x120490",
+            "arguments": [
+              "0x4d9460",
+              "0x3f92d0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 17,
+            "instruction_addresses": 17
+          },
+          {
+            "entry": "0x174900",
+            "arguments": [
+              "0x3f92d0",
+              "0x0",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 3364,
+            "instruction_addresses": 222
+          },
+          {
+            "entry": "0x13a060",
+            "arguments": [
+              "0x0",
+              "0x0",
+              "0x3f9360",
+              "0x600007f"
+            ],
+            "instructions": 13071,
+            "instruction_addresses": 523
+          },
+          {
+            "entry": "0x13a060",
+            "arguments": [
+              "0x0",
+              "0x41200000",
+              "0x3f9360",
+              "0x6000075"
+            ],
+            "instructions": 28679,
+            "instruction_addresses": 845
+          },
+          {
+            "entry": "0x120830",
+            "arguments": [
+              "0x3f9300",
+              "0x3f9660",
+              "0x0",
+              "0x0"
+            ],
+            "instructions": 31,
+            "instruction_addresses": 31
+          }
+        ]
+      }
+    }
+  ],
+  "verification_sources": {
+    "src/resource_loader.c": "6b91ec37595dea574547dfedc6ff82a41a8f217686c4b0bd786c87750e62cbf8",
+    "src/resource_loader.h": "2437e74f5cca09a1ac57ffb9c402bb1ac8abedf77b68f75ec3795670778dc0f9",
+    "tools/ee_subset.py": "5569851df96e646cebe09a042f9b6f1a0e45d4d625713ce333879e8fb5c90957",
+    "tools/verify_player_connected_runtime.py": "8b3d7370ad6127a5ada3fbfb4b9268dcf714c6c7064b6fac3327863ff02d08b3"
+  },
+  "limitations": [
+    "Hybrid C control/resource orchestration with original-instruction-modeled engine/math leaves; not all-C equivalence.",
+    "Paused RAM samples do not establish PCs; native debugger screenshots bind observations separately.",
+    "Exact comparison, no FP tolerance or expected-output replay. All reported mismatches remain failures.",
+    "Finite functional math model omits exceptional FP behavior, flags, timing and hardware.",
+    "Explicit guest transient stack interval omitted; scratchpad is used only when captured or computed."
+  ],
+  "runtime_negative_controls": [
+    {
+      "control": "wrong-square-edge-source",
+      "compiled": true,
+      "mutated_source_sha256": "4f59d87fded40d5c48a76e03f398ae207f848f83eb1305b6547bd411a3896232",
+      "result": "rejected",
+      "failed_stages": [
+        "square-update",
+        "square-transition-entry",
+        "square-to-next-handoff"
+      ],
+      "failed_checks": [
+        "transition_called_once",
+        "mode_entered"
+      ]
+    },
+    {
+      "control": "lost-transition-actor",
+      "compiled": true,
+      "mutated_source_sha256": "4f1e82448649aac3bfc93adf7d65f5e4031f1fd8542e06c2a0409d7e640b0937",
+      "result": "rejected",
+      "failed_stages": [
+        "initializer",
+        "square-update",
+        "square-transition-entry",
+        "square-to-next-handoff"
+      ],
+      "failed_checks": [
+        "transition_called_once",
+        "mode_entered"
+      ]
+    },
+    {
+      "control": "skipped-equipment-transition",
+      "compiled": true,
+      "mutated_source_sha256": "8bc1117a5b56dfc9f528aa5dafd701321c42b3ba384817da2f2d37b726ad6a1d",
+      "result": "rejected",
+      "failed_stages": [
+        "square-update",
+        "square-transition-entry",
+        "square-to-next-handoff"
+      ],
+      "failed_checks": [
+        "transition_called_once",
+        "mode_entered"
+      ]
+    },
+    {
+      "control": "wrong-entered-mode",
+      "compiled": true,
+      "mutated_source_sha256": "bc9b2d2bb5065923cdd67b3d913f3086e905a59af3a04feceee9130c9cb17e20",
+      "result": "rejected",
+      "failed_stages": [
+        "square-update",
+        "square-to-next-handoff"
+      ],
+      "failed_checks": [
+        "mode_entered"
+      ]
+    },
+    {
+      "control": "wrong-subsequent-update-state",
+      "compiled": true,
+      "mutated_source_sha256": "ab9678b73fa429f93fa318a260852462247502fb334eab4c0f06b5798d38dc7f",
+      "result": "rejected",
+      "failed_stages": [
+        "next-update"
+      ],
+      "failed_checks": [
+        "next_state_19_set"
+      ]
+    },
+    {
+      "control": "div-s-chop-rounding",
+      "compiled": false,
+      "result": "rejected",
+      "different_words": 149
+    }
+  ]
+}

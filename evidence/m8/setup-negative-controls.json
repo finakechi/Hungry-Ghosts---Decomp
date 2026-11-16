@@ -1,0 +1,26 @@
+[
+  {
+    "control": "lost-fifth-argument",
+    "result": "rejected",
+    "compiled": true,
+    "test": "test_six_arguments_and_reloaded_handle",
+    "source_sha256": "a610c5309d5dc80f43e1fd05908566c4f45ce18ea5ae2b62a8d230b614a9515d",
+    "reason": "Lists differ: [('ca[195 chars]80, 5243024, 0), ('call', 1286128, 5243024, 7340032, 34661)] != [('ca[195 chars]80, 5243024, 4660), ('call', 1286128, 5243024, 7340032, 34661)]\n\nFirst differing element 5"
+  },
+  {
+    "control": "early-timer-expiry",
+    "result": "rejected",
+    "compiled": true,
+    "test": "test_input_transition_followed_by_held_release_and_expiry",
+    "source_sha256": "b87e288fafbd27a73c9753663f9a7b404053cc27bac988407a6ca7c290145ed0",
+    "reason": "0 != 2"
+  },
+  {
+    "control": "lost-active-dispatch",
+    "result": "rejected",
+    "compiled": true,
+    "test": "test_connected_area_setup_and_active_dispatch",
+    "source_sha256": "f01f4316fce84d52d8b90fe1041af1bef62bd873261dd5277061a8033d736bcd",
+    "reason": "('call', 1619648, 5242880, 5243600) not found in [('call', 1153736, 4108376, 0, 12)]"
+  }
+]

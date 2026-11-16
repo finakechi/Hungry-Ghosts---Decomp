@@ -1,0 +1,58 @@
+{
+  "result": "passed",
+  "evidence_class": "runtime-code-presence-only",
+  "metadata_before": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 0
+  },
+  "metadata_after": {
+    "version": "PCSX2 v2.8.2",
+    "title": "HUNGRY GHOSTS",
+    "serial": "SCPS-15046",
+    "uuid": "91aa4b28",
+    "status": 0
+  },
+  "functions": [
+    {
+      "entry": "0x00159ad0",
+      "words": 132,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00159570",
+      "words": 337,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00159380",
+      "words": 36,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00158d30",
+      "words": 22,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00158e20",
+      "words": 196,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00175190",
+      "words": 1762,
+      "result": "matched-original-ELF"
+    },
+    {
+      "entry": "0x00158a10",
+      "words": 179,
+      "result": "matched-original-ELF"
+    }
+  ],
+  "limitations": [
+    "Sequential code reads, not instruction execution proof."
+  ]
+}
