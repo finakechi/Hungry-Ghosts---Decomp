@@ -1,32 +1,58 @@
 # Hungry Ghosts — start here
 
-## M8 connected gameplay result — 2026-11-16
+## M8 connected gameplay result — 2026-11-16 (delivery addendum, same day)
 
-**The connected gameplay operation is implemented and verified against the
-original game. Private Drive delivery and publication are still pending.** Branch
-`research/m8-first-gameplay-slice`. Global player 003f92d0 is compared, with
-0 differing bytes over 33,423,360 EE RAM bytes per stop, across:
-initializer 158a10, Square-edge update 159570 (+448/+44a 0→1), the C state at
-the native 158e20 transition stop, the following update and its 175190 consumer
-stop. A no-input control and a changed-input control pass. Five compiled C
-defects and chop-rounded `DIV.S` are rejected by the original-game comparison.
+**Resume here.** M8 is implemented and compared against the original game, and its
+private Drive backup is project-reported complete. PR
+[#7](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/7) is **merged into
+`main`** as merge commit `4034189bd84df9c1d89c99b63300d9a08f58f8ef`. Its former
+branch head `9fc0eb33afa712e2726a4bd26148739396c33f7f` is an ancestor of that merge,
+not the merge commit. M8 implementation commit:
+`0fd81f60a75163528730adcf8b0163c8b4ffd00a`. Retail inputs (original SCPS-15046
+image/ELF, PS2DInfo, PCSX2 captures under ignored `local/m8/`) are owner-private and
+absent from CI. **Blockers:** none known. **No M9 or final technical objective is
+selected.** **ONE next action:** after the administrative documentation is on `main`,
+Noah chooses the next development direction. Do not repeat the backup or start M9
+before that choice.
 
-Recovery repaired an invalid evidence reference encoding (it had stopped the
-interrupted regressions), a measured `DIV.S` rounding-model error (PCSX2
-default: Nearest), and an undeclared libpad IOP-DMA buffer, now an explicit
-external domain. Interrupted files are hash-preserved in
-`local/m8/recovery-20261116T171425Z/`. 11 new functions add 880 words; M8 totals
-35 functions / 2,251 words / 9,004 bytes. 191 synthetic tests, all instruction
-models, M1–M7 regressions, compiled controls and ASan/UBSan pass.
-Hybrid limits (modeled math/engine leaves, out-of-scope inter-frame writers,
-one control's seeded 64-byte camera matrix) are in [docs/M8.md](docs/M8.md).
+Evidence levels (see [docs/M8.md](docs/M8.md)):
 
-Delivery: local snapshot `20261116T180057Z-544f2b16d903` (3,429 files)
-passes verification, isolated restore and recovered-Git fsck at implementation
-`0fd81f6`. **The Drive upload/fresh download/restore was not performed** (no
-connector or rclone). Noah authorized pushing and opening the PR without it, so
-that gate remains outstanding. The PR to main is left open. One next action:
-upload and verify that snapshot through the Drive connector.
+- **Original-game comparison (recorded earlier 2026-11-16):** global player
+  003f92d0, 0 differing bytes over 33,423,360 EE RAM bytes per stop, across
+  initializer 158a10, Square-edge update 159570, the C state at the 158e20
+  transition stop, the following update and its 175190 consumer stop. No-input and
+  changed-input controls pass; five compiled C defects and chop-rounded `DIV.S`
+  are rejected. 35 M8 functions / 2,251 words / 9,004 bytes.
+- **Tests:** 191 synthetic tests and the 52-check regression inventory
+  ([connected-checks.json](evidence/m8/connected-checks.json)) passed when
+  recorded. The 191 synthetic tests were re-run at the documentation-cleanup
+  stage (Python 3.14, GCC, JDK 21): pass. The 52-check inventory and original-game
+  captures were not re-run. PR CI (Python 3.10/3.14) succeeded at the PR #7 head before merge.
+- **Private backup (project-reported complete; partly independently inspected):**
+  snapshot `20261116T180057Z-544f2b16d903` (3,429 files / 2,750,856,008 bytes) at
+  implementation `0fd81f6`. The project handoff reports it was uploaded through the
+  configured rclone Drive connection, freshly downloaded, verified against trusted
+  checksums, restored in isolation and its Git history checked. The cleanup session
+  found the retained downloaded copy and restoration directory under ignored
+  `local/`: archive/manifest SHA-256 match the snapshot, all 3,429 restored files
+  match the manifest, and the bundle verifies as complete history with HEAD
+  `0fd81f6`. It found **no local Drive transport receipt** and did not contact Drive,
+  so the upload and the download's Drive origin rest on the owner/project report.
+  The snapshot predates `9fc0eb3` and every later commit, including the merge.
+- **Limits:** hybrid reconstruction with modeled math/engine leaves; not
+  whole-game equivalence, all-C, static recompilation or byte matching. 175190 is
+  reconstructed for state 0 only; one control's 64-byte camera matrix comes from a
+  separate capture; FP flags, exceptional values, timing and external runtime
+  effects are not modeled.
+
+Recovery of the interrupted session repaired an invalid evidence reference
+encoding, a measured `DIV.S` rounding-model error (PCSX2 default: Nearest) and an
+undeclared libpad IOP-DMA buffer (now an explicit external domain). Interrupted
+files are hash-preserved in `local/m8/recovery-20261116T171425Z/`.
+
+History below: the original M8 delivery wording ("Drive pending", 2026-11-16
+earlier in the day) is superseded by this addendum and retained in
+[docs/M8.md](docs/M8.md) as the contemporary record.
 
 ## M7 resource preparation — 2026-11-15
 
