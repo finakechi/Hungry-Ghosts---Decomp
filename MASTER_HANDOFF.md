@@ -21,11 +21,12 @@ models, M1–M7 regressions, compiled controls and ASan/UBSan pass.
 Hybrid limits (modeled math/engine leaves, out-of-scope inter-frame writers,
 one control's seeded 64-byte camera matrix) are in [docs/M8.md](docs/M8.md).
 
-Delivery: implementation committed locally, with a local snapshot. **The Drive
-upload/fresh download/isolated restore is blocked** (no Drive connector or rclone
-in this session), so there is no push, PR or CI yet. One next action: attach the
-Google Drive connector (or configure rclone), upload and verify the snapshot,
-then push normally and open the PR to main.
+Delivery: local snapshot `20261116T180057Z-544f2b16d903` (3,429 files)
+passes verification, isolated restore and recovered-Git fsck at implementation
+`0fd81f6`. **The Drive upload/fresh download/restore was not performed** (no
+connector or rclone). Noah authorized pushing and opening the PR without it, so
+that gate remains outstanding. The PR to main is left open. One next action:
+upload and verify that snapshot through the Drive connector.
 
 ## M7 resource preparation — 2026-11-15
 
