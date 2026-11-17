@@ -1,0 +1,5082 @@
+{
+  "schema": "hg-m10-dependency-survey/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "representative_frames": [
+    {
+      "frame": "f00",
+      "result": "passed",
+      "modeled_calls": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 12538,
+          "instruction_addresses": 365
+        },
+        {
+          "entry": "0x160ff0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 49,
+          "instruction_addresses": 49
+        },
+        {
+          "entry": "0x160c60",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 249,
+          "instruction_addresses": 249
+        },
+        {
+          "entry": "0x143560",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 42,
+          "instruction_addresses": 42
+        },
+        {
+          "entry": "0x143620",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 43,
+          "instruction_addresses": 43
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x70000b80",
+            "0x70000b90",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15ebc0",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 61824,
+          "instruction_addresses": 969
+        },
+        {
+          "entry": "0x15fc10",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 4064,
+          "instruction_addresses": 902
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 35,
+          "instruction_addresses": 35
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15e1d0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 569,
+          "instruction_addresses": 316
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 303,
+          "instruction_addresses": 187
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d567750",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143b90",
+          "arguments": [
+            "0x0",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 105,
+          "instruction_addresses": 75
+        },
+        {
+          "entry": "0x12c640",
+          "arguments": [
+            "0x3f9860",
+            "0x70000500",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 293,
+          "instruction_addresses": 208
+        },
+        {
+          "entry": "0x12cce0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 49,
+          "instruction_addresses": 49
+        },
+        {
+          "entry": "0x12c3d0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 643,
+          "instruction_addresses": 474
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d5675e4",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        }
+      ],
+      "modeled_instruction_addresses": 3993,
+      "bus_calls": [
+        [
+          "0x15d770",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a050",
+          "0x3f800000",
+          "0x3f9360",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160ff0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160c60",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143560",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143620",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x70000b80",
+          "0x70000b90",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15ebc0",
+          "0x3fc90fdb",
+          "0x3f92d0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15fc10",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x161110",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x188650",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15bf30",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x3f9300",
+          "0x3f9660",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15e1d0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a240",
+          "0x3f9360",
+          "0x3f9320",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x267450",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d567750",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143b90",
+          "0x0",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x12c640",
+          "0x3f9860",
+          "0x70000500",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12cce0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12c3d0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d5675e4",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ]
+      ],
+      "comparison": {
+        "result": "passed",
+        "compared_bytes": 33423360,
+        "different_bytes": 0,
+        "different_words": 0,
+        "stack_excluded": {
+          "start": "0x1fe0000",
+          "end_exclusive": "0x2000000"
+        },
+        "external_dma": {
+          "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+          "buffers": [
+            {
+              "port": 0,
+              "slot": 0,
+              "start": "0x95e340",
+              "end_exclusive": "0x95e440"
+            }
+          ],
+          "different_bytes": 1,
+          "modeled_accesses": [],
+          "differences": [
+            {
+              "address": "0x95e398",
+              "actual": "0x2700",
+              "expected": "0x2702"
+            }
+          ]
+        },
+        "differences": [],
+        "differences_truncated": false,
+        "scratchpad": {
+          "compared_bytes": 16384,
+          "different_bytes": 0,
+          "differences": []
+        }
+      }
+    },
+    {
+      "frame": "f03",
+      "result": "passed",
+      "modeled_calls": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 12538,
+          "instruction_addresses": 365
+        },
+        {
+          "entry": "0x160ff0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 56,
+          "instruction_addresses": 56
+        },
+        {
+          "entry": "0x160c60",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 249,
+          "instruction_addresses": 249
+        },
+        {
+          "entry": "0x143560",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 42,
+          "instruction_addresses": 42
+        },
+        {
+          "entry": "0x143620",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 43,
+          "instruction_addresses": 43
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x70000b80",
+            "0x70000b90",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x120580",
+          "arguments": [
+            "0x4242d706",
+            "0x43848000",
+            "0x70000b80",
+            "0x0"
+          ],
+          "instructions": 62,
+          "instruction_addresses": 62
+        },
+        {
+          "entry": "0x15ebc0",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 62198,
+          "instruction_addresses": 969
+        },
+        {
+          "entry": "0x15fc10",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 4064,
+          "instruction_addresses": 902
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 23029,
+          "instruction_addresses": 879
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15e1d0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 569,
+          "instruction_addresses": 316
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 303,
+          "instruction_addresses": 187
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d567750",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143b90",
+          "arguments": [
+            "0x0",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 105,
+          "instruction_addresses": 75
+        },
+        {
+          "entry": "0x12c640",
+          "arguments": [
+            "0x3f9860",
+            "0x70000500",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 293,
+          "instruction_addresses": 208
+        },
+        {
+          "entry": "0x12cce0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 49,
+          "instruction_addresses": 49
+        },
+        {
+          "entry": "0x12c3d0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 643,
+          "instruction_addresses": 474
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d5675e6",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        }
+      ],
+      "modeled_instruction_addresses": 4519,
+      "bus_calls": [
+        [
+          "0x15d770",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a050",
+          "0x3f800000",
+          "0x3f9360",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160ff0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160c60",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143560",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143620",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x70000b80",
+          "0x70000b90",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120580",
+          "0x4242d706",
+          "0x43848000",
+          "0x70000b80",
+          "0x0"
+        ],
+        [
+          "0x15ebc0",
+          "0x3fc90fdb",
+          "0x3f92d0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15fc10",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x161110",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x119910",
+          "0x4d6118",
+          "0x4d60f0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d6048",
+          "0x4d6020",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5f78",
+          "0x4d5f50",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5ea8",
+          "0x4d5e80",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5dd8",
+          "0x4d5db0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5d08",
+          "0x4d5ce0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5c38",
+          "0x4d5c10",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5b68",
+          "0x4d5b40",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5a98",
+          "0x4d5a70",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d59c8",
+          "0x4d59a0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d58f8",
+          "0x4d58d0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5828",
+          "0x4d5800",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5758",
+          "0x4d5730",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5688",
+          "0x4d5660",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d55b8",
+          "0x4d5590",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d54e8",
+          "0x4d54c0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5418",
+          "0x4d53f0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5348",
+          "0x4d5320",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5278",
+          "0x4d5250",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d51a8",
+          "0x4d5180",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d50d8",
+          "0x4d50b0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d5008",
+          "0x4d4fe0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4f38",
+          "0x4d4f10",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4e68",
+          "0x4d4e40",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4d98",
+          "0x4d4d70",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4cc8",
+          "0x4d4ca0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4bf8",
+          "0x4d4bd0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4b28",
+          "0x4d4b00",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4a58",
+          "0x4d4a30",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4988",
+          "0x4d4960",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d48b8",
+          "0x4d4890",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d47e8",
+          "0x4d47c0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4718",
+          "0x4d46f0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4648",
+          "0x4d4620",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4578",
+          "0x4d4550",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d44a8",
+          "0x4d4480",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d43d8",
+          "0x4d43b0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4308",
+          "0x4d42e0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4238",
+          "0x4d4210",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4168",
+          "0x4d4140",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d4098",
+          "0x4d4070",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3fc8",
+          "0x4d3fa0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3ef8",
+          "0x4d3ed0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3e28",
+          "0x4d3e00",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3d58",
+          "0x4d3d30",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3c88",
+          "0x4d3c60",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3bb8",
+          "0x4d3b90",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x119910",
+          "0x4d3ae8",
+          "0x4d3ac0",
+          "0x28",
+          "0x6000001"
+        ],
+        [
+          "0x188650",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15bf30",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x3f9300",
+          "0x3f9660",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15e1d0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a240",
+          "0x3f9360",
+          "0x3f9320",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x267450",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d567750",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143b90",
+          "0x0",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x12c640",
+          "0x3f9860",
+          "0x70000500",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12cce0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12c3d0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d5675e6",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ]
+      ],
+      "comparison": {
+        "result": "passed",
+        "compared_bytes": 33423360,
+        "different_bytes": 0,
+        "different_words": 0,
+        "stack_excluded": {
+          "start": "0x1fe0000",
+          "end_exclusive": "0x2000000"
+        },
+        "external_dma": {
+          "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+          "buffers": [
+            {
+              "port": 0,
+              "slot": 0,
+              "start": "0x95e340",
+              "end_exclusive": "0x95e440"
+            }
+          ],
+          "different_bytes": 1,
+          "modeled_accesses": [],
+          "differences": [
+            {
+              "address": "0x95e418",
+              "actual": "0x2703",
+              "expected": "0x2705"
+            }
+          ]
+        },
+        "differences": [],
+        "differences_truncated": false,
+        "scratchpad": {
+          "compared_bytes": 16384,
+          "different_bytes": 0,
+          "differences": []
+        }
+      }
+    },
+    {
+      "frame": "f09",
+      "result": "passed",
+      "modeled_calls": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 12538,
+          "instruction_addresses": 365
+        },
+        {
+          "entry": "0x160ff0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 56,
+          "instruction_addresses": 56
+        },
+        {
+          "entry": "0x160c60",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 249,
+          "instruction_addresses": 249
+        },
+        {
+          "entry": "0x143560",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 42,
+          "instruction_addresses": 42
+        },
+        {
+          "entry": "0x143620",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 43,
+          "instruction_addresses": 43
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x70000b80",
+            "0x70000b90",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x120580",
+          "arguments": [
+            "0x4243bef3",
+            "0x43848000",
+            "0x70000b80",
+            "0x0"
+          ],
+          "instructions": 62,
+          "instruction_addresses": 62
+        },
+        {
+          "entry": "0x15ebc0",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 62198,
+          "instruction_addresses": 969
+        },
+        {
+          "entry": "0x15fc10",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 4064,
+          "instruction_addresses": 902
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 51,
+          "instruction_addresses": 51
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15e1d0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 569,
+          "instruction_addresses": 316
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 303,
+          "instruction_addresses": 187
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d567750",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143b90",
+          "arguments": [
+            "0x0",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 105,
+          "instruction_addresses": 75
+        },
+        {
+          "entry": "0x12c640",
+          "arguments": [
+            "0x3f9860",
+            "0x70000500",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 293,
+          "instruction_addresses": 208
+        },
+        {
+          "entry": "0x12cce0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 49,
+          "instruction_addresses": 49
+        },
+        {
+          "entry": "0x12c3d0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 643,
+          "instruction_addresses": 474
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d5675e4",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        }
+      ],
+      "modeled_instruction_addresses": 4028,
+      "bus_calls": [
+        [
+          "0x15d770",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a050",
+          "0x3f800000",
+          "0x3f9360",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160ff0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160c60",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143560",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143620",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x70000b80",
+          "0x70000b90",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120580",
+          "0x4243bef3",
+          "0x43848000",
+          "0x70000b80",
+          "0x0"
+        ],
+        [
+          "0x15ebc0",
+          "0x3fc90fdb",
+          "0x3f92d0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15fc10",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x161110",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x188650",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15bf30",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x3f9300",
+          "0x3f9660",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15e1d0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a240",
+          "0x3f9360",
+          "0x3f9320",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x267450",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d567750",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143b90",
+          "0x0",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x12c640",
+          "0x3f9860",
+          "0x70000500",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12cce0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12c3d0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d5675e4",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ]
+      ],
+      "comparison": {
+        "result": "passed",
+        "compared_bytes": 33423360,
+        "different_bytes": 0,
+        "different_words": 0,
+        "stack_excluded": {
+          "start": "0x1fe0000",
+          "end_exclusive": "0x2000000"
+        },
+        "external_dma": {
+          "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+          "buffers": [
+            {
+              "port": 0,
+              "slot": 0,
+              "start": "0x95e340",
+              "end_exclusive": "0x95e440"
+            }
+          ],
+          "different_bytes": 2,
+          "modeled_accesses": [],
+          "differences": [
+            {
+              "address": "0x95e3c4",
+              "actual": "0x7f7f7f",
+              "expected": "0x7f7f7f7f"
+            },
+            {
+              "address": "0x95e418",
+              "actual": "0x2709",
+              "expected": "0x270b"
+            }
+          ]
+        },
+        "differences": [],
+        "differences_truncated": false,
+        "scratchpad": {
+          "compared_bytes": 16384,
+          "different_bytes": 0,
+          "differences": []
+        }
+      }
+    },
+    {
+      "frame": "f10",
+      "result": "passed",
+      "modeled_calls": [
+        {
+          "entry": "0x15d770",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 33,
+          "instruction_addresses": 33
+        },
+        {
+          "entry": "0x13a050",
+          "arguments": [
+            "0x3f800000",
+            "0x3f9360",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 12538,
+          "instruction_addresses": 365
+        },
+        {
+          "entry": "0x160ff0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 56,
+          "instruction_addresses": 56
+        },
+        {
+          "entry": "0x160c60",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 249,
+          "instruction_addresses": 249
+        },
+        {
+          "entry": "0x143560",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 42,
+          "instruction_addresses": 42
+        },
+        {
+          "entry": "0x143620",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 43,
+          "instruction_addresses": 43
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x70000b80",
+            "0x70000b90",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15ebc0",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x3f92d0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 62198,
+          "instruction_addresses": 969
+        },
+        {
+          "entry": "0x15fc10",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 4064,
+          "instruction_addresses": 902
+        },
+        {
+          "entry": "0x161110",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 51,
+          "instruction_addresses": 51
+        },
+        {
+          "entry": "0x188650",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 6164,
+          "instruction_addresses": 720
+        },
+        {
+          "entry": "0x15bf30",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 3443,
+          "instruction_addresses": 650
+        },
+        {
+          "entry": "0x120830",
+          "arguments": [
+            "0x3f9300",
+            "0x3f9660",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 31,
+          "instruction_addresses": 31
+        },
+        {
+          "entry": "0x15e1d0",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 569,
+          "instruction_addresses": 316
+        },
+        {
+          "entry": "0x13a240",
+          "arguments": [
+            "0x3f9360",
+            "0x3f9320",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 30852,
+          "instruction_addresses": 692
+        },
+        {
+          "entry": "0x267450",
+          "arguments": [
+            "0x3f92d0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 303,
+          "instruction_addresses": 187
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d567750",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143b90",
+          "arguments": [
+            "0x0",
+            "0x70000500",
+            "0x70000500",
+            "0x0"
+          ],
+          "instructions": 105,
+          "instruction_addresses": 75
+        },
+        {
+          "entry": "0x12c640",
+          "arguments": [
+            "0x3f9860",
+            "0x70000500",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 293,
+          "instruction_addresses": 208
+        },
+        {
+          "entry": "0x12cce0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 49,
+          "instruction_addresses": 49
+        },
+        {
+          "entry": "0x12c3d0",
+          "arguments": [
+            "0x3f9860",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "instructions": 643,
+          "instruction_addresses": 474
+        },
+        {
+          "entry": "0x143c60",
+          "arguments": [
+            "0x3d5675e4",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        },
+        {
+          "entry": "0x143d30",
+          "arguments": [
+            "0x3fc90fdb",
+            "0x70000000",
+            "0x70000000",
+            "0x0"
+          ],
+          "instructions": 107,
+          "instruction_addresses": 77
+        }
+      ],
+      "modeled_instruction_addresses": 4016,
+      "bus_calls": [
+        [
+          "0x15d770",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a050",
+          "0x3f800000",
+          "0x3f9360",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160ff0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x160c60",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143560",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143620",
+          "0x3fc90fdb",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x70000b80",
+          "0x70000b90",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15ebc0",
+          "0x3fc90fdb",
+          "0x3f92d0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15fc10",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x161110",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x188650",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15bf30",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x120830",
+          "0x3f9300",
+          "0x3f9660",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x15e1d0",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x13a240",
+          "0x3f9360",
+          "0x3f9320",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x267450",
+          "0x3f92d0",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d567750",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x143b90",
+          "0x0",
+          "0x70000500",
+          "0x70000500",
+          "0x0"
+        ],
+        [
+          "0x12c640",
+          "0x3f9860",
+          "0x70000500",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12cce0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x12c3d0",
+          "0x3f9860",
+          "0x0",
+          "0x0",
+          "0x0"
+        ],
+        [
+          "0x143c60",
+          "0x3d5675e4",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ],
+        [
+          "0x143d30",
+          "0x3fc90fdb",
+          "0x70000000",
+          "0x70000000",
+          "0x0"
+        ]
+      ],
+      "comparison": {
+        "result": "passed",
+        "compared_bytes": 33423360,
+        "different_bytes": 0,
+        "different_words": 0,
+        "stack_excluded": {
+          "start": "0x1fe0000",
+          "end_exclusive": "0x2000000"
+        },
+        "external_dma": {
+          "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+          "buffers": [
+            {
+              "port": 0,
+              "slot": 0,
+              "start": "0x95e340",
+              "end_exclusive": "0x95e440"
+            }
+          ],
+          "different_bytes": 1,
+          "modeled_accesses": [],
+          "differences": [
+            {
+              "address": "0x95e398",
+              "actual": "0x270a",
+              "expected": "0x270c"
+            }
+          ]
+        },
+        "differences": [],
+        "differences_truncated": false,
+        "scratchpad": {
+          "compared_bytes": 16384,
+          "different_bytes": 0,
+          "differences": []
+        }
+      }
+    }
+  ],
+  "reached_indirect_transfers": [],
+  "external_interframe_writers": [
+    {
+      "from_frame": "f00",
+      "to_frame": "f01",
+      "changed_bytes": 9548,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 45
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 18
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 34
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 305
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 413
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 233
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 214
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 246
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 213
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 199
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 188
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 198
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 212
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 178
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 157
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 10
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 52
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 408
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 166
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 56
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 109
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 165
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 165
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 827
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2401
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1549
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 46
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 177
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f01",
+      "to_frame": "f02",
+      "changed_bytes": 10079,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 25
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 45
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53d000",
+          "changed_bytes": 350
+        },
+        {
+          "start": "0x53e000",
+          "changed_bytes": 449
+        },
+        {
+          "start": "0x53f000",
+          "changed_bytes": 263
+        },
+        {
+          "start": "0x540000",
+          "changed_bytes": 238
+        },
+        {
+          "start": "0x541000",
+          "changed_bytes": 264
+        },
+        {
+          "start": "0x542000",
+          "changed_bytes": 249
+        },
+        {
+          "start": "0x543000",
+          "changed_bytes": 229
+        },
+        {
+          "start": "0x544000",
+          "changed_bytes": 233
+        },
+        {
+          "start": "0x545000",
+          "changed_bytes": 243
+        },
+        {
+          "start": "0x546000",
+          "changed_bytes": 266
+        },
+        {
+          "start": "0x547000",
+          "changed_bytes": 262
+        },
+        {
+          "start": "0x548000",
+          "changed_bytes": 175
+        },
+        {
+          "start": "0x63b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 33
+        },
+        {
+          "start": "0x77a000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x77b000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x77c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x77d000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x7d0000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x7e8000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x7e9000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x930000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x933000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x934000",
+          "changed_bytes": 178
+        },
+        {
+          "start": "0x935000",
+          "changed_bytes": 297
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 177
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 53
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 108
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 163
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 163
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 833
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2406
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1554
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 42
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 183
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f02",
+      "to_frame": "f03",
+      "changed_bytes": 10515,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 28
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 46
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 30
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 13
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 350
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 432
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 293
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 274
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 282
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 273
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 247
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 290
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 264
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 320
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 286
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 220
+        },
+        {
+          "start": "0x649000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x64a000",
+          "changed_bytes": 36
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 9
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x88c000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 13
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 82
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 424
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 168
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 53
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 110
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 160
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 160
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 830
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2419
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1549
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 44
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 183
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f03",
+      "to_frame": "f04",
+      "changed_bytes": 11360,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 28
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 44
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x53d000",
+          "changed_bytes": 455
+        },
+        {
+          "start": "0x53e000",
+          "changed_bytes": 495
+        },
+        {
+          "start": "0x53f000",
+          "changed_bytes": 339
+        },
+        {
+          "start": "0x540000",
+          "changed_bytes": 342
+        },
+        {
+          "start": "0x541000",
+          "changed_bytes": 344
+        },
+        {
+          "start": "0x542000",
+          "changed_bytes": 353
+        },
+        {
+          "start": "0x543000",
+          "changed_bytes": 293
+        },
+        {
+          "start": "0x544000",
+          "changed_bytes": 338
+        },
+        {
+          "start": "0x545000",
+          "changed_bytes": 326
+        },
+        {
+          "start": "0x546000",
+          "changed_bytes": 354
+        },
+        {
+          "start": "0x547000",
+          "changed_bytes": 294
+        },
+        {
+          "start": "0x548000",
+          "changed_bytes": 274
+        },
+        {
+          "start": "0x549000",
+          "changed_bytes": 101
+        },
+        {
+          "start": "0x54a000",
+          "changed_bytes": 92
+        },
+        {
+          "start": "0x63b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 31
+        },
+        {
+          "start": "0x77a000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x77b000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x77c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x77d000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x7d0000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x7e8000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x7e9000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x930000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x933000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x934000",
+          "changed_bytes": 193
+        },
+        {
+          "start": "0x935000",
+          "changed_bytes": 296
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 170
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 57
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 111
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 825
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2396
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1551
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 43
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 178
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 63
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 314
+        }
+      ]
+    },
+    {
+      "from_frame": "f04",
+      "to_frame": "f05",
+      "changed_bytes": 11228,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 25
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 47
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 19
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 30
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 390
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 425
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 332
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 348
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 349
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 371
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 310
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 356
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 331
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 335
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 312
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 256
+        },
+        {
+          "start": "0x649000",
+          "changed_bytes": 99
+        },
+        {
+          "start": "0x64a000",
+          "changed_bytes": 84
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 10
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x88c000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 104
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 410
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 170
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 56
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 112
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 162
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 162
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 834
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2408
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1557
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 42
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 176
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 281
+        }
+      ]
+    },
+    {
+      "from_frame": "f05",
+      "to_frame": "f06",
+      "changed_bytes": 10514,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 29
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 25
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 43
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x53d000",
+          "changed_bytes": 282
+        },
+        {
+          "start": "0x53e000",
+          "changed_bytes": 412
+        },
+        {
+          "start": "0x53f000",
+          "changed_bytes": 291
+        },
+        {
+          "start": "0x540000",
+          "changed_bytes": 286
+        },
+        {
+          "start": "0x541000",
+          "changed_bytes": 304
+        },
+        {
+          "start": "0x542000",
+          "changed_bytes": 321
+        },
+        {
+          "start": "0x543000",
+          "changed_bytes": 269
+        },
+        {
+          "start": "0x544000",
+          "changed_bytes": 301
+        },
+        {
+          "start": "0x545000",
+          "changed_bytes": 287
+        },
+        {
+          "start": "0x546000",
+          "changed_bytes": 294
+        },
+        {
+          "start": "0x547000",
+          "changed_bytes": 262
+        },
+        {
+          "start": "0x548000",
+          "changed_bytes": 232
+        },
+        {
+          "start": "0x549000",
+          "changed_bytes": 57
+        },
+        {
+          "start": "0x54a000",
+          "changed_bytes": 42
+        },
+        {
+          "start": "0x63b000",
+          "changed_bytes": 18
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 31
+        },
+        {
+          "start": "0x77a000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x77b000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x77c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x77d000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x7d0000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x7e8000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x7e9000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x930000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x933000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x934000",
+          "changed_bytes": 188
+        },
+        {
+          "start": "0x935000",
+          "changed_bytes": 293
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 172
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 56
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 114
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 827
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2405
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1546
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 43
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 176
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 281
+        }
+      ]
+    },
+    {
+      "from_frame": "f06",
+      "to_frame": "f07",
+      "changed_bytes": 11393,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 45
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 25
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 34
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 419
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 492
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 348
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 340
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 349
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 375
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 326
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 343
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 332
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 343
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 300
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 281
+        },
+        {
+          "start": "0x649000",
+          "changed_bytes": 99
+        },
+        {
+          "start": "0x64a000",
+          "changed_bytes": 84
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 9
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x88c000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 106
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 408
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 169
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 54
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 113
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 166
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 166
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 846
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2396
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1564
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 42
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 181
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f07",
+      "to_frame": "f08",
+      "changed_bytes": 11387,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 47
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 19
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x53d000",
+          "changed_bytes": 406
+        },
+        {
+          "start": "0x53e000",
+          "changed_bytes": 492
+        },
+        {
+          "start": "0x53f000",
+          "changed_bytes": 355
+        },
+        {
+          "start": "0x540000",
+          "changed_bytes": 334
+        },
+        {
+          "start": "0x541000",
+          "changed_bytes": 344
+        },
+        {
+          "start": "0x542000",
+          "changed_bytes": 369
+        },
+        {
+          "start": "0x543000",
+          "changed_bytes": 321
+        },
+        {
+          "start": "0x544000",
+          "changed_bytes": 350
+        },
+        {
+          "start": "0x545000",
+          "changed_bytes": 338
+        },
+        {
+          "start": "0x546000",
+          "changed_bytes": 338
+        },
+        {
+          "start": "0x547000",
+          "changed_bytes": 318
+        },
+        {
+          "start": "0x548000",
+          "changed_bytes": 275
+        },
+        {
+          "start": "0x549000",
+          "changed_bytes": 110
+        },
+        {
+          "start": "0x54a000",
+          "changed_bytes": 98
+        },
+        {
+          "start": "0x63b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 32
+        },
+        {
+          "start": "0x77a000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x77b000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x77c000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x77d000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x7d0000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x7e8000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x7e9000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x930000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x933000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x934000",
+          "changed_bytes": 195
+        },
+        {
+          "start": "0x935000",
+          "changed_bytes": 294
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 171
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 55
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 114
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 163
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 163
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 828
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2423
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1544
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 41
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 184
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f08",
+      "to_frame": "f09",
+      "changed_bytes": 10802,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 42
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 29
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 431
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 482
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 298
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 280
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 320
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 318
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 288
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 295
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 294
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 313
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 256
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 225
+        },
+        {
+          "start": "0x649000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x64a000",
+          "changed_bytes": 36
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 9
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x88c000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 82
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 432
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 184
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 56
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 113
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 161
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 829
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2423
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1545
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 37
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 186
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f09",
+      "to_frame": "f10",
+      "changed_bytes": 10711,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 25
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 26
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 44
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 23
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 7
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x53d000",
+          "changed_bytes": 319
+        },
+        {
+          "start": "0x53e000",
+          "changed_bytes": 452
+        },
+        {
+          "start": "0x53f000",
+          "changed_bytes": 308
+        },
+        {
+          "start": "0x540000",
+          "changed_bytes": 268
+        },
+        {
+          "start": "0x541000",
+          "changed_bytes": 330
+        },
+        {
+          "start": "0x542000",
+          "changed_bytes": 330
+        },
+        {
+          "start": "0x543000",
+          "changed_bytes": 298
+        },
+        {
+          "start": "0x544000",
+          "changed_bytes": 306
+        },
+        {
+          "start": "0x545000",
+          "changed_bytes": 305
+        },
+        {
+          "start": "0x546000",
+          "changed_bytes": 311
+        },
+        {
+          "start": "0x547000",
+          "changed_bytes": 256
+        },
+        {
+          "start": "0x548000",
+          "changed_bytes": 235
+        },
+        {
+          "start": "0x549000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x54a000",
+          "changed_bytes": 36
+        },
+        {
+          "start": "0x63b000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 30
+        },
+        {
+          "start": "0x77a000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x77b000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x77c000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x77d000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x7d0000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x7e8000",
+          "changed_bytes": 12
+        },
+        {
+          "start": "0x7e9000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x930000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x933000",
+          "changed_bytes": 16
+        },
+        {
+          "start": "0x934000",
+          "changed_bytes": 178
+        },
+        {
+          "start": "0x935000",
+          "changed_bytes": 312
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 172
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 56
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 114
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 168
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 168
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 826
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2413
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1549
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 40
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 182
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0x9e8000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    },
+    {
+      "from_frame": "f10",
+      "to_frame": "f11",
+      "changed_bytes": 10439,
+      "changed_pages": [
+        {
+          "start": "0x1000",
+          "changed_bytes": 20
+        },
+        {
+          "start": "0x14000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x19000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x20000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x21000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x37a000",
+          "changed_bytes": 8
+        },
+        {
+          "start": "0x39e000",
+          "changed_bytes": 24
+        },
+        {
+          "start": "0x3ea000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3eb000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3ed000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x3f6000",
+          "changed_bytes": 3
+        },
+        {
+          "start": "0x3fa000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46d000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x46e000",
+          "changed_bytes": 2
+        },
+        {
+          "start": "0x4d8000",
+          "changed_bytes": 36
+        },
+        {
+          "start": "0x4d9000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x528000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x539000",
+          "changed_bytes": 5
+        },
+        {
+          "start": "0x53b000",
+          "changed_bytes": 18
+        },
+        {
+          "start": "0x53c000",
+          "changed_bytes": 35
+        },
+        {
+          "start": "0x63c000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x63d000",
+          "changed_bytes": 348
+        },
+        {
+          "start": "0x63e000",
+          "changed_bytes": 417
+        },
+        {
+          "start": "0x63f000",
+          "changed_bytes": 303
+        },
+        {
+          "start": "0x640000",
+          "changed_bytes": 298
+        },
+        {
+          "start": "0x641000",
+          "changed_bytes": 304
+        },
+        {
+          "start": "0x642000",
+          "changed_bytes": 285
+        },
+        {
+          "start": "0x643000",
+          "changed_bytes": 263
+        },
+        {
+          "start": "0x644000",
+          "changed_bytes": 283
+        },
+        {
+          "start": "0x645000",
+          "changed_bytes": 302
+        },
+        {
+          "start": "0x646000",
+          "changed_bytes": 291
+        },
+        {
+          "start": "0x647000",
+          "changed_bytes": 250
+        },
+        {
+          "start": "0x648000",
+          "changed_bytes": 217
+        },
+        {
+          "start": "0x73b000",
+          "changed_bytes": 9
+        },
+        {
+          "start": "0x73c000",
+          "changed_bytes": 22
+        },
+        {
+          "start": "0x73d000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x73e000",
+          "changed_bytes": 21
+        },
+        {
+          "start": "0x7b8000",
+          "changed_bytes": 4
+        },
+        {
+          "start": "0x88c000",
+          "changed_bytes": 12
+        },
+        {
+          "start": "0x88d000",
+          "changed_bytes": 6
+        },
+        {
+          "start": "0x947000",
+          "changed_bytes": 15
+        },
+        {
+          "start": "0x94a000",
+          "changed_bytes": 90
+        },
+        {
+          "start": "0x94b000",
+          "changed_bytes": 426
+        },
+        {
+          "start": "0x95e000",
+          "changed_bytes": 171
+        },
+        {
+          "start": "0x95f000",
+          "changed_bytes": 57
+        },
+        {
+          "start": "0x960000",
+          "changed_bytes": 113
+        },
+        {
+          "start": "0x961000",
+          "changed_bytes": 164
+        },
+        {
+          "start": "0x962000",
+          "changed_bytes": 164
+        },
+        {
+          "start": "0x963000",
+          "changed_bytes": 819
+        },
+        {
+          "start": "0x964000",
+          "changed_bytes": 2418
+        },
+        {
+          "start": "0x965000",
+          "changed_bytes": 1547
+        },
+        {
+          "start": "0x9db000",
+          "changed_bytes": 43
+        },
+        {
+          "start": "0x9dc000",
+          "changed_bytes": 182
+        },
+        {
+          "start": "0x9e6000",
+          "changed_bytes": 14
+        },
+        {
+          "start": "0x9e7000",
+          "changed_bytes": 48
+        },
+        {
+          "start": "0xa6b000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0xa6c000",
+          "changed_bytes": 17
+        },
+        {
+          "start": "0xa82000",
+          "changed_bytes": 1
+        },
+        {
+          "start": "0x1fff000",
+          "changed_bytes": 283
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Four representative path stages, not a complete gameplay-frame or every callback survey.",
+    "Model memory is restricted to captured EE RAM and scratchpad; all other hardware/unmapped accesses raise errors.",
+    "External interframe changes are observed ranges, without invented writer attribution or simulated effects.",
+    "Other coordinator calls are excluded, not reconstructed."
+  ]
+}

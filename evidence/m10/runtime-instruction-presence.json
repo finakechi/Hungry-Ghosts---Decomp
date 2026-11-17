@@ -1,0 +1,20 @@
+{
+  "result": "PASSED",
+  "capture": "s2-neutral-dispatch-entry",
+  "capture_sha256": "9232d334d19041e03202f438cb731a8c613cbc866a9f17455317a5e9814a83a3",
+  "checks": [
+    {
+      "packet": "analysis/player_walk_camera/functions.json",
+      "packet_sha256": "9689b45adfe306cdf282e464dd111de34f6d037fe9dcf7f4a4ef6b99774d856b",
+      "instructions_verified": 357,
+      "result": "PASSED"
+    },
+    {
+      "packet": "analysis/player_turn_camera/functions.json",
+      "packet_sha256": "31e4dfb2b3c9d84ea933723ea9e4fbbecf0449a70cb24006a6978256e510de2b",
+      "instructions_verified": 1147,
+      "result": "PASSED"
+    }
+  ],
+  "limitation": "Runtime bytes present at the selected entry; not proof every instruction executes."
+}

@@ -1854,3 +1854,40 @@ void hg_camera_update_fixed(HGResourceEnv *e) {
     p.env.load=process_load;p.env.store=process_store;p.env.call=turn_camera_process_call;
     hg_camera_update(&p.env);
 }
+
+/* M10: 00158560, observed state-1 active path only. Other states fail closed.
+ * lq/sq copy all four lanes, including position.w. +428 clears in the branch
+ * delay slot after 159570, before the common tail and history copy. */
+void hg_player_dispatch(HGResourceEnv *e) {
+    const uint32_t a=0x3f92d0;
+    w32(e,0x95e57c,0);
+    copy_quad(e,0x700000e0,a+0x30);
+    if(r8(e,a+0x18)!=1 || (r8(e,0x3eaee8)!=0 && r8(e,0x3f9f38)!=0)) {
+        domain_fault(e,0x30);return;
+    }
+    w8(e,0x3f9f38,0);w8(e,a+1,1);
+    call(e,0x159570,a,0,0,0);
+    w32(e,a+0x428,0);
+    w32(e,a+0x40,call(e,0x1204e0,fsub(e,r32(e,a+0x3c0),0x3d567750u),0,0,0));
+    uint32_t sum=r8(e,0x3f9e3f)+r8(e,a+0x44b);
+    sum+=(uint32_t)(int32_t)(int8_t)r8(e,a+0x4ac);
+    sum+=r8(e,a+0x4ad);
+    sum+=(uint32_t)(int32_t)(int16_t)r16(e,a+0x45a);
+    sum+=r8(e,a+0x49f);sum+=r8(e,0x3fa067);
+    if(r8(e,a+0x464)==0)sum++;
+    w8(e,0x3f9f6e,sum!=0);
+    copy_quad(e,a+0x390,a+0x30);
+}
+void hg_player_dispatch_fixed(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=player_process_call;
+    hg_player_dispatch(&p.env);
+}
+/* Host composition of the two consecutive calls at 12f8c4/12f8cc. This does
+ * not reconstruct the surrounding gameplay coordinator or its other calls. */
+void hg_player_walk_camera_fixed(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=turn_camera_process_call;
+    hg_player_dispatch(&p.env);
+    hg_camera_update(&p.env);
+}
