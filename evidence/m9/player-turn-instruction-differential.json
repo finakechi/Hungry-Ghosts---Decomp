@@ -175,7 +175,7 @@
     "src/resource_loader.c": "09c627d070be5f9dc3c4ea8422185fd4bc7e9f330243705573fed8fc3d9b463d",
     "src/resource_loader.h": "17372b05f8f865c1f3887fd090a33fd3fb857fb939b64c0eb3ee322cd6963a89",
     "tests/test_player_turn_camera.py": "66a07462c584f11a6d158377d81ae98cfd3581047efa0d00bf7ea2b24499150c",
-    "tools/verify_player_turn_camera.py": "6a4bf67f38bb4d159b31443fdf15389259601a2a1e6ceebeb9aeea011f2077f6",
+    "tools/verify_player_turn_camera.py": "f7023b0f9d60a13fd15fa8070173334ad41e0709d018938b6b6889ef7cea2a48",
     "tools/ee_subset.py": "7743b19b0afad6b64df6fe5e6eb2df04199bde8904b6122ac4e7ae2f16787b04"
   },
   "limitations": [

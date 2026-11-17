@@ -1666,12 +1666,20 @@
       "failed_checks": []
     },
     {
-      "control": "model-vopmsub-wrong-order",
+      "control": "model-vopmsub-adds",
       "compiled": false,
-      "mutated_model_sha256": "c29883e3caadb01f0051e0a0c56d7dd12b2bef1bb98e4a0c8c6f66dd2591080d",
+      "mutated_model_sha256": "d69ed3fafe0edb853cba85308b1a388a351ffdcc1d9638906628bdef09113d76",
       "result": "rejected",
-      "execution_error": "AssertionError",
-      "detail": "[\"ValueError('VDIV by zero outside investigated subset')\"]"
+      "failed_stages": [
+        "neutral-camera",
+        "turn1-camera",
+        "turn2-camera",
+        "release1-camera",
+        "release2-camera",
+        "release3-camera",
+        "release4-camera"
+      ],
+      "failed_checks": []
     },
     {
       "control": "model-ee-add-without-guard",
@@ -1709,8 +1717,8 @@
     "src/resource_loader.c": "09c627d070be5f9dc3c4ea8422185fd4bc7e9f330243705573fed8fc3d9b463d",
     "src/resource_loader.h": "17372b05f8f865c1f3887fd090a33fd3fb857fb939b64c0eb3ee322cd6963a89",
     "tools/ee_subset.py": "7743b19b0afad6b64df6fe5e6eb2df04199bde8904b6122ac4e7ae2f16787b04",
-    "tools/verify_player_connected_runtime.py": "2b20dc531aa54b5b7659cadb47d4d944bc29baaf05b87f31c71bf9c78b6b9e73",
-    "tools/verify_player_turn_runtime.py": "0c9006ec31b03a32ebd15008213c1fd06989063295c2cd9a984f67069bc4af9c"
+    "tools/verify_player_connected_runtime.py": "5eb48573f034ffefceb2b7c97256cdfcbaa829ef4ce38bc647f1d1676df3a121",
+    "tools/verify_player_turn_runtime.py": "31137b65a91d5429dc12a65f199ac53240c67b87909178c679436450f99568c7"
   },
   "captures": {
     "s3-neutral-camera-entry": "e5b0e4fea96ca0884aae7185e9aa06b6489342cf12b51858f74c427bf4152327",

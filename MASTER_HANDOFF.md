@@ -6,7 +6,7 @@
 It is implemented and compared with the original game **locally**. It lives in
 local commits on `research/m9-player-movement-camera`, created from `main`
 `7c4a90b510ee23700a0147a44e2857dfeafec577` (PR #7 and PR #8 merged). Implementation
-commit: `23a9ef111263a1590877faa9d9e44ada260311ac`, with correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed; FP controls regrouped). **No push, PR, CI run, merge, Drive backup or M10 work.**
+commit: `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295` (exceptions never count as negative-control rejections). **No push, PR, CI run, merge, Drive backup or M10 work.**
 
 **Operation.** Left stick held left (3eaf0c = −1.0) for five updates, then
 released. The C runs the chain 159570 active update → 159ad0 ordinary update →
@@ -32,13 +32,16 @@ decays by π/1200 to 0. Heading +44 goes from π/2 to 1.5838859, and camera yaw
   frames.
 - Controls: 4 input counterfactuals diverge as expected. 11 compiled C defects and
   3 model defects are rejected by the retail comparison, and 7 compiled defects by
-  the instruction differential. VDIV by zero (never observed) now fails closed.
+  the instruction differential, each by a measured divergence. VDIV by zero (never
+  observed) now fails closed. The evidence first committed in `e0c1f5c` counted one
+  model control as rejected only through a verifier exception. That is corrected
+  in `6062f0e`, with a replacement control.
 - Instruction differential
   ([player-turn-instruction-differential.json](evidence/m9/player-turn-instruction-differential.json)):
   8,299 synthetic cases; 1,048 of 1,147 addresses executed. The remainder are
   95 unobserved-branch addresses (whose C faults) and 4 statically unreachable
   switch-default addresses.
-- Checks: 59-check inventory at `8742ad0` ([checks.json](evidence/m9/checks.json)): 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, publication audit and `git diff --check` pass. Check 21 first failed on an M8-documented output-stem collision (not behavioural) and passed on rerun.
+- Checks: current inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
 
 **Corrected M8 defect.** 159ad0's 15fe00 calls receive a1 = 1 from the delay slot
 at 159b08. M8 passed 0, which was invisible with neutral input and hidden by an
