@@ -461,5 +461,12 @@ int main(void) {
     assert(load(&t,0x5f0449,1)==255 && load(&t,0x5f0019,1)==0);
     player_composition(&t,&e);
     turn_camera_composition(&t,&e);
-    free(t.ram);puts("PASS: synthetic M1-M7 workers, connected M8 player and M9 turn/camera composition under sanitizers");return 0;
+    /* M10: dispatcher tail around the existing connected player/camera bus. */
+    {HGResourceEnv walk=e;walk.call=player_external;t.player_calls=0;
+     store(&t,0x3f92e8,1,1);store(&t,0x3eaee8,1,0);store(&t,0x3f974a,1,0);
+     store(&t,0x3f96f8,4,0xdeadbeef);
+     hg_player_walk_camera_fixed(&walk,0x1ff8000);
+     assert(load(&t,0x3f96f8,4)==0);
+     assert(memcmp(t.ram+0x3f9300,t.ram+0x3f9660,16)==0);}
+    free(t.ram);puts("PASS: synthetic M1-M7 workers, connected M8 player and M9/M10 turn/walk camera composition under sanitizers");return 0;
 }

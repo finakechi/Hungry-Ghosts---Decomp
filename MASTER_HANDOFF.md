@@ -1,5 +1,97 @@
 # Hungry Ghosts — master handoff
 
+## M10 connected forward walking — 2026-11-16
+
+**Resume here.** Approved M10 is complete for the bounded original Japanese
+forward-walking operation, actual release, zero speed and following update.
+Repository `finakechi/Hungry-Ghosts---Decomp`; local branch
+`research/m10-forward-walk-camera`; implementation `43a2ea4ff4b82a2a5227a97d63c9389e160068ff`;
+recovered baseline `94d1ca54b8f708b872a7f03af13a3f9868fa1365`. A documentation
+commit follows the implementation. Noah authorized final documentation corrections,
+normal branch push and PR publication on 2026-11-17. At this correction checkpoint,
+publication and M10 CI are pending; the PR delivery receipt will record their
+results. The PR must remain unmerged for Noah's decision. No private M10 Drive
+backup exists.
+
+The interrupted branch was clean with no M10 commits, implementation or completed
+verification. Its ignored discovery scripts/profile and live paused emulator were
+reused; no branch/worktree was duplicated and no work discarded. Existing M8
+Ghidra snapshots supplied the assembly without re-exporting a database.
+
+**Observed operation:** frames `0x2cb..0x2d6`, 84 native stops. Input Y is zero for
+two frames, `+1.0` for seven frames, then zero for actual release, zero speed and
+the following update. Player/camera-eye X moves from `48.685237884521484` to
+`48.93647384643555`; Z remains 265. Native dispatcher/active/walk and camera
+stops plus authenticated instructions establish `12f850 -> 158560 -> 159570 ->
+159ad0 -> 15fe00(a1=1) -> 15fe70 -> 1608b0`, dispatcher tail, then `12c790`.
+The dispatcher clears `+428` in the branch delay slot, updates its common-tail
+state and copies all 16 position bytes into `+390`. Only its state-1 active path
+is reconstructed. The coordinator is surveyed only; existing M9 walking arithmetic
+and camera C are reused, not claimed as new reconstruction.
+
+**Implementation evidence/checks (recorded 2026-11-16; historical at the
+2026-11-17 correction checkpoint):** 72 stage comparisons have zero unexplained EE
+RAM/scratchpad differences. Each frame begins with an independently captured
+original-game dispatcher-entry state. The connected reconstruction calculates
+relevant player movement, dispatcher effects and camera response. The complete
+resulting 1,344-byte player and 336-byte camera structures, including unchanged
+bytes inherited from entry state, match the next original-game checkpoint across
+all 11 verified handoffs. No external writes to these structures were observed
+between the checked boundaries. In four sampled frames, the independent review
+found C writes to 393–409 player bytes and 261 camera bytes; these counts are not
+measurements of every frame.
+Twelve compiled defects and three input counterfactuals produce measured
+mismatches; errors do not count as rejections. The dispatcher differential passes
+1,200 synthetic cases / 77 reached addresses. All 357 new packet words and 1,147
+M9 words are present in entry RAM and match the authenticated ELF. The full
+synthetic suite passes 213 tests; the resumed M1–M9 inventory passes 59/59,
+including M9 retail/model controls, strict C, ASan/UBSan/LeakSanitizer, evidence,
+byte and publication checks. [docs/M10.md](docs/M10.md) and
+[evidence/m10/checks.json](evidence/m10/checks.json) distinguish original-game
+observations, instruction evidence, synthetic results, external contracts and
+preserved automation failures. The first contaminated camera capture is excluded;
+the selected replacement operation is complete. Final committed-object audit:
+implementation commit, 25 objects, zero heuristic findings.
+
+**Identity/private inputs:** SCPS-15046 ELF
+`a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61`, original ISO
+`8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e`, PCSX2
+v2.8.2 AppImage `0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea`.
+All were freshly hashed. Shared PS2DInfo reference is clean at
+`2e4a226e00d33ab35391aacade71b55826e5f52f`. Captures/screenshots/profile/save
+state and logs remain in ignored `local/m10/`; M8/M9 exports and private
+regression inputs remain required. Original media/BIOS/databases were preserved.
+
+**Limits:** hybrid C and original-instruction-modeled engine/math/terrain leaves;
+selected camera and dispatcher paths only. No general collision, full coordinator,
+whole gameplay frame, exceptional FP/flags/timing, all-C or port claim. Interframe
+external changes are surveyed and supplied at the independently captured entry
+boundary. The complete resulting player/camera state includes calculated changes
+and unchanged entry-state bytes; it demonstrates the selected connected operation,
+not autonomous reconstruction of every inter-frame engine effect. Guest stack and
+untouched IOP libpad DMA are explicit comparison exclusions. No unexplained
+mismatch remains.
+
+**Remote delivery at the 2026-11-17 correction checkpoint:** read-only queries show
+main `94d1ca5`, no M10 remote branch or PR, and successful baseline CI
+(run `43993685474`); there is no
+M10 remote CI. Both original worktrees are preserved.
+
+**Independent review:** READY AFTER SPECIFIC CORRECTIONS; no implementation
+defects, invalid negative controls or regressions reported. Documentation now
+distinguishes calculated changes from inherited state. `camera-lags-player` detects
+player-X and scratchpad differences, not proven camera-eye lag; `missing-position`
+and `camera-before-dispatch` separately support camera dependence on calculated
+player position. Code, evidence identifiers and measurements remain unchanged.
+
+**Blockers:** none for the selected operation. **ONE next action:** complete the
+authorized publication and CI verification, then leave the PR unmerged for Noah's
+merge decision. Fresh publication checks belong in the PR delivery receipt;
+original-game captures, full retail comparisons and the private regression inventory
+are not being repeated for wording changes.
+No M11 or final technical objective is selected. Earlier sections below are
+historical; this section supersedes their no-M10-selected resume wording.
+
 ## M9 player turn and camera response — 2026-11-16
 
 **Resume here.** M9's selected connected operation (a held left-stick turn and the same-frame camera response) is implemented and independently compared with the original Japanese game. PR [#9](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/9) is **merged into `main`** as merge commit `d249be3697bba4255006aa7ba671f53ece08d289`. `cfcefe8` was the former PR branch head, not the merge commit. Original baseline `7c4a90b510ee23700a0147a44e2857dfeafec577`; implementation `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295`; final M9 documentation and evidence, and the former PR branch head, `cfcefe83276b0f7ad436492b9ff008c0346e07df`. The latest recorded owner-local verification passed 59/59 checks (210 synthetic tests) at `6062f0e`; that was an owner-local run, not GitHub CI. GitHub Actions (Synthetic tests, Python 3.10 and 3.14) separately passed on the published PR head (run 43988132508). Private M9 runtime inputs remain outside Git, and **no private M9 Drive backup was created**. The hybrid-reconstruction limits below are unchanged. No M10 milestone or final technical objective has been selected. Noah approved M9, "Connected Player Movement and Camera Response".

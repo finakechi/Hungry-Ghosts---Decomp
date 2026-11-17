@@ -179,4 +179,8 @@ void hg_resource_worker_fixed(HGResourceEnv *, uint32_t frame);
  * resource endpoint is (input + word(input+0x10) + 0x40) & ~0x3f, modulo 2^32.
  * Audio/IOP state and timing remain the caller's separate responsibility. */
 void hg_resource_prepare_engine_fixed(HGResourceEnv *, uint32_t task, uint32_t frame);
+/* M10 dispatcher observed active path; frame follows the active-update contract. */
+void hg_player_dispatch(HGResourceEnv *);
+void hg_player_dispatch_fixed(HGResourceEnv *, uint32_t frame);
+void hg_player_walk_camera_fixed(HGResourceEnv *, uint32_t frame);
 #endif

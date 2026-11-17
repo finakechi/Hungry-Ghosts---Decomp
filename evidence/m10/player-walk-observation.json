@@ -1,0 +1,1360 @@
+{
+  "schema": "hg-m10-observation/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "emulator": "PCSX2 v2.8.2",
+  "frames": [
+    {
+      "id": "f00",
+      "counter": 715,
+      "stick_y": 0.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-neutral-dispatch-entry",
+          "sha256": "9232d334d19041e03202f438cb731a8c613cbc866a9f17455317a5e9814a83a3",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-neutral-dispatch-entry.png",
+              "sha256": "f1c47e1e572071b185cd85b87e491722b93ed052f7bc632fa7eb48821b577b7e"
+            },
+            {
+              "name": "s2-neutral-dispatch-entry-after.png",
+              "sha256": "f1c47e1e572071b185cd85b87e491722b93ed052f7bc632fa7eb48821b577b7e"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-neutral-camera-entry",
+          "sha256": "3878613e7a8d1c6e5652972a9db1b106d4755beb6312769f95d80778f2e0b4cf",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-neutral-camera-entry.png",
+              "sha256": "9d884a777292715bd004fd2ce8d0a19f93be1eb668b7d6866e0c615bc8e4b79f"
+            },
+            {
+              "name": "s2-neutral-camera-entry-after.png",
+              "sha256": "2c1269bf05271363a5c1df1939c08c72b113b6763a0df202d3d7728b3a83b718"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-neutral-camera-return",
+          "sha256": "e84efdebe120129ba37173ee0510aad9c73089f7bc4f4a2e84b5d9f8e1c3b145",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-neutral-camera-return.png",
+              "sha256": "cdb54c960aacda8fa656ebf6dd85202913c3eef8d032a342488534062b392b01"
+            },
+            {
+              "name": "s2-neutral-camera-return-after.png",
+              "sha256": "cdb54c960aacda8fa656ebf6dd85202913c3eef8d032a342488534062b392b01"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-held1-dispatch-entry",
+          "sha256": "1fa70f5f4c41b9b7ee66d1437cabe51679c8d2eaf7a55c648bf6fa72455bb39b",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-held1-dispatch-entry.png",
+              "sha256": "48286ae4ae71a5185d25e44ee4dd9900beff5407a0ffec7d619e96280d5f34bc"
+            },
+            {
+              "name": "s2-held1-dispatch-entry-after.png",
+              "sha256": "0fb3102b21008f49d7ddf4ff605e4d72b969b74690d9442565a5b48e03e9bab8"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-held1-camera-entry",
+          "sha256": "ad74efd653384f0cbbb8de221893c8ac3349cb2a3ff75fe09129be0d3fad76fb",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-held1-camera-entry.png",
+              "sha256": "895bf1b058213591b473d52b20003a769efd88566f5ad9a24b6ee1ae794f16b0"
+            },
+            {
+              "name": "s2-held1-camera-entry-after.png",
+              "sha256": "895bf1b058213591b473d52b20003a769efd88566f5ad9a24b6ee1ae794f16b0"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-held1-camera-return",
+          "sha256": "418f97ac9875506fa1f89d8d0dd9443dce31c978ec6ea947b9789bad8e8474dd",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-held1-camera-return.png",
+              "sha256": "0bf976d8157dab092d301b50ccbb733e3b8b74d35fe15f77e057b5ab68aace30"
+            },
+            {
+              "name": "s2-held1-camera-return-after.png",
+              "sha256": "44851752316e8af3a0b542206b5b9d857ed8268919ff8c5d4f9f2298517fc337"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-held2-dispatch-entry",
+          "sha256": "56089b047d58e680dc5992e935999eb7198406a5ddad9cf8b00c20476bfb983d",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-held2-dispatch-entry.png",
+              "sha256": "eec39ec68bb3d417b37a38bc196f94c9e22393d88de278130950b2d9f573b290"
+            },
+            {
+              "name": "s2-held2-dispatch-entry-after.png",
+              "sha256": "eec39ec68bb3d417b37a38bc196f94c9e22393d88de278130950b2d9f573b290"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f01",
+      "counter": 716,
+      "stick_y": 0.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-held2-camera-entry",
+          "sha256": "0a013fc348d656978419299dcf7ed14c6418c33bb53fb7ebb3311ffb9a54d016",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-held2-camera-entry.png",
+              "sha256": "afd34a7dceb39749fce343f3563ea64028ee03d03edee63d8988e1dd6dabce80"
+            },
+            {
+              "name": "s2-held2-camera-entry-after.png",
+              "sha256": "ff4f5986390717867fdc373d4b93916c97f4cc4c2462e70603befaffdcc9cb9b"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-held2-camera-return",
+          "sha256": "d059b45193e378bf5578127578c294448f5324246b34ae074cd9e85762619242",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-held2-camera-return.png",
+              "sha256": "cd4aecba254dd6c1c561fd738aaeecd0ecb5b782edebf01e8e383552797f530e"
+            },
+            {
+              "name": "s2-held2-camera-return-after.png",
+              "sha256": "cd4aecba254dd6c1c561fd738aaeecd0ecb5b782edebf01e8e383552797f530e"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-held3-dispatch-entry",
+          "sha256": "cc0142944f9fdf230c1fb6e84b43249c79966f511adf1e3fdc1804b263fec2e4",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-held3-dispatch-entry.png",
+              "sha256": "e9a4ccb32a40ceb195ea4e7e5c2ca28cb37f9bdaa48d6af9976573d1d2ab01f2"
+            },
+            {
+              "name": "s2-held3-dispatch-entry-after.png",
+              "sha256": "640ace7b69fe5bdec106153dd73a122b11c5ba88471d7819eadbfc61b471fc03"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-held3-camera-entry",
+          "sha256": "ecbbd674e9c0ce5da0591425e9479f3acf2491bf6cfad1e2ffc5bfa1e7e75ebf",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-held3-camera-entry.png",
+              "sha256": "f313a1dce36082c42a96df6ab5ae3cb67071196025d0adbf5515010654629299"
+            },
+            {
+              "name": "s2-held3-camera-entry-after.png",
+              "sha256": "f313a1dce36082c42a96df6ab5ae3cb67071196025d0adbf5515010654629299"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-held3-camera-return",
+          "sha256": "8ee88ba1775b81e7724bd43b43dc6993a6dc77a2922fea01f086bb4453036dd9",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-held3-camera-return.png",
+              "sha256": "87e32b8a1fe72a4051e243776f21bf0f51f35925a258db51f412c4279b8cf7a6"
+            },
+            {
+              "name": "s2-held3-camera-return-after.png",
+              "sha256": "f1ed936c1d42583e2635d44401790c6c0d03d872b56e298567580d6a8a615dbb"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-held4-dispatch-entry",
+          "sha256": "2b9d108e0a5a17f8668cae7562764bae819809223ee9ea2cc19b62f9867386af",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-held4-dispatch-entry.png",
+              "sha256": "b4203ed24f20f4ced6e7dcf0f1e2dfcadff57aeb80dcb9a0a673c3749a39cdc1"
+            },
+            {
+              "name": "s2-held4-dispatch-entry-after.png",
+              "sha256": "b4203ed24f20f4ced6e7dcf0f1e2dfcadff57aeb80dcb9a0a673c3749a39cdc1"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-held4-camera-entry",
+          "sha256": "26f70f7fc4c6f130630480a45eeea6139a1c3f77197f911630e1d1e600b7a915",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-held4-camera-entry.png",
+              "sha256": "068a77d71468e5c844ec00c4bf4fa9a416b818df205f40479538063de6048710"
+            },
+            {
+              "name": "s2-held4-camera-entry-after.png",
+              "sha256": "fa3748af306dc8723c15ca818ff627fd6f56da62d0fc049e2e4974ecda18d1a3"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f02",
+      "counter": 717,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-held4-camera-return",
+          "sha256": "cb6d4af62f0e534f1d0c3ee439722535c8271c9be3d362d37b4243de472df53d",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-held4-camera-return.png",
+              "sha256": "ae258585398d3a30af5406031acd7535f2c2e41fd8517f4938cc4ca762059278"
+            },
+            {
+              "name": "s2-held4-camera-return-after.png",
+              "sha256": "ae258585398d3a30af5406031acd7535f2c2e41fd8517f4938cc4ca762059278"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-release1-dispatch-entry",
+          "sha256": "8a01f1900b591330a017ff5de3358cb768358f403955150c775e3302c22a2892",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-release1-dispatch-entry.png",
+              "sha256": "2d42f56265f77811ffde6125cb03b6433eb1776cc037b9e06a77d955687da7e9"
+            },
+            {
+              "name": "s2-release1-dispatch-entry-after.png",
+              "sha256": "ba919d1d92204a44dd9c2cf2479770af364826035716c49bb2d12edc28085d33"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-release1-camera-entry",
+          "sha256": "26be61799e3afd4f5244785f01bb9385f765e8fbea0ebc54dc446bff025e42f2",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-release1-camera-entry.png",
+              "sha256": "871f4b28fe9890ce144b6c188585ff3162b37a65c6031ca08e1053047d2e6031"
+            },
+            {
+              "name": "s2-release1-camera-entry-after.png",
+              "sha256": "871f4b28fe9890ce144b6c188585ff3162b37a65c6031ca08e1053047d2e6031"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-release1-camera-return",
+          "sha256": "8fc428ddbac9d72b099086b34275d33b322880c65dc79f48efed41a25a5dcf0a",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-release1-camera-return.png",
+              "sha256": "192224f9c64695f95462f906751d74d9a06b8dd5743168b18f5a0fe76e7d8a3a"
+            },
+            {
+              "name": "s2-release1-camera-return-after.png",
+              "sha256": "4870873a2f93ad9329846f50bf9215a2718ac726eea4fc33f51ec3125ac12e89"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-release2-dispatch-entry",
+          "sha256": "9bd172ce8ff9d80109b107ba9afd2468cd421bf15f5b8f1da2a7b7f4e42b46f7",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-release2-dispatch-entry.png",
+              "sha256": "407dbb33f84c1468db9275690eb3abdfabe30a55899bc5cbc5e9a902b8c24d44"
+            },
+            {
+              "name": "s2-release2-dispatch-entry-after.png",
+              "sha256": "407dbb33f84c1468db9275690eb3abdfabe30a55899bc5cbc5e9a902b8c24d44"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-release2-camera-entry",
+          "sha256": "46056fc317196de0dfd3709d86d1f89fd9751f1526de42c351140063440511e6",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-release2-camera-entry.png",
+              "sha256": "a256ea6e42a643d4877f1943948c06196c18e44e393b0c564c2022f3eb183235"
+            },
+            {
+              "name": "s2-release2-camera-entry-after.png",
+              "sha256": "4170a12843831402144eb91e6eba6addd747c0f17802a1865c87c908539ff046"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-release2-camera-return",
+          "sha256": "a3a07ad8dba37720a1e8e56ed368c49a80a723b422897fba967e70d2f22b3520",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-release2-camera-return.png",
+              "sha256": "8550345e82f72bd15bf477731be700326c6c936cf1292d996aed63055d0cc0b7"
+            },
+            {
+              "name": "s2-release2-camera-return-after.png",
+              "sha256": "8550345e82f72bd15bf477731be700326c6c936cf1292d996aed63055d0cc0b7"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f03",
+      "counter": 718,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-release3-dispatch-entry",
+          "sha256": "d9a14357be46d6d5b437b0208dc3a6482e384e7c7310605dc4f5c4c3205bb4b2",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-release3-dispatch-entry.png",
+              "sha256": "72ae1e18b355d1344187cd7b295e7cc8be550a7008c9d1910c8eed9d8ec330af"
+            },
+            {
+              "name": "s2-release3-dispatch-entry-after.png",
+              "sha256": "8d71483366e9c8fbfce2780a0f484b55e95beb77d8e2e0e610e0ec5dcff382fc"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-release3-camera-entry",
+          "sha256": "8c2076d81fbd401d33dd962a532b03c1b638c27797d9cbd71f57c50c7fc4d57d",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-release3-camera-entry.png",
+              "sha256": "2b6361c4a398cd450ad120843c3bbd8e7ce60de2bfbd15b1f18194ca2915267b"
+            },
+            {
+              "name": "s2-release3-camera-entry-after.png",
+              "sha256": "8eda02c43f48eb3b020b0c9b39c352e427cdde665795a348cd83a517a0ed03fd"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-release3-camera-return",
+          "sha256": "052f17a11fa870c0d03e3cdf8e020b15575eaa0c1e9ab270f886669354939d98",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-release3-camera-return.png",
+              "sha256": "e96ef33635a25bdc9bb7fbbf5fa87d72b15ec40a5fdf9b6c83fe588c6eee3b1d"
+            },
+            {
+              "name": "s2-release3-camera-return-after.png",
+              "sha256": "e96ef33635a25bdc9bb7fbbf5fa87d72b15ec40a5fdf9b6c83fe588c6eee3b1d"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-release4-dispatch-entry",
+          "sha256": "617a07d94917ede67e72cca2d2fa502dc84c688c774c805c3919243eb27615a1",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-release4-dispatch-entry.png",
+              "sha256": "2f1ced168a56b20e50233bbcf693264f4d069f06a41da9319bb94c4c065ca8dc"
+            },
+            {
+              "name": "s2-release4-dispatch-entry-after.png",
+              "sha256": "7e86ed4ab60148891867e651d5d6bfbe7e98bd0d97450da0c428d5fc18c19966"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-release4-camera-entry",
+          "sha256": "b71f414637cbeb45b1e744714d3e78e21d4a056e5d8cd0330231c05f5f592b4f",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-release4-camera-entry.png",
+              "sha256": "dc5f53c482a95acb7eab42827aa6c73af2020d38b0df5501261d7783866c3ec5"
+            },
+            {
+              "name": "s2-release4-camera-entry-after.png",
+              "sha256": "dc5f53c482a95acb7eab42827aa6c73af2020d38b0df5501261d7783866c3ec5"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-release4-camera-return",
+          "sha256": "2507960c5184e91d1580647d3c8988e086931d4012c6e613fa024918d3d12602",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-release4-camera-return.png",
+              "sha256": "b499ba7b44ee0dd910151bd299ec429afe27872156f406e1615ed7070305c4c8"
+            },
+            {
+              "name": "s2-release4-camera-return-after.png",
+              "sha256": "360ca11a90fc601b81640a4c9eadcff68138d6b43d7ad2a354f63a04241cbcf8"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-release5-dispatch-entry",
+          "sha256": "ca376ec4161f7ab5fe215763b6842d6776dd6dd2cbf3bf724422bc437fc519b2",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-release5-dispatch-entry.png",
+              "sha256": "3f5fb0200a0aaef63d987dc39fa942b88477f1eefcac955f15726df8266abaeb"
+            },
+            {
+              "name": "s2-release5-dispatch-entry-after.png",
+              "sha256": "3f5fb0200a0aaef63d987dc39fa942b88477f1eefcac955f15726df8266abaeb"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f04",
+      "counter": 719,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-release5-camera-entry",
+          "sha256": "ad8c8a22e99a41479b644406dd6146bbfae0bb6f4c97b61ae613a44eb128d54d",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-release5-camera-entry.png",
+              "sha256": "15638cc4d699fd71ef7e0cede6d7756ffb4f598a9920dd4520420938f77705ad"
+            },
+            {
+              "name": "s2-release5-camera-entry-after.png",
+              "sha256": "297f5990dcea85df531223b53654a9d19728875b59ddd555ba81cc3290595bc3"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-release5-camera-return",
+          "sha256": "24fce620cc90e7e7e4671d2380fcedc55ca8c5e8a5332756b94b142386cdb51c",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-release5-camera-return.png",
+              "sha256": "6bc878a2c9d20286ca5d5147eadc8861ea9ce6b6429514fce7521659042a21e4"
+            },
+            {
+              "name": "s2-release5-camera-return-after.png",
+              "sha256": "6bc878a2c9d20286ca5d5147eadc8861ea9ce6b6429514fce7521659042a21e4"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-release6-dispatch-entry",
+          "sha256": "686b32e244414675794854cb97aac7dfdb866b13a99c4051df1a87b6fd90083e",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-release6-dispatch-entry.png",
+              "sha256": "21004073c600645e672d85e60daa708f55bd0d5e5448706b60fd83bb59dc1c10"
+            },
+            {
+              "name": "s2-release6-dispatch-entry-after.png",
+              "sha256": "cfb68612d5fcc9c4a8f2e732e41c7d7c8d8114a369b70e93134d831bf21ef585"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-release6-camera-entry",
+          "sha256": "61fb096fa6b61a9069c33c1ebc8d2617de10ea106e01d33f59a2b206930f0e07",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-release6-camera-entry.png",
+              "sha256": "1cf41865be93156eb5994d363dd0c74eaf07e878e4f4b652223ef458d931bbbf"
+            },
+            {
+              "name": "s2-release6-camera-entry-after.png",
+              "sha256": "5650e2e329438f076f08981b33ea59c9c4b3ffb14101fa4867ca842c7e629f95"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-release6-camera-return",
+          "sha256": "9227a14d3827f8f4564a4a801d1d1cbdb4ae255237e22883437265324d59720e",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-release6-camera-return.png",
+              "sha256": "1aaa8ca239ecb8155bb4efb9ee19cb57ae5c8f0ec42401264fdd63f543b55522"
+            },
+            {
+              "name": "s2-release6-camera-return-after.png",
+              "sha256": "08b570ede5275db5fe0bcc96a78de3fa1534d23613181a22152fbe163a11882b"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-tail-00",
+          "sha256": "5816b64bad97c8be490ea0be2be3eda8a439f4363192d352c99a4df11a177067",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-tail-00.png",
+              "sha256": "21189b9985837c9f1f0bf2d29176cc7a9222aff259ee2779d53513468fc61656"
+            },
+            {
+              "name": "s2-tail-00-after.png",
+              "sha256": "21189b9985837c9f1f0bf2d29176cc7a9222aff259ee2779d53513468fc61656"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-tail-01",
+          "sha256": "35a851da4a8d75c7d21c20957a73a66183b1304db35423add4a3e041340f4521",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-tail-01.png",
+              "sha256": "dc485c9173675221c55e90eb00cf55db9df77013b6689a8afdaf10e82db5b779"
+            },
+            {
+              "name": "s2-tail-01-after.png",
+              "sha256": "080b1b48c97cefe9ca40826f870f24e2bd679845dd91cdd27394bf66a087244b"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f05",
+      "counter": 720,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-tail-release-dispatch-entry",
+          "sha256": "931bc6cc9c93b9a782e159605d85c74530c84ee81bb135b8b68f1a2b61e8312e",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-dispatch-entry.png",
+              "sha256": "a927d07911f15e731735245fe2334b2ae18f33928e45dd111ad5eef258151a9e"
+            },
+            {
+              "name": "s2-tail-release-dispatch-entry-after.png",
+              "sha256": "2e99ccefebe76dd46dbe19bf73c138fed9d4f273895b4ca4805dd3aa781061ea"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-tail-release-update-entry",
+          "sha256": "b97978726aca14040b2dbfb49340d1e070b74a1ffe50a7c6410273049dc0d98c",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-update-entry.png",
+              "sha256": "76353946b1dc73165eccea337f33ddb86d6ca17a0bc2847ac92f29d66af99d7c"
+            },
+            {
+              "name": "s2-tail-release-update-entry-after.png",
+              "sha256": "76353946b1dc73165eccea337f33ddb86d6ca17a0bc2847ac92f29d66af99d7c"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-tail-release-walk-entry",
+          "sha256": "276bf2263af801b7d3bfabe3f49a11f0befd87fcd1a9afbb01066a69cb7acb8b",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-walk-entry.png",
+              "sha256": "d548db98bffb2b68520b9dceaaf983975b77e5899134b06a83f132c750158bc1"
+            },
+            {
+              "name": "s2-tail-release-walk-entry-after.png",
+              "sha256": "23a4ee5c3444f33da18004251fe2820897bf103b8e59632665ec6fd096d09269"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-tail-release-update-return",
+          "sha256": "ce3fc69b396f15ca15e6f70687c44db210a1ee81d1af243b16aab7e7bb84f0a8",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-update-return.png",
+              "sha256": "dc5707fb05606318503dab75fb465654fa69747405ad188e488576ab86fcba79"
+            },
+            {
+              "name": "s2-tail-release-update-return-after.png",
+              "sha256": "dc5707fb05606318503dab75fb465654fa69747405ad188e488576ab86fcba79"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-tail-release-history-copy",
+          "sha256": "c0595dfaa50261820f7d319cf0c6ef64d8702131928c850bacb7925f4f2b4a78",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-history-copy.png",
+              "sha256": "f95a9e5f465ce1206b95003fee52f446b68f0252be75bacbedc1b908a8efb343"
+            },
+            {
+              "name": "s2-tail-release-history-copy-after.png",
+              "sha256": "a163cac6922afa3a644454bdc3eab4e85a055c5c614df7026fc0f75458716235"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-tail-release-camera-entry",
+          "sha256": "589468f414f3efa1a6cdb533469460d731e9ad6bd784704bead14f18468c29f1",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-camera-entry.png",
+              "sha256": "08498f8fceacb4e90c5a41a5f3469a941e16b7dfa28b9eacc31eb7bdc06e76ec"
+            },
+            {
+              "name": "s2-tail-release-camera-entry-after.png",
+              "sha256": "08498f8fceacb4e90c5a41a5f3469a941e16b7dfa28b9eacc31eb7bdc06e76ec"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-tail-release-camera-return",
+          "sha256": "7f3b8481ecc1ce24011ecafc910ff2f974f1cab659ed914cdbd059ab4d510608",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-tail-release-camera-return.png",
+              "sha256": "19e771ed459eb66940a1c50d51905b76d4bb3acc0d3bc15673302e85cb609702"
+            },
+            {
+              "name": "s2-tail-release-camera-return-after.png",
+              "sha256": "c95160cdd8bc4c2b515303b40f5d190f98bcfb38e0fcd45435a35a2405cfea8e"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f06",
+      "counter": 721,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-tail-zero-dispatch-entry",
+          "sha256": "a0226ebff58dabc73f7c4d17b6513230c4f04ececb66ad5f4a53235fe7657c66",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-dispatch-entry.png",
+              "sha256": "24cc0bf21ab15e5971ff77b78ed044fc7abc4de457d94606dab167b914c6cfbd"
+            },
+            {
+              "name": "s2-tail-zero-dispatch-entry-after.png",
+              "sha256": "24cc0bf21ab15e5971ff77b78ed044fc7abc4de457d94606dab167b914c6cfbd"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-tail-zero-update-entry",
+          "sha256": "4cdeef283d77e21b57c3eba3ad3c52035d3e3a49079002cf09561ea9c2b7d279",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-update-entry.png",
+              "sha256": "b0c478dfb3ba6ab700d56b7cfd772b399757cc346b9536e70dfd60490888656a"
+            },
+            {
+              "name": "s2-tail-zero-update-entry-after.png",
+              "sha256": "b0c478dfb3ba6ab700d56b7cfd772b399757cc346b9536e70dfd60490888656a"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-tail-zero-walk-entry",
+          "sha256": "32f09035466103d6c35b89dc50a8db847b91dba353fe7282999526f20fa34eb0",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-walk-entry.png",
+              "sha256": "72cacc9459f2a3ef3e24b090ae065957947a8849c94870abf147cfbdf736f0d0"
+            },
+            {
+              "name": "s2-tail-zero-walk-entry-after.png",
+              "sha256": "46108e0cb3d3049e128445394c5379c93170d1edd0e88c4a823e2998e4693052"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-tail-zero-update-return",
+          "sha256": "5496d1f330324ad979dd2a7fe44a0a093c2bf84239b5d25440579e064942719a",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-update-return.png",
+              "sha256": "2ee11498ebe2728da26b375cbaeb7f05a939cd03e413ca9e5509c12f99ec6a3b"
+            },
+            {
+              "name": "s2-tail-zero-update-return-after.png",
+              "sha256": "2ee11498ebe2728da26b375cbaeb7f05a939cd03e413ca9e5509c12f99ec6a3b"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-tail-zero-history-copy",
+          "sha256": "3ef51990643698511f3018707f6fb51b81ca380b9ae3f00f24fbde92bf837778",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-history-copy.png",
+              "sha256": "789759da24d1382763bf22ef565277a66d5c3d8f33641a2805b66b0f3b9b817d"
+            },
+            {
+              "name": "s2-tail-zero-history-copy-after.png",
+              "sha256": "afe1286d6455c6a884f1290953b80439b3eb48e8126678fe2c58783fc575ee65"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-tail-zero-camera-entry",
+          "sha256": "15532c37726781295e962c420e6f2daa2de017401154f8d59eb1d6cede3927dd",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-camera-entry.png",
+              "sha256": "e74af596a6297a2404df06cd953bac0e1e50de4945886f4a93fde0a307c1cdbb"
+            },
+            {
+              "name": "s2-tail-zero-camera-entry-after.png",
+              "sha256": "e74af596a6297a2404df06cd953bac0e1e50de4945886f4a93fde0a307c1cdbb"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-tail-zero-camera-return",
+          "sha256": "2c38f862ee1304b07bf9301cceb4348beeb001fba67721f0b6cb116495cadcd2",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-tail-zero-camera-return.png",
+              "sha256": "bcbf293023348380e918d5d66aa9dc368020998397b3c500c38d4441e02cf8c1"
+            },
+            {
+              "name": "s2-tail-zero-camera-return-after.png",
+              "sha256": "aedc0781be9efb7265984ede9d8adb78caeefcd448fb6aa8af940bb273e01c25"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f07",
+      "counter": 722,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-tail-following-dispatch-entry",
+          "sha256": "b1f330ec489873727a6ce154657bcbd9a9cb3877ec505155f9ce10f09d5405ad",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-dispatch-entry.png",
+              "sha256": "f0e1cea846152006b22bbb9957a22ae5540d7963a2c9de5b257b9070dd008255"
+            },
+            {
+              "name": "s2-tail-following-dispatch-entry-after.png",
+              "sha256": "f0e1cea846152006b22bbb9957a22ae5540d7963a2c9de5b257b9070dd008255"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-tail-following-update-entry",
+          "sha256": "0d30f20d68f5d4b9f9b1828b9bfb40f971e217c4fccd2b0988d96dfa96993f70",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-update-entry.png",
+              "sha256": "1de1b8e4c73566bfcffdd4ff5eb49629d0d08423c59d9fdf300159fc44e592e0"
+            },
+            {
+              "name": "s2-tail-following-update-entry-after.png",
+              "sha256": "7e1eb861f26abb5b32e7f3fb657c572c39ba1097fcc4f02c8a347c4ec063547d"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-tail-following-walk-entry",
+          "sha256": "aa4638abb510165ba4ad7902f320034ff1096075af28288252b10445ac16d106",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-walk-entry.png",
+              "sha256": "0585556f6afbf40b0d4ad2d067b9e3fac2bd276d34d4478b073c98dda654bf10"
+            },
+            {
+              "name": "s2-tail-following-walk-entry-after.png",
+              "sha256": "1b1c7ffcf0d895a517617c61e8aff3d4e721f3ad050c0e73ba4c1a85bd7617cc"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-tail-following-update-return",
+          "sha256": "78c2e964744ad00916ff3bc16e9d39d9bb99f92911f7b0a2b69b2c35b5c6330d",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-update-return.png",
+              "sha256": "d0cbe89498401acc9187bd90f59427d6126fa3d7a6dec098e2b234b519e21486"
+            },
+            {
+              "name": "s2-tail-following-update-return-after.png",
+              "sha256": "c80d4b24b2ff34514b22c678efd5fcad84b0957d9bbc1bb767dfb692d546f3c9"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-tail-following-history-copy",
+          "sha256": "83608e89914253c74b5aa37602b6797dc382655074cc510e70e1168669030682",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-history-copy.png",
+              "sha256": "77609783276f0e019c682401fa08dfd224ca4099aea1a2a71f91445584a7b10e"
+            },
+            {
+              "name": "s2-tail-following-history-copy-after.png",
+              "sha256": "77609783276f0e019c682401fa08dfd224ca4099aea1a2a71f91445584a7b10e"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-tail-following-camera-entry",
+          "sha256": "6f4a9f37c8e214fb5fad7895d8fd4ce41a79845af42548bf6a94a5d6578ef2aa",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-camera-entry.png",
+              "sha256": "528e5a65be57be81ad92e5e23f257c8c4858fed23bda76809ba6e326b74c4ec5"
+            },
+            {
+              "name": "s2-tail-following-camera-entry-after.png",
+              "sha256": "4bfd1692c4ae17eaa2bdff4570edd1a7a72550948e7a307e4ba84b2ee41403ae"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-tail-following-camera-return",
+          "sha256": "42a6012fc534ac41e85d1d2b4f844c476b1c83eebe84ca20f074a20249568e94",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-tail-following-camera-return.png",
+              "sha256": "ba316ff429b1ccce6eb718987ba33e15082042111bfa0ec117dc98fc2596b20c"
+            },
+            {
+              "name": "s2-tail-following-camera-return-after.png",
+              "sha256": "ba316ff429b1ccce6eb718987ba33e15082042111bfa0ec117dc98fc2596b20c"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f08",
+      "counter": 723,
+      "stick_y": 1.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-end-release-dispatch-entry",
+          "sha256": "0adc6529b249005800666be7705270230b51c5516e8a093e594a7e6a5f0b734f",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-end-release-dispatch-entry.png",
+              "sha256": "fd56b118c20c501c11809f3e0471708f9038da41420ee1111ea16dfa050a2929"
+            },
+            {
+              "name": "s2-end-release-dispatch-entry-after.png",
+              "sha256": "a9c80378d978097bb70b6c2baa6f5df1ad49931f021a8880f762e53004c9ebb9"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-end-release-update-entry",
+          "sha256": "06c3fac8514f9d1139e6377da0ee28c07f86e7f73ad0659a5dc4c96784f9f935",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-end-release-update-entry.png",
+              "sha256": "bbcb59c6ca4d91e458cd48ecc0babd4aba58e60a693b43286a13c1aa87f5ade7"
+            },
+            {
+              "name": "s2-end-release-update-entry-after.png",
+              "sha256": "bbcb59c6ca4d91e458cd48ecc0babd4aba58e60a693b43286a13c1aa87f5ade7"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-end-release-walk-entry",
+          "sha256": "ce1aa7d0ddabf3f4ace9e0e7d33a4de5ea427e090d98612106adcf207a41aed1",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-end-release-walk-entry.png",
+              "sha256": "5c2a5c26f1e287957cdb52a050060ada14ce28d394ece6b8d8d81e1f849fc909"
+            },
+            {
+              "name": "s2-end-release-walk-entry-after.png",
+              "sha256": "5af94bbf04fc69d18d42891e117cdf93d69d3f47520ea9d150a88e104e1a8db1"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-end-release-update-return",
+          "sha256": "36e7f6b869e14f0a262267278759fdaf991aacf3e507b138bd9806a9b130d286",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-end-release-update-return.png",
+              "sha256": "fbbc7f15090e29501e10e56b0c43090b93380585c01fe55198482f497112a463"
+            },
+            {
+              "name": "s2-end-release-update-return-after.png",
+              "sha256": "3140043c8153c93ce075b624fe7fe88162be71706b20fab76850f7c57c82c8f2"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-end-release-history-copy",
+          "sha256": "c314cfaca61985335465680859429fb4c9d9f645b5b7a195c8fefe2b71c33832",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-end-release-history-copy.png",
+              "sha256": "0d0ecf90fe37afb6a78402ea6f145360f0ef6ae6142a75d1e164c3e98a9b6681"
+            },
+            {
+              "name": "s2-end-release-history-copy-after.png",
+              "sha256": "b42f4585010259d3a0a105ac469c5a7800dc96d8a8766f560734a6fb346edf01"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-end-release-camera-entry",
+          "sha256": "ebfda150e4006db70bf0dee120715ad61d57d48e3d67763575d87dd32c8266fc",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-end-release-camera-entry.png",
+              "sha256": "eda3c578275545958e8112eb41c771b2840caf09d96c0bedf2da6c1d88ddc087"
+            },
+            {
+              "name": "s2-end-release-camera-entry-after.png",
+              "sha256": "eda3c578275545958e8112eb41c771b2840caf09d96c0bedf2da6c1d88ddc087"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-end-release-camera-return",
+          "sha256": "7987a19c2c0538c8ccdceb07188dfacca2b60ce1260cf69e5ff86b18ad49d46d",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-end-release-camera-return.png",
+              "sha256": "6134ed97866398854d2f63b04fd5cd0d2e87fe2833c37290c45aad162fa74b2e"
+            },
+            {
+              "name": "s2-end-release-camera-return-after.png",
+              "sha256": "896e015213476870a0db2388b5194ad68e0b427c13335c1e5ab65064c990f540"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f09",
+      "counter": 724,
+      "stick_y": 0.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-end-zero-dispatch-entry",
+          "sha256": "481dff58b6ddbb797e917a937938033048bdf3c0ff49b6046e27fdf5f7a0dbbd",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-dispatch-entry.png",
+              "sha256": "eefa6b92d524154b352df5fe1954a3aa3ec5de13220ad1ce0fe6e27e5f2f938b"
+            },
+            {
+              "name": "s2-end-zero-dispatch-entry-after.png",
+              "sha256": "c51f664ca24d4fd955cf07cda3513a29a06da8cc996b59dc64be0788683b4091"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-end-zero-update-entry",
+          "sha256": "fab54d299f7c1f35b23e2230ada7402e8c5368645a890f4397565e4b2eadec45",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-update-entry.png",
+              "sha256": "5cad60dade97953b3c32f4c66afbf34386c83b85dd3de2912247fbb979ec85a9"
+            },
+            {
+              "name": "s2-end-zero-update-entry-after.png",
+              "sha256": "75ef2932901e5579dc6baec88fb68d10953e8af9935fe26d44e5b5c512c149f1"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-end-zero-walk-entry",
+          "sha256": "c185e4f3af7c5eebb742b31e600108a485e7b1a0b4b3734756b53d10bbaf7671",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-walk-entry.png",
+              "sha256": "cbd189f630be2a9b168017256e0fc9ac18d6a9149a4d360bd0a75d07880a5868"
+            },
+            {
+              "name": "s2-end-zero-walk-entry-after.png",
+              "sha256": "cbd189f630be2a9b168017256e0fc9ac18d6a9149a4d360bd0a75d07880a5868"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-end-zero-update-return",
+          "sha256": "cd835813d4c2b2bea94f0e07a9033e6126f76d8418076d7d0406d61cd5601431",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-update-return.png",
+              "sha256": "35f041a273abbca18530715e5f097c79aff9606430572f9436f8c567bbfc21da"
+            },
+            {
+              "name": "s2-end-zero-update-return-after.png",
+              "sha256": "0a742a7239f41e1ee6e3a4de55ce55a97c0f3144613f93cbcc3f39e2f384401e"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-end-zero-history-copy",
+          "sha256": "066d0bf2545f86d175452d940eb4c08d83ee2c4e1a0e9858ac2537046513ca0b",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-history-copy.png",
+              "sha256": "4aa078a2c688e987970931f4c03dcb48ac865015c0fb36d92ac48d424af07adb"
+            },
+            {
+              "name": "s2-end-zero-history-copy-after.png",
+              "sha256": "4aa078a2c688e987970931f4c03dcb48ac865015c0fb36d92ac48d424af07adb"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-end-zero-camera-entry",
+          "sha256": "1e504b7fbe9220bd42de071bfa829c7975e26f98902c2084784662fc8c177512",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-camera-entry.png",
+              "sha256": "62a620309d7af84a0efcdcb5d7b7c2b2eeee5c40299a37e12df8202fedb79c5e"
+            },
+            {
+              "name": "s2-end-zero-camera-entry-after.png",
+              "sha256": "2ff8f26f371fe2e6a145c3bad0cb1b34b81031f29afbc7ae15af9ab80d86d86e"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-end-zero-camera-return",
+          "sha256": "c4f3467ec7da2236a1a077696071f5c4e442c3af4cb9a2f20c3842a197117202",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-end-zero-camera-return.png",
+              "sha256": "c113c77a6a07c977ca59639f9c4a09635df89ff9fa4320bb225892d4d74b43f2"
+            },
+            {
+              "name": "s2-end-zero-camera-return-after.png",
+              "sha256": "c113c77a6a07c977ca59639f9c4a09635df89ff9fa4320bb225892d4d74b43f2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f10",
+      "counter": 725,
+      "stick_y": 0.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-end-following-dispatch-entry",
+          "sha256": "d0ef0ff9b6fb4b95feffc9144349fdefa0aaa2570d8afbe5d727241a7bf2c605",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-end-following-dispatch-entry.png",
+              "sha256": "d2ca5ef0c7c6f171fe5acacbaad8eaf2933983f88296f32a844eeaf8c48526aa"
+            },
+            {
+              "name": "s2-end-following-dispatch-entry-after.png",
+              "sha256": "9843361512962d5f7a3105ec23bb9672b12faad7b817152d0445d9eb10fed93a"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-end-following-update-entry",
+          "sha256": "e60bae7ccb39d28051359f3b72c91df453ebd7c47d3f3b94672a3d7315cb8e1a",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-end-following-update-entry.png",
+              "sha256": "6138f49042a5282e5ebd74fc4b4e332baf0bdeb1a504eb7a6884b5a18dde1966"
+            },
+            {
+              "name": "s2-end-following-update-entry-after.png",
+              "sha256": "6138f49042a5282e5ebd74fc4b4e332baf0bdeb1a504eb7a6884b5a18dde1966"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-end-following-walk-entry",
+          "sha256": "78fb86c370b3ab0e758bff82bd3ad9fdd338ca28ba106699d4568dfa8d94dedd",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-end-following-walk-entry.png",
+              "sha256": "ea4f5c9b008851bde64ffdc1c3cb160c1a247c71995755dcd0a22fb7648461e0"
+            },
+            {
+              "name": "s2-end-following-walk-entry-after.png",
+              "sha256": "c9483d38ee709b7e32f6ae3244b9b14ac091032d742bd4aac1d8b7990011a9ea"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-end-following-update-return",
+          "sha256": "46eebd03fbe4618f489c51632394b5354f2efcf9c99a57e917c8a79af591a82a",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-end-following-update-return.png",
+              "sha256": "d06c79339992f76093bc00cf9b9a5b5c2366d14eb18133c490125baab0ac81c5"
+            },
+            {
+              "name": "s2-end-following-update-return-after.png",
+              "sha256": "d06c79339992f76093bc00cf9b9a5b5c2366d14eb18133c490125baab0ac81c5"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-end-following-history-copy",
+          "sha256": "e9eaa0c0c3b36764ce140f90eaa01714c4a45aeacacf2b10bef2cb12777bc6db",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-end-following-history-copy.png",
+              "sha256": "1dd5519cc61cf3a012491fd78503387bdd1439b3e83eea9ed930bc87f191b87b"
+            },
+            {
+              "name": "s2-end-following-history-copy-after.png",
+              "sha256": "16a6fc8b25c3d6632d4810fb40e8ab22120a9cc407ac022ee3f02ebb69a02149"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-end-following-camera-entry",
+          "sha256": "9f3f5e8facff3dfe0e8e4afdcbb41105c13e4759f1ae7fecb9280a38bceb34fc",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-end-following-camera-entry.png",
+              "sha256": "33b67131845f4db9384bc135b0e27b926755cf40b33756c06f24f3d0decc1a5b"
+            },
+            {
+              "name": "s2-end-following-camera-entry-after.png",
+              "sha256": "33b67131845f4db9384bc135b0e27b926755cf40b33756c06f24f3d0decc1a5b"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-end-following-camera-return",
+          "sha256": "6e7cb16ba19d374587780756d37f56d7eecd17e2eace697ec413deac691baae0",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-end-following-camera-return.png",
+              "sha256": "1b7a1f53e10a2582e846e74a84e9176177adc9001adb14bb040d1feda610e683"
+            },
+            {
+              "name": "s2-end-following-camera-return-after.png",
+              "sha256": "1b7a1f53e10a2582e846e74a84e9176177adc9001adb14bb040d1feda610e683"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "f11",
+      "counter": 726,
+      "stick_y": 0.0,
+      "captures": {
+        "dispatch-entry": {
+          "name": "s2-following-final-dispatch-entry",
+          "sha256": "046d3f3445ca9e94e33de68abb268f5614b0d0878e7d89d8b369c2ea35f92ca7",
+          "native_pc": "0x158560",
+          "screenshots": [
+            {
+              "name": "s2-following-final-dispatch-entry.png",
+              "sha256": "266df326faede5b19d47ed53937b44fc0cd3328e1763c9de6d350944cc3e2744"
+            },
+            {
+              "name": "s2-following-final-dispatch-entry-after.png",
+              "sha256": "266df326faede5b19d47ed53937b44fc0cd3328e1763c9de6d350944cc3e2744"
+            }
+          ]
+        },
+        "update-entry": {
+          "name": "s2-following-final-update-entry",
+          "sha256": "d5e5acfc5bd9fedc7f08c65bbdcbfca26d7ababc095f69a1fb50090bc44677e9",
+          "native_pc": "0x159570",
+          "screenshots": [
+            {
+              "name": "s2-following-final-update-entry.png",
+              "sha256": "8f861fa144db3faba0bbe6670e1764517d83015ded96d0db3b1533fea53ee623"
+            },
+            {
+              "name": "s2-following-final-update-entry-after.png",
+              "sha256": "8f861fa144db3faba0bbe6670e1764517d83015ded96d0db3b1533fea53ee623"
+            }
+          ]
+        },
+        "walk-entry": {
+          "name": "s2-following-final-walk-entry",
+          "sha256": "4792d8a4a69f3ce2874e445263e95014753d6c0f14f3d9e118f0b6afd0b91449",
+          "native_pc": "0x1608b0",
+          "screenshots": [
+            {
+              "name": "s2-following-final-walk-entry.png",
+              "sha256": "90ce7006bac4f31e5c322aeb3954ace62e8b7fc256aafb0d7796ad32fb7eef29"
+            },
+            {
+              "name": "s2-following-final-walk-entry-after.png",
+              "sha256": "15951f33fb15cee30b0c7bd7a53648ee9cc64b0e3e75b9e9b9c4ab64858d495b"
+            }
+          ]
+        },
+        "update-return": {
+          "name": "s2-following-final-update-return",
+          "sha256": "ba6c00e5bdd0d1d6f1954aa4e8b30f65aebe4077e624d50b1ca11ee4fd562c80",
+          "native_pc": "0x158778",
+          "screenshots": [
+            {
+              "name": "s2-following-final-update-return.png",
+              "sha256": "ec50764446b461afc621e1d935f607be25310cc888876a3b216652783649d2be"
+            },
+            {
+              "name": "s2-following-final-update-return-after.png",
+              "sha256": "ec50764446b461afc621e1d935f607be25310cc888876a3b216652783649d2be"
+            }
+          ]
+        },
+        "history-copy": {
+          "name": "s2-following-final-history-copy",
+          "sha256": "31f09174fec2d5400f52d639b856182d0ff855e020733263a9d57ebda674fbe0",
+          "native_pc": "0x1589f0",
+          "screenshots": [
+            {
+              "name": "s2-following-final-history-copy.png",
+              "sha256": "79d6f8ffd687e08d0be51ae0286b09d7df67dc19f02f5f86ef4df71b7bf55967"
+            },
+            {
+              "name": "s2-following-final-history-copy-after.png",
+              "sha256": "79d6f8ffd687e08d0be51ae0286b09d7df67dc19f02f5f86ef4df71b7bf55967"
+            }
+          ]
+        },
+        "camera-entry": {
+          "name": "s2-following-final-camera-entry",
+          "sha256": "04166e13eacd7d296c3d116c00c09959d32b0ddec2fc1e2fb2b0b08abea3768d",
+          "native_pc": "0x12c790",
+          "screenshots": [
+            {
+              "name": "s2-following-final-camera-entry.png",
+              "sha256": "27fcf98d30da171e88f7b7c5fe971055e5b1b9417154e78354c74cdf7314761c"
+            },
+            {
+              "name": "s2-following-final-camera-entry-after.png",
+              "sha256": "27fcf98d30da171e88f7b7c5fe971055e5b1b9417154e78354c74cdf7314761c"
+            }
+          ]
+        },
+        "camera-return": {
+          "name": "s2-following-final-camera-return",
+          "sha256": "25f76baaf6673194f5fb78e264fb5d2442fc85c5b2f67fd2dcd97594fe3a6976",
+          "native_pc": "0x12f8d4",
+          "screenshots": [
+            {
+              "name": "s2-following-final-camera-return.png",
+              "sha256": "a8448619620e15383688a782a6bf397d07033a3de8a60c9075201e752a71b489"
+            },
+            {
+              "name": "s2-following-final-camera-return-after.png",
+              "sha256": "bdf6b93d4b6af696cc2d99b7d9204357b32ed2f3d3e4de1404c5759f62cf54fb"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Filenames retain provisional labels; this mapping uses native-stop screenshots and frame counters.",
+    "s1-release5-camera-return is invalid due overlapping automation and is not used.",
+    "Breakpoint settings reload changed the displayed list but retained seven executing engine breakpoints.",
+    "Keyboard key-up timing is not input-release evidence. Game input Y determines the observed release frame.",
+    "All binary captures and screenshots remain owner-private."
+  ],
+  "native_stop_validation": "All 84 paired stops checked: 120 screenshot PCs recognized by OCR, 48 corresponding screenshots (24 paired active/camera stops) visually checked where symbol/address OCR confused digits."
+}
