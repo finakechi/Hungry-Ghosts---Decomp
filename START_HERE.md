@@ -2,10 +2,7 @@
 
 ## M9 player turn and camera response — 2026-11-16
 
-**Resume here.** M9 is implemented and compared with the original game **locally**.
-It lives in local commits on branch `research/m9-player-movement-camera`, based on
-`main` `7c4a90b510ee23700a0147a44e2857dfeafec577`. **Nothing is pushed, and there
-is no M9 PR, CI run or private backup.** Implementation commit: `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295` (exceptions never count as negative-control rejections).
+**Resume here.** M9's selected connected operation is implemented and independently compared with the original Japanese game. PR [#9](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/9) is **merged into `main`** as merge commit `d249be3697bba4255006aa7ba671f53ece08d289`; `cfcefe8` was the former PR branch head, not the merge commit. Implementation `23a9ef111263a1590877faa9d9e44ada260311ac` (baseline `7c4a90b510ee23700a0147a44e2857dfeafec577`); verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295`; final M9 documentation/evidence `cfcefe83276b0f7ad436492b9ff008c0346e07df`. Latest recorded owner-local verification: 59/59 checks (210 synthetic tests) at `6062f0e`. GitHub Actions separately passed on the published PR head (Python 3.10 and 3.14). Private M9 inputs stay outside Git; **no private M9 Drive backup was created**. No M10 or final technical objective is selected. Delivery detail: [docs/M9.md](docs/M9.md).
 
 - **Operation:** holding the left stick left turns global player 003f92d0, and the
   camera follows in the same frame. The chain is 159570 → 159ad0 → 15fe00 (a1 = 1)
@@ -19,7 +16,7 @@ is no M9 PR, CI run or private backup.** Implementation commit: `23a9ef111263a15
   are original-byte verified. See [docs/M9.md](docs/M9.md).
 - **Corrected M8 defect:** 159ad0 calls 15fe00 with a1 = 1 (delay slot 159b08); M8
   passed 0.
-- **Checks:** current inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
+- **Checks (owner-local, recorded 2026-11-16):** inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
 - **Identities:** SCPS-15046 ELF `a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61`,
   ISO `8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e`, PCSX2
   v2.8.2 AppImage `0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea`
@@ -33,9 +30,8 @@ is no M9 PR, CI run or private backup.** Implementation commit: `23a9ef111263a15
   fail closed). One observed operation: a left turn at level 3, with no walking,
   strafing, look or pitch. Functional FP without flags or timing, under PCSX2
   defaults. Capture names release1–3 are held-stick frames.
-- **Blockers:** none for local work. Publication requires Noah's approval.
-- **ONE next action:** Noah reviews M9 and decides whether to push the branch and
-  open a PR. M10 has not been started.
+- **Blockers:** none known. The earlier "local, unpublished" status is superseded; see the delivery addendum in [docs/M9.md](docs/M9.md).
+- **ONE next action:** Noah chooses the next development direction after administrative integration. M10 has not been started.
 
 ## M8 connected gameplay result — 2026-11-16 (delivery addendum, same day)
 

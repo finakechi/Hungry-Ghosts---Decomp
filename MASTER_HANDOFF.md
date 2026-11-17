@@ -2,11 +2,7 @@
 
 ## M9 player turn and camera response — 2026-11-16
 
-**Resume here.** Noah approved M9, "Connected Player Movement and Camera Response".
-It is implemented and compared with the original game **locally**. It lives in
-local commits on `research/m9-player-movement-camera`, created from `main`
-`7c4a90b510ee23700a0147a44e2857dfeafec577` (PR #7 and PR #8 merged). Implementation
-commit: `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295` (exceptions never count as negative-control rejections). **No push, PR, CI run, merge, Drive backup or M10 work.**
+**Resume here.** M9's selected connected operation (a held left-stick turn and the same-frame camera response) is implemented and independently compared with the original Japanese game. PR [#9](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/9) is **merged into `main`** as merge commit `d249be3697bba4255006aa7ba671f53ece08d289`. `cfcefe8` was the former PR branch head, not the merge commit. Original baseline `7c4a90b510ee23700a0147a44e2857dfeafec577`; implementation `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295`; final M9 documentation and evidence, and the former PR branch head, `cfcefe83276b0f7ad436492b9ff008c0346e07df`. The latest recorded owner-local verification passed 59/59 checks (210 synthetic tests) at `6062f0e`; that was an owner-local run, not GitHub CI. GitHub Actions (Synthetic tests, Python 3.10 and 3.14) separately passed on the published PR head (run 43988132508). Private M9 runtime inputs remain outside Git, and **no private M9 Drive backup was created**. The hybrid-reconstruction limits below are unchanged. No M10 milestone or final technical objective has been selected. Noah approved M9, "Connected Player Movement and Camera Response".
 
 **Operation.** Left stick held left (3eaf0c = −1.0) for five updates, then
 released. The C runs the chain 159570 active update → 159ad0 ordinary update →
@@ -41,7 +37,7 @@ decays by π/1200 to 0. Heading +44 goes from π/2 to 1.5838859, and camera yaw
   8,299 synthetic cases; 1,048 of 1,147 addresses executed. The remainder are
   95 unobserved-branch addresses (whose C faults) and 4 statically unreachable
   switch-default addresses.
-- Checks: current inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
+- Checks (owner-local, recorded 2026-11-16): inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
 
 **Corrected M8 defect.** 159ad0's 15fe00 calls receive a1 = 1 from the delay slot
 at 159b08. M8 passed 0, which was invisible with neutral input and hidden by an
@@ -61,9 +57,8 @@ because of input latency.
 debugger screenshots, the runtime profile (PINE 28059, analog keyboard bindings),
 save state, the HGExport snapshots, the compiled controls and the final-check logs.
 
-**Blockers:** none for local work. **ONE next action:** Noah reviews the local M9
-commits and decides whether to authorize a normal push and PR. No M10 work and no
-final technical objective have been chosen.
+- **Blockers:** none known. The earlier "local, unpublished" status is superseded; see the delivery addendum in [docs/M9.md](docs/M9.md).
+- **ONE next action:** Noah chooses the next development direction after administrative integration. M10 has not been started.
 
 ## M8 connected gameplay result — 2026-11-16 (delivery addendum, same day)
 
