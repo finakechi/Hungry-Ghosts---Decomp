@@ -7,7 +7,11 @@ forward-walking operation, actual release, zero speed and following update.
 Repository `finakechi/Hungry-Ghosts---Decomp`; local branch
 `research/m10-forward-walk-camera`; implementation `43a2ea4ff4b82a2a5227a97d63c9389e160068ff`;
 recovered baseline `94d1ca54b8f708b872a7f03af13a3f9868fa1365`. A documentation
-commit follows the implementation. No push, PR action, merge or new backup occurred.
+commit follows the implementation. Noah authorized final documentation corrections,
+normal branch push and PR publication on 2026-11-17. At this correction checkpoint,
+publication and M10 CI are pending; the PR delivery receipt will record their
+results. The PR must remain unmerged for Noah's decision. No private M10 Drive
+backup exists.
 
 The interrupted branch was clean with no M10 commits, implementation or completed
 verification. Its ignored discovery scripts/profile and live paused emulator were
@@ -25,9 +29,17 @@ state and copies all 16 position bytes into `+390`. Only its state-1 active path
 is reconstructed. The coordinator is surveyed only; existing M9 walking arithmetic
 and camera C are reused, not claimed as new reconstruction.
 
-**Fresh evidence/checks:** 72 stage comparisons have zero unexplained EE
-RAM/scratchpad differences. All 11 following-frame handoffs carry the complete
-1,344-byte player and 336-byte camera structures, calculated rather than replayed.
+**Implementation evidence/checks (recorded 2026-11-16; historical at the
+2026-11-17 correction checkpoint):** 72 stage comparisons have zero unexplained EE
+RAM/scratchpad differences. Each frame begins with an independently captured
+original-game dispatcher-entry state. The connected reconstruction calculates
+relevant player movement, dispatcher effects and camera response. The complete
+resulting 1,344-byte player and 336-byte camera structures, including unchanged
+bytes inherited from entry state, match the next original-game checkpoint across
+all 11 verified handoffs. No external writes to these structures were observed
+between the checked boundaries. In four sampled frames, the independent review
+found C writes to 393–409 player bytes and 261 camera bytes; these counts are not
+measurements of every frame.
 Twelve compiled defects and three input counterfactuals produce measured
 mismatches; errors do not count as rejections. The dispatcher differential passes
 1,200 synthetic cases / 77 reached addresses. All 357 new packet words and 1,147
@@ -53,16 +65,30 @@ regression inputs remain required. Original media/BIOS/databases were preserved.
 **Limits:** hybrid C and original-instruction-modeled engine/math/terrain leaves;
 selected camera and dispatcher paths only. No general collision, full coordinator,
 whole gameplay frame, exceptional FP/flags/timing, all-C or port claim. Interframe
-external changes are surveyed and supplied at the entry boundary; full player and
-camera state remains calculated. Guest stack and untouched IOP libpad DMA are
-explicit comparison exclusions. No unexplained mismatch remains.
+external changes are surveyed and supplied at the independently captured entry
+boundary. The complete resulting player/camera state includes calculated changes
+and unchanged entry-state bytes; it demonstrates the selected connected operation,
+not autonomous reconstruction of every inter-frame engine effect. Guest stack and
+untouched IOP libpad DMA are explicit comparison exclusions. No unexplained
+mismatch remains.
 
-**Remote delivery:** fresh read-only queries still show main `94d1ca5`, no M10
-remote branch or PR, and successful baseline CI (run `43993685474`); there is no
+**Remote delivery at the 2026-11-17 correction checkpoint:** read-only queries show
+main `94d1ca5`, no M10 remote branch or PR, and successful baseline CI
+(run `43993685474`); there is no
 M10 remote CI. Both original worktrees are preserved.
 
-**Blockers:** none for the selected operation. **ONE next action:** Noah reviews
-the local M10 changes/evidence and decides whether to authorize publication.
+**Independent review:** READY AFTER SPECIFIC CORRECTIONS; no implementation
+defects, invalid negative controls or regressions reported. Documentation now
+distinguishes calculated changes from inherited state. `camera-lags-player` detects
+player-X and scratchpad differences, not proven camera-eye lag; `missing-position`
+and `camera-before-dispatch` separately support camera dependence on calculated
+player position. Code, evidence identifiers and measurements remain unchanged.
+
+**Blockers:** none for the selected operation. **ONE next action:** complete the
+authorized publication and CI verification, then leave the PR unmerged for Noah's
+merge decision. Fresh publication checks belong in the PR delivery receipt;
+original-game captures, full retail comparisons and the private regression inventory
+are not being repeated for wording changes.
 No M11 or final technical objective is selected. Earlier sections below are
 historical; this section supersedes their no-M10-selected resume wording.
 

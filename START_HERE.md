@@ -6,18 +6,33 @@
 walk, actual release, braking to zero and a following stationary update. Local
 branch `research/m10-forward-walk-camera`; implementation `43a2ea4ff4b82a2a5227a97d63c9389e160068ff`;
 recovered published baseline `94d1ca54b8f708b872a7f03af13a3f9868fa1365`.
-No M10 push, PR, merge, remote CI or private backup occurred.
+Noah authorized final documentation corrections, normal branch push and PR
+publication on 2026-11-17. At this correction checkpoint, publication and M10 CI
+are pending; the PR delivery receipt will record their results. The PR must remain
+unmerged for Noah's decision. No private M10 Drive backup exists.
 
 - **Evidence:** 84 native stops across frames `0x2cb..0x2d6`; stick Y `+1.0`
   moves player and camera-eye X by `0.2512359619140625`. Required dispatcher
   prefix/tail, `+428` clear and full previous-position quad are reconstructed.
   The forward arithmetic and camera code already existed in M9.
-- **Fresh checks:** 72 exact RAM/scratchpad stage comparisons, 11 complete
+- **Implementation checks (recorded 2026-11-16; historical at the 2026-11-17
+  correction checkpoint):** 72 exact RAM/scratchpad stage comparisons, 11 complete
   player/camera structure handoffs, 12 compiled defects plus 3 input controls,
   1,200 dispatcher instruction cases, 213 synthetic tests and 59/59 regression
   checks passed. Strict C and ASan/UBSan/LeakSanitizer passed. Publication audits
   found no heuristic findings. All failures/retries and exact verification argv
   are in [docs/M10.md](docs/M10.md) and [checks.json](evidence/m10/checks.json).
+- **State continuity:** each frame begins with an independently captured
+  original-game dispatcher-entry state. The connected reconstruction calculates
+  relevant movement, dispatcher effects and camera response. Complete resulting
+  player/camera structures, including unchanged entry-state bytes, match the next
+  original-game checkpoint across all 11 verified handoffs; no external structure
+  writes were observed between checked boundaries. This verifies the selected
+  connected operation, not autonomous reconstruction of every inter-frame effect.
+- **Independent review:** READY AFTER SPECIFIC CORRECTIONS; no implementation
+  defects, invalid negative controls or regressions reported. Documentation now
+  qualifies state continuity and describes `camera-lags-player` as detecting
+  player-X/scratchpad differences, without claiming proven camera-eye lag.
 - **Original build:** SCPS-15046 ELF
   `a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61`;
   PCSX2 v2.8.2, CRC `91AA4B28`. Private inputs: ignored `local/m10/` captures,
@@ -25,8 +40,10 @@ No M10 push, PR, merge, remote CI or private backup occurred.
 - **Limits:** hybrid C/modeled leaves, selected dispatcher/camera branches only;
   interframe work remains external. Guest stack and untouched asynchronous libpad
   DMA are explicit exclusions. No full-frame, all-C, byte-match or port claim.
-- **Blockers:** none for this operation. **ONE next action:** Noah reviews the
-  local M10 result and decides whether to authorize publication. Do not start M11.
+- **Blockers:** none for this operation. **ONE next action:** complete authorized
+  publication and CI verification, then leave the PR unmerged for Noah's merge
+  decision. Fresh publication checks belong in the PR delivery receipt. Do not
+  start M11.
 
 Earlier milestone sections below retain their historical status and next-action
 wording; M10 above is the current resume point.
