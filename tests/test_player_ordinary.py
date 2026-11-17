@@ -5,7 +5,8 @@ from resource_harness import Driver, ResourceEnv, ROOT, library
 
 FUNCTIONS={0x159ad0:'hg_player_ordinary_update',0x159380:'hg_player_apply_transition',
            0x158d30:'hg_player_reset_transition'}
-ARITIES={0x13a050:2,0x159d00:1,0x15e190:3,0x15fe00:1,0x159380:1,
+# M9: 0015fe00 compares both a0 and the delay-slot a1=1 (arity 1 hid an M8 defect).
+ARITIES={0x13a050:2,0x159d00:1,0x15e190:3,0x15fe00:2,0x159380:1,
          0x161110:2,0x188650:1,0x15bf30:1,0x187e10:1,0x15b1e0:2,
          0x158d90:1,0x159350:1,0x158dc0:1,0x158e20:1,0x158ce0:2}
 

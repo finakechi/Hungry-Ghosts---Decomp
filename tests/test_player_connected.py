@@ -17,6 +17,8 @@ ARITIES={0x138370:2,0x139d20:3,0x139fc0:2,0x1235c0:2,0x267300:2,0x139ff0:3,
     0x15fe00:2,0x15c160:1,0x174900:2,0x15e190:3,0x158d30:1}
 RETURNS={0x1b7f00:0x600100,0x15de80:0x600104,0x120830:0x600108,0x15fe00:0x60010c}
 DISPATCHES={0x159ad0,0x32b3c0,0x175190,0x176fb0,0x1bcd00,0x1e5060,0x15a0d0}
+# M9: external leaves reached by the reconstructed 0015fe00 chain with a neutral stick.
+MOVEMENT=[0x160ff0,0x160c60,0x143560,0x143620,0x120830,0x15ebc0,0x15fc10]
 
 
 def configure(lib):
@@ -59,7 +61,9 @@ class IntegratedDriver(Driver):
             0x144340:3,0x13a240:3,0x267450:1,0x13a060:4,0x15d770:1,
             0x13a050:2,0x15fe00:2,0x161110:2,0x188650:1,0x15bf30:1,
             0x120830:2,0x188550:2,0x17d930:3,0x120490:2,0x174900:2,
-            0x119ac8:3,0x119910:3}
+            0x119ac8:3,0x119910:3,
+            # M9: 0015fe00 now resolves in C; its reached modeled leaves.
+            0x160ff0:1,0x160c60:1,0x143560:1,0x143620:1,0x15ebc0:2,0x15fc10:1}
         if pc not in arities:raise AssertionError(f'Unexpected unresolved dependency {pc:#x}')
         self.calls.append((pc,*(a,b,c,d)[:arities[pc]]))
         if pc==0x119ac8:self.mem.put(a,bytes([b&255])*c);return a
@@ -178,7 +182,7 @@ class ConnectedTests(unittest.TestCase):
                 self.assertEqual(d.mem.load(a+0x449,1),255)
                 self.assertEqual(d.mem.load(a+0x19,1),0 if edge else 1)
                 self.assertEqual([c[0] for c in d.calls],
-                    [0x1b7f00,0x15d770,0x13a050,0x15fe00,0x161110,0x188650,0x15bf30,0x120830])
+                    [0x1b7f00,0x15d770,0x13a050,*MOVEMENT,0x161110,0x188650,0x15bf30,0x120830])
                 d.calls.clear();d.mem.store(0x3eaf04,0,2)
                 update(C.byref(d.env),a,frame)
                 self.assertFalse(d.errors,d.errors)
@@ -193,7 +197,7 @@ class ConnectedTests(unittest.TestCase):
                     self.assertEqual(d.mem.load(child+0x3c),0x3f800000)
                     self.assertEqual(d.mem.load(a+0xb6,2),0x75)
                     self.assertEqual([c[0] for c in d.calls],
-                        [0x1b7f00,0x15d770,0x188550,0x188650,0x15bf30,0x17d930,0x15fe00,
+                        [0x1b7f00,0x15d770,0x188550,0x188650,0x15bf30,0x17d930,*MOVEMENT,
                          0x119ac8,0x120490,0x174900,0x13a060,0x13a060,0x120830])
                     self.assertIn((0x120490,child,a),d.calls)
                 else:

@@ -31,6 +31,9 @@ research sources and reuse limits are listed in [docs/sources.md](docs/sources.m
 M8 (merged via PR #7) adds a connected player-gameplay operation compared
 against the original game; the figures above are the M6 summary. See
 [START_HERE.md](START_HERE.md) and [docs/M8.md](docs/M8.md) for current status.
+M9 (local branch, unpublished) adds a held left-stick turn and the camera
+response that follows it, compared frame by frame with the original game; see
+[docs/M9.md](docs/M9.md).
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 

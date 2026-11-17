@@ -70,6 +70,16 @@ class CapturedMemory:
         if ram is None:raise ValueError('Missing complete RAM capture')
         return cls(ram,scratch)
 
+# Host bus seams for modeled original leaves called from reconstructed C:
+# entry -> (leading raw-bit FP operands placed in f12.., result in f0?).
+# Remaining bus operands go to a0.. in order. Verified against each listing.
+FP_SEAMS={0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,False),
+    0x13a060:(2,False),0x120830:(0,True),0x1204e0:(1,True),
+    0x143560:(1,True),0x143620:(1,True),0x143c60:(1,False),0x143d30:(1,False),0x143b90:(1,False),
+    0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False)}
+# Host-only fail-closed signal from C paths outside the reconstructed domain.
+DOMAIN_FAULT=0xfffffff0
+
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
     def __init__(self,mem,elfdata,segments):
@@ -90,15 +100,14 @@ class ConnectedRuntimeDriver(Driver):
         if pc==0x119910:
             if c>0x2000000:raise ValueError('Unbounded memcpy')
             self.mem.put(a,self.mem.get(b,c));return a
+        if pc==DOMAIN_FAULT:raise ValueError(f'C path outside reconstructed domain (code {a:#x})')
         machine=Machine();machine.mem=self.mem;machine.reg[28]=0x3e7f70
         # Each nested modeled call receives separate scratch stack storage.
         machine.reg[29]=0x1ff0800-self.model_depth*0x1000
-        for index,value in enumerate((a,b,c,d),4):machine.reg[index]=value
-        if pc==0x13a060:
-            machine.fpr[12]=a;machine.fpr[13]=b;machine.reg[4]=c;machine.reg[5]=d
-        elif pc in (0x13a050,0x15e190,0x188550,0x17d930):
-            machine.fpr[12]=a
-            for index,value in enumerate((b,c,d),4):machine.reg[index]=value
+        fp_count,fp_result=FP_SEAMS.get(pc,(0,False))
+        operands=(a,b,c,d)
+        for index,value in enumerate(operands[:fp_count]):machine.fpr[12+index]=value
+        for index,value in enumerate(operands[fp_count:],4):machine.reg[index]=value
         def memcall(cpu,target):
             return self.external(target,*(cpu.reg[i]&0xffffffff for i in (4,5,6,7)))
         machine.hooks={target:(lambda cpu,target=target:memcall(cpu,target)) for target in (0x119910,0x119ac8)}
@@ -109,7 +118,7 @@ class ConnectedRuntimeDriver(Driver):
         self.verify_executed(machine.executed);self.executed.update(machine.executed)
         self.modeled_calls.append(dict(entry=hex(pc),arguments=[hex(v) for v in (a,b,c,d)],
             instructions=machine.steps,instruction_addresses=len(machine.executed)))
-        return machine.fpr[0] if pc in (0x120830,0x1204e0) else value&0xffffffff
+        return machine.fpr[0] if fp_result else value&0xffffffff
 
 # Guest call frames differ between host C and instruction execution. These
 # explicit transient stack bytes are not gameplay state and are omitted.
@@ -377,15 +386,17 @@ def runtime_negative_controls(elfdata,segments,capture_dir,folder,baseline_lib):
     for name,old,new in RUNTIME_DEFECTS:
         if source.count(old)!=1:raise AssertionError(f'{name}: mutation target must be unique')
         path=folder/(name+'.c');path.open('x').write(source.replace(old,new))
+        # M9 hardening: only a completed comparison with failed stages/checks is a
+        # rejection; an exception is 'error' and fails the run instead.
         try:
             outcome=run_connected(library(source=path,output=folder/(name+'.so')),elfdata,segments,capture_dir)
             failed=[s['stage'] for s in outcome['stages'] if s['result']!='passed']
             checks=[k for k,v in outcome['gameplay_checks'].items() if not v]
-            rejected=outcome['result']=='failed';reason=dict(failed_stages=failed,failed_checks=checks)
+            result='rejected' if outcome['result']=='failed' else 'ESCAPED'
+            reason=dict(failed_stages=failed,failed_checks=checks)
         except Exception as error:
-            rejected=True;reason=dict(execution_error=type(error).__name__)
-        controls.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),
-            result='rejected' if rejected else 'ESCAPED',**reason))
+            result='error';reason=dict(execution_error=type(error).__name__,detail=str(error)[:200])
+        controls.append(dict(control=name,compiled=True,mutated_source_sha256=digest(path),result=result,**reason))
     # Model control: the measured EE DIV.S rounding is required; chop must fail.
     saved=ee_subset.fp_signed_nearest
     ee_subset.fp_signed_nearest=ee_subset.fp_signed_chop

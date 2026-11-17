@@ -14,6 +14,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'tests')]
 from resource_harness import Memory, ResourceEnv, machine, library
 from test_player_connected import FUNCTIONS, ARITIES, RETURNS, ConnectedDriver, ConnectedTests, configure
+import test_player_connected as connected_tests
 from verify_resource_loader import shared_module, EXPECTED, clone, compare
 from hg_evidence_safety import digest
 from ee_subset import sx, MASK64
@@ -140,11 +141,18 @@ def negative_controls(output):
         path=folder/(name+'.c');path.open('x').write(source.replace(old,new))
         lib=configure(library(source=path,output=folder/(name+'.so')))
         test=ConnectedTests('test_integrated_setup_square_and_following_update_with_control');test.lib=lib
+        # M9 hardening: a failure caused by bus/driver errors (exceptions recorded
+        # by the synthetic driver) is not a measured divergence and never a rejection.
+        drivers=[];fixture=connected_tests.integrated_fixture
+        connected_tests.integrated_fixture=lambda:drivers.append(fixture()) or drivers[-1]
         try:test.test_integrated_setup_square_and_following_update_with_control()
         except AssertionError as exc:
+            if any(d.errors for d in drivers):
+                raise AssertionError(f'{name}: driver errors, not a rejection: {[d.errors for d in drivers if d.errors]}') from None
             results.append(dict(control=name,result='rejected',compiled=True,source_sha256=digest(path),
                 test='test_integrated_setup_square_and_following_update_with_control',reason=str(exc)))
         else:raise AssertionError(name+' defect escaped')
+        finally:connected_tests.integrated_fixture=fixture
     return dict(result='passed',baseline='passed',controls=results,
         sources={name:digest(ROOT/name) for name in ['src/resource_loader.c','src/resource_loader.h',
             'tests/test_player_connected.py','tools/verify_player_connected.py']},

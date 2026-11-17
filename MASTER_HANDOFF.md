@@ -1,8 +1,73 @@
 # Hungry Ghosts — master handoff
 
+## M9 player turn and camera response — 2026-11-16
+
+**Resume here.** Noah approved M9, "Connected Player Movement and Camera Response".
+It is implemented and compared with the original game **locally**. It lives in
+local commits on `research/m9-player-movement-camera`, created from `main`
+`7c4a90b510ee23700a0147a44e2857dfeafec577` (PR #7 and PR #8 merged). Implementation
+commit: `23a9ef111263a1590877faa9d9e44ada260311ac`; correction `8742ad052c8e04e0376e7f391c2b513472e32b7e` (VDIV by zero fails closed); evidence `e0c1f5c`; verifier hardening `6062f0e02f2b1d091ac6f3bb98686133b62a3295` (exceptions never count as negative-control rejections). **No push, PR, CI run, merge, Drive backup or M10 work.**
+
+**Operation.** Left stick held left (3eaf0c = −1.0) for five updates, then
+released. The C runs the chain 159570 active update → 159ad0 ordinary update →
+15fe00 gate → 15fe70 movement → 1608b0 walk → 160510 turn → 160420 rate approach
+/ 1204e0 wrap. Then 12c790 camera update → 12d130 follow → 12bd00 head matrix,
+with look-at 12c3d0 and the view matrix at scratchpad 70000000 (eye 70000040 =
+position + 16.5 y). Rate +440 ramps by −π/4000 per frame to −0.0039270, then
+decays by π/1200 to 0. Heading +44 goes from π/2 to 1.5838859, and camera yaw
+3f9934 follows.
+
+**Evidence** ([docs/M9.md](docs/M9.md)):
+
+- Native observation: 37 stops in one continuous PCSX2 v2.8.2 run (save state slot
+  1; frames 46e118 = 0x752, 0x754–0x75a). PC/ra come from after-capture debugger
+  screenshots. Capture and screenshot SHA-256 values are in
+  [player-turn-camera-observation.json](evidence/m9/player-turn-camera-observation.json).
+- Original-game comparison
+  ([player-turn-runtime-comparison.json](evidence/m9/player-turn-runtime-comparison.json)):
+  7 update stages, 7 camera stages, 8 C-state probes at the native 160510 entry and
+  the release5 tail. All show **0 differing bytes over 33,423,360 RAM bytes and
+  16,384 scratchpad bytes**. The handoffs (update → camera entry → next frame)
+  match. The whole original 12c790 executed in the model also matches on all 7
+  frames.
+- Controls: 4 input counterfactuals diverge as expected. 11 compiled C defects and
+  3 model defects are rejected by the retail comparison, and 7 compiled defects by
+  the instruction differential, each by a measured divergence. VDIV by zero (never
+  observed) now fails closed. The evidence first committed in `e0c1f5c` counted one
+  model control as rejected only through a verifier exception. That is corrected
+  in `6062f0e`, with a replacement control.
+- Instruction differential
+  ([player-turn-instruction-differential.json](evidence/m9/player-turn-instruction-differential.json)):
+  8,299 synthetic cases; 1,048 of 1,147 addresses executed. The remainder are
+  95 unobserved-branch addresses (whose C faults) and 4 statically unreachable
+  switch-default addresses.
+- Checks: current inventory at `6062f0e` ([checks.json](evidence/m9/checks.json)): **59/59 passed** on the first attempt. That covers 210 synthetic tests, M1–M8 instruction and saved-runtime regressions, ASan/UBSan, PS2DInfo validation, the publication audit and `git diff --check`. Every control rejection is a measured divergence, never an exception. The earlier run at `8742ad0` is preserved: check 21 FAILED on an output-stem collision (not behavioural), then passed in the session rerun and in Noah's manual recheck (`m9-transition-recheck-001.json`). The private runner now prevents that collision.
+
+**Corrected M8 defect.** 159ad0's 15fe00 calls receive a1 = 1 from the delay slot
+at 159b08. M8 passed 0, which was invisible with neutral input and hidden by an
+arity-1 test declaration. The ordinary-update differential now uses arity 2 and
+rejects the old source. CI's sanitizer harness needed the new M9 leaves, because
+15fe00 now resolves in C.
+
+**Limits.** This is a hybrid: C control plus original-instruction-modeled leaves.
+It is not all-C, whole-game equivalence or byte matching. 12c790 and 12bd00 are
+reconstructed for their observed branches only. Only one operation is observed
+(left turn, level 3, speed class 1, no walking, strafing, look or pitch). The FP
+model is functional only (no flags, exceptional values or timing) and assumes
+PCSX2 v2.8.2 defaults. Capture names release1–3 denote held-stick frames,
+because of input latency.
+
+**Private inputs** stay in ignored `local/m9/`: captures (2.7 GB of hex JSON, including the earlier session-2 attempts),
+debugger screenshots, the runtime profile (PINE 28059, analog keyboard bindings),
+save state, the HGExport snapshots, the compiled controls and the final-check logs.
+
+**Blockers:** none for local work. **ONE next action:** Noah reviews the local M9
+commits and decides whether to authorize a normal push and PR. No M10 work and no
+final technical objective have been chosen.
+
 ## M8 connected gameplay result — 2026-11-16 (delivery addendum, same day)
 
-**Resume here.** M8 is implemented and compared against the original game, and its
+**Superseded as the resume point by M9 above.** M8 is implemented and compared against the original game, and its
 private Drive backup is project-reported complete. PR
 [#7](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/7) is **merged into
 `main`** as merge commit `4034189bd84df9c1d89c99b63300d9a08f58f8ef`. Its former

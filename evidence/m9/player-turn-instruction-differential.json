@@ -1,0 +1,188 @@
+{
+  "result": "passed",
+  "functions": [
+    {
+      "entry": "0x0015fe00",
+      "name": "hg_player_movement_gate",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x0015fe70",
+      "name": "hg_player_movement",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x001608b0",
+      "name": "hg_player_walk",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x00160510",
+      "name": "hg_player_turn",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x00160420",
+      "name": "hg_player_rate_approach",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x0015fcd0",
+      "name": "hg_player_speed_class",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x00160c20",
+      "name": "hg_player_move_limit",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x001204e0",
+      "name": "hg_angle_wrap",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x0012c790",
+      "name": "hg_camera_update",
+      "compared": 684,
+      "failed_closed": 84,
+      "complete_function": false,
+      "unexecuted_unobserved_branch_addresses": 46
+    },
+    {
+      "entry": "0x0012d130",
+      "name": "hg_camera_follow",
+      "compared": 768,
+      "failed_closed": 0,
+      "complete_function": true
+    },
+    {
+      "entry": "0x0012bd00",
+      "name": "hg_camera_head_matrix",
+      "compared": 703,
+      "failed_closed": 65,
+      "complete_function": false,
+      "unexecuted_unobserved_branch_addresses": 49
+    }
+  ],
+  "cases": 8299,
+  "failed_closed": 149,
+  "instruction_addresses": 1147,
+  "executed_addresses": 1048,
+  "partial_exclusions": {
+    "0x0012c790": {
+      "branch": "3eaed4 != 0",
+      "addresses": 46
+    },
+    "0x0012bd00": {
+      "branch": "player +47a != 0",
+      "addresses": 49
+    }
+  },
+  "static_exclusions": {
+    "0x00160510": {
+      "reason": "switch default; level register a1 is 0..3 by construction",
+      "addresses": [
+        "0x16063c",
+        "0x160640"
+      ]
+    },
+    "0x001608b0": {
+      "reason": "switch default; level register a1 is 0..3 by construction",
+      "addresses": [
+        "0x160aac",
+        "0x160ab0"
+      ]
+    }
+  },
+  "negative_controls": [
+    {
+      "control": "missing-sign-negation",
+      "compiled": true,
+      "mutated_source_sha256": "4b89f9a85341f9fe1063d678cfd7231c791b11d9859bd203443ec6a192978348",
+      "result": "rejected",
+      "reason": "hg_player_turn/['0x3f92d0', '0xc']: external call trace differs"
+    },
+    {
+      "control": "decay-without-zero-clamp",
+      "compiled": true,
+      "mutated_source_sha256": "c2fbac8c0897604fbff22f997be4f02d4b671ece0e4f8e4ad29f0431181aeef2",
+      "result": "rejected",
+      "reason": "hg_player_movement/['0x3f92d0', '0x1']: external call trace differs"
+    },
+    {
+      "control": "wrong-dead-zone",
+      "compiled": true,
+      "mutated_source_sha256": "04fb94353472a7d7b0af05537e4a013c3272b24513a28dd30b76dc6f26989ea8",
+      "result": "rejected",
+      "reason": "hg_player_walk/['0x3f92d0']: external call trace differs"
+    },
+    {
+      "control": "swapped-brake-branch",
+      "compiled": true,
+      "mutated_source_sha256": "c5e823aa2e7d56742223ac73bcf1547153d24f8c1967aa785790fd82b270a06e",
+      "result": "rejected",
+      "reason": "hg_player_rate_approach/['0xbf38f53e', '0x3eb3efac', '0x40664914', '0x601000']: memory differs at 00601000: C 17df3c40000000000000000000000000, EE 2de30fc0000000000000000000000000"
+    },
+    {
+      "control": "camera-target-depth",
+      "compiled": true,
+      "mutated_source_sha256": "3957aea51977450cfb1c8ec174ba41ce622a80a9f97d6c899121c1a6d2369ef3",
+      "result": "rejected",
+      "reason": "hg_camera_head_matrix/['0x3f92d0', '0x3f9860', '0x1']: memory differs at 7000070a: C a8410000803f00000000000000000000, EE a0410000803f00000000000000000000"
+    },
+    {
+      "control": "ee-add-without-guard",
+      "compiled": true,
+      "mutated_source_sha256": "83f929e262c831a335ac33e2a0b77d93f240d2da8af99448217f0191c4ac0057",
+      "result": "rejected",
+      "reason": "hg_player_movement/['0x3f92d0', '0xe']: external call trace differs"
+    },
+    {
+      "control": "vu-add-with-ee-guard",
+      "compiled": true,
+      "mutated_source_sha256": "ffeb70e7dd26fba3c10a7b96e8e99879d68abf33d27022d7e960f7e8e7d724b4",
+      "result": "rejected",
+      "reason": "hg_camera_head_matrix/['0x3f92d0', '0x3f9860', '0x1']: memory differs at 003f9954: C 3ddcdcbd69587ebe93d17c43701bbd2f, EE 3cdcdcbd68587ebe92d17c43701bbd2f"
+    }
+  ],
+  "original_bytes": {
+    "schema": "ps2-elf-byte-check/v1",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "endianness": "little",
+    "segments": 1,
+    "instructions_verified": 1147,
+    "instructions_unknown": 0,
+    "scope": "file-backed PT_LOAD bytes only; no semantic or runtime verification"
+  },
+  "sources": {
+    "src/resource_loader.c": "09c627d070be5f9dc3c4ea8422185fd4bc7e9f330243705573fed8fc3d9b463d",
+    "src/resource_loader.h": "17372b05f8f865c1f3887fd090a33fd3fb857fb939b64c0eb3ee322cd6963a89",
+    "tests/test_player_turn_camera.py": "66a07462c584f11a6d158377d81ae98cfd3581047efa0d00bf7ea2b24499150c",
+    "tools/verify_player_turn_camera.py": "f7023b0f9d60a13fd15fa8070173334ad41e0709d018938b6b6889ef7cea2a48",
+    "tools/ee_subset.py": "7743b19b0afad6b64df6fe5e6eb2df04199bde8904b6122ac4e7ae2f16787b04"
+  },
+  "limitations": [
+    "Synthetic leaf results and effects; no retail equivalence.",
+    "Raw FP operands precede integer arguments on the host bus; FP results return in f0.",
+    "12c790 and 12bd00: observed branch only; the other branch must call the host domain fault.",
+    "Bounded finite FP oracle (chop, DAZ/FTZ, EE guard bit); no FP flags or timing.",
+    "Callee-saved 128-bit registers checked; guest stack scratch excluded."
+  ]
+}

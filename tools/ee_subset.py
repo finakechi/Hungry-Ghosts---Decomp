@@ -178,6 +178,8 @@ class Machine:
                 elif fn == 0x23: wordreg(rd,a-b)
                 elif fn == 0x25: self.setreg(rd,a|b)
                 elif fn == 0x24: self.setreg(rd,a&b)
+                elif fn == 0x26: self.setreg(rd,a^b)  # xor (M9)
+                elif fn == 0x27: self.setreg(rd,~(a|b)&MASK64)  # nor (M9)
                 elif fn == 0x2a: self.setreg(rd,int(sx(a,64)<sx(b,64)))
                 elif fn == 0x2b: self.setreg(rd,int(a<b))
                 elif fn == 0x2d: self.setreg(rd,a+b)
@@ -213,6 +215,15 @@ class Machine:
             elif op == 15: wordreg(rt,(word & 0xffff)<<16)
             elif op == 0x1c and fn == 9 and sa == 14:  # pcpyld
                 if rd:self.reg[rd] = (a << 64) | b
+            elif op == 0x1c and (fn,sa) in ((8,0x12),(0x28,0x12),(0x29,0x0e)):
+                # M9 camera: pextlw / pextuw interleave words; pcpyud copies upper doublewords.
+                full_s,full_t = self.reg[rs] if rs else 0,self.reg[rt] if rt else 0
+                ws=[(full_s >> (32*i)) & 0xffffffff for i in range(4)]
+                wt=[(full_t >> (32*i)) & 0xffffffff for i in range(4)]
+                if fn == 8:out=[wt[0],ws[0],wt[1],ws[1]]
+                elif fn == 0x28:out=[wt[2],ws[2],wt[3],ws[3]]
+                else:out=[ws[2],ws[3],wt[2],wt[3]]
+                if rd:self.reg[rd]=sum(w << (32*i) for i,w in enumerate(out))
             elif op in (0x31, 0x39):  # lwc1 / swc1
                 address = (a + imm) & 0xffffffff
                 if op == 0x31:self.fpr[rt] = self.load(address,4)
@@ -288,12 +299,40 @@ class Machine:
                         product=[fp_signed_chop(fp_value(x)*fp_value(right[fn&3])) if mask&(8>>i) else 0 for i,x in enumerate(left)]
                         out=product if sa == 6 else [fp_signed_chop(fp_value(x)+fp_value(y)) if mask&(8>>i) else 0 for i,(x,y) in enumerate(zip(self.vacc,product))]
                         accum=True
+                    elif fn == 0x3e and sa == 0x0b:  # vopmula ACC = fs.yzx * ft.zxy (M9 camera)
+                        order=((1,2),(2,0),(0,1))
+                        out=[fp_signed_chop(fp_value(left[i])*fp_value(right[j])) if mask&(8>>lane) else 0
+                             for lane,(i,j) in enumerate(order)]+[0]
+                        accum=True
+                    elif fn == 0x2e:  # vopmsub fd = ACC - fs.yzx * ft.zxy (same pattern as vopmula)
+                        order=((1,2),(2,0),(0,1))
+                        out=[]
+                        for lane,(i,j) in enumerate(order):
+                            if not mask&(8>>lane):out.append(0);continue
+                            product=fp_signed_chop(fp_value(left[i])*fp_value(right[j]))
+                            out.append(fp_signed_chop(fp_value(self.vacc[lane])-fp_value(product)))
+                        out.append(0)
+                    elif fn == 0x3f and sa == 0x0b:  # vnop
+                        out=[]
+                    elif fn == 0x3c and sa == 14:  # vdiv Q, fs.fsf, ft.ftf (M9 camera), VU0 Chop
+                        dividend,divisor=left[(word>>21)&3],right[(word>>23)&3]
+                        # A zero divisor was never observed in the M9 captures; fail closed.
+                        if fp_value(divisor) == 0:raise ValueError('VDIV by zero outside investigated subset')
+                        self.q=fp_signed_chop(fp_value(dividend)/fp_value(divisor))
+                        out=[]
                     elif fn == 0x3d and sa == 14:  # vsqrt
                         self.q=fp_chop(abs(fp_value(right[(word>>23)&3])),root=True)
                         out=[]
-                    elif fn in tuple(range(0x00,0x0c))+tuple(range(0x18,0x1c))+(0x20,0x28,0x29,0x2a,0x2c):
+                    elif fn == 0x3e and sa == 14:  # vrsqrt Q, fs.fsf, ft.ftf (M9 camera)
+                        # PCSX2 default VU0 rounding (Chop): square root, then division,
+                        # each rounded. Zero/negative radicands stay outside the subset.
+                        root=fp_chop(fp_value(right[(word>>23)&3]),root=True)
+                        if root == 0:raise ValueError('VRSQRT of zero outside investigated subset')
+                        self.q=fp_signed_chop(fp_value(left[(word>>21)&3])/fp_value(root))
+                        out=[]
+                    elif fn in tuple(range(0x00,0x0c))+tuple(range(0x18,0x1c))+(0x1c,0x20,0x28,0x29,0x2a,0x2c):
                         if fn < 0x1c:other=[right[fn&3]]*4
-                        elif fn == 0x20:other=[self.q]*4
+                        elif fn in (0x1c,0x20):other=[self.q]*4  # vmulq / vaddq
                         else:other=right
                         out=[]
                         for lane,(x,y) in enumerate(zip(left,other)):
