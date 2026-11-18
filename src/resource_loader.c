@@ -2027,7 +2027,7 @@ static uint32_t constraint_leave(HGResourceEnv *e,uint32_t result) {
     return result;
 }
 uint32_t hg_player_static_constraint(HGResourceEnv *e,uint32_t heading,uint32_t a) {
-    const uint32_t head=0x41840000u,middle=0x41040000u,foot=0x40400000u;
+    const uint32_t head=0x41840000U,middle=0x41040000u,foot=0x40400000u; /* 16.5, 8.25, 3.0 */
     const uint32_t minus_90=0xc2b40000u,step_45=0x42340000u;
     uint32_t result=0,hit;
     call(e,HG_GUEST_FRAME,0x70,1,0,0);
@@ -2099,9 +2099,10 @@ static uint32_t constraint_process_call(void *user,uint32_t pc,uint32_t a,uint32
 }
 void hg_player_constraint_camera_fixed(HGResourceEnv *e,uint32_t frame) {
     HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
-    p.env.load=process_load;p.env.store=process_store;p.env.call=constraint_process_call;
-    hg_player_dispatch(&p.env);
-    hg_camera_update(&p.env);
+    HGResourceEnv *bus=&p.env;
+    bus->load=process_load;bus->store=process_store;bus->call=constraint_process_call;
+    hg_player_dispatch(bus);   /* walk, C 0015ebc0 response, history */
+    hg_camera_update(bus);     /* same-frame camera on the corrected position */
 }
 /* Host entry for synthetic/original-instruction differentials of 0015ebc0. */
 uint32_t hg_player_static_constraint_fixed(HGResourceEnv *e,uint32_t heading,uint32_t a) {
