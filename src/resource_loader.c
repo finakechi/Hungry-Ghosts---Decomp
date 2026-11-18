@@ -1545,8 +1545,68 @@ static int64_t fp_key(uint32_t b) {
     int64_t m=fp_field(b)?(int64_t)(b&0x7fffffffu):0;
     return (b&0x80000000u)?-m:m;
 }
+/* M11. Normal-range division core: q = floor((ml << 40) / mr) lies in
+ * [2^39, 2^41); returns the 24-bit truncated mantissa, its exponent (value =
+ * mant * 2^e2) and the discarded fraction state for rounding. */
+static uint64_t fp_quotient(uint64_t ml,uint64_t mr,int *e2,uint64_t *low,uint64_t *half,int *exact) {
+    uint64_t num=ml<<40,q=num/mr;
+    int shift=(q>>40)!=0?17:16;
+    *low=q&((1ull<<shift)-1u);*half=1ull<<(shift-1);*exact=(num%mr)==0;
+    *e2=shift-40;
+    return q>>shift;
+}
+/* EE DIV.S under the PCSX2 v2.8.2 default profile: round to nearest even
+ * (unlike the chopped add/mul), as fp_signed_nearest in tools/ee_subset.py.
+ * A zero divisor or non-finite operand is outside the verified domain. */
+static uint32_t fp_div_nearest_bits(uint32_t l,uint32_t r,uint32_t *fault) {
+    if(fp_field(l)==255 || fp_field(r)==255 || fp_field(r)==0) {*fault=1;return 0;}
+    if(fp_field(l)==0)return 0;
+    uint64_t low,half;int e2,exact;
+    uint64_t mant=fp_quotient(fp_mantissa(l),fp_mantissa(r),&e2,&low,&half,&exact);
+    int field=e2+fp_field(l)-fp_field(r)+150;
+    uint32_t sign=(l^r)&0x80000000u;
+    if(field<=0)return 0;                 /* the oracle flushes before rounding */
+    if(field>=255)return sign|0x7f7fffffu;
+    if(low>half || (low==half && (!exact || (mant&1u)!=0))) {
+        if(++mant==(1ull<<24)) {mant>>=1;field++;}
+    }
+    if(field>=255)return sign|0x7f7fffffu;
+    return sign|((uint32_t)field<<23)|((uint32_t)mant&0x7fffffu);
+}
+static uint64_t isqrt64(uint64_t n) {
+    uint64_t root=0,bit=1ull<<62;
+    while(bit>n)bit>>=2;
+    while(bit!=0) {
+        if(n>=root+bit) {n-=root+bit;root=(root>>1)+bit;}
+        else root>>=1;
+        bit>>=2;
+    }
+    return root;
+}
+/* VU0 macro VRSQRT Q, fs.fsf, ft.ftf under PCSX2 defaults (Chop): the square
+ * root of ft.ftf is chopped to single precision, then fs.fsf / root is
+ * chopped. Zero, negative or non-finite radicands are outside the domain. */
+static uint32_t vu_rsqrt_bits(uint32_t num,uint32_t rad,uint32_t *fault) {
+    if(fp_field(num)==255 || fp_field(rad)==255 || fp_field(rad)==0 || (rad&0x80000000u)!=0) {*fault=1;return 0;}
+    uint64_t m=fp_mantissa(rad);int e=fp_field(rad)-150;
+    if((e&1)!=0) {m<<=1;e--;}
+    uint64_t s=isqrt64(m<<38);            /* sqrt(rad) = s * 2^((e-38)/2), floored */
+    int bits=0;
+    while((s>>bits)!=0)bits++;
+    uint64_t root=s>>(bits-24);
+    int root_e2=(e-38)/2+(bits-24);       /* root value = root * 2^root_e2, normal */
+    if(fp_field(num)==0)return 0;
+    uint64_t low,half;int e2,exact;
+    uint64_t mant=fp_quotient(fp_mantissa(num),root,&e2,&low,&half,&exact);
+    int field=e2+(fp_field(num)-150)-root_e2+150;
+    uint32_t sign=num&0x80000000u;
+    if(field<=0)return 0;
+    if(field>=255)return sign|0x7f7fffffu;
+    return sign|((uint32_t)field<<23)|((uint32_t)mant&0x7fffffu);
+}
 /* Exported for synthetic differential tests: op 0 add.s, 1 sub.s, 2 mul.s,
- * 3 c.lt.s, 4 c.le.s, 5 c.eq.s, 6 VU add, 7 VU sub. */
+ * 3 c.lt.s, 4 c.le.s, 5 c.eq.s, 6 VU add, 7 VU sub, 8 div.s (nearest),
+ * 9 VU rsqrt (a / sqrt(b), chop). */
 uint32_t hg_ee_fp(uint32_t op,uint32_t a,uint32_t b,uint32_t *fault) {
     *fault=0;
     switch(op) {
@@ -1558,6 +1618,8 @@ uint32_t hg_ee_fp(uint32_t op,uint32_t a,uint32_t b,uint32_t *fault) {
         if(op==4)return fp_key(a)<=fp_key(b);
         return fp_key(a)==fp_key(b);
     case 6:case 7:return fp_add_bits(a,b,op==7,0,fault);
+    case 8:return fp_div_nearest_bits(a,b,fault);
+    case 9:return vu_rsqrt_bits(a,b,fault);
     default:*fault=1;return 0;
     }
 }
@@ -1890,4 +1952,161 @@ void hg_player_walk_camera_fixed(HGResourceEnv *e,uint32_t frame) {
     p.env.load=process_load;p.env.store=process_store;p.env.call=turn_camera_process_call;
     hg_player_dispatch(&p.env);
     hg_camera_update(&p.env);
+}
+
+/* M11: 0015ebc0, the static movement constraint called by 0015fe70 after the
+ * walk proposes +30/+38 (original evidence: analysis/player_constraint/
+ * functions.json). Four probe tiers query 001446a0 from the proposed position:
+ * head (+16.5 y) and middle (+8.25 y) segments 4 units out at -90..+90 degrees
+ * around the movement heading; foot (+3 y) segments from 2 units behind to 4
+ * ahead; then 1 (or 3 with +4ad) rear probes. A qualifying normal-wall hit
+ * whose normalized probe direction faces the hit normal (dot <= -0.3, or -0.7
+ * for foot/rear probes with +4ad) adds the query's push vector 3f39b0/3f39b8
+ * to X/Z and restarts that tier's probes from the corrected position.
+ *
+ * The scene query, sin/cos (00143560/00143620), RNG 0011ad58 and sound request
+ * 00156ad0 remain original-address bus calls. Hits flagged 0x1e00 (special
+ * surfaces: 0015eaf0 re-query and 3f3a20 object updates) were not observed and
+ * fail closed. HG_GUEST_FRAME is a host-only seam, like HG_DOMAIN_FAULT: it
+ * tells an instruction-modeling bus that callees run beneath this function's
+ * original 0x70-byte guest frame. 0x145740 later copies uninitialized guest
+ * stack into the 3f3a00 hit record, so the original layout is observable. */
+#define HG_GUEST_FRAME 0xfffffff1u
+static uint32_t vadd(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,6,a,b); }
+static uint32_t vsub(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,7,a,b); }
+static uint32_t sra32(uint32_t v,unsigned n) { return (v>>n)|((v&0x80000000u)!=0?~(0xffffffffu>>n):0u); }
+/* lq/sq the position quad to the probe origin 70000b80, then y += height. */
+static void constraint_origin(HGResourceEnv *e,uint32_t a,uint32_t height) {
+    copy_quad(e,0x70000b80,a+0x30);
+    w32(e,0x70000b84,fadd(e,r32(e,0x70000b84),height));
+}
+/* wrap(heading + degrees * pi / 180): mul.s, then div.s (nearest), add.s. */
+static uint32_t constraint_angle(HGResourceEnv *e,uint32_t heading,uint32_t degrees) {
+    uint32_t radians=fp_op(e,8,fmul(e,0x40490fdbu,degrees),0x43340000u);
+    return call(e,0x1204e0,fadd(e,heading,radians),0,0,0);
+}
+/* point.x += scale * sin(angle); point.z += scale * cos(angle). */
+static void constraint_offset(HGResourceEnv *e,uint32_t point,uint32_t angle,uint32_t scale) {
+    uint32_t s=call(e,0x143560,angle,0,0,0);
+    w32(e,point,fadd(e,r32(e,point),fmul(e,scale,s)));
+    uint32_t c=call(e,0x143620,angle,0,0,0);
+    w32(e,point+8,fadd(e,r32(e,point+8),fmul(e,scale,c)));
+}
+/* 1 = normal wall, 0 = ignored hit/miss, 2 = unobserved special surface. */
+static uint32_t constraint_hit(HGResourceEnv *e,uint32_t a,uint32_t from) {
+    uint32_t hit=call(e,0x1446a0,a,from,0x70000b90,0x207);
+    if(hit==0)return 0;
+    if((hit&0x100)!=0 && (r16(e,0x3f39c4)&2u)==0)return 0;
+    if((hit&0x1e00)!=0) {domain_fault(e,0x40);return 2;}
+    return 1;
+}
+/* VU0: c00 = (b90 - b80).xyz with w = b90.w; Q = 1/sqrt(|c00.xyz|^2);
+ * c00 = (c00.xyz * Q, 0 + w); dot = c00.xyz . normal 3f3a10; c.le.s. */
+static int constraint_facing(HGResourceEnv *e,uint32_t a,int foot) {
+    uint32_t v[4],n[3];
+    for(uint32_t i=0;i<3;i++)w32(e,0x70000c00+i*4,vsub(e,r32(e,0x70000b90+i*4),r32(e,0x70000b80+i*4)));
+    w32(e,0x70000c0c,r32(e,0x70000b9c));
+    for(uint32_t i=0;i<4;i++)v[i]=r32(e,0x70000c00+i*4);
+    uint32_t length2=vadd(e,vadd(e,fmul(e,v[0],v[0]),fmul(e,v[1],v[1])),fmul(e,v[2],v[2]));
+    uint32_t q=fp_op(e,9,0x3f800000u,length2),w_lane=vadd(e,0,v[3]);
+    for(uint32_t i=0;i<3;i++)w32(e,0x70000c00+i*4,fmul(e,v[i],q));
+    w32(e,0x70000c0c,w_lane);
+    for(uint32_t i=0;i<3;i++) {v[i]=r32(e,0x70000c00+i*4);n[i]=r32(e,0x3f3a10+i*4);}
+    uint32_t dot=vadd(e,vadd(e,fmul(e,v[0],n[0]),fmul(e,v[1],n[1])),fmul(e,v[2],n[2]));
+    uint32_t threshold=foot && r8(e,a+0x4ad)!=0?0xbf333333u:0xbe99999au;
+    return fle(e,dot,threshold);
+}
+/* Apply the push to X/Z only, then restart the tier origin from it. */
+static void constraint_push(HGResourceEnv *e,uint32_t a,uint32_t height) {
+    w32(e,a+0x30,fadd(e,r32(e,a+0x30),r32(e,0x3f39b0)));
+    w32(e,a+0x38,fadd(e,r32(e,a+0x38),r32(e,0x3f39b8)));
+    constraint_origin(e,a,height);
+}
+static uint32_t constraint_leave(HGResourceEnv *e,uint32_t result) {
+    call(e,HG_GUEST_FRAME,0x70,0,0,0);
+    return result;
+}
+uint32_t hg_player_static_constraint(HGResourceEnv *e,uint32_t heading,uint32_t a) {
+    const uint32_t head=0x41840000U,middle=0x41040000u,foot=0x40400000u; /* 16.5, 8.25, 3.0 */
+    const uint32_t minus_90=0xc2b40000u,step_45=0x42340000u;
+    uint32_t result=0,hit;
+    call(e,HG_GUEST_FRAME,0x70,1,0,0);
+    constraint_origin(e,a,head);
+    for(uint32_t i=0,degrees=minus_90;i<5;i++,degrees=fadd(e,degrees,step_45)) {
+        uint32_t side=i==2?0u:2u,angle=constraint_angle(e,heading,degrees);
+        copy_quad(e,0x70000b90,0x70000b80);
+        constraint_offset(e,0x70000b90,angle,0x40800000u);
+        if((hit=constraint_hit(e,a,0x70000b80))==2)return constraint_leave(e,0);
+        if(hit!=0 && constraint_facing(e,a,0)) {constraint_push(e,a,head);result=side|1u;}
+    }
+    constraint_origin(e,a,middle);
+    for(uint32_t i=0,degrees=minus_90;i<5;i++,degrees=fadd(e,degrees,step_45)) {
+        copy_quad(e,0x70000b90,0x70000b80);
+        uint32_t angle=constraint_angle(e,heading,degrees);
+        constraint_offset(e,0x70000b90,angle,0x40800000u);
+        if((hit=constraint_hit(e,a,0x70000b80))==2)return constraint_leave(e,0);
+        if(hit!=0 && constraint_facing(e,a,0)) {constraint_push(e,a,middle);result|=0x30u;}
+    }
+    constraint_origin(e,a,foot);
+    for(uint32_t i=0,degrees=minus_90;i<5;i++,degrees=fadd(e,degrees,step_45)) {
+        copy_quad(e,0x70000b90,0x70000b80);
+        uint32_t angle=constraint_angle(e,heading,degrees);
+        constraint_offset(e,0x70000b90,angle,0x40800000u);
+        copy_quad(e,0x70000c10,0x70000b80);
+        constraint_offset(e,0x70000c10,angle,0xc0000000u);
+        if((hit=constraint_hit(e,a,0x70000c10))==2)return constraint_leave(e,0);
+        if(hit!=0 && constraint_facing(e,a,1)) {constraint_push(e,a,foot);result|=0x100u;}
+    }
+    constraint_origin(e,a,foot);
+    uint32_t rear=r8(e,a+0x4ad)!=0?3u:1u;
+    for(uint32_t i=0;i<rear;i++) {
+        uint32_t degrees=i==0?0u:(i==1?step_45:0xc2340000u);
+        copy_quad(e,0x70000b90,0x70000b80);
+        copy_quad(e,0x70000c10,0x70000b80);
+        uint32_t angle=constraint_angle(e,heading,degrees);
+        constraint_offset(e,0x70000b90,angle,0xc0000000u);
+        if(r8(e,a+0x4ad)!=0)constraint_offset(e,0x70000c10,angle,0x40000000u);
+        if((hit=constraint_hit(e,a,0x70000c10))==2)return constraint_leave(e,0);
+        if(hit!=0 && constraint_facing(e,a,1)) {constraint_push(e,a,foot);result|=0x100u;}
+    }
+    /* Bump: pushed while moving almost straight backward relative to the
+     * facing heading, or by foot/rear probes only; +508 rate-limits it. */
+    uint32_t turn=call(e,0x1204e0,fsub(e,r32(e,a+0x44),heading),0,0,0);
+    if(flt(e,turn,0))turn=fneg(turn);
+    int bump=(!flt(e,turn,0x403de44eu) && result!=0 && (result&0x22u)==0) || result==0x100u;
+    if(bump && r8(e,a+0x508)==0 && (r16(e,a+0x49a)&0x100u)==0) {
+        w8(e,a+0x508,0x50);
+        if(r8(e,a+0x49c)!=0) {
+            uint32_t random=call(e,0x11ad58,0,0,0,0),volume=r32(e,0x3eaa78);
+            /* M8's volume conversion is verified for finite [0,1] only. */
+            if((volume&0x80000000u)!=0 || volume>0x3f800000u) {domain_fault(e,0x41);return constraint_leave(e,0);}
+            uint32_t offset=sra32(sra32(random,16)<<2,15)<<1;
+            /* The bus has four argument slots; this call's fifth R5900
+             * argument t0 is the constant 1 (delay slot 0015fbb8). */
+            call(e,0x156ad0,r16(e,0x3e0850u+offset),0x1000,player_sound_volume_127(volume),0x40);
+        }
+    }
+    if(r8(e,a+0x508)!=0)w8(e,a+0x508,r8(e,a+0x508)-1u);
+    w16(e,a+0x49a,result);
+    return constraint_leave(e,result);
+}
+/* M11 composition: M10's dispatcher/history and M9's camera, with 0015ebc0
+ * resolved to C. The M10 composition above keeps its modeled constraint. */
+static uint32_t constraint_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x15ebc0)return hg_player_static_constraint(&p->env,a,b);
+    return turn_camera_process_call(user,pc,a,b,c,d);
+}
+void hg_player_constraint_camera_fixed(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    HGResourceEnv *bus=&p.env;
+    bus->load=process_load;bus->store=process_store;bus->call=constraint_process_call;
+    hg_player_dispatch(bus);   /* walk, C 0015ebc0 response, history */
+    hg_camera_update(bus);     /* same-frame camera on the corrected position */
+}
+/* Host entry for synthetic/original-instruction differentials of 0015ebc0. */
+uint32_t hg_player_static_constraint_fixed(HGResourceEnv *e,uint32_t heading,uint32_t a) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=constraint_process_call;
+    return hg_player_static_constraint(&p.env,heading,a);
 }

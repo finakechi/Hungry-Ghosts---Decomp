@@ -1,5 +1,59 @@
 # Hungry Ghosts — master handoff
 
+## M11 connected static movement constraint — 2026-11-18
+
+**Resume here.** M11 is complete for one bounded original Japanese static movement
+constraint and its same-frame camera response. It is on local branch
+`research/m11-static-movement-constraint` in worktree `decomp-m11`. Baseline
+`1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`; implementation `4ba7a63`, control-target
+fix `18f9101`, then the documentation/evidence commit. **Nothing pushed, no PR, no
+private M11 Drive backup.**
+
+**Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
+BOOT2, ELF/CRC, PCSX2 AppImage, BIOS image, save state). A private copy of the M10
+profile, attached to a settled session, held stick Y −1.0 toward the corridor's
+slanted end wall. Execute breakpoints were gated on X < 31. 67 native stops
+(PC bound 2-of-3 from the highlighted debugger row) each have a full 32 MiB EE
+RAM + 16 KiB scratchpad capture. Frames 4278–4281 are free, with entry X equal to
+return X and all foot queries 0. Frames 4282–4284 make contact: foot probe 3
+returns 0x100, the native push stop `0015f654` shows dot `0xBF7C9C91 ≤ 0xBE99999A`,
+and committed X is 29.29078 / 29.29095 / 29.29095. Stick, speed, Z and the
+movement direction (`f12 = −π/2`) are identical across free and contact frames.
+So the static query and its push cause the difference. No special-surface or
+non-foot push breakpoint fired.
+
+**Gate 2 (C boundary):** `0015fe70 → 0015ebc0(direction, player)`, then modeled
+`0015fc10`. All of `0015ebc0` is C: four probe tiers, hit filtering, the VU0
+facing test (exact `vrsqrt` chop), push and per-tier restart, result flags, bump
+timer, and RNG-selected sound request. Only the unobserved special-surface
+branch (`0015eaf0`) fails closed. New exact `div.s` (nearest) and `vrsqrt` C
+helpers are differentially tested. The scene query, RNG, audio library and
+gravity/floor remain original-instruction-modeled. The 6-routine, 1,456-word
+packet passes PS2DInfo `--require-all-bytes`.
+
+**Verification (owner-local, 2026-11-18):** 59 stage comparisons and 20 register
+cross-checks pass, 6/6 handoffs carry complete 1,344-byte player and 336-byte
+camera structures, and Status invariance holds in 7/7 frames. 13/13 controls
+show measured divergence. `missing-guest-frame` differs exactly at
+`3f3a00..3f3a0c`, which proves the stack contract is necessary. The 600-case
+perturbed-scene differential has 0 failures and 0 unsupported cases. Inventory
+`r20261118T034353Z`: 72/72. The first inventory (`r20261118T030620Z`, 70/72)
+is preserved: the new C repeated two M9/M10 mutation targets, and that collision
+was fixed without behaviour change. See [docs/M11.md](docs/M11.md) and
+[evidence/m11/checks.json](evidence/m11/checks.json).
+
+**Discrepancies retained:** in one running PINE discovery sample `+49c` read 0,
+but it was 2 in every `obs1` capture. The camera-structure eye X follows the
+`+380` head node, not player X; the original behaves identically. Frame 4277 was
+partial and is excluded. Smoke/discovery sessions are not evidence.
+
+**Limits:** hybrid C with modeled leaves, one wall/approach/foot tier, `+4ad = 0`,
+FP under PCSX2 defaults. Interframe effects come from each captured entry state.
+Guest stack and untouched libpad DMA remain the only comparison exclusions. No
+general collision, autonomous interframe execution, all-C, byte-match, port or
+whole-game claim. **ONE next action:** Noah reviews M11 and decides on
+publication. M12 and the final technical goal are not selected.
+
 ## M10 connected forward walking — 2026-11-16
 
 **Resume here.** M10 is complete for the bounded original Japanese forward-walking

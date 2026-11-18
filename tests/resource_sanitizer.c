@@ -190,6 +190,35 @@ static uint32_t fault_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_
     if(pc==0xfffffff0u) {assert(a==0x20 || a==0x21);faults++;}
     return 0;
 }
+/* M11: synthetic static wall at x = 20 for probes below y = 5 (foot/rear
+ * tiers only). Every probe points -X (sin -1, cos 0); a hit writes the push
+ * vector, a +X normal and attribute bit 2 like the original hit record. */
+static unsigned constraint_depth,constraint_frames,constraint_sounds;
+static uint32_t constraint_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    switch(pc) {
+    case 0xfffffff1u:
+        assert(a==0x70 && b<=1);
+        if(b)constraint_depth++; else {assert(constraint_depth>0);constraint_depth--;}
+        constraint_frames++;return 0;
+    case 0x143560:return 0xbf800000u;
+    case 0x143620:return 0;
+    case 0x1446a0: {
+        assert(a==0x3f92d0 && (b==0x70000b80 || b==0x70000c10) && c==0x70000b90 && d==0x207);
+        uint32_t tb=load(u,c,4),fb=load(u,b+4,4);float to,from_y;
+        memcpy(&to,&tb,4);memcpy(&from_y,&fb,4);
+        if(!(from_y<5.0f) || !(to<20.0f))return 0;
+        float push=20.0f-to;uint32_t pb;memcpy(&pb,&push,4);
+        store(u,0x3f39b0,4,pb);store(u,0x3f39b4,4,0);store(u,0x3f39b8,4,0);
+        store(u,0x3f3a10,4,0x3f800000u);store(u,0x3f3a14,4,0);store(u,0x3f3a18,4,0);
+        store(u,0x3f39c4,2,2);return 0x100;
+    }
+    case 0x11ad58:return 0x7fff0000u;
+    case 0x156ad0:
+        assert(a==load(u,0x3e0856,2) && b==0x1000 && c==127 && d==0x40);
+        constraint_sounds++;return 0;
+    default:return player_external(u,pc,a,b,c,d);
+    }
+}
 /* M9: held-then-released left stick through the real update chain, then the
  * camera update, with synthetic tables (step 2^-10, limit 2^-5, decay 2^-9). */
 static void turn_camera_composition(Test *t,HGResourceEnv *original) {
@@ -468,5 +497,22 @@ int main(void) {
      hg_player_walk_camera_fixed(&walk,0x1ff8000);
      assert(load(&t,0x3f96f8,4)==0);
      assert(memcmp(t.ram+0x3f9300,t.ram+0x3f9660,16)==0);}
-    free(t.ram);puts("PASS: synthetic M1-M7 workers, connected M8 player and M9/M10 turn/walk camera composition under sanitizers");return 0;
+    /* M11: C 0015ebc0 on a synthetic foot-height wall, then the connected
+     * dispatcher/constraint/history/camera composition on the same bus. */
+    {HGResourceEnv m11=e;m11.call=constraint_external;const uint32_t actor=0x3f92d0;
+     store(&t,actor+0x30,4,0x41b00000);store(&t,actor+0x34,4,0);store(&t,actor+0x38,4,0);
+     store(&t,actor+0x3c,4,0x3f800000);store(&t,actor+0x44,4,0x3fc90fdb);
+     store(&t,actor+0x4ad,1,0);store(&t,actor+0x49c,1,2);store(&t,actor+0x508,1,0);
+     store(&t,0x3eaa78,4,0x3f800000);store(&t,0x3e0856,2,0x1234);
+     constraint_frames=0;constraint_sounds=0;
+     assert(hg_player_static_constraint_fixed(&m11,0xbfc90fdb,actor)==0x100);
+     assert(load(&t,actor+0x30,4)==0x41c00000 && load(&t,actor+0x49a,2)==0x100);
+     assert(load(&t,actor+0x508,1)==0x4f && constraint_sounds==1);
+     assert(constraint_depth==0 && constraint_frames==2);
+     store(&t,0x3f92e8,1,1);store(&t,0x3eaee8,1,0);store(&t,0x3f974a,1,0);
+     hg_player_constraint_camera_fixed(&m11,0x1ff8000);
+     assert(constraint_depth==0 && constraint_frames==4);
+     assert(memcmp(t.ram+0x3f9300,t.ram+0x3f9660,16)==0);
+     assert(load(&t,0x70000040,4)==load(&t,actor+0x30,4));}
+    free(t.ram);puts("PASS: synthetic M1-M7 workers, connected M8 player, M9/M10 turn/walk camera and M11 constraint composition under sanitizers");return 0;
 }

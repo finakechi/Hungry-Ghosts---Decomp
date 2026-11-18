@@ -79,12 +79,17 @@ FP_SEAMS={0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,F
     0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False)}
 # Host-only fail-closed signal from C paths outside the reconstructed domain.
 DOMAIN_FAULT=0xfffffff0
+# Host-only M11 seam: (bytes, 1) enters and (bytes, 0) leaves a reconstructed
+# function's original guest frame, so modeled callees run at its stack depth.
+GUEST_FRAME=0xfffffff1
 
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
     def __init__(self,mem,elfdata,segments):
         super().__init__(mem);self.elfdata=elfdata;self.segments=segments
         self.modeled_calls=[];self.executed=set();self.model_depth=0
+        # Opt-in M11 contracts; defaults preserve the M8-M10 behaviour.
+        self.guest_frame=0;self.cop0_status=None;self.constant_t0={}
     def verify_executed(self,addresses):
         for address in addresses:
             offsets=[off+address-start for start,end,off in self.segments if start<=address and address+4<=end]
@@ -101,9 +106,14 @@ class ConnectedRuntimeDriver(Driver):
             if c>0x2000000:raise ValueError('Unbounded memcpy')
             self.mem.put(a,self.mem.get(b,c));return a
         if pc==DOMAIN_FAULT:raise ValueError(f'C path outside reconstructed domain (code {a:#x})')
+        if pc==GUEST_FRAME:
+            if b not in (0,1) or a&15 or (b==0 and self.guest_frame<a):raise ValueError('Invalid guest frame seam')
+            self.guest_frame+=a if b else -a;return 0
         machine=Machine();machine.mem=self.mem;machine.reg[28]=0x3e7f70
+        machine.cop0_status=self.cop0_status
         # Each nested modeled call receives separate scratch stack storage.
-        machine.reg[29]=0x1ff0800-self.model_depth*0x1000
+        machine.reg[29]=0x1ff0800-self.guest_frame-self.model_depth*0x1000
+        if self.model_depth==0 and pc in self.constant_t0:machine.reg[8]=self.constant_t0[pc]
         fp_count,fp_result=FP_SEAMS.get(pc,(0,False))
         operands=(a,b,c,d)
         for index,value in enumerate(operands[:fp_count]):machine.fpr[12+index]=value

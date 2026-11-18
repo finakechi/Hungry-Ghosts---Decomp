@@ -183,4 +183,10 @@ void hg_resource_prepare_engine_fixed(HGResourceEnv *, uint32_t task, uint32_t f
 void hg_player_dispatch(HGResourceEnv *);
 void hg_player_dispatch_fixed(HGResourceEnv *, uint32_t frame);
 void hg_player_walk_camera_fixed(HGResourceEnv *, uint32_t frame);
+/* M11 static movement constraint; heading is raw f12 bits. Special-surface
+ * hits fail closed. Emits host-only HG_GUEST_FRAME (0xfffffff1) bus calls
+ * around its body: (0x70, 1) on entry and (0x70, 0) on exit. */
+uint32_t hg_player_static_constraint(HGResourceEnv *, uint32_t heading, uint32_t); /* 0015ebc0 */
+void hg_player_constraint_camera_fixed(HGResourceEnv *, uint32_t frame);
+uint32_t hg_player_static_constraint_fixed(HGResourceEnv *, uint32_t heading, uint32_t);
 #endif
