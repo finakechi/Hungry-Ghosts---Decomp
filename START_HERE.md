@@ -8,10 +8,11 @@ In each contact frame the original `0015ebc0` foot probe hits the wall, its faci
 test passes, and the push moves the proposed X back to `29.29095`. Input, speed and
 Z are unchanged. History `+390` and the same-frame camera then use the corrected
 position. `0015ebc0` is now C (`hg_player_static_constraint`), layered on the M10
-dispatcher and M9 camera. Local branch `research/m11-static-movement-constraint`
-(baseline `1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`; commits `4ba7a63`,
-`18f9101` and the documentation commit). **Not pushed; no PR; no private M11
-Drive backup.** Delivery detail: [docs/M11.md](docs/M11.md).
+dispatcher and M9 camera. Published through [PR #13](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/13)
+(merged 2026-11-18 as `3eac8b59e22cb84f6e86b700bfdb790547fcd9bf`).
+Branch head `822054dd4f824a61ba7eea246425b3a0b3db23cc` is distinct from
+the merge commit; baseline was `1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`.
+**No verified M11 private Drive backup.** Delivery detail: [docs/M11.md](docs/M11.md).
 
 - **Evidence:** 67 native stops in one continuous PCSX2 v2.8.2 run; 66 fall in
   complete frames 4278–4284: four free frames, then contact. The native `0015f654` push stop
@@ -27,6 +28,14 @@ Drive backup.** Delivery detail: [docs/M11.md](docs/M11.md).
   PS2DInfo and the publication audit. 1,456 new packet words are original-byte
   verified. [checks.json](evidence/m11/checks.json) holds the commands, logs and
   preserved failures, including the first inventory's 70/72 control-target collision.
+- **Independent review (2026-11-18):** DeepSeek Moby reported **READY** for
+  the bounded M11 claim after fresh reruns of the 59 memory stages, 20 register
+  checks, 6 handoffs, 13 M11 controls and 600-case differential. M9/M10
+  negative controls also passed (14/14 and 15/15); the M10 total includes
+  12 logged source edits and 3 input mutations recorded in JSON. The original
+  retail capture session was reviewed, not freshly rerun.
+- **Published CI:** [Synthetic tests run #44417054847](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/44417054847)
+  passed on the PR head. CI covers host/synthetic checks, not retail comparison.
 - **New contracts:** a host-only guest-frame seam keeps an original
   uninitialised-stack read (`00145740` → `3f3a00`) identical. The sound request's
   fifth argument `t0 = 1` is supplied explicitly. CP0 Status is a varied
@@ -41,8 +50,9 @@ Drive backup.** Delivery detail: [docs/M11.md](docs/M11.md).
   tiers are covered only by the model differential. Special surfaces fail
   closed. Each frame begins from a captured entry state. No general collision,
   autonomous inter-frame execution, all-C, byte-match or whole-game claim.
-- **Blockers:** none. **ONE next action:** Noah reviews M11 and decides on
-  publication (push/PR/backup). No M12 or final technical objective is selected.
+- **Blockers:** none for the published M11 scope. **ONE next action:** Noah
+  decides whether to make a private M11 backup. M12 and the final technical
+  objective remain unselected and unauthorized.
 
 Earlier milestone sections below retain their historical status and next-action
 wording; M11 above is the current resume point.
