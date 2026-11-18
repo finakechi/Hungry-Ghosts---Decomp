@@ -2,16 +2,13 @@
 
 ## M10 connected forward walking — 2026-11-16
 
-**Resume here.** Approved M10 is complete for the bounded original Japanese
-forward-walking operation, actual release, zero speed and following update.
-Repository `finakechi/Hungry-Ghosts---Decomp`; local branch
-`research/m10-forward-walk-camera`; implementation `43a2ea4ff4b82a2a5227a97d63c9389e160068ff`;
-recovered baseline `94d1ca54b8f708b872a7f03af13a3f9868fa1365`. A documentation
-commit follows the implementation. Noah authorized final documentation corrections,
-normal branch push and PR publication on 2026-11-17. At this correction checkpoint,
-publication and M10 CI are pending; the PR delivery receipt will record their
-results. The PR must remain unmerged for Noah's decision. No private M10 Drive
-backup exists.
+**Resume here.** M10 is complete for the bounded original Japanese forward-walking
+operation, actual release, zero speed and following update. Implementation
+`43a2ea4ff4b82a2a5227a97d63c9389e160068ff`, original baseline
+`94d1ca54b8f708b872a7f03af13a3f9868fa1365`. PR [#11](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/11)
+was **merged into `main`** as `015e34cd830318493710659ff2574b7318fc582a`.
+`8d46bfe390565e3b51e9e6118e77de6ec8ec72cc` was the former PR branch head,
+not the merge commit. No private M10 Drive backup exists.
 
 The interrupted branch was clean with no M10 commits, implementation or completed
 verification. Its ignored discovery scripts/profile and live paused emulator were
@@ -29,9 +26,9 @@ state and copies all 16 position bytes into `+390`. Only its state-1 active path
 is reconstructed. The coordinator is surveyed only; existing M9 walking arithmetic
 and camera C are reused, not claimed as new reconstruction.
 
-**Implementation evidence/checks (recorded 2026-11-16; historical at the
-2026-11-17 correction checkpoint):** 72 stage comparisons have zero unexplained EE
-RAM/scratchpad differences. Each frame begins with an independently captured
+**Owner-local implementation evidence/checks (recorded 2026-11-16; not rerun
+for this post-merge documentation update):** 72 stage comparisons have zero
+unexplained EE RAM/scratchpad differences. Each frame begins with an independently captured
 original-game dispatcher-entry state. The connected reconstruction calculates
 relevant player movement, dispatcher effects and camera response. The complete
 resulting 1,344-byte player and 336-byte camera structures, including unchanged
@@ -72,10 +69,17 @@ not autonomous reconstruction of every inter-frame engine effect. Guest stack an
 untouched IOP libpad DMA are explicit comparison exclusions. No unexplained
 mismatch remains.
 
-**Remote delivery at the 2026-11-17 correction checkpoint:** read-only queries show
-main `94d1ca5`, no M10 remote branch or PR, and successful baseline CI
-(run `43993685474`); there is no
-M10 remote CI. Both original worktrees are preserved.
+**Published delivery — 2026-11-17:** PR [#11](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/11)
+was merged into `main` at `015e34cd830318493710659ff2574b7318fc582a`.
+The published branch head was `8d46bfe390565e3b51e9e6118e77de6ec8ec72cc`,
+distinct from the merge commit. Push CI run `44198611906` and PR CI run
+`44198706302` passed their Python 3.10/3.14 synthetic, strict-C, sanitizer
+and whitespace checks. This is a GitHub CI result, not a new retail run.
+
+**Historical pre-publication checkpoint — 2026-11-17 (superseded):** read-only
+queries then showed `main` at `94d1ca5`, no M10 remote branch or PR, baseline
+CI run `43993685474` successful, and no M10 CI. Both original worktrees were
+preserved. The published delivery above supersedes that earlier status.
 
 **Independent review:** READY AFTER SPECIFIC CORRECTIONS; no implementation
 defects, invalid negative controls or regressions reported. Documentation now
@@ -84,13 +88,11 @@ player-X and scratchpad differences, not proven camera-eye lag; `missing-positio
 and `camera-before-dispatch` separately support camera dependence on calculated
 player position. Code, evidence identifiers and measurements remain unchanged.
 
-**Blockers:** none for the selected operation. **ONE next action:** complete the
-authorized publication and CI verification, then leave the PR unmerged for Noah's
-merge decision. Fresh publication checks belong in the PR delivery receipt;
-original-game captures, full retail comparisons and the private regression inventory
-are not being repeated for wording changes.
-No M11 or final technical objective is selected. Earlier sections below are
-historical; this section supersedes their no-M10-selected resume wording.
+**Blockers:** none for the selected operation. **ONE next action:** Noah
+chooses the next substantial development direction. No M11 milestone or
+final technical objective has been selected. Original-game captures and full
+retail/regression inventories were not repeated for this documentation update.
+Earlier sections below are historical; this M10 section is the active handoff.
 
 ## M9 player turn and camera response — 2026-11-16
 
