@@ -3,10 +3,12 @@
 ## M11 connected static movement constraint — 2026-11-18
 
 **Resume here.** M11 is complete for one bounded original Japanese static movement
-constraint and its same-frame camera response. It is on local branch
-`research/m11-static-movement-constraint` in worktree `decomp-m11`. Baseline
-`1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`; implementation `4ba7a63`, control-target
-fix `18f9101`, then the documentation/evidence commit. **Nothing pushed, no PR, no
+constraint and its same-frame camera response. [PR #13](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/13)
+was **merged into `main`** on 2026-11-18 as
+`3eac8b59e22cb84f6e86b700bfdb790547fcd9bf`. The published M11 branch head
+was `822054dd4f824a61ba7eea246425b3a0b3db23cc`, not the merge commit.
+Baseline `1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`; implementation
+`4ba7a63`, control-target fix `18f9101`, then evidence/docs. **No verified
 private M11 Drive backup.**
 
 **Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
@@ -42,6 +44,17 @@ is preserved: the new C repeated two M9/M10 mutation targets, and that collision
 was fixed without behaviour change. See [docs/M11.md](docs/M11.md) and
 [evidence/m11/checks.json](evidence/m11/checks.json).
 
+**Independent review and published CI (2026-11-18):** DeepSeek Moby returned
+**READY** for the stated M11 boundary. It reported fresh independent reruns of
+59/59 memory stages, 20/20 register cross-checks, 6/6 handoffs, 13/13 M11
+negative controls, and 600/600 differential cases, plus 230 synthetic tests,
+authenticated-byte checks and sanitizers. The repaired M9/M10 controls were
+retested with meaningful divergences; M9 rejected 14/14 and M10 rejected 15/15
+(12 source-edit controls printed in the log plus 3 input mutations recorded in
+JSON). The original PCSX2 observation was historical evidence, not freshly
+re-executed by the reviewer. [GitHub Actions run #44417054847](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/44417054847)
+passed synthetic/host CI on the PR head; it does not verify retail behavior.
+
 **Discrepancies retained:** in one running PINE discovery sample `+49c` read 0,
 but it was 2 in every `obs1` capture. The camera-structure eye X follows the
 `+380` head node, not player X; the original behaves identically. Frame 4277 was
@@ -51,8 +64,9 @@ partial and is excluded. Smoke/discovery sessions are not evidence.
 FP under PCSX2 defaults. Interframe effects come from each captured entry state.
 Guest stack and untouched libpad DMA remain the only comparison exclusions. No
 general collision, autonomous interframe execution, all-C, byte-match, port or
-whole-game claim. **ONE next action:** Noah reviews M11 and decides on
-publication. M12 and the final technical goal are not selected.
+whole-game claim. **ONE next action:** Noah decides whether to create a
+private M11 backup. M12 and the final technical goal remain unselected and
+unauthorized.
 
 ## M10 connected forward walking — 2026-11-16
 
