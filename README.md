@@ -35,6 +35,8 @@ M9 (merged via PR #9) adds a held left-stick turn and the camera response that f
 compared frame by frame with the original game; see [docs/M9.md](docs/M9.md).
 M10 (merged via PR #11) adds a connected forward walk, release and camera response,
 with verified handoffs and documented external effects; see [docs/M10.md](docs/M10.md).
+M11 (local branch, not yet published) reconstructs one observed static movement constraint,
+walking into a wall, with the corrected position, history and same-frame camera; see [docs/M11.md](docs/M11.md).
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 

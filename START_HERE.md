@@ -1,5 +1,52 @@
 # Hungry Ghosts — start here
 
+## M11 static movement constraint and camera — 2026-11-18
+
+**Resume here.** M11 is complete for one original-game-observed static movement
+constraint: walking backward (stick Y −1.0) into the starting corridor's end wall.
+In each contact frame the original `0015ebc0` foot probe hits the wall, its facing
+test passes, and the push moves the proposed X back to `29.29095`. Input, speed and
+Z are unchanged. History `+390` and the same-frame camera then use the corrected
+position. `0015ebc0` is now C (`hg_player_static_constraint`), layered on the M10
+dispatcher and M9 camera. Local branch `research/m11-static-movement-constraint`
+(baseline `1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`; commits `4ba7a63`,
+`18f9101` and the documentation commit). **Not pushed; no PR; no private M11
+Drive backup.** Delivery detail: [docs/M11.md](docs/M11.md).
+
+- **Evidence:** 67 native stops in one continuous PCSX2 v2.8.2 run; 66 fall in
+  complete frames 4278–4284: four free frames, then contact. The native `0015f654` push stop
+  shows dot `−0.987 ≤ −0.3`, and 20/20 foot-query results equal the original `v0`.
+  Corrections are +0.0122, +0.3095 and +0.3094; free frames change by 0. The
+  bump timer `+508` arms at 0x50 and the bump sound request is reached.
+- **Owner-local checks (2026-11-18):** 59 complete EE RAM/scratchpad stage
+  comparisons with 0 unexplained bytes, 6/6 player/camera handoffs, CP0 Status
+  invariance in 7/7 frames, and 13/13 measured negative controls (11 compiled
+  defects, 2 input counterfactuals). The 600-case original-instruction
+  differential passes. Inventory 72/72 passed, covering 230
+  synthetic tests, M1–M10 regressions, strict C, ASan/UBSan/LeakSanitizer,
+  PS2DInfo and the publication audit. 1,456 new packet words are original-byte
+  verified. [checks.json](evidence/m11/checks.json) holds the commands, logs and
+  preserved failures, including the first inventory's 70/72 control-target collision.
+- **New contracts:** a host-only guest-frame seam keeps an original
+  uninitialised-stack read (`00145740` → `3f3a00`) identical. The sound request's
+  fifth argument `t0 = 1` is supplied explicitly. CP0 Status is a varied
+  input. The instruction model gains RNG/audio instructions (`multu`, `mult1`,
+  `mfc0 Status`, `di/ei`, …).
+- **Identities:** SCPS-15046 ELF `a74248c5…3c61` (CRC `91AA4B28`), ISO
+  `8ca1513c…994e`, PCSX2 v2.8.2 AppImage `0c46bb6a…abea`, BIOS image
+  `c641edbd…363c4a`, save state `1d8798fa…808d`, all freshly hashed. Private
+  inputs are in ignored `local/m11/`; M8–M10 inputs are still required.
+- **Limits:** hybrid C with original-instruction-modeled query, RNG, sound and
+  gravity/floor leaves. One wall, foot tier, `+4ad = 0`, observed retail. Other
+  tiers are covered only by the model differential. Special surfaces fail
+  closed. Each frame begins from a captured entry state. No general collision,
+  autonomous inter-frame execution, all-C, byte-match or whole-game claim.
+- **Blockers:** none. **ONE next action:** Noah reviews M11 and decides on
+  publication (push/PR/backup). No M12 or final technical objective is selected.
+
+Earlier milestone sections below retain their historical status and next-action
+wording; M11 above is the current resume point.
+
 ## M10 forward walking and camera translation — 2026-11-16
 
 **Resume here.** M10 is complete for one independently observed ordinary forward
@@ -46,7 +93,7 @@ former PR branch head, not the merge commit. **No private M10 Drive backup exist
   technical objective has been selected.
 
 Earlier milestone sections below retain their historical status and next-action
-wording; M10 above is the current resume point.
+wording; M10 was the resume point until M11.
 
 ## M9 player turn and camera response — 2026-11-16
 
