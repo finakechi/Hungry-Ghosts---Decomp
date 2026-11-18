@@ -90,6 +90,8 @@ class Machine:
         self.mem = {}
         self.reg = [0] * 32
         self.hi = self.lo = 0
+        self.hi1 = self.lo1 = 0
+        self.cop0_status = None
         self.pc = 0
         self.pending = None
         self.hooks = {}
@@ -164,16 +166,22 @@ class Machine:
                 elif fn == 0x3e: self.setreg(rd,b >> (sa+32))
                 elif fn == 0x3f: self.setreg(rd,sx(b,64) >> (sa+32))
                 elif fn == 0x38: self.setreg(rd,b << sa)
+                elif fn == 0x3a: self.setreg(rd,b >> sa)  # dsrl (M11 soft-float library)
+                elif fn == 0x3b: self.setreg(rd,sx(b,64) >> sa)  # dsra
+                elif fn == 0x2f: self.setreg(rd,a-b)  # dsubu
                 elif fn == 8: target = a
                 elif fn == 9:  # jalr: target is read before writing link (rd may equal rs)
                     target = a
                     self.setreg(rd,pc+8)
                 elif fn in (0x0a,0x0b):  # movz / movn
                     if (b == 0) == (fn == 0x0a):self.setreg(rd,a)
-                elif fn == 0x18:
-                    product = sx(a,32) * sx(b,32)
+                elif fn in (0x18,0x19):  # mult / multu (R5900 three-operand: rd = LO)
+                    product = sx(a,32) * sx(b,32) if fn == 0x18 else (a & 0xffffffff) * (b & 0xffffffff)
                     self.lo, self.hi = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
                     wordreg(rd, product)
+                elif fn == 0x0f and rs == rt == rd == 0 and sa in (0,0x10): pass  # sync / sync.p (M11 sound DI helper)
+                elif fn == 0x10: self.setreg(rd,self.hi)  # mfhi (M11 RNG 00114010)
+                elif fn == 0x12: self.setreg(rd,self.lo)  # mflo
                 elif fn == 0x21: wordreg(rd,a+b)
                 elif fn == 0x23: wordreg(rd,a-b)
                 elif fn == 0x25: self.setreg(rd,a|b)
@@ -207,12 +215,17 @@ class Machine:
                 if op == 8 and not -(1 << 31) <= sx(a,32)+imm < (1 << 31):
                     raise ValueError('ADDI overflow outside investigated subset')
                 wordreg(rt,a+imm)
+            elif op == 0x19: self.setreg(rt,a+imm)  # daddiu (64-bit, non-trapping; M11 RNG)
             elif op == 10: self.setreg(rt,int(sx(a,64)<imm))
             elif op == 11: self.setreg(rt, int(a < (imm & MASK64)))
             elif op == 12:self.setreg(rt,a & (word&0xffff))
             elif op == 13:self.setreg(rt,a | (word&0xffff))
             elif op == 14:self.setreg(rt,a ^ (word&0xffff))
             elif op == 15: wordreg(rt,(word & 0xffff)<<16)
+            elif op == 0x1c and fn == 0x18 and sa == 0:  # mult1: LO1/HI1 pipeline, rd = LO1 (M11 RNG)
+                product = sx(a,32) * sx(b,32)
+                self.lo1, self.hi1 = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
+                wordreg(rd, product)
             elif op == 0x1c and fn == 9 and sa == 14:  # pcpyld
                 if rd:self.reg[rd] = (a << 64) | b
             elif op == 0x1c and (fn,sa) in ((8,0x12),(0x28,0x12),(0x29,0x0e)):
@@ -234,6 +247,13 @@ class Machine:
                     value=self.load(address,16)
                     if rt:self.vf[rt] = value
                 else:self.store(address,self.vf[rt],16)
+            elif op == 0x10 and rs == 0 and rd == 12 and (word & 0x7ff) == 0:  # mfc0 rt, Status
+                # CP0 state is not captured in RAM. The caller must supply it explicitly.
+                if self.cop0_status is None:raise ValueError(f'CP0 Status read without supplied value at {pc:08x}')
+                wordreg(rt, self.cop0_status)
+            elif word in (0x42000038, 0x42000039):  # ei / di: Status.EIE only (no interrupt delivery)
+                if self.cop0_status is None:raise ValueError(f'EI/DI without supplied CP0 Status at {pc:08x}')
+                self.cop0_status = (self.cop0_status | 0x10000) if word == 0x42000038 else (self.cop0_status & ~0x10000)
             elif op == 0x11:  # investigated COP1 operations only
                 fs, ft, fd = rd, rt, sa
                 if rs == 0:wordreg(rt,self.fpr[fs])
