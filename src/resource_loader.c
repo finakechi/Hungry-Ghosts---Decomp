@@ -2179,11 +2179,21 @@ void hg_player_grounded(HGResourceEnv *e,uint32_t a) {
 }
 /* M12 composition: M11's C constraint, then C grounded/floor, on the
  * unchanged M10 dispatcher/history and M9 camera. M9-M11 entry points keep
- * their modeled 0015fc10. */
+ * their modeled 0015fc10.
+ *
+ * HG_CALL_RETURN is a host-only observation seam, like HG_GUEST_FRAME: it
+ * reports (callee entry, actual return value) of the C floor routine to the
+ * outer bus so verification compares the value 0015fc10 receives with the
+ * native v0. It has no guest effect. */
+#define HG_CALL_RETURN 0xfffffff2u
 static uint32_t grounded_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
     HGProcessing *p=user;
     if(pc==0x15fc10) {hg_player_grounded(&p->env,a);return 0;}
-    if(pc==0x15e420)return hg_player_floor(&p->env,a);
+    if(pc==0x15e420) {
+        uint32_t result=hg_player_floor(&p->env,a);
+        p->outer->call(p->outer->user,HG_CALL_RETURN,pc,result,0,0);
+        return result;
+    }
     return constraint_process_call(user,pc,a,b,c,d);
 }
 void hg_player_grounded_camera_fixed(HGResourceEnv *e,uint32_t frame) {

@@ -6,16 +6,20 @@ corridor scene), then perturbs position, height above the floor, vertical speed 
 floor-result fields that the floor routine reads or writes. For each case the C
 reconstruction and the authenticated original 0015fc10 instructions run from identical
 memory at the same guest stack depth; complete EE RAM (stack excluded), scratchpad and
-the vertical-speed/position results must match. Cases where the C fails closed (no
-floor within the probe, hazard/special surfaces) are counted as unsupported, never as
-passes; for each one the original must also have taken an unsupported branch. These
-are model differential results, not additional retail observations.
+the vertical-speed/position results must match. A case where the C fails closed is
+'unsupported' only if its single refusal code names exactly the original branch taken
+(0x50 no-floor, 0x51 type-7/type-6 by the hit type, 0x52 special-0x1e00, 0x53 type-5,
+0x54 spawn); a wrong or extra code is a 'failed' refusal-mismatch. Only a completed
+comparison with differing bytes is a measured divergence; refusal mismatches, unrefused
+unsupported branches, DMA-touch-only results and harness errors never are. These are
+model differential results, not additional retail observations.
 """
 import argparse
 import ctypes as C
 import gc
 import json
 import random
+import re
 import struct
 import sys
 from pathlib import Path
@@ -67,6 +71,61 @@ def prepare(base, s):
     return mem, ext
 
 
+DOMAIN = re.compile(r'outside reconstructed domain \(code (0x[0-9a-f]+)\)')
+# C refusal code -> the one original 0015e420 branch it stands for. 0x51 covers both
+# hazards; the hit type the C itself read (3f39c6) selects type-7 or type-6.
+REFUSAL_BRANCH = {0x50: 'no-floor', 0x52: 'special-0x1e00', 0x53: 'type-5', 0x54: 'spawn'}
+HAZARD_BRANCH = {7: 'type-7', 6: 'type-6'}
+# 'failed' sub-kinds. Only measured-divergence is a completed comparison with a genuine
+# difference; the others fail equivalence but never count as negative-control divergence.
+FAILURES = ('measured-divergence', 'refusal-mismatch', 'unsupported-branch-not-refused', 'external-dma-access')
+
+
+def expected_branch(code, floor_type):
+    return HAZARD_BRANCH.get(floor_type) if code == 0x51 else REFUSAL_BRANCH.get(code)
+
+
+def classify(c_errors, c_balanced, c_floor_type, reached, comparison=None, scratch_bytes=0):
+    """One case: 'passed', 'failed' (with a failure sub-kind), 'unsupported' or 'error'.
+
+    c_errors: driver errors from the C run; reached: original unsupported branches executed;
+    comparison: compare_memory result, present only when the C completed."""
+    codes = [int(m.group(1), 16) for e in c_errors for m in [DOMAIN.search(str(e))] if m]
+    other = [str(e)[:200] for e in c_errors if not DOMAIN.search(str(e))]
+    if other or not c_balanced:
+        return dict(result='error', detail=other or ['Unbalanced guest frame'])
+    if codes:
+        expected = expected_branch(codes[0], c_floor_type) if len(codes) == 1 else None
+        row = dict(refusal_codes=[hex(c) for c in codes], expected_branch=expected, original_branches=reached)
+        if expected is not None and reached == [expected]: return dict(result='unsupported', **row)
+        return dict(result='failed', failure='refusal-mismatch', **row)
+    if comparison is None:
+        return dict(result='error', detail=['C completed but no comparison was made'])
+    genuine = comparison['different_bytes'] > 0 or scratch_bytes > 0
+    row = dict(original_branches=reached, different_bytes=comparison['different_bytes'], scratch_bytes=scratch_bytes,
+               differences=comparison['differences'][:8])
+    if genuine: return dict(result='failed', failure='measured-divergence', **row)
+    if reached: return dict(result='failed', failure='unsupported-branch-not-refused', **row)
+    if comparison['result'] != 'passed':
+        return dict(result='failed', failure='external-dma-access',
+                    modeled_accesses=comparison['external_dma']['modeled_accesses'][:8], **row)
+    return dict(result='passed', **row)
+
+
+def tally(rows):
+    counts = {r: sum(1 for x in rows if x['result'] == r) for r in ('passed', 'failed', 'unsupported', 'error')}
+    counts['failures'] = {k: sum(1 for x in rows if x.get('failure') == k) for k in FAILURES}
+    return counts
+
+
+def control_verdict(counts, expect):
+    """'divergence': at least one completed comparison with a genuine difference and no
+    errors. 'refusal-mismatch': a wrong refusal code is rejected by classification (it
+    is deliberately not counted as divergence)."""
+    if counts['error']: return 'error'
+    return 'rejected' if counts['failures'][{'divergence': 'measured-divergence', 'refusal-mismatch': 'refusal-mismatch'}[expect]] > 0 else 'ESCAPED'
+
+
 def run_case(lib, elf, segments, base, s):
     cm, ext = prepare(base, s); om, _ = prepare(base, s)
     cd = V.ConnectedRuntimeDriver(cm, elf, segments)
@@ -76,29 +135,28 @@ def run_case(lib, elf, segments, base, s):
     od.external(0x15fc10, P)
     if od.errors: raise AssertionError(od.errors)
     reached = sorted(name for address, name in UNSUPPORTED_ENTRIES.items() if address in od.executed)
-    if any('outside reconstructed domain' in str(e) for e in cd.errors):
-        if cd.guest_frame != 0: raise AssertionError('Unbalanced guest frame after fail-closed path')
-        return dict(result='unsupported' if reached else 'failed', original_branches=reached,
-                    errors=[str(e)[:120] for e in cd.errors]), od.executed
-    if cd.errors: raise AssertionError(cd.errors)
-    if cd.guest_frame != 0: raise AssertionError('Unbalanced guest frame')
-    r = V.compare_memory(cd.mem, od.mem, ext)
-    scratch = [i for i in range(0x4000) if cd.mem.scratch[i] != od.mem.scratch[i]]
-    ok = r['result'] == 'passed' and not scratch and not reached
-    return dict(result='passed' if ok else 'failed', original_branches=reached,
-                speed_out=hex(od.mem.load(P + 0x430)), ground_2c3=od.mem.load(P + 0x2c3, 1),
-                y_out=hex(od.mem.load(P + 0x34)), surface_47c=hex(od.mem.load(P + 0x47c, 2)),
-                f483_out=hex(od.mem.load(P + 0x483, 1)), different_bytes=r['different_bytes'], scratch_bytes=len(scratch),
-                differences=r['differences'][:8]), od.executed
+    completed = not cd.errors and cd.guest_frame == 0
+    comparison = V.compare_memory(cd.mem, od.mem, ext) if completed else None
+    scratch = [i for i in range(0x4000) if cd.mem.scratch[i] != od.mem.scratch[i]] if completed else []
+    row = classify(cd.errors, cd.guest_frame == 0, cm.peek_word(0x3f39c6, 2), reached, comparison, len(scratch))
+    row.update(c_floor_returns=[hex(v) for _, v in cd.call_returns])
+    if completed:
+        row.update(speed_out=hex(od.mem.peek_word(P + 0x430)), ground_2c3=od.mem.peek_word(P + 0x2c3, 1),
+                   y_out=hex(od.mem.peek_word(P + 0x34)), surface_47c=hex(od.mem.peek_word(P + 0x47c, 2)),
+                   f483_out=hex(od.mem.peek_word(P + 0x483, 1)))
+    return row, od.executed
 
 
-# Differential-level negative controls: branches retail frames do not reach. Each mutant
-# must fail some cases by measured memory divergence, with no errors.
+# Differential-level negative controls: branches retail frames do not reach. 'divergence'
+# mutants must fail some cases by a completed comparison with a genuine memory difference,
+# with no errors. The 'refusal-mismatch' mutant (a wrong fail-closed code) produces no
+# memory difference by construction; it must be rejected by exact code-to-branch matching.
 CONTROLS = [
-    ('omitted-speed-clamp', '    if(flt(e,speed,0xc0000000u))w32(e,a+0x430,0xc0000000u);\n', ''),
-    ('wrong-alternate-gravity', 'uint32_t gravity=r8(e,a+0x4ad)==0?0x3da3d70au:0x3cf5c28fu;',
+    ('omitted-speed-clamp', 'divergence', '    if(flt(e,speed,0xc0000000u))w32(e,a+0x430,0xc0000000u);\n', ''),
+    ('wrong-alternate-gravity', 'divergence', 'uint32_t gravity=r8(e,a+0x4ad)==0?0x3da3d70au:0x3cf5c28fu;',
      'uint32_t gravity=r8(e,a+0x4ad)==0?0x3da3d70au:0x3da3d70au;'),
-    ('omitted-state-restore', '            if(r8(e,a)==2)w8(e,a,1);\n', ''),
+    ('omitted-state-restore', 'divergence', '            if(r8(e,a)==2)w8(e,a,1);\n', ''),
+    ('wrong-refusal-code', 'refusal-mismatch', 'if(hit==0)fault=0x50;', 'if(hit==0)fault=0x54;'),
 ]
 
 
@@ -109,9 +167,9 @@ def run_cases(lib, elf, segments, states, count, seed):
         try:
             outcome, addresses = run_case(lib, elf, segments, base, s)
             executed |= addresses
-        except Exception as exc: outcome = dict(result='error', detail=str(exc)[:300])
+        except Exception as exc: outcome = dict(result='error', detail=[str(exc)[:300]])
         rows.append(dict(index=index, base_frame=frame, **{k: (round(v, 6) if isinstance(v, float) else v) for k, v in s.items()}, **outcome))
-        if index % 50 == 49: print(index + 1, {r: sum(1 for x in rows if x['result'] == r) for r in ('passed', 'failed', 'unsupported', 'error')}, flush=True)
+        if index % 50 == 49: print(index + 1, tally(rows), flush=True)
         gc.collect()
     return rows, executed
 
@@ -135,7 +193,8 @@ def main():
     p.add_argument('--negative-controls', type=int, default=0, metavar='CASES',
                    help='also run each CONTROLS mutant on CASES cases; each must diverge with no errors')
     p.add_argument('--expect-divergence', action='store_true',
-                   help='negative control: pass only if the (mutated) source fails some cases by measured divergence, with no errors')
+                   help='negative control: pass only if the (mutated) source fails some cases by a completed comparison '
+                        'with a genuine memory difference, with no errors (refusal mismatches do not count)')
     a = p.parse_args()
     if a.output.exists() or a.output.with_suffix('.so').exists(): raise FileExistsError('Fresh output required')
     if digest(a.elf) != EXPECTED: raise ValueError('Wrong original ELF')
@@ -145,7 +204,7 @@ def main():
     elf = a.elf.read_bytes(); segments, _ = shared_module(a.ps2dinfo).segments_from_elf(elf)
     lib = library(source=a.source, output=a.output.with_suffix('.so')) if a.source else library(output=a.output.with_suffix('.so'))
     rows, executed = run_cases(lib, elf, segments, states, a.cases, a.seed)
-    counts = {r: sum(1 for x in rows if x['result'] == r) for r in ('passed', 'failed', 'unsupported', 'error')}
+    counts = tally(rows)
     ok_rows = [r for r in rows if r['result'] == 'passed']
     coverage = dict(clamped_speed=sum(1 for r in ok_rows if r['speed'] - (0.03 if r['f4ad'] else 0.08) < -2.0),
                     alternate_gravity_4ad=sum(1 for r in ok_rows if r['f4ad']), state0_two=sum(1 for r in ok_rows if r['state0'] == 2),
@@ -153,7 +212,7 @@ def main():
                     surface_bit_kept_8000=sum(1 for r in ok_rows if r['f47c'] & 0x8000),
                     unsupported_branches={b: sum(1 for r in rows if b in r.get('original_branches', ())) for b in UNSUPPORTED_ENTRIES.values()})
     own = {x for x in executed if 0x15fc10 <= x < 0x15fcc8 or 0x15e420 <= x < 0x15eaec}
-    if a.expect_divergence: ok = counts['failed'] > 0 and counts['error'] == 0
+    if a.expect_divergence: ok = control_verdict(counts, 'divergence') == 'rejected'
     else: ok = counts['failed'] == counts['error'] == 0 and counts['passed'] > 0
     out = dict(schema='hg-player-grounded-differential/v1', result='passed' if ok else 'failed',
                mode='negative-control (divergence required)' if a.expect_divergence else 'equivalence',
@@ -170,16 +229,20 @@ def main():
     if a.negative_controls:
         folder = a.output.parent / (a.output.stem + '-controls'); folder.mkdir(exist_ok=False)
         source = (ROOT / 'src/resource_loader.c').read_text(); results = []
-        for name, old, new in CONTROLS:
+        for name, expect, old, new in CONTROLS:
             try:
                 if source.count(old) != 1: raise AssertionError(f'{name}: target not unique')
                 path = folder / (name + '.c'); path.open('x').write(source.replace(old, new))
                 mrows, _ = run_cases(library(source=path, output=folder / (name + '.so')), elf, segments, states, a.negative_controls, a.seed)
-                c = {r: sum(1 for x in mrows if x['result'] == r) for r in ('passed', 'failed', 'unsupported', 'error')}
-                row = dict(control=name, mutated_source_sha256=digest(path), counts=c,
-                           result='rejected' if c['failed'] > 0 and c['error'] == 0 else ('error' if c['error'] else 'ESCAPED'),
-                           first_failure=next((dict(index=x['index'], differences=x.get('differences', [])[:4]) for x in mrows if x['result'] == 'failed'), None))
-            except Exception as exc: row = dict(control=name, result='error', detail=str(exc)[:300])
+                c = tally(mrows); kind = {'divergence': 'measured-divergence', 'refusal-mismatch': 'refusal-mismatch'}[expect]
+                row = dict(control=name, expect=expect, mutated_source_sha256=digest(path), counts=c,
+                           result=control_verdict(c, expect),
+                           # Shown for every mutant: how it would fare under the divergence rule.
+                           divergence_verdict=control_verdict(c, 'divergence'),
+                           first_failure=next((dict(index=x['index'], failure=x['failure'],
+                                                    **{k: x[k] for k in ('differences', 'refusal_codes', 'expected_branch', 'original_branches') if k in x})
+                                               for x in mrows if x.get('failure') == kind), None))
+            except Exception as exc: row = dict(control=name, expect=expect, result='error', detail=str(exc)[:300])
             results.append(row); print(name, row['result'], row.get('counts'), flush=True)
         out['negative_controls'] = results
         if not all(r['result'] == 'rejected' for r in results): out['result'] = 'failed'

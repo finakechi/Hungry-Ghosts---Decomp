@@ -44,6 +44,35 @@ class ExternalDmaDomainTests(unittest.TestCase):
             else:actual.load(0x95e400)
             self.assertEqual(V.compare_memory(actual,expected,external)['result'],'failed',access)
 
+    def test_reporting_reads_do_not_record_watched_access(self):
+        # Regression (M12 review): DMA difference reporting read through load(), which
+        # recorded a modeled access, so comparing the same memory again failed. A control
+        # judged on its second comparison could then be "rejected" with no real difference.
+        actual,expected=memory(),memory();expected.store(0x95e418,0xe741,2)
+        external=V.pad_dma_buffers(actual);actual.watch=[(e['start'],e['end']) for e in external]
+        results=[V.compare_memory(actual,expected,external) for _ in range(3)]
+        self.assertEqual(actual.watched_reads,set())
+        self.assertEqual(expected.watched_reads,set())
+        self.assertEqual(results[0],results[1]);self.assertEqual(results[1],results[2])
+        self.assertEqual(results[2]['result'],'passed')
+        self.assertEqual(results[2]['external_dma']['modeled_accesses'],[])
+        self.assertEqual(results[2]['external_dma']['differences'],
+                         [dict(address='0x95e418',actual='0x0',expected='0xe741')])
+
+    def test_repeated_comparison_keeps_genuine_access_failure(self):
+        actual,expected=memory(),memory()
+        external=V.pad_dma_buffers(actual);actual.watch=[(e['start'],e['end']) for e in external]
+        actual.load(0x95e400)   # a modeled read of the DMA buffer
+        first,second=(V.compare_memory(actual,expected,external) for _ in range(2))
+        self.assertEqual(first,second);self.assertEqual(second['result'],'failed')
+        self.assertEqual(second['external_dma']['modeled_accesses'],['0x95e400'])
+
+    def test_peek_has_get_bounds_without_recording(self):
+        m=memory();m.watch=[(0x95e340,0x95e440)]
+        self.assertEqual(m.peek_word(0x95e400),0);self.assertEqual(m.watched_reads,set())
+        with self.assertRaises(ValueError):m.peek(0x70000000,4)    # uncaptured scratchpad
+        with self.assertRaises(ValueError):m.peek(0x2000000,4)     # unmapped
+
     def test_difference_outside_domains_fails(self):
         actual,expected=memory(),memory();expected.store(0x3f9718,1,1)
         result=V.compare_memory(actual,expected,V.pad_dma_buffers(actual))

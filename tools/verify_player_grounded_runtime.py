@@ -14,6 +14,7 @@ import argparse
 import ctypes as C
 import gc
 import json
+import re
 import struct
 import sys
 from pathlib import Path
@@ -48,7 +49,7 @@ class GroundedDriver(V.ProbeDriver):
         self.cop0_status = status; self.constant_t0 = {0x156ad0: 1}
         self.stage = {}; self.pushes = []; self.queries = []; self.floor_query = None
         self.history = None; self.camera_entry = None; self.sound = None; self.status_read = False
-        self.direction = None
+        self.direction = None; self.floor_returns = []
 
     def snap(self):
         copy = V.CapturedMemory(bytes(self.mem.raw), bytes(self.mem.scratch))
@@ -61,6 +62,8 @@ class GroundedDriver(V.ProbeDriver):
         if pc == 0x15e1d0 and self.camera_entry is None: self.camera_entry = self.snap()
         if pc == 0x156ad0: self.sound = [hex(v) for v in (a, b, c, d)] + ['t0=0x1']
         if pc == 0x10cca0 or pc == 0x156ad0: self.status_read = True
+        # Actual value returned by C hg_player_floor to C 0015fc10 (host-only seam).
+        if pc == V.CALL_RETURN and a == 0x15e420: self.floor_returns.append(b)
         result = super().external(pc, a, b, c, d)
         if pc == V.GUEST_FRAME and b == 0 and (a, b) in FRAME_STAGES: self.stage[FRAME_STAGES[(a, b)]] = self.snap()
         if pc == 0x145630:
@@ -114,6 +117,27 @@ def stage_pairs(driver, frame, strict=True):
     return pairs
 
 
+def register_checks(driver, frame, entry):
+    """Native register readings against values measured from this C run, never constants.
+
+    floor-query-v0: the modeled 00145630 result; floor-return-v0: the value C hg_player_floor
+    actually returned to C 0015fc10 (HG_CALL_RETURN seam); constraint-entry-f12: the movement
+    direction (00120580 result, or facing +44 when the move is below 0.001). A measurement
+    that is absent is 'missing', never 'passed' and never a measured divergence."""
+    regs = frame['captures']
+    direction = driver.direction if driver.direction is not None else entry.load(P + 0x44)
+    floor_return = driver.floor_returns[0] if len(driver.floor_returns) == 1 else None
+    rows = []
+    for name, native, value in (('floor-query-v0', regs['floor-query-return']['registers']['v0_low'], driver.floor_query),
+                                ('floor-return-v0', regs['floor-return']['registers']['v0_low'], floor_return),
+                                ('constraint-entry-f12', regs['constraint-entry']['registers']['f12'], direction)):
+        calculated = None if value is None else f'{value & 0xffffffff:08x}'
+        result = 'missing' if calculated is None else 'passed' if native['value'] == calculated else 'failed'
+        rows.append(dict(frame=frame['counter'], register=name, native=native['value'], method=native['method'],
+                         calculated=calculated, result=result))
+    return rows
+
+
 def summary(driver, frame):
     st = driver.stage; g = lambda name, off, w=4: st[name].load(P + off, w)
     return dict(frame=frame['counter'], stick_x=f(driver.mem.load(0x3eaf0c)), stick_y=f(driver.mem.load(0x3eaf10)),
@@ -121,7 +145,7 @@ def summary(driver, frame):
         proposed=[f(g('constraint-entry', o)) for o in (0x30, 0x34, 0x38)],
         constrained=[f(g('constraint-return', o)) for o in (0x30, 0x34, 0x38)],
         after_gravity_y=f(g('floor-entry', 0x34)), speed_after_gravity=hex(g('floor-entry', 0x430)),
-        floor_query_result=hex(driver.floor_query), floor_hit=[f(st['floor-query-return'].load(0x3f39a0 + 4 * i)) for i in range(3)],
+        floor_query_result=hex(driver.floor_query), floor_returns=[hex(v) for v in driver.floor_returns], floor_hit=[f(st['floor-query-return'].load(0x3f39a0 + 4 * i)) for i in range(3)],
         floor_type=st['floor-query-return'].load(0x3f39c6, 2), floor_normal_y=f(st['floor-query-return'].load(0x3f3a14)),
         committed=[f(g('grounded-return', o)) for o in (0x30, 0x34, 0x38)],
         committed_bits=[hex(g('grounded-return', o)) for o in (0x30, 0x34, 0x38)],
@@ -151,15 +175,7 @@ def sequence(lib, caps, obs):
             if actual is None: raise AssertionError(f'Missing {frame["counter"]}/{label} coverage')
             r = compare(actual, caps.load(row['name']))
             stages.append(dict(frame=frame['counter'], stage=label, expected=row['name'], expected_sha256=row['sha256'], **r))
-        regs = frame['captures']
-        # Movement direction: 120580 result, or facing +44 when the move is below 0.001.
-        direction = driver.direction if driver.direction is not None else entry.load(P + 0x44)
-        checks = [('floor-query-v0', regs['floor-query-return']['registers']['v0_low'], f'{driver.floor_query:08x}'),
-                  ('floor-return-v0', regs['floor-return']['registers']['v0_low'], '00000001'),
-                  ('constraint-entry-f12', regs['constraint-entry']['registers']['f12'], f'{direction:08x}')]
-        for name, native, calculated in checks:
-            registers.append(dict(frame=frame['counter'], register=name, native=native['value'], method=native['method'],
-                                  calculated=calculated, result='passed' if native['value'] == calculated else 'failed'))
+        registers += register_checks(driver, frame, entry)
         values.append(summary(driver, frame))
         executed.update(driver.executed); prior = driver.mem
         print(frame['counter'], 'PASSED' if all(s['result'] == 'passed' for s in stages + registers if s['frame'] == frame['counter']) else 'FAILED', flush=True)
@@ -208,7 +224,12 @@ DEFECTS = [
     ('camera-uses-unsnapped-height', 'contact', '    copy_quad(e,a+0x30,0x3f39a0);                         /* snap to the floor hit */',
      '    m12_unsnapped_y=r32(e,a+0x34);copy_quad(e,a+0x30,0x3f39a0);'),
     ('missing-floor-guest-frame', 'contact', '    call(e,HG_GUEST_FRAME,0x30,1,0,0);\n    w8(e,a+0x483', '    w8(e,a+0x483'),
+    # 0015fc10 only tests the floor result for nonzero, so memory cannot see this defect:
+    # it must be rejected by the measured floor-return v0 alone.
+    ('floor-returns-two', 'contact', '    call(e,HG_GUEST_FRAME,0x30,0,0,0);\n    return 1;\n}', '    call(e,HG_GUEST_FRAME,0x30,0,0,0);\n    return 2;\n}'),
 ]
+# Defects whose claim is a register-only rejection: memory must match at every checkpoint.
+REGISTER_ONLY = {'floor-returns-two'}
 # Second edits complete a defect whose other site is elsewhere.
 SECOND = {
     'history-before-floor': ('copy_quad(e,a+0x390,a+0x30);\n}\nvoid hg_player_dispatch_fixed', '/* history recorded before 0015fc10 */\n}\nvoid hg_player_dispatch_fixed'),
@@ -225,11 +246,15 @@ INPUTS = [('released-in-contact', 'contact', {0x3eaf10: (0, 4)}),
           ('raised-above-floor', 'contact', {P + 0x34: (0x42200000, 4)})]   # y = 40: still within the probe
 
 
-def frozen(memory):
-    copy = V.CapturedMemory(bytes(memory.raw), bytes(memory.scratch))
-    copy.scratch_known = set(memory.scratch_known); copy.writes = set(memory.writes)
-    copy.watched_reads = set(memory.watched_reads)
-    return copy
+def control_verdict(memory_first, final, registers):
+    """A control is rejected only by a completed comparison with a genuine difference:
+    differing EE RAM/scratchpad bytes at an authenticated checkpoint, or a native register
+    that differs from the value measured in this run. Missing measurements, driver errors
+    and DMA-touch-only results never count."""
+    memory = memory_first is not None or bool(final['different_bytes'] or final['scratchpad']['different_bytes'])
+    register = [r['register'] for r in registers if r['result'] == 'failed']
+    basis = (['memory'] if memory else []) + (['register'] if register else [])
+    return ('rejected' if basis else 'ESCAPED'), basis, register
 
 
 def controls(lib, caps, obs, folder):
@@ -240,19 +265,22 @@ def controls(lib, caps, obs, folder):
     # The middle frame of a phase; computed calculated carry is not needed (entry capture only).
     pick = lambda phase: by_phase[phase][len(by_phase[phase]) // 2]
     def measure(name, fr, d, kind):
-        # Each comparison uses a frozen copy: compare_memory's DMA reporting reads through
-        # load(), which would otherwise record a spurious modeled access for a later compare.
-        # Rejection requires differing EE RAM or scratchpad bytes at an authenticated checkpoint.
-        final = compare(frozen(d.mem), caps.load(fr['captures']['camera-return']['name']))
+        # compare_memory reports through side-effect-free peeks, so comparing the same
+        # memory more than once (camera-return is both a stage and the final state) is stable.
+        final = compare(d.mem, caps.load(fr['captures']['camera-return']['name']))
         first = None; checkpoints = 0
         for label, actual, row in stage_pairs(d, fr, strict=False):
             if actual is None: continue
-            r = compare(frozen(actual), caps.load(row['name'])); checkpoints += 1
+            r = compare(actual, caps.load(row['name'])); checkpoints += 1
             if (r['different_bytes'] or r['scratchpad']['different_bytes']) and first is None:
                 first = dict(stage=label, different_bytes=r['different_bytes'], scratchpad=r['scratchpad']['different_bytes'])
-        diverged = first is not None or final['different_bytes'] or final['scratchpad']['different_bytes']
+        registers = register_checks(d, fr, caps.load(fr['captures']['dispatch-entry']['name']))
+        result, basis, register = control_verdict(first, final, registers)
+        if name in REGISTER_ONLY and basis != ['register']:
+            result = 'error'   # the control would not demonstrate a register-only rejection
         gr = d.stage.get('grounded-return')
-        return dict(control=name, kind=kind, frame=fr['counter'], result='rejected' if diverged else 'ESCAPED',
+        return dict(control=name, kind=kind, frame=fr['counter'], result=result, rejected_by=basis,
+                    divergent_registers=register, registers=registers, floor_returns=[hex(v) for v in d.floor_returns],
                     checkpoints_compared=checkpoints, native_pushes=len(fr['pushes']), calculated_pushes=len(d.pushes),
                     first_divergent_stage=first, comparison=final,
                     committed_y=f(gr.load(P + 0x34)) if gr else None, eye_y=f(d.mem.load(0x70000044)),
@@ -262,7 +290,8 @@ def controls(lib, caps, obs, folder):
         fr = pick(phase)
         try:
             row = measure(f'null-{phase}', fr, execute(lib, caps, fr, STATUS_VALUES[0]), 'null-control')
-            row['result'] = 'clean' if row['result'] == 'ESCAPED' else 'DIVERGED'
+            clean = row['result'] == 'ESCAPED' and all(r['result'] == 'passed' for r in row['registers'])
+            row['result'] = 'clean' if clean else 'DIVERGED'
         except Exception as exc: row = dict(control=f'null-{phase}', kind='null-control', frame=fr['counter'], result='error', detail=str(exc)[:500])
         rows.append(row); print(row['control'], row['result'], flush=True)
         with (folder / (row['control'] + '.result.json')).open('x') as out: json.dump(row, out, indent=2); out.write('\n')
@@ -300,7 +329,8 @@ def controls(lib, caps, obs, folder):
         execute(lib, caps, fr, STATUS_VALUES[0], mutate={P + 0x34: (0x42480000, 4)})   # y = 50
         row = dict(control='airborne-fails-closed', kind='fail-closed', frame=fr['counter'], result='ESCAPED')
     except AssertionError as exc:
-        closed = 'code 0x50' in str(exc)
+        codes = re.findall(r'outside reconstructed domain \(code (0x[0-9a-f]+)\)', str(exc))
+        closed = codes == ['0x50']   # exactly one refusal, the no-floor code
         row = dict(control='airborne-fails-closed', kind='fail-closed', frame=fr['counter'],
                    result='refused' if closed else 'error', detail=str(exc)[:300])
     rows.append(row); print(row['control'], row['result'], flush=True)

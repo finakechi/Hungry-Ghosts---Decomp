@@ -221,13 +221,17 @@ static uint32_t constraint_external(void *u,uint32_t pc,uint32_t a,uint32_t b,ui
 }
 /* M12: synthetic floor at y = 10 under the 00145630 probe (segment y'+4 .. y'-2);
  * a hit writes the whole hit quad (x, 10, z, w) and surface type 2. */
-static unsigned grounded_depth,grounded_frames,grounded_floors;
+static unsigned grounded_depth,grounded_frames,grounded_floors,grounded_returns;
+static uint32_t grounded_floor_return;
 static uint32_t grounded_external(void *u,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
     switch(pc) {
     case 0xfffffff1u:
         assert((a==0x70 || a==0x30 || a==0x20) && b<=1);
         if(b)grounded_depth+=a; else {assert(grounded_depth>=a);grounded_depth-=a;}
         grounded_frames++;return 0;
+    case 0xfffffff2u:   /* host-only C floor-return observation */
+        assert(a==0x15e420 && grounded_depth==0x20);
+        grounded_floor_return=b;grounded_returns++;return 0;
     case 0x145630: {
         assert(a==0x40c00000u && b==0x3f92d0 && c==0x70000b80 && d==0x2c0 && grounded_depth==0x50);
         uint32_t yb=load(u,c+4,4);float y;memcpy(&y,&yb,4);
@@ -543,8 +547,9 @@ int main(void) {
      * connected constraint/grounded/history/camera composition on the same bus. */
     {HGResourceEnv m12=e;m12.call=grounded_external;const uint32_t actor=0x3f92d0;
      store(&t,actor+0x34,4,0x41240000);store(&t,actor+0x430,4,0);store(&t,actor+0x4ad,1,0);store(&t,actor,1,2);
-     grounded_depth=0;grounded_frames=0;grounded_floors=0;
+     grounded_depth=0;grounded_frames=0;grounded_floors=0;grounded_returns=0;grounded_floor_return=0;
      hg_player_grounded_fixed(&m12,actor);
+     assert(grounded_returns==1 && grounded_floor_return==1);
      assert(load(&t,actor+0x34,4)==0x41200000u && load(&t,actor+0x430,4)==0 && load(&t,actor,1)==1);
      {uint32_t ob=load(&t,0x70000b84,4);float o;memcpy(&o,&ob,4);assert(o>8.16f && o<8.18f);}  /* 10.25 - 0.08 - 2 */
      assert(load(&t,actor+0x2c3,1)==1 && (load(&t,actor+0x47c,2)&0x7fff)==4);
@@ -558,6 +563,7 @@ int main(void) {
      grounded_depth=0;grounded_frames=0;
      hg_player_grounded_camera_fixed(&m12,0x1ff8000);
      assert(grounded_depth==0 && grounded_frames==6 && grounded_floors==3);
+     assert(grounded_returns==3 && grounded_floor_return==1);
      assert(load(&t,actor+0x34,4)==0x41200000u && load(&t,actor+0x430,4)==0);
      assert(memcmp(t.ram+0x3f9300,t.ram+0x3f9660,16)==0);
      assert(load(&t,0x70000040,4)==load(&t,actor+0x30,4));}
