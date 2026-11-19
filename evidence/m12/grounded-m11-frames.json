@@ -1,0 +1,1482 @@
+{
+  "schema": "hg-player-grounded-m11-frames/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "observation_sha256": "5ed55a44a47eca1f5e992d31a22c744b807347b7e1e3fcc8da3ffca774dd4120",
+  "stages": [
+    {
+      "frame": 4278,
+      "stage": "constraint-entry",
+      "expected": "obs1-002",
+      "expected_sha256": "8c116c89190109d5897ece5ce15d1b1bb8e30d7ea20c0aadbdf3b4ebb758f97b",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4278,
+      "stage": "constraint-return",
+      "expected": "obs1-003",
+      "expected_sha256": "06a5978a183c5d0a065bf1c0389f92b4f2fba0e1bf29656e0e9f7c6997d8d8fb",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34eb",
+            "expected": "0x34ed"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4278,
+      "stage": "history-copy",
+      "expected": "obs1-004",
+      "expected_sha256": "3e126970895e438bc810adb4681d50846cec18b17f6d6f9291ccfc162535b8e6",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34eb",
+            "expected": "0x34ed"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4278,
+      "stage": "camera-entry",
+      "expected": "obs1-005",
+      "expected_sha256": "03a53769f4d91417c8480f0a50e558a0f4e4e713122e6b6dd3f03cb68cc0614c",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34eb",
+            "expected": "0x34ed"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4278,
+      "stage": "camera-return",
+      "expected": "obs1-006",
+      "expected_sha256": "ff4724cd452aca404d6b9156c135c2dd24e381719784ceedb94a4c5c98432c41",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34eb",
+            "expected": "0x34ed"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4279,
+      "stage": "constraint-entry",
+      "expected": "obs1-008",
+      "expected_sha256": "5c3d5395e571b6661950feccb2fc191e9dea5397f79345e3b5ef85a302be0fdc",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4279,
+      "stage": "constraint-return",
+      "expected": "obs1-009",
+      "expected_sha256": "a2ec0bb4eb7409b00fc742c8a4b573a0f7572a5e93bef10f07eabe53b3319c74",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ec",
+            "expected": "0x34ee"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4279,
+      "stage": "history-copy",
+      "expected": "obs1-010",
+      "expected_sha256": "ccccb6636830095bdda8c6ad829d8b977460065540e8dc808afb05a2cb9d9789",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ec",
+            "expected": "0x34ee"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4279,
+      "stage": "camera-entry",
+      "expected": "obs1-011",
+      "expected_sha256": "9ca89359371bd1a25267cb4c6655e4e9b6ce84d0b8fc577435f03889391f5e94",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ec",
+            "expected": "0x34ee"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4279,
+      "stage": "camera-return",
+      "expected": "obs1-012",
+      "expected_sha256": "b8bf5baa8113befc53bf13feed4fd4f9e373af77bf86645935c1c9c3b9b38bb9",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ec",
+            "expected": "0x34ee"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4280,
+      "stage": "constraint-entry",
+      "expected": "obs1-014",
+      "expected_sha256": "cd5a14d3b2d32216c87f317991d948678c1b2991e729f5b7a1ff280a195396aa",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4280,
+      "stage": "constraint-return",
+      "expected": "obs1-015",
+      "expected_sha256": "0301174e566f74e5b51ed3f0229608f2720d3333c8f9b397875adc0d77420583",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ed",
+            "expected": "0x34ef"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4280,
+      "stage": "history-copy",
+      "expected": "obs1-016",
+      "expected_sha256": "723ec51bb784152d4e00e2078f9e72a513ec7afd7b4c257dfe12753dd0a8cbf6",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ed",
+            "expected": "0x34ef"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4280,
+      "stage": "camera-entry",
+      "expected": "obs1-017",
+      "expected_sha256": "e21822e14e7c106584b6cd855d9aa1e82cc092b16d124d154897e5f20e29e5da",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ed",
+            "expected": "0x34ef"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4280,
+      "stage": "camera-return",
+      "expected": "obs1-018",
+      "expected_sha256": "61cc02baa3fe138ea6f1b795153efd73a5a60cc63734aa68858119aee04975ed",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ed",
+            "expected": "0x34ef"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4281,
+      "stage": "constraint-entry",
+      "expected": "obs1-020",
+      "expected_sha256": "19818053d5f78f4d527106275eed930cc30b2d5b41971888269966b03ca99c88",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4281,
+      "stage": "constraint-return",
+      "expected": "obs1-026",
+      "expected_sha256": "0ac89401bffea04c743ff840b27c63289cba596ec38b79c763f56707bc90f761",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ee",
+            "expected": "0x34f0"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4281,
+      "stage": "history-copy",
+      "expected": "obs1-027",
+      "expected_sha256": "b2176e71debbe51363b5399463b96385aa568329d2a6618eee288739708642aa",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ee",
+            "expected": "0x34f0"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4281,
+      "stage": "camera-entry",
+      "expected": "obs1-028",
+      "expected_sha256": "26c82746b6b9203655d6570cb5e60f9f239382a26a6c3e57ac2a11dbec34fbe1",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ee",
+            "expected": "0x34f0"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4281,
+      "stage": "camera-return",
+      "expected": "obs1-029",
+      "expected_sha256": "82972f9e9449f4d826a3acbf73ed7a97c01722031b4b3e64822b8066ce0846f4",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34ee",
+            "expected": "0x34f0"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "constraint-entry",
+      "expected": "obs1-031",
+      "expected_sha256": "cc51483e18864e4c11ba2d8387e71f48506ab79b61e6af836aced55bc551bedd",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "constraint-return",
+      "expected": "obs1-039",
+      "expected_sha256": "2e23007ee2cb25b6bba9756adb81adf9cef7b6283e14f9c5ceff86cc8942e842",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ef",
+            "expected": "0x34f1"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "history-copy",
+      "expected": "obs1-040",
+      "expected_sha256": "e679cd319faad84bd08e150746588628fd5132b38271f803e1e99cb2df493669",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ef",
+            "expected": "0x34f1"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "camera-entry",
+      "expected": "obs1-041",
+      "expected_sha256": "b7e922ab6b711c12c835194b2d9c298924f5ff3071e6ad0fb586c107e4ac34cf",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ef",
+            "expected": "0x34f1"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "camera-return",
+      "expected": "obs1-042",
+      "expected_sha256": "afe179d6616089f99cb1b53116119a708800d49384a2582b1357c646bd3ef0d5",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ef",
+            "expected": "0x34f1"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4282,
+      "stage": "bump-sound-call",
+      "expected": "obs1-038",
+      "expected_sha256": "39e1953cdf0d376cbae05dd1d39d117ceb4a3192a007426126dd3b8c8af5e57d",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34ef",
+            "expected": "0x34f1"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4283,
+      "stage": "constraint-entry",
+      "expected": "obs1-044",
+      "expected_sha256": "fa747bb60e94772ab13d5680c6c1a146c3336ad790321083b7ca4ef8a45d37f7",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4283,
+      "stage": "constraint-return",
+      "expected": "obs1-051",
+      "expected_sha256": "5b4de0c7fa85f74c3be22ead3744f089499bebb7043909395ad45d7b5622a302",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34f0",
+            "expected": "0x34f2"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4283,
+      "stage": "history-copy",
+      "expected": "obs1-052",
+      "expected_sha256": "40ff92825bafa3d7e028f29c36c6d9e1561bf0c382fba0af7348754b05534ce8",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34f0",
+            "expected": "0x34f2"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4283,
+      "stage": "camera-entry",
+      "expected": "obs1-053",
+      "expected_sha256": "c3cb1222ce7ffdef84767691b8344a9f32089709b14650d1b38249df89b93406",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34f0",
+            "expected": "0x34f2"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4283,
+      "stage": "camera-return",
+      "expected": "obs1-054",
+      "expected_sha256": "2bc5a7a1ab3e1f01723747fd49c68c37c4320b9a04b0c79f243eeac1f7b5829f",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e398",
+            "actual": "0x34f0",
+            "expected": "0x34f2"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4284,
+      "stage": "constraint-entry",
+      "expected": "obs1-056",
+      "expected_sha256": "868665f0ff31149fe8b14806a1b6b46b69f7c324b81730bbdc5b1d83cad9fcab",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 0,
+        "modeled_accesses": [],
+        "differences": []
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4284,
+      "stage": "constraint-return",
+      "expected": "obs1-063",
+      "expected_sha256": "9840568930339f35b8c290827f15bf422ccb47d7897f72d6eaf7fb3536afb473",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34f1",
+            "expected": "0x34f3"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4284,
+      "stage": "history-copy",
+      "expected": "obs1-064",
+      "expected_sha256": "46dd4f06b02ce11a21a8efe55d6f3166a2789524213fb1aad95c41dd03c4a754",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34f1",
+            "expected": "0x34f3"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4284,
+      "stage": "camera-entry",
+      "expected": "obs1-065",
+      "expected_sha256": "a9240ee9f34e1a73afe5ad4e58fa6f1892bf98c4bcf9974639f39cacd4b6488c",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34f1",
+            "expected": "0x34f3"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    },
+    {
+      "frame": 4284,
+      "stage": "camera-return",
+      "expected": "obs1-066",
+      "expected_sha256": "2c6ab1b3b0d2d9843d690f377307692621dc4eb7a3a08874c831c8e3f0087e0a",
+      "result": "passed",
+      "compared_bytes": 33423360,
+      "different_bytes": 0,
+      "different_words": 0,
+      "stack_excluded": {
+        "start": "0x1fe0000",
+        "end_exclusive": "0x2000000"
+      },
+      "external_dma": {
+        "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+        "buffers": [
+          {
+            "port": 0,
+            "slot": 0,
+            "start": "0x95e340",
+            "end_exclusive": "0x95e440"
+          }
+        ],
+        "different_bytes": 1,
+        "modeled_accesses": [],
+        "differences": [
+          {
+            "address": "0x95e418",
+            "actual": "0x34f1",
+            "expected": "0x34f3"
+          }
+        ]
+      },
+      "differences": [],
+      "differences_truncated": false,
+      "scratchpad": {
+        "compared_bytes": 16384,
+        "different_bytes": 0,
+        "differences": []
+      }
+    }
+  ],
+  "handoffs": [
+    {
+      "frame": 4279,
+      "result": "passed",
+      "differences": []
+    },
+    {
+      "frame": 4280,
+      "result": "passed",
+      "differences": []
+    },
+    {
+      "frame": 4281,
+      "result": "passed",
+      "differences": []
+    },
+    {
+      "frame": 4282,
+      "result": "passed",
+      "differences": []
+    },
+    {
+      "frame": 4283,
+      "result": "passed",
+      "differences": []
+    },
+    {
+      "frame": 4284,
+      "result": "passed",
+      "differences": []
+    }
+  ],
+  "verification_sources": {
+    "src/resource_loader.c": "660e896bbd83fb5d567592638bedc28e09100e85fb5b2adf2a2ca9a9fdd2c1e8",
+    "tools/verify_player_grounded_m11_frames.py": "96c27ebb64ddb65e50820f452ff8e7bff2436c19cccdfb7071191815d2c51007",
+    "tools/verify_player_constraint_runtime.py": "6bf6178ae31a9cbb2e3e821d6937c57143e8af1b3faefcf997fab820cd921e96"
+  },
+  "limitations": [
+    "M11 captures have no native stop inside 0015fc10; its effects are checked at the history-copy and camera stops."
+  ]
+}

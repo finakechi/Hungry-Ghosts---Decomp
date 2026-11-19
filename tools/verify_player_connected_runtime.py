@@ -29,8 +29,12 @@ class CapturedMemory:
         self.writes=set()
         self.watch=();self.watched_reads=set()
     def get(self,address,size):
+        """Modeled-execution read: records accesses to watched external-DMA ranges."""
         for start,end in self.watch:
             if address<end and start<address+size:self.watched_reads.add(address)
+        return self.peek(address,size)
+    def peek(self,address,size):
+        """Harness/reporting read with get()'s bounds rules; never recorded as a modeled access."""
         if 0<=address<=len(self.raw)-size:return bytes(self.raw[address:address+size])
         if 0x70000000<=address<=0x70004000-size:
             offset=address-0x70000000
@@ -50,6 +54,7 @@ class CapturedMemory:
     def update(self,pairs):
         for address,value in pairs:self[address]=value
     def load(self,address,width=4):return int.from_bytes(self.get(address,width),'little')
+    def peek_word(self,address,width=4):return int.from_bytes(self.peek(address,width),'little')
     def store(self,address,value,width=4):self.put(address,(value&((1<<(width*8))-1)).to_bytes(width,'little'))
     @classmethod
     def load_capture(cls,path):
@@ -76,12 +81,16 @@ class CapturedMemory:
 FP_SEAMS={0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,False),
     0x13a060:(2,False),0x120830:(0,True),0x1204e0:(1,True),
     0x143560:(1,True),0x143620:(1,True),0x143c60:(1,False),0x143d30:(1,False),0x143b90:(1,False),
-    0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False)}
+    0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False),
+    0x145630:(1,False)}  # M12: C 0015e420 floor probe, f12 = segment rise
 # Host-only fail-closed signal from C paths outside the reconstructed domain.
 DOMAIN_FAULT=0xfffffff0
 # Host-only M11 seam: (bytes, 1) enters and (bytes, 0) leaves a reconstructed
 # function's original guest frame, so modeled callees run at its stack depth.
 GUEST_FRAME=0xfffffff1
+# Host-only M12 seam: (callee entry, value) reports the actual return value of a
+# reconstructed C callee resolved inside the C composition. No guest effect.
+CALL_RETURN=0xfffffff2
 
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
@@ -90,6 +99,7 @@ class ConnectedRuntimeDriver(Driver):
         self.modeled_calls=[];self.executed=set();self.model_depth=0
         # Opt-in M11 contracts; defaults preserve the M8-M10 behaviour.
         self.guest_frame=0;self.cop0_status=None;self.constant_t0={}
+        self.call_returns=[]
     def verify_executed(self,addresses):
         for address in addresses:
             offsets=[off+address-start for start,end,off in self.segments if start<=address and address+4<=end]
@@ -109,6 +119,7 @@ class ConnectedRuntimeDriver(Driver):
         if pc==GUEST_FRAME:
             if b not in (0,1) or a&15 or (b==0 and self.guest_frame<a):raise ValueError('Invalid guest frame seam')
             self.guest_frame+=a if b else -a;return 0
+        if pc==CALL_RETURN:self.call_returns.append((a,b));return 0
         machine=Machine();machine.mem=self.mem;machine.reg[28]=0x3e7f70
         machine.cop0_status=self.cop0_status
         # Each nested modeled call receives separate scratch stack storage.
@@ -145,13 +156,17 @@ def pad_dma_buffers(memory):
     for port in range(2):
         for slot in range(4):
             entry=PAD_TABLE+port*0x70+slot*0x1c
-            if memory.load(entry+0x10)==1:
-                base=memory.load(entry)
+            if memory.peek_word(entry+0x10)==1:
+                base=memory.peek_word(entry)
                 if base&0x3f or not 0<base<0x2000000-0x100:raise ValueError(f'Invalid libpad buffer {base:#x}')
                 buffers.append(dict(port=port,slot=slot,start=base,end=base+0x100))
     return buffers
 
 def compare_memory(actual,expected,external=()):
+    """Compare complete EE RAM minus the guest stack; libpad DMA bytes are separated.
+
+    Reporting uses peek_word(), so a comparison never adds watched accesses and
+    repeated comparisons of the same memory give identical results."""
     lower,upper=STACK_EXCLUSION
     def outside(i):return any(e['start']<=i<e['end'] for e in external)
     if len(actual.raw)!=len(expected.raw):raise ValueError('Comparison sizes differ')
@@ -169,8 +184,8 @@ def compare_memory(actual,expected,external=()):
         external_dma=dict(domain='libpad IOP SIF-DMA receive buffers, not EE-written',
             buffers=[dict(port=e['port'],slot=e['slot'],start=hex(e['start']),end_exclusive=hex(e['end'])) for e in external],
             different_bytes=len(dma),modeled_accesses=[hex(i) for i in touched[:32]],
-            differences=[dict(address=hex(i),actual=hex(actual.load(i)),expected=hex(expected.load(i))) for i in sorted({i&~3 for i in dma})[:32]]),
-        differences=[dict(address=hex(i),actual=hex(actual.load(i)),expected=hex(expected.load(i))) for i in words[:128]],
+            differences=[dict(address=hex(i),actual=hex(actual.peek_word(i)),expected=hex(expected.peek_word(i))) for i in sorted({i&~3 for i in dma})[:32]]),
+        differences=[dict(address=hex(i),actual=hex(actual.peek_word(i)),expected=hex(expected.peek_word(i))) for i in words[:128]],
         differences_truncated=len(words)>128)
 
 def run_initializer(lib,elfdata,segments,capture_dir):

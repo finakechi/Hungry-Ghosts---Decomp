@@ -274,7 +274,11 @@ class Machine:
                         else:raise ValueError('FP division by zero outside investigated subset')
                         if value is not None:
                             magnitude = fp_chop(abs(value))
-                            self.fpr[fd] = magnitude | (0x80000000 if value < 0 and magnitude else 0)
+                            if magnitude:sign = 0x80000000 if value < 0 else 0
+                            # M12: a zero or flushed product keeps sign(fs) ^ sign(ft), as PCSX2
+                            # does (retail 0012c640: +0 * negative sin/cos stored as 0x80000000).
+                            else:sign = (self.fpr[fs] ^ self.fpr[ft]) & 0x80000000
+                            self.fpr[fd] = magnitude | sign
                     elif fn == 6:self.fpr[fd] = self.fpr[fs]
                     elif fn == 7:self.fpr[fd] = self.fpr[fs] ^ 0x80000000
                     elif fn == 0x24:  # cvt.w.s in the captured chop profile

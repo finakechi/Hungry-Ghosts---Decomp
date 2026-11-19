@@ -1,0 +1,1767 @@
+{
+  "schema": "hg-m12-checks/v2",
+  "recorded_utc": "2026-11-19T22:27:39.194299+00:00",
+  "result": "PASSED",
+  "baseline": "35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c",
+  "verified_commit": "28d7c807695cdb07c34c5dafd28486e35580e13d",
+  "previous_verified_commit": "95364d6086f8421deee20bd17e100040724d7880",
+  "regression_inventory": {
+    "run": "r20261119T213946Z",
+    "passed": 79,
+    "total": 79,
+    "started_utc": "2026-11-19T21:39:46.150391+00:00",
+    "completed_utc": "2026-11-19T22:27:17.006074+00:00"
+  },
+  "checks": [
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "00.log",
+      "log_sha256": "fff2dd7db7cd135ab40f58e8d899f38a6c7004f388facf367ec646749b4b728a"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_disc_read.py",
+        "--elf",
+        "$HG_ELF",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m1-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "01.log",
+      "log_sha256": "97364a40f14e4a8efd4628204a873e268a7552bb0b62b5283e976ff4c41e72e3"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_loader.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m2-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "02.log",
+      "log_sha256": "99c2c21afd06122139d3c2d3e499d070a7989bbe35440174800744e3f294248a"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_rebase.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m3/fixup-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m3-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "03.log",
+      "log_sha256": "70c871142b25df98ac705fb75f3bdd79e257a4bd06cc31e4c96efd295713b024"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_resource_fixup.py",
+        "--elf",
+        "$HG_ELF",
+        "--exports",
+        "local/m4/fixup-export",
+        "--geometry-exports",
+        "local/m6/geometry-export",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m4-m6-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "04.log",
+      "log_sha256": "44a65d3834903b5ddaf2ec849709044298f2cb2050261ff5bdf183c4b311ec51"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_lifecycle.py",
+        "--elf",
+        "$HG_ELF",
+        "--general-exports",
+        "local/m2/exports/connected",
+        "--alternative-exports",
+        "local/m5/alternative-export",
+        "--area-exports",
+        "local/m5/area-export",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--area-code-exports",
+        "local/m5/area1-observed-export",
+        "--actor-dependency-exports",
+        "local/m5/actor-dependency-export",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m5-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "05.log",
+      "log_sha256": "13087902e2d790c7a3b01085e80ab4ec0f96978ce586e3d1b066e736f32c1e95"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "compileall",
+        "-q",
+        "tools",
+        "tests"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "06.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_preparation.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m7-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "07.log",
+      "log_sha256": "c972352e4392d34a9f14677eded7f16580168c3a0c6b380e7aa55b4d3f26a60a"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_lists.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/actor-lists-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "08.log",
+      "log_sha256": "14baba3ffeeaa9706a8afbe4a65275a184c71771b8ec10077d03797cceb655db"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_fixup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m4/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m4/runtime/capture-profile.ini",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m4-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "09.log",
+      "log_sha256": "d47e4993c5cd8c9eae24aa7c5766f61d5e12a68ca34f5a3a4a37c0d0a05e6068"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_area_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m5/runtime",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m5/resume/capture-profile.ini",
+        "--pack-runtime",
+        "local/m6/captures2",
+        "--pack-profile",
+        "local/m6/capture2-profile.ini",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "10.log",
+      "log_sha256": "b6991b40177068e813e181b2a1781eb9ba8c4ee4fe0ca309dc0a015518cccbd9"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/check_local_inputs.py",
+        "--manifest",
+        "evidence/local-inputs.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "11.log",
+      "log_sha256": "58c7b13b8485282220866187e627ebc2078d608a918d81a15e110c8a02ef4728"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_engine_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--image",
+        "$HG_JAPAN_ISO",
+        "--runtime",
+        "local/m7",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--emulator",
+        "$HG_PCSX2",
+        "--profile",
+        "local/m7/capture-profile.ini",
+        "--contract-profile",
+        "local/m7/contract-profile.ini",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m7-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "12.log",
+      "log_sha256": "e3b86cb7bfb190ab9b28dacf8c957d7cd4650c8121577b2964c7ab8fcc292049"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/setup-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "13.log",
+      "log_sha256": "4b02caecc3229f87876360ea6370d646623499961498caffaade9036c3872962"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_actor_setup_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--entry",
+        "local/m8/captures/setup-entry.json",
+        "--returned",
+        "local/m8/captures/setup-return.json",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/setup-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "14.log",
+      "log_sha256": "0793d2e024ff0894cfd113623b746f5fb4f433185284ec0998804b7a08541e4c"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_ordinary.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/ordinary-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "15.log",
+      "log_sha256": "2deff99bfac703ab76e0c2d9ecd6fa1648c6a12eda311d16750864ecdfc7acb2"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_connected.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/connected-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "16.log",
+      "log_sha256": "a9e5ab37979f5f694f09fe2f065a7297d68404eed2fc50521b8b531a3ba191e3"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_transition.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/transition-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "17.log",
+      "log_sha256": "ff86ca307da713d0e221b64d722dd34a28c0154787e12f459438f45bf07773bb"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_input_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--capture-dir",
+        "local/m8/captures",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/ordinary-input-saved-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "18.log",
+      "log_sha256": "0806927e4b88ad23d8e03b86ed6b0fe4b402228ef101a9e84429db054a2e51d6"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_connected_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m8/captures",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/connected-gameplay-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "19.log",
+      "log_sha256": "807216070ffc43b047d1bc476ea3f1beb410cf43456207a49f3a395fb380d355"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_connected.py",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/final002-connected-negatives-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "20.log",
+      "log_sha256": "06562fff9461541c5b4acf8479548d2ac1d50d5414fa153b10321e4cb29caf44"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_transition.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/final002-transition-negatives-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "21.log",
+      "log_sha256": "a123343008222f23f2dff30aabf523ba75e367e53c57c7c6da62da9704a37267"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/m12/final-checks-r20261119T213946Z/setup-negative-controls.py"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "22.log",
+      "log_sha256": "c8ceaaa803cd061deb557e01580857d4a1f2187e7476a8dd449ad942fa2860ae"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/m12/final-checks-r20261119T213946Z/list-negative-controls.py"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "23.log",
+      "log_sha256": "470c6134de9f1e68c67652e142dd1a3b22fdd02a79f0815e7dd06ec7245b0e50"
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-O1",
+        "-g",
+        "-fsanitize=address,undefined",
+        "-fno-sanitize-recover=all",
+        "-Isrc",
+        "tests/resource_sanitizer.c",
+        "src/resource_loader.c",
+        "src/disc_read.c",
+        "-o",
+        "local/m12/final-checks-r20261119T213946Z/sanitizer"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "24.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "local/m12/final-checks-r20261119T213946Z/sanitizer"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "25.log",
+      "log_sha256": "b41b67afe51d4acabfd0761da5f6234bd4088dcaf5830e79632fee60bc949310"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/actor_lists/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "26.log",
+      "log_sha256": "469c9c584947c35b824522c91aba4c9c318ee43e18ffe20e053686e1aabc71e4"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/actor_lists/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "27.log",
+      "log_sha256": "1dbe0a6df238134d4ed4045550cb74986218239edf4d6f03c6b42425bd57410d"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/actor_setup/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "28.log",
+      "log_sha256": "d1aeef57e26cc625c0353d1cc444b2df5adda3278f823e7b5b4f32787bd9d2ba"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/actor_setup/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "29.log",
+      "log_sha256": "448e16e09ac57d92ee4a249639c82dd241f8026d53451a456cf80ac88c0a0060"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/actor_setup/math-dependencies.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "30.log",
+      "log_sha256": "bee7d57f113efcad5b7c418a40521cab112dae0e7361110fbfb15e4871905bbc"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/actor_setup/math-dependencies.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "31.log",
+      "log_sha256": "62c564f8840d823ba23d0858238c0c7e85d2a4f401b88304129bb6ea542a047b"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/area_lifecycle/area1-functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "32.log",
+      "log_sha256": "f1dc2033d94281e38e5b4ff3623af29eb7d03da54bef90822e123f2295116434"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/area_lifecycle/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "33.log",
+      "log_sha256": "f65f268022fd38a63ce1d255855deb0805ace44e1a1e35322c73ecb2e40869e3"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/area_lifecycle/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "34.log",
+      "log_sha256": "eefd9fc3c0bc78e2f8f435cf868b459eb892faaf37a0691c9d58387b6bb61d48"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/disc_read/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "35.log",
+      "log_sha256": "b75adba02b3291f17f2ac4e684087dce832fcea20061c398ec9056acb192d2e6"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/disc_read/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "36.log",
+      "log_sha256": "d8b636795e7a6a843e67b7d0643170c6ab0bf15bdf0e80a8b5e1629dc8d3d5ca"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/engine_preparation/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "37.log",
+      "log_sha256": "b90a2649c4a8dad6a0c3e1cd8ce04e76aa8c5732b0c169cb3cd15279423d4ee8"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/engine_preparation/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "38.log",
+      "log_sha256": "d8b636795e7a6a843e67b7d0643170c6ab0bf15bdf0e80a8b5e1629dc8d3d5ca"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/pack_finalization/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "39.log",
+      "log_sha256": "f9f85ddae4cc5831960b5ace1c9c1745c39a82bc4e2271cfb22cec9f57acd1e2"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/pack_finalization/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "40.log",
+      "log_sha256": "d8b636795e7a6a843e67b7d0643170c6ab0bf15bdf0e80a8b5e1629dc8d3d5ca"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_connected/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "41.log",
+      "log_sha256": "074dabc5f2f46d83deb98f4c84e6cd5062b031906f16af54ce8e8427907cfacf"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_connected/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "42.log",
+      "log_sha256": "2b2e7b429801b0f45da326bdfe2ae53814d9c148ae3f861be5046601738354be"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_ordinary/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "43.log",
+      "log_sha256": "e78d084e4f7585b959947bab10fd4849afb8b43e72caa52fbdffe87bf48a50a5"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_ordinary/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "44.log",
+      "log_sha256": "14712ca8afb926db1b317a14e26f76e57355ddc37403b78286d17a4e732eea1c"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/resource_fixup/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "45.log",
+      "log_sha256": "b3f8af8218c71d14e9700178709cbfbc767589a20a9610cc4a9427dc068938e2"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/resource_fixup/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "46.log",
+      "log_sha256": "1dbe0a6df238134d4ed4045550cb74986218239edf4d6f03c6b42425bd57410d"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/resource_loader/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "47.log",
+      "log_sha256": "739111b582e00ef0b64c6f187c0bdce9cb802f6fd7e5d6a22bed0a86065092fe"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/resource_loader/functions.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "48.log",
+      "log_sha256": "2b2e7b429801b0f45da326bdfe2ae53814d9c148ae3f861be5046601738354be"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/hg_publication_audit.py",
+        "--base",
+        "origin/main",
+        "--head",
+        "HEAD",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/head-publication-audit-r20261119T213946Z.json"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "49.log",
+      "log_sha256": "4f5c165ebcf2572e457bea3ec2913b2498a756b055ead222f03a40504243e37b"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "local/m12/final-checks-r20261119T213946Z/worktree-audit.py"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "50.log",
+      "log_sha256": "6ed168f08361a5a4af696bca1778298d0d3e9dd1cb5fb534ab9723e542c5d7f6"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "origin": "m8-inventory",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "51.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_turn_camera/functions.json"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "52.log",
+      "log_sha256": "7f542e40fcfa1d15743f7bf54d01ff33fec8c0bd034fc65e89723b0cd53605bc"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_turn_camera/functions.json"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "53.log",
+      "log_sha256": "2b2e7b429801b0f45da326bdfe2ae53814d9c148ae3f861be5046601738354be"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/player_turn_camera/functions.json"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "54.log",
+      "log_sha256": "9b45171b69584eae0db4210e4172ec38a10b832d325e12887c3d19a9f10427c0"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_turn_camera.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/turn-camera-instructions-r20261119T213946Z.json"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "55.log",
+      "log_sha256": "41163dcc91ca97f44aa9bc51f930091e68163c128923afe74b4f239e3db462f0"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_turn_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m9/captures",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/turn-camera-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "56.log",
+      "log_sha256": "96cfe00304f67685dd8fcf42453ab7d5e05ffed753088776e9371fbf573eb009"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_player_turn_camera.py",
+        "-v"
+      ],
+      "origin": "m9",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "57.log",
+      "log_sha256": "c26475bc10ea9aaadc651ac9657cf78118c8a557413a3727464400f49458de3a"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_player_walk_camera.py",
+        "-v"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "58.log",
+      "log_sha256": "8c049297cd3c70e23d93a75180e9a349ba0ef1d2d670134a6a73ceedfaba50fa"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_walk_camera/functions.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "59.log",
+      "log_sha256": "8355a57946597acf5685f82b115ad7beff65cbe96af462b889a2be92344c07a5"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/player_walk_camera/functions.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "60.log",
+      "log_sha256": "4f364c02c63136d04806fa836693c22f2dbc41e84153badde91d7aad6c7ab7ad"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_walk_camera/functions.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "61.log",
+      "log_sha256": "62c564f8840d823ba23d0858238c0c7e85d2a4f401b88304129bb6ea542a047b"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_walk_dispatch.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/walk-dispatch-r20261119T213946Z.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "62.log",
+      "log_sha256": "ff452f57595fbd8f88547157c18988faf3daec75ec31fd0ef7b1d6be5d693788"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_walk_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m10/captures",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/walk-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "63.log",
+      "log_sha256": "14d0f833ee07f2590ca99880959dc4167be7041eddc492d9b1ce5e0be9a08afd"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/survey_player_walk_dependencies.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m10/captures",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/walk-dependency-survey-r20261119T213946Z.json"
+      ],
+      "origin": "m10",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "64.log",
+      "log_sha256": "d626796d1e3a3f691dd0c16d7a2a5173116f81edd594775059afa7696830333d"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_player_constraint.py",
+        "-v"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "65.log",
+      "log_sha256": "99e74b76b080504cd6562cc87fa9ec4a28d030d826eafa6ffa64a56281d1ab04"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_constraint/functions.json"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "66.log",
+      "log_sha256": "3f10b2b162eddf62667742496c38277d6d9804f49dd99bc132bac6441b72b43b"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/player_constraint/functions.json"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "67.log",
+      "log_sha256": "d1896bec9a4a161ad4b0bb33382c6cc3b562488d52f5c87bb4d17875a9c79c67"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_constraint/functions.json"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "68.log",
+      "log_sha256": "1f72c61427f2056b57e084bbcfa471ac9016340564234c48a3154358c145da92"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_constraint_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m11/captures",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/constraint-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "69.log",
+      "log_sha256": "43bf4935eab26613150bf3926f2be8e7a4ef5b719354bac201bd0185de53df40"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_constraint_differential.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m11/captures",
+        "--cases",
+        "600",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/constraint-differential-r20261119T213946Z.json"
+      ],
+      "origin": "m11",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "70.log",
+      "log_sha256": "8fca88a3f9df3001f5e76067defb728ce244198f74c8594d7fcc431db0c60339"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_player_grounded.py",
+        "-v"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "71.log",
+      "log_sha256": "44b1f4730b61eebd06f431c5d35eb5f77fc9e913e7ce6137e06930dbb3aa0b2d"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/validate_evidence.py",
+        "analysis/player_grounded/functions.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "72.log",
+      "log_sha256": "7b52e5970833dd7716246a921aca5fe64336c256df03a5ae16f73f678a928317"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+        "--require-all-bytes",
+        "$HG_ELF",
+        "analysis/player_grounded/functions.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "73.log",
+      "log_sha256": "937ef384851677b8fa13ebf10130032f9469febb885704f29ee9f2f15da5327a"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "$HG_ELF",
+        "--record",
+        "analysis/player_grounded/functions.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "74.log",
+      "log_sha256": "d8b636795e7a6a843e67b7d0643170c6ab0bf15bdf0e80a8b5e1629dc8d3d5ca"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_grounded_runtime.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m12/captures",
+        "--negative-controls",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/grounded-runtime-r20261119T213946Z.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "75.log",
+      "log_sha256": "161d898f863ef9acc0644628fd0349ce64a99ee3fc2de95cacd39ec4f82b3c46"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_grounded_differential.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m12/captures",
+        "--cases",
+        "600",
+        "--negative-controls",
+        "120",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/grounded-differential-r20261119T213946Z.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "76.log",
+      "log_sha256": "336808d8904fa1930cdab07888704d86d7d3fe8921fc4b39a0830194d989b237"
+    },
+    {
+      "command": [
+        "python",
+        "-u",
+        "-B",
+        "tools/verify_player_grounded_m11_frames.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--capture-dir",
+        "local/m11/captures",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/m11-frames-grounded-r20261119T213946Z.json"
+      ],
+      "origin": "m12",
+      "expected": "pass",
+      "result": "PASSED",
+      "returncode": 0,
+      "log": "77.log",
+      "log_sha256": "bbf1b2ebbe0dd12ed57a4390a57a1fa1767b2bcf85d951abb10b6ef9fd831e79"
+    },
+    {
+      "command": [
+        "python",
+        "-B",
+        "tools/verify_player_ordinary.py",
+        "--elf",
+        "$HG_ELF",
+        "--ps2dinfo",
+        "$HG_PS2DINFO",
+        "--source",
+        "local/m9/m8-a1-zero.c",
+        "--output",
+        "local/m12/final-checks-r20261119T213946Z/ordinary-a1-zero-control-r20261119T213946Z.json"
+      ],
+      "origin": "m9-control",
+      "expected": "fail",
+      "result": "PASSED",
+      "returncode": 1,
+      "log": "78.log",
+      "log_sha256": "bf1bd8574f3e499d5238f2ea231dbeb78fb743318f8b2c1c31b628e1264c7c9a"
+    }
+  ],
+  "negative_control_sources": [
+    {
+      "control": "camera-uses-unsnapped-height",
+      "mutated_source_sha256": "cbf5345bc2631d70fe25d51bd4479c0aa785f914d23cfc6512f7ce722915ff71"
+    },
+    {
+      "control": "floor-before-constraint",
+      "mutated_source_sha256": "53ba8811ff7e8dd381cb01e00d70c68a01e3225f96710cda1ea0132a62b2ed47"
+    },
+    {
+      "control": "floor-returns-two",
+      "mutated_source_sha256": "7a8349b76cba87cf6f3a13456a98adf207ba158b1344ef3cbb5d4a18bab4284d"
+    },
+    {
+      "control": "history-before-floor",
+      "mutated_source_sha256": "2960847d37d9fbbf534550865ed85d5983c483bbbe058a4e4b1ef5a77d6dcd96"
+    },
+    {
+      "control": "missing-floor-guest-frame",
+      "mutated_source_sha256": "a397da9dd4638e1378253d655359e0a2448151625f02a7dd262dd3e8ce08af3b"
+    },
+    {
+      "control": "omitted-floor-snap",
+      "mutated_source_sha256": "4dff8fa4786b9af968d716a844369245f9a528499eb3ec4a7d0bea055772d199"
+    },
+    {
+      "control": "speed-not-cleared",
+      "mutated_source_sha256": "3d558ee0b4b41cab893e5578f3d7e9c99fa1feab84d400747750f9b65c513ab3"
+    },
+    {
+      "control": "wrong-gravity-step",
+      "mutated_source_sha256": "40db2d382feca36179a931be3c47cc5f94ce523e53a019bf7e6b777321653f22"
+    },
+    {
+      "control": "wrong-ground-flag",
+      "mutated_source_sha256": "5a48ceb61f76f3568c9f5c7c204676b5a29f9b6196467702e60d2a3a61919b5e"
+    },
+    {
+      "control": "wrong-probe-origin",
+      "mutated_source_sha256": "efca5c51f1fef8dc7426d713e24b29074de1377771cc24541fb780acfefed319"
+    },
+    {
+      "control": "wrong-surface-bit",
+      "mutated_source_sha256": "be44d9f33b2e5fa461338bcce2a704996a3a31e630449242d5de5a46ff7772b4"
+    },
+    {
+      "control": "omitted-speed-clamp",
+      "mutated_source_sha256": "79205d86362ec4e95aa28485103bc9839f23de91473ed8f8c98aef1ab48f760d"
+    },
+    {
+      "control": "omitted-state-restore",
+      "mutated_source_sha256": "1b5e5d04c9c4f855c8d641915dcafe32cc123dfd7bef7f004edc95effe6114f2"
+    },
+    {
+      "control": "wrong-alternate-gravity",
+      "mutated_source_sha256": "c4cae1aea84f696bab0cced4cca76a64cc3ee0e45c5b5cd713b835bfd52e89d9"
+    },
+    {
+      "control": "wrong-refusal-code",
+      "mutated_source_sha256": "9494beebf601ae631803b201b6c1f32893a18960fd1d6c69afb8e6e089043000"
+    }
+  ],
+  "independent_review_corrections": [
+    {
+      "finding": "Runtime floor-return v0 compared with a hardcoded 1",
+      "correction": "C composition glue reports the actual hg_player_floor return through host-only HG_CALL_RETURN (0xfffffff2); register_checks compares it with native v0; a missing measurement is \"missing\", never passed. New runtime control floor-returns-two must be rejected by register divergence with matching memory.",
+      "before": {
+        "verifier": "ffa6ef3 tools/verify_player_grounded_runtime.py on a source whose hg_player_floor returns 2",
+        "result": "passed",
+        "stages_passed": 130,
+        "stages": 130,
+        "floor_return_rows": [
+          [
+            "00000001",
+            "00000001",
+            "passed"
+          ]
+        ],
+        "log_sha256": "61aa103e1bc4ac6ee6d343805e44aec1c2d74540cbd910a7af3048f0cfacc3b6"
+      },
+      "after": "floor-returns-two in the inventory runtime controls (see grounded-runtime-comparison.json negative_controls)."
+    },
+    {
+      "finding": "Differential accepted any C refusal code when the original reached any unsupported branch, and counted refusal/branch disagreements as measured failures",
+      "correction": "classify(): a refusal is unsupported only if its single code names exactly the original branch taken; otherwise failed/refusal-mismatch. Only completed comparisons with differing bytes are measured-divergence; negative controls require one. New differential control wrong-refusal-code (0x50 -> 0x54).",
+      "before": {
+        "verifier": "ffa6ef3 differential, 100 cases, mutated source 0x50 -> 0x54",
+        "result": "passed",
+        "counts": {
+          "passed": 93,
+          "failed": 0,
+          "unsupported": 7,
+          "error": 0
+        },
+        "log_sha256": "83228f2d399326c48235242dfc4c0bd3788dab996613c659bc1730b85113128d"
+      },
+      "after": {
+        "verifier": "fixed differential, same 100 cases and mutation",
+        "result": "failed",
+        "counts": {
+          "passed": 93,
+          "failed": 7,
+          "unsupported": 0,
+          "error": 0,
+          "failures": {
+            "measured-divergence": 0,
+            "refusal-mismatch": 7,
+            "unsupported-branch-not-refused": 0,
+            "external-dma-access": 0
+          }
+        },
+        "log_sha256": "4629aaa5231677a25155daa1f52d87e8a9ae41e4a293ce1e63abc818f0eff835"
+      }
+    },
+    {
+      "finding": "Shared compare_memory reporting reads went through load(), adding watched DMA accesses",
+      "correction": "CapturedMemory.peek()/peek_word(): reporting and pad-table reads never record accesses; repeated comparisons are identical (synthetic tests). M12 frozen-copy workaround removed.",
+      "before_after_log_sha256": "076e78a6001f97b6412ab15aa5efc065117971f755bababf7fd7f90d296abc8c",
+      "before_after": [
+        "old ffa6ef3 [('passed', 0, []), ('failed', 0, ['0x95e418'])]",
+        "fixed [('passed', 0, []), ('passed', 0, [])]"
+      ],
+      "m11_controls_rerun": {
+        "result": "passed",
+        "log_sha256": "8e76acde25b2245a1f6b587086eeefc1fb7a19070cea6e2c91bc83de038b599e",
+        "controls": [
+          {
+            "control": "omitted-correction",
+            "result": "rejected",
+            "final_different_bytes": 241,
+            "final_scratchpad_bytes": 20,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-push-vector",
+            "result": "rejected",
+            "final_different_bytes": 520,
+            "final_scratchpad_bytes": 32,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-query-origin",
+            "result": "rejected",
+            "final_different_bytes": 88,
+            "final_scratchpad_bytes": 8,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-direction-facing-heading",
+            "result": "rejected",
+            "final_different_bytes": 1921,
+            "final_scratchpad_bytes": 26,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "inverted-facing-test",
+            "result": "rejected",
+            "final_different_bytes": 1469,
+            "final_scratchpad_bytes": 26,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-result-flag",
+            "result": "rejected",
+            "final_different_bytes": 1794,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "omitted-bump-timer",
+            "result": "rejected",
+            "final_different_bytes": 1,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "omitted-sound-request",
+            "result": "rejected",
+            "final_different_bytes": 61,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "history-before-correction",
+            "result": "rejected",
+            "final_different_bytes": 8,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "camera-uses-proposed-position",
+            "result": "rejected",
+            "final_different_bytes": 0,
+            "final_scratchpad_bytes": 3,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "missing-guest-frame",
+            "result": "rejected",
+            "final_different_bytes": 14,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "released-at-contact",
+            "result": "rejected",
+            "final_different_bytes": 6,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "reversed-at-contact",
+            "result": "rejected",
+            "final_different_bytes": 1908,
+            "final_scratchpad_bytes": 20,
+            "final_modeled_dma_accesses": 0
+          }
+        ],
+        "note": "Every M11 control final comparison recorded in evidence/m11 shows one modeled DMA access: the reporting artifact. All 13 also have genuine differing RAM or scratchpad bytes and remain rejected without it."
+      }
+    },
+    {
+      "finding": "Documentation: comparison exclusions, 130 comparisons vs 118 native targets, head-push dot range, 427-word floor listing",
+      "correction": "docs/M12.md, START_HERE.md and MASTER_HANDOFF.md corrected."
+    }
+  ],
+  "additional_results": [
+    {
+      "check": "Fresh read-only Ghidra exports (0015fc10, 0015e420, 00145630, 00144820)",
+      "result": "PASSED",
+      "reason": "Recorded 2026-11-19 at 95364d6 (Ghidra 12.1.4 headless -readOnly -noanalysis); packet unchanged, not rerun."
+    },
+    {
+      "check": "Fresh identity of ISO, SYSTEM.CNF and boot ELF",
+      "result": "PASSED",
+      "reason": "Recorded 2026-11-19 at 95364d6 with tools/hg_identify.py; the ELF SHA-256 is rechecked by every verifier."
+    },
+    {
+      "check": "M12 private Drive backup",
+      "result": "NOT RUN",
+      "reason": "Backup upload not authorized."
+    },
+    {
+      "check": "M12 push, PR and remote CI",
+      "result": "NOT RUN",
+      "reason": "Not run when this record was made; Noah authorized publication on 2026-11-19 afterwards. CI results are on the pull request."
+    },
+    {
+      "check": "Publication of the 628 original instruction words in analysis/player_grounded/functions.json",
+      "result": "DECIDED",
+      "reason": "Noah chose on 2026-11-19 to publish with bytes included, as for M1-M11; none of the 628 words was previously public."
+    },
+    {
+      "check": "Unsupported floor paths (no floor, types 5/6/7, 0x1e00, spawn) comparison",
+      "result": "NOT RUN",
+      "reason": "Never observed in retail; C fails closed (0x50..0x54). The differential matches each refusal code to its exact original branch; only no-floor (0x50) occurs in its cases."
+    }
+  ],
+  "preserved_failed_attempts": [
+    {
+      "result": "FAILED",
+      "check": "obs1 serialized observation (exploratory, superseded by obs2)",
+      "reason": "Key releases were sent without focusing the game window and were not delivered; no release phase. Its 11 frames are identical in schedule up to the turn and are retained privately, not as evidence."
+    },
+    {
+      "result": "FAILED",
+      "check": "First M12 runtime trial on obs1/obs2 frames (before the mul.s correction)",
+      "reason": "Camera +0x20/+0x28 and scratch 70000700/70000708: model stored +0 where the original stored -0 (modeled 0012c640, +0 x negative sin/cos). Instruction model and C mirror corrected; then 130/130 stages passed."
+    },
+    {
+      "result": "FAILED",
+      "check": "Register OCR (single tesseract pass)",
+      "reason": "Tesseract dropped or confused hex digits (BF4D0C87 read as BF4DC87; 4 read as A). Replaced by multi-variant majority plus comparison with the calculated value; 5 f12 values read by eye."
+    },
+    {
+      "result": "FAILED",
+      "check": "Runtime negative controls run grounded-runtime-001",
+      "reason": "Verifier bug: compare_memory DMA reporting reads through load(), recording a spurious modeled access, so a second comparison of the same memory failed. floor-snap-keeps-xz was counted rejected with 0 differing bytes. First worked around by frozen copies; fixed in the shared comparator after the independent review."
+    },
+    {
+      "result": "FAILED",
+      "check": "Differential smoke runs 001-003",
+      "reason": "Verifier key collision (f483), then a probe-window sign error put 40% of cases outside the probe. Fixed; smoke-004 56 passed, 0 failed, 4 unsupported."
+    },
+    {
+      "result": "FAILED",
+      "check": "Independent M12 publication review of ffa6ef3",
+      "reason": "Four genuine findings (hardcoded floor-return v0, inexact refusal classification, comparator side effect, documentation inaccuracies); see independent_review_corrections. The prior 79/79 inventory r20261119T120758Z at 95364d6 is superseded by this record."
+    }
+  ],
+  "source_sha256": {
+    "src/resource_loader.c": "660e896bbd83fb5d567592638bedc28e09100e85fb5b2adf2a2ca9a9fdd2c1e8",
+    "src/resource_loader.h": "902164180bc17ed02ccc3e4e0c231f7eef99df16b8ed2bec9617a39f3511baab",
+    "tests/resource_sanitizer.c": "1e7a1560e8844d26046d76768f2c471e26b6e11cf13a951cca13f15f79b38f5f",
+    "tests/test_player_grounded.py": "64c636da0712eb223c10c9791fd09403d46da6c2fcd68024aacf0a59e03380ec",
+    "tests/test_player_connected_runtime.py": "1edd5a3de4d03fd72fce66891dc43795df002a93907e07f64527d403f489407f",
+    "tests/test_ee_subset.py": "e9b185583a06718f5f5366b5f7fcf577064abbcb4c613144212d9272689f1997",
+    "tests/test_player_turn_camera.py": "13ec1f9b8683b822188dd897671e9443c1f1454bc85029df78c888c3c391ba02",
+    "tools/ee_subset.py": "47463c7f691f621f407bf2e417a1a930c9a84583cbcfb2f74d2631d61b78d415",
+    "tools/hg_m12_evidence.py": "4072c26eb174783fed889d1456dbcbaf253023543ad01720ec88e70294c11580",
+    "tools/verify_player_connected_runtime.py": "a98264fd19a6038d6fa1d5913a0bed8e552a7bd1908118a1edf377de775a3acc",
+    "tools/verify_player_grounded_runtime.py": "24842b75d45be1c9b3b6329514a78918cf7f3c842da4ed3d50dae43bee7eadad",
+    "tools/verify_player_grounded_differential.py": "345aedd2a50b1eb23dbc0763c69fd52b871adb3066637a4aa98817a744b27cef",
+    "tools/verify_player_grounded_m11_frames.py": "96c27ebb64ddb65e50820f452ff8e7bff2436c19cccdfb7071191815d2c51007"
+  },
+  "limitations": [
+    "Public command arguments use owner-private $HG_* substitutions; private logs/inputs remain outside Git.",
+    "Retail observation covers one floor material and one wall (head tier), +4ad = 0; gravity variants are model-differential only.",
+    "The differential compares memory only; the floor-return value is checked against native v0 in the 12 retail frames (value 1)."
+  ]
+}

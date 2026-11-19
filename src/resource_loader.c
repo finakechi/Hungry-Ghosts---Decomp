@@ -1490,7 +1490,8 @@ void hg_player_equipment_transition_fixed(HGResourceEnv *e,uint32_t actor) {
  * Integer-exact single-precision subset shared by EE COP1 and VU0 macro code
  * here. It mirrors tools/ee_subset.py, the arithmetic oracle measured against
  * PCSX2 v2.8.2 default-settings retail captures: denormal operands read as zero,
- * results round toward zero (chop), denormal results flush to +0 and overflow
+ * results round toward zero (chop), denormal results flush to +0 (a zero
+ * product keeps the operand sign XOR, M12) and overflow
  * saturates to +/-FLT_MAX. EE add/sub first clear the smaller operand's bits
  * below one alignment guard bit; VU adds are exact-then-chop. Non-finite
  * operands and the unobserved branches marked below are outside the verified
@@ -1536,10 +1537,14 @@ static uint32_t fp_add_bits(uint32_t l,uint32_t r,int subtract,int ee_guard,uint
     uint64_t m=sb==ss?big+small:big-small-sticky;
     return fp_encode(sb,m,eb-180);
 }
+/* M12: a zero (or flushed) product keeps the operand sign XOR, as EE mul.s
+ * does under PCSX2 (retail 0012c640 stores +0 * negative as 0x80000000). */
 static uint32_t fp_mul_bits(uint32_t l,uint32_t r,uint32_t *fault) {
+    uint32_t sign=(l^r)&0x80000000u,v;
     if(fp_field(l)==255 || fp_field(r)==255) {*fault=1;return 0;}
-    if(fp_field(l)==0 || fp_field(r)==0)return 0;
-    return fp_encode((l^r)&0x80000000u,fp_mantissa(l)*fp_mantissa(r),fp_field(l)+fp_field(r)-300);
+    if(fp_field(l)==0 || fp_field(r)==0)return sign;
+    v=fp_encode(sign,fp_mantissa(l)*fp_mantissa(r),fp_field(l)+fp_field(r)-300);
+    return v!=0?v:sign;
 }
 static int64_t fp_key(uint32_t b) {
     int64_t m=fp_field(b)?(int64_t)(b&0x7fffffffu):0;
@@ -2109,4 +2114,98 @@ uint32_t hg_player_static_constraint_fixed(HGResourceEnv *e,uint32_t heading,uin
     HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
     p.env.load=process_load;p.env.store=process_store;p.env.call=constraint_process_call;
     return hg_player_static_constraint(&p.env,heading,a);
+}
+
+/* M12: 0015fc10 grounded follow-up and the observed floor-hit path of its
+ * floor routine 0015e420 (original evidence: analysis/player_grounded/
+ * functions.json). 0015fe70 calls 0015fc10 directly after 0015ebc0, so the
+ * gravity step starts from the constraint-corrected position.
+ *
+ * 0015e420 probes the floor through the original-address bus call 00145630
+ * (f12 = 6.0, segment from y+4 down to y-2; 00144820/00145740/00267ed0 stay
+ * modeled). Only ordinary floor hits are reconstructed. These paths fail
+ * closed: no floor (airborne/ledge, 0x50), hazard types 6/7 (0x51), special
+ * surfaces 0x1e00 (0x52), type-5 secondary probe (0x53) and the +47e == 3
+ * effect-actor spawn (0x54). Both functions announce their original guest
+ * frames (0x20 and 0x30) so the modeled floor query runs at its original
+ * stack depth, as the M11 HG_GUEST_FRAME contract requires. */
+uint32_t hg_player_floor(HGResourceEnv *e,uint32_t a) {
+    call(e,HG_GUEST_FRAME,0x30,1,0,0);
+    w8(e,a+0x483,r8(e,a+0x483)&0xfdu);
+    w16(e,0x3f9ff2,0);
+    copy_quad(e,0x70000b80,a+0x30);                      /* lq/sq, w included */
+    w32(e,0x70000b84,fsub(e,r32(e,0x70000b84),0x40000000u)); /* y - 2.0 */
+    uint32_t hit=call(e,0x145630,0x40c00000u,a,0x70000b80,0x2c0);
+    uint32_t fault=0;
+    if(hit==0)fault=0x50;
+    else {
+        uint32_t type=r16(e,0x3f39c6);
+        if(type==7 || type==6)fault=0x51;
+        else {
+            if(r8(e,a)==2)w8(e,a,1);
+            if((hit&0x1e00u)!=0)fault=0x52;
+            else if((hit&0x100u)==0) {w32(e,a+0x4f4,0);w8(e,a+0x2c3,2);}
+            else {
+                w8(e,a+0x2c3,1);
+                w16(e,a+0x47c,r16(e,a+0x47c)&0x8000u);
+                w16(e,a+0x47c,r16(e,a+0x47c)|((1u<<(type&31u))&0xffffu)); /* sllv */
+                w16(e,a+0x47e,r16(e,0x3f39c8));
+                if(r16(e,a+0x47e)==0) {
+                    w8(e,a+0x480,r16(e,0x3f39cc)&0xffu);
+                    if(r8(e,a+0x480)==1 && (r32(e,0x46d88c)&1u)!=0)w8(e,a+0x483,r8(e,a+0x483)|2u);
+                    w8(e,a+0x481,(r16(e,0x3f39cc)>>8)&0xffu);
+                } else {w8(e,a+0x480,0);w8(e,a+0x481,0);}
+                if(r16(e,0x3f39c6)==5)fault=0x53;
+                else if(r16(e,a+0x47e)==3 && r8(e,0x3fa4d7)==0 && r8(e,0x3fa1b6)==0)fault=0x54;
+            }
+        }
+    }
+    if(fault!=0) {domain_fault(e,fault);call(e,HG_GUEST_FRAME,0x30,0,0,0);return 0;}
+    copy_quad(e,a+0x30,0x3f39a0);                         /* snap to the floor hit */
+    call(e,HG_GUEST_FRAME,0x30,0,0,0);
+    return 1;
+}
+/* 0015fc10: vertical speed +430 -= 0.08 (0.03 while +4ad), floored at -2.0;
+ * y += speed; the speed clears when 0015e420 reports a floor. */
+void hg_player_grounded(HGResourceEnv *e,uint32_t a) {
+    call(e,HG_GUEST_FRAME,0x20,1,0,0);
+    uint32_t gravity=r8(e,a+0x4ad)==0?0x3da3d70au:0x3cf5c28fu;
+    uint32_t speed=fsub(e,r32(e,a+0x430),gravity);
+    w32(e,a+0x430,speed);
+    if(flt(e,speed,0xc0000000u))w32(e,a+0x430,0xc0000000u);
+    w32(e,a+0x34,fadd(e,r32(e,a+0x34),r32(e,a+0x430)));
+    if(call(e,0x15e420,a,0,0,0)!=0)w32(e,a+0x430,0);
+    call(e,HG_GUEST_FRAME,0x20,0,0,0);
+}
+/* M12 composition: M11's C constraint, then C grounded/floor, on the
+ * unchanged M10 dispatcher/history and M9 camera. M9-M11 entry points keep
+ * their modeled 0015fc10.
+ *
+ * HG_CALL_RETURN is a host-only observation seam, like HG_GUEST_FRAME: it
+ * reports (callee entry, actual return value) of the C floor routine to the
+ * outer bus so verification compares the value 0015fc10 receives with the
+ * native v0. It has no guest effect. */
+#define HG_CALL_RETURN 0xfffffff2u
+static uint32_t grounded_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x15fc10) {hg_player_grounded(&p->env,a);return 0;}
+    if(pc==0x15e420) {
+        uint32_t result=hg_player_floor(&p->env,a);
+        p->outer->call(p->outer->user,HG_CALL_RETURN,pc,result,0,0);
+        return result;
+    }
+    return constraint_process_call(user,pc,a,b,c,d);
+}
+void hg_player_grounded_camera_fixed(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    HGResourceEnv *bus=&p.env;
+    bus->load=process_load;bus->store=process_store;bus->call=grounded_process_call;
+    hg_player_dispatch(bus);   /* walk, C 0015ebc0, C 0015fc10/0015e420, history */
+    hg_camera_update(bus);     /* same-frame camera on the floor-corrected position */
+}
+/* Host entry for synthetic/original-instruction differentials of 0015fc10. */
+void hg_player_grounded_fixed(HGResourceEnv *e,uint32_t a) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=grounded_process_call;
+    hg_player_grounded(&p.env,a);
 }

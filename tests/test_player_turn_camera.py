@@ -34,7 +34,9 @@ FP_SEAMS={0x160420:(3,False),0x1204e0:(1,True),0x143560:(1,True),0x143620:(1,Tru
 
 def f(x):return struct.unpack('<I',struct.pack('<f',x))[0]
 def neg(b):return b^0x80000000
-def mul(a,b):return fp_signed_chop(fp_value(a)*fp_value(b))
+def mul(a,b):
+    # EE mul.s: a zero or flushed product keeps sign(a) ^ sign(b) (M12 retail 0012c640).
+    v=fp_signed_chop(fp_value(a)*fp_value(b));return v if v&0x7fffffff else (a^b)&0x80000000
 def add(a,b):return fp_ee_add(a,b)
 def sub(a,b):return fp_ee_add(a,b,True)
 def le(a,b):return fp_value(a)<=fp_value(b)

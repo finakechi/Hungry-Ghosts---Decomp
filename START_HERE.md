@@ -1,5 +1,66 @@
 # Hungry Ghosts — start here
 
+## M12 connected grounded movement and environmental response — 2026-11-19
+
+**Resume here.** M12 is complete for one original-game-observed connected
+sequence. The player walks forward obliquely (about −45°) into the starting
+corridor's +Z side wall, slides along it, turns while in contact, and releases.
+Every frame the original grounded follow-up `0015fc10` lowers the player by
+gravity, and its floor routine `0015e420` snaps the position to the sloped floor
+and clears the vertical speed. History `+390` and the same-frame camera use the
+wall- and floor-corrected position. `0015fc10` and the floor-hit path of
+`0015e420` are now C (`hg_player_grounded`, `hg_player_floor`), composed with the
+M11 constraint, M10 dispatcher and M9 camera. Local branch
+`research/m12-grounded-movement` (baseline main `35360c9b…4c`): implementation
+`95364d6`, evidence `ffa6ef3`, review fixes `28d7c80`, then the corrected
+documentation/evidence commit.
+**Pushed for pull-request review (not merged); no private M12 Drive backup.** Detail: [docs/M12.md](docs/M12.md).
+
+- **Evidence:** run `obs2`, 139 native stops (all PC-bound); 12 complete frames
+  1209–1220: approach 2, contact 3, contact-turn 3, release 4. The 10 native
+  head-push stops show dot −0.999896 … −0.999863 ≤ −0.3; every floor query returns
+  `0x101` and native `v0` after the floor routine is 1; Y follows the floor slope
+  each frame (38.02151 → 38.01458).
+- **Independent review (2026-11-19):** four genuine findings against `ffa6ef3`:
+  a hardcoded floor-return `v0`, inexact refusal-code classification in the
+  differential, a comparator whose reporting reads added watched DMA accesses,
+  and documentation errors. Each false pass was reproduced, then fixed in
+  `28d7c80` with regressions.
+- **Owner-local checks after the fixes (2026-11-19, at `28d7c80`):** 130 stage
+  comparisons against 118 distinct native captures with 0 differing bytes (EE RAM
+  minus the 128 KiB guest stack, untouched libpad DMA separated, full scratchpad),
+  11/11 handoffs, 36/36 register cross-checks (floor-return `v0` now against the
+  measured C return), 14/14 runtime controls (11 compiled defects incl.
+  `floor-returns-two` rejected by register alone, 3 input counterfactuals), 2/2
+  clean null controls, airborne refused with exactly 0x50; a 600-case differential
+  (551 equal, 0 failed, 49 refusals each matching the original's exact no-floor
+  branch) with 4/4 mutants rejected; 36/36 M11 retail checkpoints with C
+  grounded/floor; M11 controls rerun 13/13 with the comparator fix. Inventory
+  79/79 passed (`r20261119T213946Z`), covering 247 synthetic tests, M1–M11 regressions,
+  strict C, sanitizers, PS2DInfo and the publication audit.
+  [checks.json](evidence/m12/checks.json) holds the commands, logs, before/after
+  results and preserved failures.
+- **Model correction:** the first oblique heading showed that EE `mul.s` zero
+  products keep their sign under PCSX2 (camera up vector `−0`); the shared oracle
+  and its C mirror now do the same, and all M8–M11 regressions still pass.
+- **Identities:** SCPS-15046 ELF `a74248c5…3c61` (CRC `91AA4B28`), ISO
+  `8ca1513c…994e`, PCSX2 v2.8.2 `0c46bb6a…abea`, BIOS `c641edbd…363c4a`, save state
+  `1d8798fa…808d`, freshly hashed. Private inputs in ignored `local/m12/`
+  (17 GiB captures); M8–M11 inputs are still required.
+- **Limits:** one floor material, one wall (head tier), `+4ad = 0`; gravity variants
+  differential-only; only the floor-hit path of the 427-word `0015e420` listing is
+  C; no-floor, hazard, special-surface, type-5 and spawn paths fail closed; each
+  frame starts from a captured entry state. No general collision, autonomous
+  inter-frame execution, all-C, byte-match or whole-game claim.
+- **Publication:** on 2026-11-19 Noah chose to publish the packet with its 628
+  original instruction words included, as for M1–M11; the branch is pushed and a
+  pull request opened. Merge and a private backup are not authorized.
+- **Blockers:** none. **ONE next action:** Noah reviews and decides on merging the
+  M12 pull request. No M13 or final technical objective is selected.
+
+Earlier milestone sections below retain their historical status and next-action
+wording; M12 above is the current resume point.
+
 ## M11 static movement constraint and camera — 2026-11-18
 
 **Resume here.** M11 is complete for one original-game-observed static movement
@@ -55,7 +116,7 @@ the merge commit; baseline was `1e0a14aaeca079d3f62d1cd5088e4ccfd15c23ae`.
   objective remain unselected and unauthorized.
 
 Earlier milestone sections below retain their historical status and next-action
-wording; M11 above is the current resume point.
+wording; M12 at the top is the current resume point.
 
 ## M10 forward walking and camera translation — 2026-11-16
 

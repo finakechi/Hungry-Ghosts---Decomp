@@ -95,4 +95,16 @@ class SubsetTests(unittest.TestCase):
             with self.assertRaises(ValueError):m.run(0x1000)
 
 
+    def test_mul_zero_product_keeps_operand_sign_xor(self):
+        # M12: +0 * negative stores -0, as PCSX2 does; add/sub zero results stay +0.
+        cases=[(2,0x00000000,0xbf333333,0x80000000),(2,0x80000000,0xbf333333,0x00000000),
+               (2,0x80000000,0x3f000000,0x80000000),(2,0x00000001,0xbf800000,0x80000000),  # denormal operand
+               (2,0x00800000,0x80800000,0x80000000),                                        # flushed underflow
+               (1,0x80000000,0x00000000,0x00000000)]
+        for fn,x,y,want in cases:
+            m=self.run_words([(0x11<<26)|(16<<21)|(2<<16)|(1<<11)|(3<<6)|fn,0x03e00008,0])
+            m.fpr[1]=x;m.fpr[2]=y;m.run(0x1000)
+            self.assertEqual(m.fpr[3],want,(fn,hex(x),hex(y)))
+
+
 if __name__=='__main__':unittest.main()

@@ -1,5 +1,86 @@
 # Hungry Ghosts — master handoff
 
+## M12 connected grounded movement and environmental response — 2026-11-19
+
+**Resume here.** M12 is complete for one bounded original Japanese connected
+movement sequence: oblique side-wall contact, slide, turning in contact and
+release, with the grounded floor response, history and same-frame camera. It is on
+local branch `research/m12-grounded-movement` in worktree `decomp-m12`. Baseline
+main `35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c`; implementation `95364d6`, evidence
+`ffa6ef3`, independent-review fixes `28d7c80`, then the corrected
+documentation/evidence commit. **Pushed for pull-request review, not merged; no private M12 Drive backup.**
+
+**Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
+BOOT2, disc-extracted ELF equal to the working ELF, PCSX2 AppImage, BIOS image,
+save state). A private copy of the M11 profile turned the player to −0.797 rad
+(running, no stop armed), then held W into the +Z side wall; D was added after 5
+completed frames and both released after 8. Execute breakpoints were gated on
+Z > 272.0. Run `obs2`: 139 native stops, all PC-bound 2-of-3, each with full EE
+RAM + scratchpad; 12 complete frames 1209–1220 (approach, contact, contact-turn,
+release). Contact frames push Z back by 0.066–0.216 while X advances along the
+wall (head tier, `+49a = 0x3`; the 10 native head-push stops show dot −0.999896 …
+−0.999863 ≤ −0.3). Of the 130 stops in complete frames, 12 are dispatch-entry
+inputs and 118 are comparison targets. Every frame's
+floor query returns `0x101` (type 2), Y drops by gravity 0.08 and snaps to the
+sloped floor, and the vertical speed clears. Sentinels on every unsupported floor
+branch and special surface never fired. `obs1` (same schedule, key releases not
+delivered) and `disc1` are exploratory only.
+
+**Gate 2 (C boundary):** `0015fe70 → 0015ebc0` (M11 C) `→ 0015fc10` (now C) `→
+0015e420` (floor-hit path now C) `→ 00145630` (modeled). The 4-routine, 628-word
+packet passes PS2DInfo `--require-all-bytes` and the project byte/JAL verifier; it
+lists all 427 words of `0015e420` (every path), of which only the floor-hit path
+is C. Guest frames 0x20/0x30 keep the modeled floor query at its original stack
+depth. A host-only `HG_CALL_RETURN` seam reports the value C `hg_player_floor`
+returns, so it is compared with native `v0`.
+
+**Model correction:** the first oblique heading exposed that EE `mul.s` zero
+products keep the operand sign XOR under PCSX2 (`0012c640` stores the camera up
+vector as (−0, 1, −0)); the oracle (`tools/ee_subset.py`) and C `fp_mul_bits` now
+match, with a synthetic test, and all M8–M11 retail regressions still pass.
+
+**Independent review (2026-11-19) and fixes (`28d7c80`):** the review of
+`ffa6ef3` found four genuine defects, each reproduced before fixing: (1) the
+runtime compared floor-return `v0` with a constant 1 (a source returning 2
+passed); (2) the differential accepted any refusal code when the original took any
+unsupported branch (0x50→0x54 passed) and counted classification failures as
+divergence; (3) `compare_memory` reporting read DMA bytes through `load()`, adding
+watched accesses, so a second comparison of the same memory failed with 0
+differing bytes; (4) documentation errors (exclusions, 130 vs 118, dot range,
+427-word listing). Fixes: measured floor return, exact code-to-branch
+classification with failure kinds (only completed comparisons with differing bytes
+count as divergence), side-effect-free `peek()` reporting, corrected documents,
+and regressions for each.
+
+**Verification (owner-local, 2026-11-19, at `28d7c80`):** 130 stage comparisons
+against 118 distinct native captures with 0 differing bytes (EE RAM minus the guest
+stack, untouched libpad DMA separated, full scratchpad), 36/36 register
+cross-checks, 11/11 handoffs, 13/13 operation checks; 14/14 runtime controls (11
+compiled defects incl. `floor-returns-two`, rejected by register alone, 3 input
+counterfactuals), 2/2 clean null controls, airborne refused with exactly 0x50; a
+600-case differential (551 equal, 0 failed, 49 exact no-floor refusals) with 4/4
+mutants rejected (3 by measured divergence, `wrong-refusal-code` by refusal
+mismatch); 36/36 independent M11 retail checkpoints with C grounded/floor.
+Inventory 79/79 passed (`r20261119T213946Z`), covering 247 synthetic tests, M1–M11
+regressions, strict C, sanitizers, PS2DInfo and the publication audit. See
+[docs/M12.md](docs/M12.md) and [evidence/m12/checks.json](evidence/m12/checks.json).
+
+**M11 effect of the comparator fix:** every published M11 control's final
+comparison shows one spurious modeled DMA access (the reporting artifact). A fresh
+M11 runtime rerun at `28d7c80` shows none, and all 13 controls remain rejected
+with the same differing byte counts; the M11 verdicts stand and its published
+records were not rewritten.
+
+**Limits:** hybrid C with modeled floor/scene queries; one floor material, one
+wall (head tier), `+4ad = 0`; gravity variants differential-only; unsupported
+floor paths fail closed; inter-frame effects come from each captured entry state.
+No general collision, autonomous inter-frame execution, all-C, byte-match, port or
+whole-game claim. **Publication:** on 2026-11-19 Noah chose to publish the packet
+with its 628 original instruction words, as for M1–M11; branch pushed and pull
+request opened, not merged, no backup. **Blockers:** none. **ONE next action:**
+Noah reviews and decides on merging the M12 pull request. M13 and the final
+technical goal are not selected.
+
 ## M11 connected static movement constraint — 2026-11-18
 
 **Resume here.** M11 is complete for one bounded original Japanese static movement
