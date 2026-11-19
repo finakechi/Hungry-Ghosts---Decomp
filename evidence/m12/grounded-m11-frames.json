@@ -1472,7 +1472,7 @@
     }
   ],
   "verification_sources": {
-    "src/resource_loader.c": "308b42690484c6ee9aab0bb632645e71aba8fd1712cf78aa40122f4457ffd374",
+    "src/resource_loader.c": "660e896bbd83fb5d567592638bedc28e09100e85fb5b2adf2a2ca9a9fdd2c1e8",
     "tools/verify_player_grounded_m11_frames.py": "96c27ebb64ddb65e50820f452ff8e7bff2436c19cccdfb7071191815d2c51007",
     "tools/verify_player_constraint_runtime.py": "6bf6178ae31a9cbb2e3e821d6937c57143e8af1b3faefcf997fab820cd921e96"
   },

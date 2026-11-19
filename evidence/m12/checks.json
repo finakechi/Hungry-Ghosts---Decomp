@@ -1,15 +1,16 @@
 {
-  "schema": "hg-m12-checks/v1",
-  "recorded_utc": "2026-11-19T12:54:29.655464+00:00",
+  "schema": "hg-m12-checks/v2",
+  "recorded_utc": "2026-11-19T22:27:39.194299+00:00",
   "result": "PASSED",
   "baseline": "35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c",
-  "verified_commit": "95364d6086f8421deee20bd17e100040724d7880",
+  "verified_commit": "28d7c807695cdb07c34c5dafd28486e35580e13d",
+  "previous_verified_commit": "95364d6086f8421deee20bd17e100040724d7880",
   "regression_inventory": {
-    "run": "r20261119T120758Z",
+    "run": "r20261119T213946Z",
     "passed": 79,
     "total": 79,
-    "started_utc": "2026-11-19T12:07:58.642721+00:00",
-    "completed_utc": "2026-11-19T12:54:07.713290+00:00"
+    "started_utc": "2026-11-19T21:39:46.150391+00:00",
+    "completed_utc": "2026-11-19T22:27:17.006074+00:00"
   },
   "checks": [
     {
@@ -28,7 +29,7 @@
       "result": "PASSED",
       "returncode": 0,
       "log": "00.log",
-      "log_sha256": "7b75aacb99602d85eb33f0130b59f575e034a32b9cdaff263d26a6e70cc1fab7"
+      "log_sha256": "fff2dd7db7cd135ab40f58e8d899f38a6c7004f388facf367ec646749b4b728a"
     },
     {
       "command": [
@@ -38,7 +39,7 @@
         "--elf",
         "$HG_ELF",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m1-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m1-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -57,14 +58,14 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m2-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m2-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "02.log",
-      "log_sha256": "749b754e16659995fb66580b8594d9a8a503839f8c7312ad1fb6de4c8fc14613"
+      "log_sha256": "99c2c21afd06122139d3c2d3e499d070a7989bbe35440174800744e3f294248a"
     },
     {
       "command": [
@@ -78,7 +79,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m3-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m3-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -103,7 +104,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m4-m6-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m4-m6-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -134,7 +135,7 @@
         "--actor-dependency-exports",
         "local/m5/actor-dependency-export",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m5-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m5-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -170,7 +171,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m7-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m7-instructions-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -189,7 +190,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/actor-lists-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/actor-lists-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -216,7 +217,7 @@
         "--profile",
         "local/m4/runtime/capture-profile.ini",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m4-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m4-runtime-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -247,7 +248,7 @@
         "--pack-profile",
         "local/m6/capture2-profile.ini",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/runtime-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -291,7 +292,7 @@
         "--contract-profile",
         "local/m7/contract-profile.ini",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m7-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m7-runtime-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -310,7 +311,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/setup-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/setup-instructions-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -333,14 +334,14 @@
         "--returned",
         "local/m8/captures/setup-return.json",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/setup-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/setup-runtime-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "14.log",
-      "log_sha256": "dfb97eea291bb1709735f1390419e5431708359289e09c52340cc3c9cfd3beaf"
+      "log_sha256": "0793d2e024ff0894cfd113623b746f5fb4f433185284ec0998804b7a08541e4c"
     },
     {
       "command": [
@@ -352,7 +353,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/ordinary-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/ordinary-instructions-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -371,14 +372,14 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/connected-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/connected-instructions-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "16.log",
-      "log_sha256": "3c17bdf4b4d4859f57c4cb9216f4baf6cbb3457d73593e4f19bc338128faa6b5"
+      "log_sha256": "a9e5ab37979f5f694f09fe2f065a7297d68404eed2fc50521b8b531a3ba191e3"
     },
     {
       "command": [
@@ -390,14 +391,14 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/transition-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/transition-instructions-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "17.log",
-      "log_sha256": "a49b68a0bc00101630da235e475c5ed14b1678254e68f45dbb249ea1aeaf17d5"
+      "log_sha256": "ff86ca307da713d0e221b64d722dd34a28c0154787e12f459438f45bf07773bb"
     },
     {
       "command": [
@@ -409,14 +410,14 @@
         "--capture-dir",
         "local/m8/captures",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/ordinary-input-saved-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/ordinary-input-saved-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "18.log",
-      "log_sha256": "4ec364e0508b742d5cfbc5840c0c2804c0ccb458b9165bb0aae39a7b80253e9d"
+      "log_sha256": "0806927e4b88ad23d8e03b86ed6b0fe4b402228ef101a9e84429db054a2e51d6"
     },
     {
       "command": [
@@ -431,7 +432,7 @@
         "local/m8/captures",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/connected-gameplay-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/connected-gameplay-runtime-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -447,14 +448,14 @@
         "tools/verify_player_connected.py",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/final002-connected-negatives-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/final002-connected-negatives-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "20.log",
-      "log_sha256": "77d63c0d8bc0db2268775106f59c76b56b30cb4463fd69ad9c99023dd0ae8172"
+      "log_sha256": "06562fff9461541c5b4acf8479548d2ac1d50d5414fa153b10321e4cb29caf44"
     },
     {
       "command": [
@@ -467,40 +468,40 @@
         "$HG_PS2DINFO",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/final002-transition-negatives-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/final002-transition-negatives-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "21.log",
-      "log_sha256": "177cab095e78832d35d261bf26807debb8c65a4c824f016bacf4f4efe61399bc"
+      "log_sha256": "a123343008222f23f2dff30aabf523ba75e367e53c57c7c6da62da9704a37267"
     },
     {
       "command": [
         "python",
         "-B",
-        "local/m12/final-checks-r20261119T120758Z/setup-negative-controls.py"
+        "local/m12/final-checks-r20261119T213946Z/setup-negative-controls.py"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "22.log",
-      "log_sha256": "738da37180b781f3c0d5e5be1813bfad4ca4c74c8381037a188667023757c213"
+      "log_sha256": "c8ceaaa803cd061deb557e01580857d4a1f2187e7476a8dd449ad942fa2860ae"
     },
     {
       "command": [
         "python",
         "-B",
-        "local/m12/final-checks-r20261119T120758Z/list-negative-controls.py"
+        "local/m12/final-checks-r20261119T213946Z/list-negative-controls.py"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "23.log",
-      "log_sha256": "654614f44e2978360ba39c08b9c656e83e8641d83d9541e110f06399d872085d"
+      "log_sha256": "470c6134de9f1e68c67652e142dd1a3b22fdd02a79f0815e7dd06ec7245b0e50"
     },
     {
       "command": [
@@ -519,7 +520,7 @@
         "src/resource_loader.c",
         "src/disc_read.c",
         "-o",
-        "local/m12/final-checks-r20261119T120758Z/sanitizer"
+        "local/m12/final-checks-r20261119T213946Z/sanitizer"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -530,7 +531,7 @@
     },
     {
       "command": [
-        "local/m12/final-checks-r20261119T120758Z/sanitizer"
+        "local/m12/final-checks-r20261119T213946Z/sanitizer"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
@@ -904,27 +905,27 @@
         "--head",
         "HEAD",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/head-publication-audit-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/head-publication-audit-r20261119T213946Z.json"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "49.log",
-      "log_sha256": "b8f483fd36448d76fb6b065725553b4647478d068be25225be38d91b90032b1d"
+      "log_sha256": "4f5c165ebcf2572e457bea3ec2913b2498a756b055ead222f03a40504243e37b"
     },
     {
       "command": [
         "python",
         "-B",
-        "local/m12/final-checks-r20261119T120758Z/worktree-audit.py"
+        "local/m12/final-checks-r20261119T213946Z/worktree-audit.py"
       ],
       "origin": "m8-inventory",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "50.log",
-      "log_sha256": "4d6260fc66ce68449a081ca809b579c5892a6a2915c3f36d791d8759bc7a4c0b"
+      "log_sha256": "6ed168f08361a5a4af696bca1778298d0d3e9dd1cb5fb534ab9723e542c5d7f6"
     },
     {
       "command": [
@@ -997,14 +998,14 @@
         "$HG_PS2DINFO",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/turn-camera-instructions-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/turn-camera-instructions-r20261119T213946Z.json"
       ],
       "origin": "m9",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "55.log",
-      "log_sha256": "cade0e8bf4fc3fb583bed37f9bfff5ed692bf943199e01299fc4033253715541"
+      "log_sha256": "41163dcc91ca97f44aa9bc51f930091e68163c128923afe74b4f239e3db462f0"
     },
     {
       "command": [
@@ -1019,7 +1020,7 @@
         "local/m9/captures",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/turn-camera-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/turn-camera-runtime-r20261119T213946Z.json"
       ],
       "origin": "m9",
       "expected": "pass",
@@ -1046,7 +1047,7 @@
       "result": "PASSED",
       "returncode": 0,
       "log": "57.log",
-      "log_sha256": "f8a3890acfe3e55b0243e664adcaff7bf669a5170d84ffbf0114fd15a313212c"
+      "log_sha256": "c26475bc10ea9aaadc651ac9657cf78118c8a557413a3727464400f49458de3a"
     },
     {
       "command": [
@@ -1066,7 +1067,7 @@
       "result": "PASSED",
       "returncode": 0,
       "log": "58.log",
-      "log_sha256": "4ae467ddd727570024a0d06d8cf52d46620f7b3931b10d55211597af45659b63"
+      "log_sha256": "8c049297cd3c70e23d93a75180e9a349ba0ef1d2d670134a6a73ceedfaba50fa"
     },
     {
       "command": [
@@ -1125,7 +1126,7 @@
         "--ps2dinfo",
         "$HG_PS2DINFO",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/walk-dispatch-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/walk-dispatch-r20261119T213946Z.json"
       ],
       "origin": "m10",
       "expected": "pass",
@@ -1148,7 +1149,7 @@
         "local/m10/captures",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/walk-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/walk-runtime-r20261119T213946Z.json"
       ],
       "origin": "m10",
       "expected": "pass",
@@ -1170,7 +1171,7 @@
         "--capture-dir",
         "local/m10/captures",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/walk-dependency-survey-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/walk-dependency-survey-r20261119T213946Z.json"
       ],
       "origin": "m10",
       "expected": "pass",
@@ -1197,7 +1198,7 @@
       "result": "PASSED",
       "returncode": 0,
       "log": "65.log",
-      "log_sha256": "4ddbeabd24d5dccef0ab9129a7757e65c4b75463d78552aae4221c3322481324"
+      "log_sha256": "99e74b76b080504cd6562cc87fa9ec4a28d030d826eafa6ffa64a56281d1ab04"
     },
     {
       "command": [
@@ -1260,7 +1261,7 @@
         "local/m11/captures",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/constraint-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/constraint-runtime-r20261119T213946Z.json"
       ],
       "origin": "m11",
       "expected": "pass",
@@ -1284,7 +1285,7 @@
         "--cases",
         "600",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/constraint-differential-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/constraint-differential-r20261119T213946Z.json"
       ],
       "origin": "m11",
       "expected": "pass",
@@ -1311,7 +1312,7 @@
       "result": "PASSED",
       "returncode": 0,
       "log": "71.log",
-      "log_sha256": "9b33354ee9c41eb722857838c4486f9974f9d4ce40d1f0840991af70fdf82da8"
+      "log_sha256": "44b1f4730b61eebd06f431c5d35eb5f77fc9e913e7ce6137e06930dbb3aa0b2d"
     },
     {
       "command": [
@@ -1374,14 +1375,14 @@
         "local/m12/captures",
         "--negative-controls",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/grounded-runtime-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/grounded-runtime-r20261119T213946Z.json"
       ],
       "origin": "m12",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "75.log",
-      "log_sha256": "ac08d0a8ed7b9677881e588476385ef8f7d8305414f4d4935cadeaa51d871faf"
+      "log_sha256": "161d898f863ef9acc0644628fd0349ce64a99ee3fc2de95cacd39ec4f82b3c46"
     },
     {
       "command": [
@@ -1400,14 +1401,14 @@
         "--negative-controls",
         "120",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/grounded-differential-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/grounded-differential-r20261119T213946Z.json"
       ],
       "origin": "m12",
       "expected": "pass",
       "result": "PASSED",
       "returncode": 0,
       "log": "76.log",
-      "log_sha256": "b65f7459571285bc419a327dc32d261aba9e15f9250c283d1eaf7121b729f977"
+      "log_sha256": "336808d8904fa1930cdab07888704d86d7d3fe8921fc4b39a0830194d989b237"
     },
     {
       "command": [
@@ -1422,7 +1423,7 @@
         "--capture-dir",
         "local/m11/captures",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/m11-frames-grounded-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/m11-frames-grounded-r20261119T213946Z.json"
       ],
       "origin": "m12",
       "expected": "pass",
@@ -1443,7 +1444,7 @@
         "--source",
         "local/m9/m8-a1-zero.c",
         "--output",
-        "local/m12/final-checks-r20261119T120758Z/ordinary-a1-zero-control-r20261119T120758Z.json"
+        "local/m12/final-checks-r20261119T213946Z/ordinary-a1-zero-control-r20261119T213946Z.json"
       ],
       "origin": "m9-control",
       "expected": "fail",
@@ -1456,67 +1457,239 @@
   "negative_control_sources": [
     {
       "control": "camera-uses-unsnapped-height",
-      "mutated_source_sha256": "2bf0e0c3c4e67b2873c9c2c500bc88ccfc996bc4a48e1390fd380e74a3e20e3b"
+      "mutated_source_sha256": "cbf5345bc2631d70fe25d51bd4479c0aa785f914d23cfc6512f7ce722915ff71"
     },
     {
       "control": "floor-before-constraint",
-      "mutated_source_sha256": "e964a62a48bb492d8b4486c484f0a76f85f30eacb93456b9174d0d59684a8a28"
+      "mutated_source_sha256": "53ba8811ff7e8dd381cb01e00d70c68a01e3225f96710cda1ea0132a62b2ed47"
+    },
+    {
+      "control": "floor-returns-two",
+      "mutated_source_sha256": "7a8349b76cba87cf6f3a13456a98adf207ba158b1344ef3cbb5d4a18bab4284d"
     },
     {
       "control": "history-before-floor",
-      "mutated_source_sha256": "b0cdc3e64e86452ddbb778d78cc5c0c470f9687670335418a7650a9f0f123479"
+      "mutated_source_sha256": "2960847d37d9fbbf534550865ed85d5983c483bbbe058a4e4b1ef5a77d6dcd96"
     },
     {
       "control": "missing-floor-guest-frame",
-      "mutated_source_sha256": "4c18238adfef26de2fb440bd9e15e2661a885c76efc5c0a8fd28a3621fa6d622"
+      "mutated_source_sha256": "a397da9dd4638e1378253d655359e0a2448151625f02a7dd262dd3e8ce08af3b"
     },
     {
       "control": "omitted-floor-snap",
-      "mutated_source_sha256": "08c489e8b96728067d32eda0fa577c730570a251364567821db05341e0b60fa7"
+      "mutated_source_sha256": "4dff8fa4786b9af968d716a844369245f9a528499eb3ec4a7d0bea055772d199"
     },
     {
       "control": "speed-not-cleared",
-      "mutated_source_sha256": "953add1883d07f1e17943d30e8c9d2c14bc16989af25518adee2116597b0928c"
+      "mutated_source_sha256": "3d558ee0b4b41cab893e5578f3d7e9c99fa1feab84d400747750f9b65c513ab3"
     },
     {
       "control": "wrong-gravity-step",
-      "mutated_source_sha256": "f4c5f25433cda0b684babc065c00c027d04f3f9c74a07fe77a1cb6de1d8ddcf2"
+      "mutated_source_sha256": "40db2d382feca36179a931be3c47cc5f94ce523e53a019bf7e6b777321653f22"
     },
     {
       "control": "wrong-ground-flag",
-      "mutated_source_sha256": "97e01198cb5dd6b4ad34b226032a003b777c7fcb16201ef7bfe4d163aaa1b8e5"
+      "mutated_source_sha256": "5a48ceb61f76f3568c9f5c7c204676b5a29f9b6196467702e60d2a3a61919b5e"
     },
     {
       "control": "wrong-probe-origin",
-      "mutated_source_sha256": "aec8c11b86a76c9bbadf9651b46c91fe4cb59717f0dc78299c5d4f3c042bf2c9"
+      "mutated_source_sha256": "efca5c51f1fef8dc7426d713e24b29074de1377771cc24541fb780acfefed319"
     },
     {
       "control": "wrong-surface-bit",
-      "mutated_source_sha256": "a6d8a254bcc2974e1a0240de08951f080baea0fa2024272a406f76fed82b9956"
+      "mutated_source_sha256": "be44d9f33b2e5fa461338bcce2a704996a3a31e630449242d5de5a46ff7772b4"
     },
     {
       "control": "omitted-speed-clamp",
-      "mutated_source_sha256": "46567ef76ce1102f8b2bfab24dd7fe24559672a4b6f11feb0f80c790a4607831"
+      "mutated_source_sha256": "79205d86362ec4e95aa28485103bc9839f23de91473ed8f8c98aef1ab48f760d"
     },
     {
       "control": "omitted-state-restore",
-      "mutated_source_sha256": "ac9908a7a48ce043dd3f3a37bd2f930cc2c3d2420a77114f03e74347cdb3446e"
+      "mutated_source_sha256": "1b5e5d04c9c4f855c8d641915dcafe32cc123dfd7bef7f004edc95effe6114f2"
     },
     {
       "control": "wrong-alternate-gravity",
-      "mutated_source_sha256": "5b27a11f1ec7066dec4937a87bf4cf493da6df96939de0add6877f35288b684c"
+      "mutated_source_sha256": "c4cae1aea84f696bab0cced4cca76a64cc3ee0e45c5b5cd713b835bfd52e89d9"
+    },
+    {
+      "control": "wrong-refusal-code",
+      "mutated_source_sha256": "9494beebf601ae631803b201b6c1f32893a18960fd1d6c69afb8e6e089043000"
+    }
+  ],
+  "independent_review_corrections": [
+    {
+      "finding": "Runtime floor-return v0 compared with a hardcoded 1",
+      "correction": "C composition glue reports the actual hg_player_floor return through host-only HG_CALL_RETURN (0xfffffff2); register_checks compares it with native v0; a missing measurement is \"missing\", never passed. New runtime control floor-returns-two must be rejected by register divergence with matching memory.",
+      "before": {
+        "verifier": "ffa6ef3 tools/verify_player_grounded_runtime.py on a source whose hg_player_floor returns 2",
+        "result": "passed",
+        "stages_passed": 130,
+        "stages": 130,
+        "floor_return_rows": [
+          [
+            "00000001",
+            "00000001",
+            "passed"
+          ]
+        ],
+        "log_sha256": "61aa103e1bc4ac6ee6d343805e44aec1c2d74540cbd910a7af3048f0cfacc3b6"
+      },
+      "after": "floor-returns-two in the inventory runtime controls (see grounded-runtime-comparison.json negative_controls)."
+    },
+    {
+      "finding": "Differential accepted any C refusal code when the original reached any unsupported branch, and counted refusal/branch disagreements as measured failures",
+      "correction": "classify(): a refusal is unsupported only if its single code names exactly the original branch taken; otherwise failed/refusal-mismatch. Only completed comparisons with differing bytes are measured-divergence; negative controls require one. New differential control wrong-refusal-code (0x50 -> 0x54).",
+      "before": {
+        "verifier": "ffa6ef3 differential, 100 cases, mutated source 0x50 -> 0x54",
+        "result": "passed",
+        "counts": {
+          "passed": 93,
+          "failed": 0,
+          "unsupported": 7,
+          "error": 0
+        },
+        "log_sha256": "83228f2d399326c48235242dfc4c0bd3788dab996613c659bc1730b85113128d"
+      },
+      "after": {
+        "verifier": "fixed differential, same 100 cases and mutation",
+        "result": "failed",
+        "counts": {
+          "passed": 93,
+          "failed": 7,
+          "unsupported": 0,
+          "error": 0,
+          "failures": {
+            "measured-divergence": 0,
+            "refusal-mismatch": 7,
+            "unsupported-branch-not-refused": 0,
+            "external-dma-access": 0
+          }
+        },
+        "log_sha256": "4629aaa5231677a25155daa1f52d87e8a9ae41e4a293ce1e63abc818f0eff835"
+      }
+    },
+    {
+      "finding": "Shared compare_memory reporting reads went through load(), adding watched DMA accesses",
+      "correction": "CapturedMemory.peek()/peek_word(): reporting and pad-table reads never record accesses; repeated comparisons are identical (synthetic tests). M12 frozen-copy workaround removed.",
+      "before_after_log_sha256": "076e78a6001f97b6412ab15aa5efc065117971f755bababf7fd7f90d296abc8c",
+      "before_after": [
+        "old ffa6ef3 [('passed', 0, []), ('failed', 0, ['0x95e418'])]",
+        "fixed [('passed', 0, []), ('passed', 0, [])]"
+      ],
+      "m11_controls_rerun": {
+        "result": "passed",
+        "log_sha256": "8e76acde25b2245a1f6b587086eeefc1fb7a19070cea6e2c91bc83de038b599e",
+        "controls": [
+          {
+            "control": "omitted-correction",
+            "result": "rejected",
+            "final_different_bytes": 241,
+            "final_scratchpad_bytes": 20,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-push-vector",
+            "result": "rejected",
+            "final_different_bytes": 520,
+            "final_scratchpad_bytes": 32,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-query-origin",
+            "result": "rejected",
+            "final_different_bytes": 88,
+            "final_scratchpad_bytes": 8,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-direction-facing-heading",
+            "result": "rejected",
+            "final_different_bytes": 1921,
+            "final_scratchpad_bytes": 26,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "inverted-facing-test",
+            "result": "rejected",
+            "final_different_bytes": 1469,
+            "final_scratchpad_bytes": 26,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "wrong-result-flag",
+            "result": "rejected",
+            "final_different_bytes": 1794,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "omitted-bump-timer",
+            "result": "rejected",
+            "final_different_bytes": 1,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "omitted-sound-request",
+            "result": "rejected",
+            "final_different_bytes": 61,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "history-before-correction",
+            "result": "rejected",
+            "final_different_bytes": 8,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "camera-uses-proposed-position",
+            "result": "rejected",
+            "final_different_bytes": 0,
+            "final_scratchpad_bytes": 3,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "missing-guest-frame",
+            "result": "rejected",
+            "final_different_bytes": 14,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "released-at-contact",
+            "result": "rejected",
+            "final_different_bytes": 6,
+            "final_scratchpad_bytes": 0,
+            "final_modeled_dma_accesses": 0
+          },
+          {
+            "control": "reversed-at-contact",
+            "result": "rejected",
+            "final_different_bytes": 1908,
+            "final_scratchpad_bytes": 20,
+            "final_modeled_dma_accesses": 0
+          }
+        ],
+        "note": "Every M11 control final comparison recorded in evidence/m11 shows one modeled DMA access: the reporting artifact. All 13 also have genuine differing RAM or scratchpad bytes and remain rejected without it."
+      }
+    },
+    {
+      "finding": "Documentation: comparison exclusions, 130 comparisons vs 118 native targets, head-push dot range, 427-word floor listing",
+      "correction": "docs/M12.md, START_HERE.md and MASTER_HANDOFF.md corrected."
     }
   ],
   "additional_results": [
     {
       "check": "Fresh read-only Ghidra exports (0015fc10, 0015e420, 00145630, 00144820)",
       "result": "PASSED",
-      "reason": "Ghidra 12.1.4 headless -readOnly -noanalysis on the existing M2 database; no database change."
+      "reason": "Recorded 2026-11-19 at 95364d6 (Ghidra 12.1.4 headless -readOnly -noanalysis); packet unchanged, not rerun."
     },
     {
       "check": "Fresh identity of ISO, SYSTEM.CNF and boot ELF",
       "result": "PASSED",
-      "reason": "tools/hg_identify.py with boot extraction to a fresh ignored folder; ELF equals the working ELF."
+      "reason": "Recorded 2026-11-19 at 95364d6 with tools/hg_identify.py; the ELF SHA-256 is rechecked by every verifier."
     },
     {
       "check": "M12 private Drive backup",
@@ -1529,9 +1702,14 @@
       "reason": "No push or PR action authorized."
     },
     {
+      "check": "Publication of the 628 original instruction words in analysis/player_grounded/functions.json",
+      "result": "NOT DECIDED",
+      "reason": "Awaiting Noah; none of the 628 words is already public on origin/main."
+    },
+    {
       "check": "Unsupported floor paths (no floor, types 5/6/7, 0x1e00, spawn) comparison",
       "result": "NOT RUN",
-      "reason": "Never observed; C fails closed (0x50..0x54). The differential compares only the no-floor refusal."
+      "reason": "Never observed in retail; C fails closed (0x50..0x54). The differential matches each refusal code to its exact original branch; only no-floor (0x50) occurs in its cases."
     }
   ],
   "preserved_failed_attempts": [
@@ -1553,30 +1731,37 @@
     {
       "result": "FAILED",
       "check": "Runtime negative controls run grounded-runtime-001",
-      "reason": "Verifier bug: compare_memory DMA reporting reads through load(), recording a spurious modeled access, so a second comparison of the same memory failed. floor-snap-keeps-xz was counted rejected with 0 differing bytes. Fixed by frozen copies and byte-based rejection, null controls added; that mutant is equivalent here and dropped."
+      "reason": "Verifier bug: compare_memory DMA reporting reads through load(), recording a spurious modeled access, so a second comparison of the same memory failed. floor-snap-keeps-xz was counted rejected with 0 differing bytes. First worked around by frozen copies; fixed in the shared comparator after the independent review."
     },
     {
       "result": "FAILED",
       "check": "Differential smoke runs 001-003",
       "reason": "Verifier key collision (f483), then a probe-window sign error put 40% of cases outside the probe. Fixed; smoke-004 56 passed, 0 failed, 4 unsupported."
+    },
+    {
+      "result": "FAILED",
+      "check": "Independent M12 publication review of ffa6ef3",
+      "reason": "Four genuine findings (hardcoded floor-return v0, inexact refusal classification, comparator side effect, documentation inaccuracies); see independent_review_corrections. The prior 79/79 inventory r20261119T120758Z at 95364d6 is superseded by this record."
     }
   ],
   "source_sha256": {
-    "src/resource_loader.c": "308b42690484c6ee9aab0bb632645e71aba8fd1712cf78aa40122f4457ffd374",
+    "src/resource_loader.c": "660e896bbd83fb5d567592638bedc28e09100e85fb5b2adf2a2ca9a9fdd2c1e8",
     "src/resource_loader.h": "902164180bc17ed02ccc3e4e0c231f7eef99df16b8ed2bec9617a39f3511baab",
-    "tests/resource_sanitizer.c": "4833494bc8f6c46210e9633c40517f0f667cd227f06e1d8a295ab8b7cace027b",
-    "tests/test_player_grounded.py": "0b9275789a3249a6d8d0db4c7a9e26c6d1966164fc866fc8b239fc77256177ea",
+    "tests/resource_sanitizer.c": "1e7a1560e8844d26046d76768f2c471e26b6e11cf13a951cca13f15f79b38f5f",
+    "tests/test_player_grounded.py": "64c636da0712eb223c10c9791fd09403d46da6c2fcd68024aacf0a59e03380ec",
+    "tests/test_player_connected_runtime.py": "1edd5a3de4d03fd72fce66891dc43795df002a93907e07f64527d403f489407f",
     "tests/test_ee_subset.py": "e9b185583a06718f5f5366b5f7fcf577064abbcb4c613144212d9272689f1997",
     "tests/test_player_turn_camera.py": "13ec1f9b8683b822188dd897671e9443c1f1454bc85029df78c888c3c391ba02",
     "tools/ee_subset.py": "47463c7f691f621f407bf2e417a1a930c9a84583cbcfb2f74d2631d61b78d415",
     "tools/hg_m12_evidence.py": "4072c26eb174783fed889d1456dbcbaf253023543ad01720ec88e70294c11580",
-    "tools/verify_player_connected_runtime.py": "9e3f72c15a3a387667756d73e27de6df4fa01bcf7a92002270d7fb86be3ed396",
-    "tools/verify_player_grounded_runtime.py": "ac1ae58aeba362b9dba39c65a00a97ed283d0775d6f03988d87d4e0a33d09d37",
-    "tools/verify_player_grounded_differential.py": "a37a0806ec416338026474be782bd691ce7e1db4593e6cb3eb508310d8e8f5e8",
+    "tools/verify_player_connected_runtime.py": "a98264fd19a6038d6fa1d5913a0bed8e552a7bd1908118a1edf377de775a3acc",
+    "tools/verify_player_grounded_runtime.py": "24842b75d45be1c9b3b6329514a78918cf7f3c842da4ed3d50dae43bee7eadad",
+    "tools/verify_player_grounded_differential.py": "345aedd2a50b1eb23dbc0763c69fd52b871adb3066637a4aa98817a744b27cef",
     "tools/verify_player_grounded_m11_frames.py": "96c27ebb64ddb65e50820f452ff8e7bff2436c19cccdfb7071191815d2c51007"
   },
   "limitations": [
     "Public command arguments use owner-private $HG_* substitutions; private logs/inputs remain outside Git.",
-    "Retail observation covers one floor material and one wall (head tier), +4ad = 0; gravity variants are model-differential only."
+    "Retail observation covers one floor material and one wall (head tier), +4ad = 0; gravity variants are model-differential only.",
+    "The differential compares memory only; the floor-return value is checked against native v0 in the 12 retail frames (value 1)."
   ]
 }

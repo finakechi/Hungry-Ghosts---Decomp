@@ -11,17 +11,35 @@ and clears the vertical speed. History `+390` and the same-frame camera use the
 wall- and floor-corrected position. `0015fc10` and the floor-hit path of
 `0015e420` are now C (`hg_player_grounded`, `hg_player_floor`), composed with the
 M11 constraint, M10 dispatcher and M9 camera. Local branch
-`research/m12-grounded-movement` (baseline main `35360c9b…4c`); implementation `95364d6` plus the documentation/evidence commit.
+`research/m12-grounded-movement` (baseline main `35360c9b…4c`): implementation
+`95364d6`, evidence `ffa6ef3`, review fixes `28d7c80`, then the corrected
+documentation/evidence commit.
 **Not pushed; no PR; no private M12 Drive backup.** Detail: [docs/M12.md](docs/M12.md).
 
 - **Evidence:** run `obs2`, 139 native stops (all PC-bound); 12 complete frames
-  1209–1220: approach 2, contact 3, contact-turn 3, release 4. Native head-push
-  stops show dot ≈ −0.99996 ≤ −0.3; every floor query returns `0x101` and the floor
-  routine 1; Y follows the floor slope each frame (38.02151 → 38.01458).
-- **Owner-local checks (2026-11-19):** 130 stage comparisons with 0 differing
-  bytes, 11/11 handoffs, 36/36 register cross-checks, 13/13 measured runtime controls (10 compiled defects, 3 input counterfactuals) with 2/2 clean null controls and the airborne input refused,
-  a 600-case original-instruction differential (551 equal, 0 failed, 49 fail-closed misses matching the original) with 3/3 mutants rejected, and 36/36 M11 retail checkpoints with C grounded/floor. Inventory 79/79 passed, covering 237 synthetic tests, M1–M11 regressions, strict C, sanitizers, PS2DInfo and the publication audit.
-  [checks.json](evidence/m12/checks.json) holds the commands, logs and preserved failures.
+  1209–1220: approach 2, contact 3, contact-turn 3, release 4. The 10 native
+  head-push stops show dot −0.999896 … −0.999863 ≤ −0.3; every floor query returns
+  `0x101` and native `v0` after the floor routine is 1; Y follows the floor slope
+  each frame (38.02151 → 38.01458).
+- **Independent review (2026-11-19):** four genuine findings against `ffa6ef3`:
+  a hardcoded floor-return `v0`, inexact refusal-code classification in the
+  differential, a comparator whose reporting reads added watched DMA accesses,
+  and documentation errors. Each false pass was reproduced, then fixed in
+  `28d7c80` with regressions.
+- **Owner-local checks after the fixes (2026-11-19, at `28d7c80`):** 130 stage
+  comparisons against 118 distinct native captures with 0 differing bytes (EE RAM
+  minus the 128 KiB guest stack, untouched libpad DMA separated, full scratchpad),
+  11/11 handoffs, 36/36 register cross-checks (floor-return `v0` now against the
+  measured C return), 14/14 runtime controls (11 compiled defects incl.
+  `floor-returns-two` rejected by register alone, 3 input counterfactuals), 2/2
+  clean null controls, airborne refused with exactly 0x50; a 600-case differential
+  (551 equal, 0 failed, 49 refusals each matching the original's exact no-floor
+  branch) with 4/4 mutants rejected; 36/36 M11 retail checkpoints with C
+  grounded/floor; M11 controls rerun 13/13 with the comparator fix. Inventory
+  79/79 passed (`r20261119T213946Z`), covering 247 synthetic tests, M1–M11 regressions,
+  strict C, sanitizers, PS2DInfo and the publication audit.
+  [checks.json](evidence/m12/checks.json) holds the commands, logs, before/after
+  results and preserved failures.
 - **Model correction:** the first oblique heading showed that EE `mul.s` zero
   products keep their sign under PCSX2 (camera up vector `−0`); the shared oracle
   and its C mirror now do the same, and all M8–M11 regressions still pass.
@@ -30,11 +48,15 @@ M11 constraint, M10 dispatcher and M9 camera. Local branch
   `1d8798fa…808d`, freshly hashed. Private inputs in ignored `local/m12/`
   (17 GiB captures); M8–M11 inputs are still required.
 - **Limits:** one floor material, one wall (head tier), `+4ad = 0`; gravity variants
-  differential-only; no-floor, hazard, special-surface, type-5 and spawn paths fail
-  closed; each frame starts from a captured entry state. No general collision,
-  autonomous inter-frame execution, all-C, byte-match or whole-game claim.
-- **Blockers:** none. **ONE next action:** Noah reviews M12 and decides on
-  publication (push/PR/backup). No M13 or final technical objective is selected.
+  differential-only; only the floor-hit path of the 427-word `0015e420` listing is
+  C; no-floor, hazard, special-surface, type-5 and spawn paths fail closed; each
+  frame starts from a captured entry state. No general collision, autonomous
+  inter-frame execution, all-C, byte-match or whole-game claim.
+- **Blockers:** technical review blockers resolved. Publication is blocked only on
+  Noah's decision about the 628 original instruction words in
+  `analysis/player_grounded/functions.json` (none yet public) and on push/PR/backup
+  authorization. **ONE next action:** Noah chooses the evidence-publication option.
+  No M13 or final technical objective is selected.
 
 Earlier milestone sections below retain their historical status and next-action
 wording; M12 above is the current resume point.

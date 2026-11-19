@@ -5748,6 +5748,9 @@
       "after_gravity_y": 37.94151306152344,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         41.0311164855957,
         38.02077865600586,
@@ -5835,6 +5838,9 @@
       "after_gravity_y": 37.94077682495117,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         40.80979537963867,
         38.02004623413086,
@@ -5922,6 +5928,9 @@
       "after_gravity_y": 37.94004440307617,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         40.58955001831055,
         38.01931381225586,
@@ -6009,6 +6018,9 @@
       "after_gravity_y": 37.93931198120117,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         40.37077713012695,
         38.01858901977539,
@@ -6096,6 +6108,9 @@
       "after_gravity_y": 37.9385871887207,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         40.15200424194336,
         38.01786422729492,
@@ -6183,6 +6198,9 @@
       "after_gravity_y": 37.937862396240234,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.94853973388672,
         38.017189025878906,
@@ -6271,6 +6289,9 @@
       "after_gravity_y": 37.93718719482422,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.76039505004883,
         38.016563415527344,
@@ -6358,6 +6379,9 @@
       "after_gravity_y": 37.936561584472656,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.58755111694336,
         38.0159912109375,
@@ -6445,6 +6469,9 @@
       "after_gravity_y": 37.93598937988281,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.44123458862305,
         38.015506744384766,
@@ -6532,6 +6559,9 @@
       "after_gravity_y": 37.93550491333008,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.321441650390625,
         38.015106201171875,
@@ -6619,6 +6649,9 @@
       "after_gravity_y": 37.93510437011719,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.2281608581543,
         38.01479721069336,
@@ -6706,6 +6739,9 @@
       "after_gravity_y": 37.93479537963867,
       "speed_after_gravity": "0xbda3d70a",
       "floor_query_result": "0x101",
+      "floor_returns": [
+        "0x1"
+      ],
       "floor_hit": [
         39.16140365600586,
         38.01457595825195,
@@ -6796,6 +6832,37 @@
       "kind": "null-control",
       "frame": 1212,
       "result": "clean",
+      "rejected_by": [],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -6847,6 +6914,37 @@
       "kind": "null-control",
       "frame": 1215,
       "result": "clean",
+      "rejected_by": [],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1215,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1215,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1215,
+          "register": "constraint-entry-f12",
+          "native": "bf4c61b8",
+          "method": "visual",
+          "calculated": "bf4c61b8",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -6898,6 +6996,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -6953,6 +7084,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -7402,6 +7566,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -7457,6 +7654,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -7518,6 +7748,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -7579,6 +7842,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -7640,6 +7936,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -8032,6 +8361,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -8098,6 +8460,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -8157,6 +8552,39 @@
       "kind": "compiled-defect",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 9,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -8208,10 +8636,132 @@
       "speed_430": "0x0"
     },
     {
+      "control": "floor-returns-two",
+      "kind": "compiled-defect",
+      "frame": 1212,
+      "result": "rejected",
+      "rejected_by": [
+        "register"
+      ],
+      "divergent_registers": [
+        "floor-return-v0"
+      ],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000002",
+          "result": "failed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x2"
+      ],
+      "checkpoints_compared": 11,
+      "native_pushes": 1,
+      "calculated_pushes": 1,
+      "first_divergent_stage": null,
+      "comparison": {
+        "result": "passed",
+        "compared_bytes": 33423360,
+        "different_bytes": 0,
+        "different_words": 0,
+        "stack_excluded": {
+          "start": "0x1fe0000",
+          "end_exclusive": "0x2000000"
+        },
+        "external_dma": {
+          "domain": "libpad IOP SIF-DMA receive buffers, not EE-written",
+          "buffers": [
+            {
+              "port": 0,
+              "slot": 0,
+              "start": "0x95e340",
+              "end_exclusive": "0x95e440"
+            }
+          ],
+          "different_bytes": 1,
+          "modeled_accesses": [],
+          "differences": [
+            {
+              "address": "0x95e418",
+              "actual": "0x28f1",
+              "expected": "0x28f3"
+            }
+          ]
+        },
+        "differences": [],
+        "differences_truncated": false,
+        "scratchpad": {
+          "compared_bytes": 16384,
+          "different_bytes": 0,
+          "differences": []
+        }
+      },
+      "committed_y": 38.01858901977539,
+      "eye_y": 54.51858901977539,
+      "history_y": 38.01858901977539,
+      "speed_430": "0x0"
+    },
+    {
       "control": "released-in-contact",
       "kind": "input-counterfactual",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory",
+        "register"
+      ],
+      "divergent_registers": [
+        "constraint-entry-f12"
+      ],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1848",
+          "result": "failed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -8935,6 +9485,42 @@
       "kind": "input-counterfactual",
       "frame": 1215,
       "result": "rejected",
+      "rejected_by": [
+        "memory",
+        "register"
+      ],
+      "divergent_registers": [
+        "constraint-entry-f12"
+      ],
+      "registers": [
+        {
+          "frame": 1215,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1215,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1215,
+          "register": "constraint-entry-f12",
+          "native": "bf4c61b8",
+          "method": "visual",
+          "calculated": "bf4b1224",
+          "result": "failed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -9664,6 +10250,39 @@
       "kind": "input-counterfactual",
       "frame": 1212,
       "result": "rejected",
+      "rejected_by": [
+        "memory"
+      ],
+      "divergent_registers": [],
+      "registers": [
+        {
+          "frame": 1212,
+          "register": "floor-query-v0",
+          "native": "00000101",
+          "method": "ocr-vote",
+          "calculated": "00000101",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "floor-return-v0",
+          "native": "00000001",
+          "method": "ocr-vote",
+          "calculated": "00000001",
+          "result": "passed"
+        },
+        {
+          "frame": 1212,
+          "register": "constraint-entry-f12",
+          "native": "bf4c1594",
+          "method": "ocr-vote",
+          "calculated": "bf4c1594",
+          "result": "passed"
+        }
+      ],
+      "floor_returns": [
+        "0x1"
+      ],
       "checkpoints_compared": 11,
       "native_pushes": 1,
       "calculated_pushes": 1,
@@ -10397,11 +11016,11 @@
   "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
   "observation_sha256": "5c551cfa095d56f15da0c63e1f302f5c351da8e81d03004ce57811939236ed14",
   "verification_sources": {
-    "src/resource_loader.c": "308b42690484c6ee9aab0bb632645e71aba8fd1712cf78aa40122f4457ffd374",
+    "src/resource_loader.c": "660e896bbd83fb5d567592638bedc28e09100e85fb5b2adf2a2ca9a9fdd2c1e8",
     "src/resource_loader.h": "902164180bc17ed02ccc3e4e0c231f7eef99df16b8ed2bec9617a39f3511baab",
     "tools/ee_subset.py": "47463c7f691f621f407bf2e417a1a930c9a84583cbcfb2f74d2631d61b78d415",
-    "tools/verify_player_grounded_runtime.py": "ac1ae58aeba362b9dba39c65a00a97ed283d0775d6f03988d87d4e0a33d09d37",
-    "tools/verify_player_connected_runtime.py": "9e3f72c15a3a387667756d73e27de6df4fa01bcf7a92002270d7fb86be3ed396",
+    "tools/verify_player_grounded_runtime.py": "24842b75d45be1c9b3b6329514a78918cf7f3c842da4ed3d50dae43bee7eadad",
+    "tools/verify_player_connected_runtime.py": "a98264fd19a6038d6fa1d5913a0bed8e552a7bd1908118a1edf377de775a3acc",
     "tools/verify_player_turn_runtime.py": "31137b65a91d5429dc12a65f199ac53240c67b87909178c679436450f99568c7"
   },
   "continuity_ranges": [
