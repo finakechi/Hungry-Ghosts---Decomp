@@ -76,7 +76,8 @@ class CapturedMemory:
 FP_SEAMS={0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,False),
     0x13a060:(2,False),0x120830:(0,True),0x1204e0:(1,True),
     0x143560:(1,True),0x143620:(1,True),0x143c60:(1,False),0x143d30:(1,False),0x143b90:(1,False),
-    0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False)}
+    0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False),
+    0x145630:(1,False)}  # M12: C 0015e420 floor probe, f12 = segment rise
 # Host-only fail-closed signal from C paths outside the reconstructed domain.
 DOMAIN_FAULT=0xfffffff0
 # Host-only M11 seam: (bytes, 1) enters and (bytes, 0) leaves a reconstructed

@@ -189,4 +189,10 @@ void hg_player_walk_camera_fixed(HGResourceEnv *, uint32_t frame);
 uint32_t hg_player_static_constraint(HGResourceEnv *, uint32_t heading, uint32_t); /* 0015ebc0 */
 void hg_player_constraint_camera_fixed(HGResourceEnv *, uint32_t frame);
 uint32_t hg_player_static_constraint_fixed(HGResourceEnv *, uint32_t heading, uint32_t);
+/* M12 grounded follow-up and observed floor-hit path. Unobserved floor paths
+ * fail closed. Emit HG_GUEST_FRAME (0x20 and 0x30, nested) like M11. */
+void hg_player_grounded(HGResourceEnv *, uint32_t);              /* 0015fc10 */
+uint32_t hg_player_floor(HGResourceEnv *, uint32_t);             /* 0015e420 */
+void hg_player_grounded_camera_fixed(HGResourceEnv *, uint32_t frame);
+void hg_player_grounded_fixed(HGResourceEnv *, uint32_t);
 #endif
