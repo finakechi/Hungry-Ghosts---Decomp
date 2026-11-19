@@ -1699,12 +1699,12 @@
     {
       "check": "M12 push, PR and remote CI",
       "result": "NOT RUN",
-      "reason": "No push or PR action authorized."
+      "reason": "Not run when this record was made; Noah authorized publication on 2026-11-19 afterwards. CI results are on the pull request."
     },
     {
       "check": "Publication of the 628 original instruction words in analysis/player_grounded/functions.json",
-      "result": "NOT DECIDED",
-      "reason": "Awaiting Noah; none of the 628 words is already public on origin/main."
+      "result": "DECIDED",
+      "reason": "Noah chose on 2026-11-19 to publish with bytes included, as for M1-M11; none of the 628 words was previously public."
     },
     {
       "check": "Unsupported floor paths (no floor, types 5/6/7, 0x1e00, spawn) comparison",

@@ -14,7 +14,7 @@ M11 constraint, M10 dispatcher and M9 camera. Local branch
 `research/m12-grounded-movement` (baseline main `35360c9b…4c`): implementation
 `95364d6`, evidence `ffa6ef3`, review fixes `28d7c80`, then the corrected
 documentation/evidence commit.
-**Not pushed; no PR; no private M12 Drive backup.** Detail: [docs/M12.md](docs/M12.md).
+**Pushed for pull-request review (not merged); no private M12 Drive backup.** Detail: [docs/M12.md](docs/M12.md).
 
 - **Evidence:** run `obs2`, 139 native stops (all PC-bound); 12 complete frames
   1209–1220: approach 2, contact 3, contact-turn 3, release 4. The 10 native
@@ -52,11 +52,11 @@ documentation/evidence commit.
   C; no-floor, hazard, special-surface, type-5 and spawn paths fail closed; each
   frame starts from a captured entry state. No general collision, autonomous
   inter-frame execution, all-C, byte-match or whole-game claim.
-- **Blockers:** technical review blockers resolved. Publication is blocked only on
-  Noah's decision about the 628 original instruction words in
-  `analysis/player_grounded/functions.json` (none yet public) and on push/PR/backup
-  authorization. **ONE next action:** Noah chooses the evidence-publication option.
-  No M13 or final technical objective is selected.
+- **Publication:** on 2026-11-19 Noah chose to publish the packet with its 628
+  original instruction words included, as for M1–M11; the branch is pushed and a
+  pull request opened. Merge and a private backup are not authorized.
+- **Blockers:** none. **ONE next action:** Noah reviews and decides on merging the
+  M12 pull request. No M13 or final technical objective is selected.
 
 Earlier milestone sections below retain their historical status and next-action
 wording; M12 above is the current resume point.

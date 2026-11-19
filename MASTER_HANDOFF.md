@@ -8,7 +8,7 @@ release, with the grounded floor response, history and same-frame camera. It is 
 local branch `research/m12-grounded-movement` in worktree `decomp-m12`. Baseline
 main `35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c`; implementation `95364d6`, evidence
 `ffa6ef3`, independent-review fixes `28d7c80`, then the corrected
-documentation/evidence commit. **Nothing pushed, no PR, no private M12 Drive backup.**
+documentation/evidence commit. **Pushed for pull-request review, not merged; no private M12 Drive backup.**
 
 **Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
 BOOT2, disc-extracted ELF equal to the working ELF, PCSX2 AppImage, BIOS image,
@@ -75,10 +75,11 @@ records were not rewritten.
 wall (head tier), `+4ad = 0`; gravity variants differential-only; unsupported
 floor paths fail closed; inter-frame effects come from each captured entry state.
 No general collision, autonomous inter-frame execution, all-C, byte-match, port or
-whole-game claim. **Blockers:** technical review blockers resolved; publication
-awaits Noah's decision on the 628 original instruction words (none yet public)
-and push/PR/backup authorization. **ONE next action:** Noah chooses the
-evidence-publication option. M13 and the final technical goal are not selected.
+whole-game claim. **Publication:** on 2026-11-19 Noah chose to publish the packet
+with its 628 original instruction words, as for M1–M11; branch pushed and pull
+request opened, not merged, no backup. **Blockers:** none. **ONE next action:**
+Noah reviews and decides on merging the M12 pull request. M13 and the final
+technical goal are not selected.
 
 ## M11 connected static movement constraint — 2026-11-18
 
