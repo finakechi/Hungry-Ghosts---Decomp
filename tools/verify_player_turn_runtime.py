@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'tests')]
 import verify_player_connected_runtime as V
+from hg_verify_build import build_path
 from resource_harness import ResourceEnv, library
 from verify_resource_loader import EXPECTED, shared_module
 from hg_evidence_safety import digest
@@ -275,7 +276,9 @@ def main():
     if digest(a.elf)!=EXPECTED:raise ValueError('Wrong original ELF')
     captures=Captures(a.capture_dir);captures.elfdata=a.elf.read_bytes()
     captures.segments,_=shared_module(a.ps2dinfo).segments_from_elf(captures.elfdata)
-    build=Path(tempfile.mkdtemp(prefix='player-turn-',dir=ROOT/'local/build'))
+    build_root = build_path(ROOT / 'local/build')
+    build_root.mkdir(parents=True, exist_ok=True)
+    build=Path(tempfile.mkdtemp(prefix='player-turn-',dir=build_root))
     lib=library(output=build/'runtime.so')
     stages,handoffs,drivers=sequence(lib,captures)
     checks,values=operation_checks(drivers,captures)

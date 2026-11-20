@@ -1,14 +1,51 @@
 # Hungry Ghosts — master handoff
 
+
+## M12 verification automation — 2026-11-19
+
+M12 merged through [PR #15](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/15)
+at `3b52075176f4a9cae1accba8a230167e0c7ef194`. Main CI passed on Python
+3.10 and 3.14. The automation milestone is on
+`automation/m12-verification-stage1` in `decomp-m12`.
+
+From that worktree, run `python3 -B tools/hg_verify.py plan --profile full`
+and `python3 -B tools/hg_verify.py run --profile full`. Set `HG_PCSX2`
+to the approved binary for the saved M4–M7 inputs. The focused profile
+retains eight gates. See the [M12 command guide](docs/M12.md#verification-automation).
+
+MainPC accepted 79/79 historical checks in run `m12-20261120T021536Z-q6tug_5i`.
+The synthetic suite passed 259 tests. The saved M12 replay matched 130
+stages across 118 captures, 36 register comparisons and 11 handoffs. It
+rejected 14 mutations, passed two null controls and observed the expected airborne
+refusal `0x50`. The M12 instruction differential measured 551 equal and
+49 expected refusals. The M11 frame cross-check matched all 36 checkpoints.
+
+The clean run took 53m29s against the historical 47m31s, including 31.7s
+outside the child commands. Resume revalidated and reused all 79 receipts
+in 21.5s without executing a verifier. The missing-input run
+accounted for all 79 checks and exited with an incomplete verdict.
+Reports remain in ignored `local/verification/`. Final review replayed all
+79 verdicts through the corrected classifier and passed 260 synthetic tests.
+
+Clean run source fingerprint
+`6987cea8e4d3df90ffcfa8d8d714b43052c2e9aef3d5e73b09dbfd7138d6a7f8`.
+The build used Python 3.14.9, GCC 16.2.1 and PS2DInfo
+`2e4a226e00d33ab35391aacade71b55826e5f52f`. Final source fingerprint
+`2021f3332cfdb7bd6da61a675846f0b78d68a885e9ac5edb7e22ea530b925fef`
+includes the escaped-control classification correction and its regression test.
+
+**Next action.** Profile check 70, the 600-case M11 instruction differential,
+using the saved inputs and preserving its comparison contract.
+
 ## M12 connected grounded movement and environmental response — 2026-11-19
 
 **Resume here.** M12 is complete for one bounded original Japanese connected
 movement sequence: oblique side-wall contact, slide, turning in contact and
-release, with the grounded floor response, history and same-frame camera. It is on
-local branch `research/m12-grounded-movement` in worktree `decomp-m12`. Baseline
+release, with the grounded floor response, history and same-frame camera. It was
+authored on `research/m12-grounded-movement`. Baseline
 main `35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c`; implementation `95364d6`, evidence
 `ffa6ef3`, independent-review fixes `28d7c80`, then the corrected
-documentation/evidence commit. **Pushed for pull-request review, not merged; no private M12 Drive backup.**
+documentation/evidence commit. **Merged through PR #15.** Private M12 Drive backup status is **unrun**.
 
 **Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
 BOOT2, disc-extracted ELF equal to the working ELF, PCSX2 AppImage, BIOS image,
@@ -76,10 +113,9 @@ wall (head tier), `+4ad = 0`; gravity variants differential-only; unsupported
 floor paths fail closed; inter-frame effects come from each captured entry state.
 No general collision, autonomous inter-frame execution, all-C, byte-match, port or
 whole-game claim. **Publication:** on 2026-11-19 Noah chose to publish the packet
-with its 628 original instruction words, as for M1–M11; branch pushed and pull
-request opened, not merged, no backup. **Blockers:** none. **ONE next action:**
-Noah reviews and decides on merging the M12 pull request. M13 and the final
-technical goal are not selected.
+with its 628 original instruction words, as for M1–M11. PR #15 is merged. The
+current continuation is the automation section above. Any M13 work and the final
+technical goal remain deferred.
 
 ## M11 connected static movement constraint — 2026-11-18
 

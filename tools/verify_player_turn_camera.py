@@ -104,13 +104,30 @@ class Mismatch(AssertionError):
     faults on compared paths, coverage gaps and any other exception do not."""
 
 
+class UnexpectedRefusal(AssertionError):
+    """Required fail-closed behavior did not match the selected branch."""
+
+
+def check_refusal(entry, args, mem, errors, calls):
+    address, code = {0x12c790: (0x3eaed4, 0x21),
+                     0x12bd00: (args[0] + 0x47a if args else 0, 0x20)}.get(entry, (None, None))
+    expected = code if address is not None and mem.load(address, 1) else None
+    faults = [call[1] for call in calls if call[0] == 'fault']
+    if not errors and not faults and expected is None:
+        return False
+    if expected is not None and faults == [expected] and errors == [repr(ValueError(f'domain fault {expected:#x}'))]:
+        return True
+    if faults or not errors:
+        raise UnexpectedRefusal(f'{entry:#x}: expected refusal {expected}, measured {faults}, errors {errors}')
+    raise RuntimeError(f'{entry:#x}: driver errors {errors}')
+
+
 def execute(lib,entry,args,mem):
     name,n,returns=FUNCTIONS[entry]
     cd=SlotDriver(clone(mem));md=SlotDriver(clone(mem))
     result=getattr(lib,name)(C.byref(cd.env),*args)
-    if cd.errors:
-        if entry in PARTIAL and cd.calls and cd.calls[-1][0]=='fault':return None
-        raise AssertionError(f'{name}{args}: C failed {cd.errors}')
+    if check_refusal(entry, args, mem, cd.errors, cd.calls):
+        return None
     m=machine(md)
     for pc in ARITIES:
         if pc==entry:continue

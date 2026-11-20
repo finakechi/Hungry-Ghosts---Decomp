@@ -40,7 +40,9 @@ class FloorDriver(Driver):
 class GroundedTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.lib = library(output=ROOT / 'local/build/player_grounded.so')
+        build = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(build.cleanup)
+        cls.lib = library(output=Path(build.name) / 'player_grounded.so')
         f = cls.lib.hg_player_grounded_fixed; f.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; f.restype = None
 
     def run_case(self, d, y=38.0, speed=0.0, f4ad=0, state0=1, f47c=0x8004, f483=0xff, d88c=0):
@@ -158,7 +160,7 @@ class RuntimeRegisterTests(unittest.TestCase):
             row = self.floor_row(Measured(returns))
             self.assertEqual((row['calculated'], row['result']), (None, 'missing'))
         rows = GR.register_checks(Measured([]), native(), None)
-        self.assertEqual(GR.control_verdict(None, NO_DIFFERENCE, rows), ('ESCAPED', [], []))
+        self.assertEqual(GR.control_verdict(None, NO_DIFFERENCE, rows), ('error', [], []))
 
     def test_memory_divergence_is_reported_with_its_basis(self):
         rows = GR.register_checks(Measured([1]), native(), None)
@@ -197,6 +199,7 @@ class DifferentialClassificationTests(unittest.TestCase):
                  (GD.classify([], True, 2, [], comparison(0), scratch_bytes=2), 'failed', 'measured-divergence'),
                  (GD.classify([], True, 2, ['spawn'], comparison(0)), 'failed', 'unsupported-branch-not-refused'),
                  (GD.classify([], True, 2, [], comparison(0, 'failed', ['0x95e400'])), 'failed', 'external-dma-access'),
+                 (GD.classify([], True, 2, [], comparison(3, 'failed', ['0x95e400'])), 'failed', 'external-dma-access'),
                  (GD.classify([], True, 2, [], comparison(0)), 'passed', None),
                  (GD.classify([], True, 2, []), 'error', None),                                   # missing comparison
                  (GD.classify(["ValueError('boom')"], True, 2, [], comparison(0)), 'error', None),  # harness exception
@@ -205,7 +208,7 @@ class DifferentialClassificationTests(unittest.TestCase):
         not_measured = [row for row, _, failure in cases if failure != 'measured-divergence']
         self.assertEqual(GD.control_verdict(GD.tally([r for r in not_measured if r['result'] != 'error']), 'divergence'), 'ESCAPED')
         self.assertEqual(GD.control_verdict(GD.tally([cases[0][0]]), 'divergence'), 'rejected')
-        self.assertEqual(GD.control_verdict(GD.tally([cases[0][0], cases[5][0]]), 'divergence'), 'error')
+        self.assertEqual(GD.control_verdict(GD.tally([cases[0][0], next(row for row, result, _ in cases if result == 'error')]), 'divergence'), 'error')
 
 
 if __name__ == '__main__':

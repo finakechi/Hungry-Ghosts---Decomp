@@ -1,9 +1,13 @@
 """Compile original reconstruction into ignored local build, expose ctypes ABI."""
 import ctypes as C
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools'))
+from hg_verify_build import build_path
+
 class State(C.Structure):
     _fields_ = [(n,C.c_uint32) for n in ('state_word','error','file_record','destination','byte_offset','byte_length','next_lba','sector_count','sectors_issued','next_destination','between_chunks')]
 READ32 = C.CFUNCTYPE(C.c_uint32,C.c_void_p,C.c_uint32)
@@ -15,7 +19,7 @@ class Env(C.Structure):
                 ('inhibit',C.c_uint8),('active',C.c_uint8),('chunk_flag_a',C.c_uint8),('chunk_flag_b',C.c_uint8)]
 
 def library():
-    out = ROOT/'local/build'
+    out = build_path(ROOT / 'local/build')
     out.mkdir(parents=True,exist_ok=True)
     shared = out/'disc_read.so'
     subprocess.run(['cc','-std=c11','-O2','-Wall','-Wextra','-Werror','-pedantic','-fPIC','-shared',str(ROOT/'src/disc_read.c'),'-o',str(shared)],check=True)

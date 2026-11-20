@@ -52,16 +52,31 @@ def prepare(base, s):
     return mem, ext
 
 
+def classify_refusal(errors, balanced, original_addresses):
+    refusal = repr(ValueError('C path outside reconstructed domain (code 0x40)'))
+    original_special = 0x15eaf0 in original_addresses
+    if not balanced:
+        return dict(result='error', detail='Unbalanced constraint guest frame')
+    if errors and any(not error.startswith("ValueError('C path outside reconstructed domain (code ") for error in errors):
+        return dict(result='error', detail=errors)
+    if errors == [refusal] and original_special:
+        return dict(result='unsupported', refusal_code='0x40', original_special=True)
+    if errors or original_special:
+        return dict(result='failed', failure='refusal-mismatch', errors=errors, original_special=original_special)
+    return None
+
+
 def run_case(lib, elf, segments, base, s, status):
     cm, ext = prepare(base, s); om, _ = prepare(base, s)
     cd = V.ConnectedRuntimeDriver(cm, elf, segments); cd.cop0_status = status; cd.constant_t0 = {0x156ad0: 1}
     fn = lib.hg_player_static_constraint_fixed; fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32, C.c_uint32]; fn.restype = C.c_uint32
     c_result = fn(C.byref(cd.env), bits(s['heading']), P)
-    if any('outside reconstructed domain' in str(e) for e in cd.errors): return dict(result='unsupported', errors=[str(e) for e in cd.errors]), None
-    if cd.errors: raise AssertionError(cd.errors)
     od = V.ConnectedRuntimeDriver(om, elf, segments); od.cop0_status = status
     o_result = od.external(0x15ebc0, bits(s['heading']), P)
     if od.errors: raise AssertionError(od.errors)
+    refusal = classify_refusal(cd.errors, cd.guest_frame == 0, od.executed)
+    if refusal is not None:
+        return refusal, od.executed
     r = V.compare_memory(cd.mem, od.mem, ext)
     scratch = [i for i in range(0x4000) if cd.mem.scratch[i] != od.mem.scratch[i]]
     ok = r['result'] == 'passed' and not scratch and (c_result & 0xffff) == (o_result & 0xffff)

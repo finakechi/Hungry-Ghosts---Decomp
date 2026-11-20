@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'tools'), str(ROOT / 'tests')]
 from ee_subset import MASK64, sx
 from hg_evidence_safety import digest
+from hg_verify_build import build_path
 from resource_harness import Memory, machine, library
 from test_player_transition import FUNCTIONS, ARITIES, TransitionDriver, configure
 from verify_resource_loader import EXPECTED, clone, compare, shared_module
@@ -117,7 +118,7 @@ def run(lib, data, segments, packet):
 
 def negative_controls(source_bytes, data, segments, output_stem):
     """Compile three specific defects and require original instructions to disagree."""
-    work = ROOT / 'local/build' / ('player-transition-controls-' + output_stem)
+    work = build_path(ROOT / 'local/build') / ('player-transition-controls-' + output_stem)
     work.mkdir(parents=True, exist_ok=False)
     text = source_bytes.decode('utf-8')
     controls = []
@@ -200,7 +201,7 @@ def main():
     # edited concurrently without misidentifying the code actually compared.
     source_bytes = source.read_bytes()
     source_hash = hashlib.sha256(source_bytes).hexdigest()
-    build = ROOT / 'local/build'
+    build = build_path(ROOT / 'local/build')
     build.mkdir(parents=True, exist_ok=True)
     if args.negative_controls:
         controls = negative_controls(source_bytes, data, segments, args.output.stem)
