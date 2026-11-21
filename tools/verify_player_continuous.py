@@ -52,12 +52,18 @@ def render_external_scratch(caps, obs):
 
     At the camera-return stage the offsets the reconstructed path actually WRITES
     are guarded and must reproduce the original's post-chain values (they do:
-    0 guarded differences). The remaining set -- the original's 0012c790-body
+    0 guarded differences). The remaining set is never written by the C
+    composition and stays classified external at every stage, with the
+    authenticated evidence: the 0012c790 instruction stream itself contains no
+    stores to them, and every direct writer (00138ed8, 0015c580, 0017fb58,
+    00181874, 0012ab80) is jalr-indirect -- they are produced deeper in the
+    chain through paths the composition does not model. They include the
     screen-space projection arrays 0x7c0-0x7ff (quad corners -6.7/65.3/28.94541
-    with camera-tracking depth, +72 offsets), 0x900 (normalized screen coordinate
-    varying linearly with the eye position) and 0x940 (constant 165.8/180/495/1)
-    -- is never written by the C composition, so it stays classified external at
-    every stage. The reconstructed camera STATE (0x3f9860) and all RAM guarded
+    with camera-tracking depth, +72 offsets), 0x900 (normalized screen
+    coordinate, linear in the eye position), 0x940 (constant 165.8/180/495/1),
+    and the constant render block 0x710..0x72f (0,768,960,0,128,128,128,12)
+    with 0xba0..0xbaf (camera position, w=127.0) at every obs3 camera-return
+    stop. The reconstructed camera STATE (0x3f9860) and all RAM guarded
     domains are compared at every stage."""
     frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
     changed = set()

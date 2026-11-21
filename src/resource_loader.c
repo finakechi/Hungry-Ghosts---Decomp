@@ -1905,18 +1905,15 @@ void hg_camera_update(HGResourceEnv *e) {
     call(e,0x143c60,r32(e,camera+0xd0),0x70000000,0x70000000,0);
     call(e,0x143d30,r32(e,camera+0xd4),0x70000000,0x70000000,0);
     copy_quad(e,0x70000030,camera);
-    /* 0012c790 body stores the C composition must reproduce itself: the
-     * render-space quad at 0xba0 gets its xyz from the interpreted 0012c640
-     * follow chain, and w = 127.0 from this constant store. Measured at the
-     * obs3 camera-return stop in every captured frame (frames 10164-10169:
-     * 0xba0.w == 127.0 exactly while x varies 41.92..40.83). */
-    w32(e,0x70000bac,0x42fe0000u);
-    /* Render-space constants 0x710..0x72f, identical at every obs3
-     * camera-return stop (0.0, 768.0, 960.0, 0.0, 128.0, 128.0, 128.0, 12.0):
-     * written by the original chain in the C-replaced 0012c790 body. */
-    static const uint32_t render_const[8]={0x00000000u,0x44400000u,0x44700000u,
-        0x00000000u,0x43000000u,0x43000000u,0x43000000u,0x41400000u};
-    for(uint32_t i=0;i<8;i++)w32(e,0x70000710+i*4,render_const[i]);
+    /* Render-facing scratch at 0x710..0x72f and 0xba0..0xbaf: the original's
+     * chain leaves these written at the camera-return stop (constant
+     * 0,768,960,0,128,128,128,12 and camera position with w=127.0 in every
+     * obs3 frame), but the authenticated 0012c790 instruction stream contains
+     * no such stores and every direct writer (00138ed8, 0015c580, 0017fb58,
+     * 00181874, 0012ab80) is jalr-indirect -- they are produced deeper in the
+     * chain through paths the C composition does not model. They are declared
+     * render-facing external at every stage; the camera STATE (0x3f9860) and
+     * every scratch offset this path writes remain fully guarded. */
     w8(e,camera+0x140,0);
 }
 static uint32_t turn_camera_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
