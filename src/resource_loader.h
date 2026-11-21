@@ -195,4 +195,18 @@ void hg_player_grounded(HGResourceEnv *, uint32_t);              /* 0015fc10 */
 uint32_t hg_player_floor(HGResourceEnv *, uint32_t);             /* 0015e420 */
 void hg_player_grounded_camera_fixed(HGResourceEnv *, uint32_t frame);
 void hg_player_grounded_fixed(HGResourceEnv *, uint32_t);
+/* M13 inter-frame advance: the observed prefix of the original per-frame
+ * coordinator 0012f850 (3fa190 increment with the negative-wrap reset,
+ * 0031bb80 edge sync, 3f9ff8 clear, guarded 46e118 increment) and the
+ * observed engine counter advance (46d930/46e110, guarded). Both guards read
+ * the byte 0x2f78(gp) = 0x3fcee8. Unobserved engine service calls stay host
+ * seams (HG_EXTERNAL_CALL 0xfffffff3), not guest effects. */
+void hg_frame_edge_sync(HGResourceEnv *);                        /* 0031bb80 */
+void hg_counter_advance(HGResourceEnv *);
+void hg_frame_advance(HGResourceEnv *);                          /* 0012f850 observed prefix */
+/* M13 continuous frame: engine counters, coordinator prefix, the M10
+ * dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history) and the
+ * M9 same-frame camera on one carried bus. */
+void hg_player_frame_continuous(HGResourceEnv *, uint32_t frame);
+void hg_player_frame_continuous_fixed(HGResourceEnv *, uint32_t frame);
 #endif
