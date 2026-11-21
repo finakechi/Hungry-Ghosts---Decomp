@@ -2231,11 +2231,12 @@ void hg_player_grounded_fixed(HGResourceEnv *e,uint32_t a) {
  * (inter-frame write evidence). The observed corridor frames run 0012f850
  * (not its sibling 0012f950): the selector byte 3f9f3e is 0.
  *
- * hg_player_frame_continuous: one continuous frame = engine counter advance,
- * coordinator prefix, M10 dispatcher (walk/turn, C 0015ebc0, C 0015fc10/
- * 0015e420, history) and the M9 same-frame camera, all on one carried bus.
- * The controller input (pad area) is an external per-frame input; nothing
- * else is restored between frames. */
+ * hg_player_frame_continuous: one continuous frame = coordinator prefix,
+ * M10 dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history), the
+ * M9 same-frame camera, the declared external coordinator tail and the
+ * 001379f0 engine counter advance, all on one carried bus. The controller
+ * input (pad area) is an external per-frame input; nothing else is restored
+ * between frames. */
 #define HG_EXTERNAL_CALL 0xfffffff3u
 static const uint32_t frame_guard=0x3fcee8u; /* byte 0x2f78(gp), gp = 0x3f9f70 */
 

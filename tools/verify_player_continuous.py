@@ -134,8 +134,10 @@ class ContinuousRun:
         for address, value in delta.items():
             self.mem.raw[address] = value
 
-    def run_frame(self, fr):
+    def run_frame(self, fr, mutate=None):
         self.inject_input(fr['counter'])
+        for address, (value, width) in (mutate or {}).items():
+            self.mem.store(address, value, width)
         driver = ContinuousDriver(self.mem, self.caps.elfdata, self.caps.segments, STATUS_VALUES[0])
         fn = getattr(self.lib, 'hg_player_frame_continuous')
         fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = None
@@ -187,6 +189,7 @@ def sequence(lib, caps, obs):
     # must start from the authenticated starting state, untouched).
     scratch = ContinuousRun(lib, caps, obs).guarded_scratch()
     run = ContinuousRun(lib, caps, obs)
+    run.scratch_guarded = scratch
     rows = []
     failures = []
     for fr in run.frames:
@@ -219,20 +222,20 @@ def controls(lib, caps, obs, folder):
     frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
     middle = len(frames) // 2
     target = frames[middle]
+    scratch_set = ContinuousRun(lib, caps, obs).guarded_scratch()
 
     def measure(name, kind, mutate=None, restore=False):
         run = ContinuousRun(lib, caps, obs)
+        run.scratch_guarded = scratch_set
         for fr in run.frames:
-            if fr['counter'] == target['counter'] and mutate:
-                for address, (value, width) in mutate.items():
-                    run.mem.store(address, value, width)
-                run.mem.initial = bytes(run.mem.raw)
             if restore and fr['counter'] == target['counter']:
                 fresh = caps.load(fr['captures']['dispatch-entry']['name'])
                 run.mem.raw[:] = fresh.raw
                 run.mem.scratch[:] = fresh.scratch
             run.mem.watch = [(e['start'], e['end']) for e in run.external]
-            d = run.run_frame(fr)
+            if fr['counter'] == target['counter'] and mutate:
+                run.mem.initial = bytes(run.mem.raw)
+            d = run.run_frame(fr, mutate if fr['counter'] == target['counter'] else None)
             if fr['counter'] != target['counter']: continue
             for label, snapshot in d.stage.items():
                 row = fr['captures'].get(label)
@@ -275,7 +278,7 @@ def controls(lib, caps, obs, folder):
         path = folder / 'wrong-gravity-step.c'
         path.open('x').write(source.replace(before, after))
         mlib = library(source=path, output=folder / 'wrong-gravity-step.so')
-        row = measure_compiled(mlib, 'wrong-gravity-step', caps, obs, target)
+        row = measure_compiled(mlib, 'wrong-gravity-step', caps, obs, target, scratch_set)
     except Exception as exc:
         row = dict(control='wrong-gravity-step', kind='compiled-defect', frame=target['counter'],
                    result='error', detail=str(exc)[:400])
@@ -285,8 +288,9 @@ def controls(lib, caps, obs, folder):
     return rows
 
 
-def measure_compiled(mlib, name, caps, obs, target):
+def measure_compiled(mlib, name, caps, obs, target, scratch_set):
     run = ContinuousRun(mlib, caps, obs)
+    run.scratch_guarded = scratch_set
     for fr in run.frames:
         d = run.run_frame(fr)
         if fr['counter'] != target['counter']: continue
