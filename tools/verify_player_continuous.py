@@ -37,20 +37,38 @@ from hg_evidence_safety import digest
 
 P, CAM = 0x3f92d0, 0x3f9860
 EXTERNAL_SAMPLE = 8
-# Render-facing scratch regions the reconstructed path excludes by evidence: at every
-# obs3 stage stop their authentic values are written outside the reconstructed path.
-# Measured obs3 frame 10166 (local/m13/captures): coordinator-entry 0x700=[2,2,2,124],
-# 0xba0=[9.024,9.024,9.024,0]; dispatch-entry through camera-entry 0x700=[1718,1926,
-# 2378,2170] (camera-space quad) and 0xba0=[64,64,64,127] -- written by the declared-
-# external coordinator services 00198f60/0017f6d0/0017f2d0 in the coordinator-entry ->
-# dispatch-entry window and held all frame; camera-return 0x700=[-0,1,-0,1] (unit
-# quad) and 0xba0=[41.484,54.532,271.872,127] (camera position) -- the original's
-# post-camera render work after the chain returns. The C path's own camera-internal
-# use of 0x700 (VU target [0,0,20,1] in hg_camera_head_matrix) is M12-verified
-# against the camera-chain return capture (exact 16 KiB scratchpad compare, 79-check
-# profile). Both regions are render intermediates; the reconstructed camera STATE
-# (0x3f9860) remains fully guarded at every stage.
-EXTERNAL_SCRATCH = set(range(0x700, 0x710)) | set(range(0xba0, 0xbb0))
+def render_external_scratch(caps, obs):
+    """Scratch offsets the ORIGINAL itself rewrites outside the reconstructed path.
+
+    Computed from the authenticated observation captures, not hardcoded: the union
+    over consecutive frame pairs of (a) offsets changed between frame N's
+    camera-return and frame N+1's coordinator-entry (inter-frame render work after
+    the coordinator returns) and (b) offsets changed between coordinator-entry and
+    dispatch-entry of the same frame (the declared-external coordinator services
+    00198f60/0017f6d0/0017f2d0). Measured obs3 examples: 0x700=[1718,1926,2378,2170]
+    and 0xba0=[64,64,64,127] at every dispatch-entry..camera-entry stop; 0x500 head
+    matrix rewritten inter-frame (10164 camera-return [0.699,0,0.715,0] -> 10165
+    coordinator-entry [4.2,0,0,0]); 0x7b0 screen-space pair 0,0 -> 41.916,13.167.
+
+    At the camera-return stage the offsets the reconstructed path actually WRITES
+    are guarded and must reproduce the original's post-chain values (they do:
+    0 guarded differences). The remaining set -- the original's 0012c790-body
+    screen-space projection arrays 0x7c0-0x7ff (quad corners -6.7/65.3/28.94541
+    with camera-tracking depth, +72 offsets), 0x900 (normalized screen coordinate
+    varying linearly with the eye position) and 0x940 (constant 165.8/180/495/1)
+    -- is never written by the C composition, so it stays classified external at
+    every stage. The reconstructed camera STATE (0x3f9860) and all RAM guarded
+    domains are compared at every stage."""
+    frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
+    changed = set()
+    for fr, nxt in zip(frames, frames[1:]):
+        ret = caps.load(fr['captures']['camera-return']['name'])
+        entry = caps.load(nxt['captures']['coordinator-entry']['name'])
+        disp = caps.load(nxt['captures']['dispatch-entry']['name'])
+        for off in range(0x4000):
+            if ret.scratch[off] != entry.scratch[off] or entry.scratch[off] != disp.scratch[off]:
+                changed.add(off)
+    return sorted(changed)
 OBSERVATION = ROOT / 'evidence/m13/continuous-observation.json'
 PAD_INPUT = (0x3eaf00, 0x3eaf40)
 # Coordinator seam events (HG_GUEST_FRAME bytes from hg_frame_advance).
@@ -109,6 +127,12 @@ class ContinuousDriver(G.GroundedDriver):
             return 0
         if pc == 0xfffffff3:
             self.external_calls.append(hex(a))
+            # 0013b6e0 is the first coordinator tail service after the camera chain
+            # returns (0012f8d8); the original's camera-return stop is 0012f8d4,
+            # immediately before it. Snapshot here: end-of-frame memory would also
+            # include the 001379f0 counter advance, which runs after the stop.
+            if a == 0x13b6e0:
+                self.stage['camera-return'] = self.snap()
             return 0
         return super().external(pc, a, b, c, d)
 
@@ -128,6 +152,7 @@ class ContinuousRun:
         self.external = V.pad_dma_buffers(self.mem)
         self.mem.watch = [(e['start'], e['end']) for e in self.external]
         self.scratch_guarded = None
+        self.render_external = None
         self.pad_delta = self._pad_deltas()
 
     def _pad_deltas(self):
@@ -162,11 +187,20 @@ class ContinuousRun:
         if driver.guest_frame != 0: raise AssertionError('Unbalanced guest frame')
         driver.stage['history-copy'] = driver.history
         driver.stage['camera-entry'] = driver.camera_entry
-        driver.stage['camera-return'] = driver.mem
+        if 'camera-return' not in driver.stage:
+            raise AssertionError('Missing camera-return seam coverage')
         return driver
 
     def guarded_scratch(self):
-        """All scratchpad offsets written by the reconstructed path (empirical union)."""
+        """All scratchpad offsets written by the reconstructed path (empirical union),
+        minus the render-external set the original rewrites outside the path.
+
+        The raw write union is retained: at camera-return the intersection
+        (render_external offsets the C DOES write) is re-guarded, because there the
+        reconstructed chain must reproduce the original's post-chain values. The
+        render-external offsets the C never writes (the original's 0012c790-body
+        screen-space projection arrays 0x7c0-0x7ff/0x900/0x940) stay external at
+        every stage."""
         if self.scratch_guarded is None:
             offsets = set()
             for fr in self.frames:
@@ -174,11 +208,23 @@ class ContinuousRun:
                 for address in d.mem.writes:
                     if 0x70000000 <= address < 0x70004000:
                         offsets.add(address - 0x70000000)
-            self.scratch_guarded = sorted(offsets - EXTERNAL_SCRATCH)
+            self.render_external = set(render_external_scratch(self.caps, self.obs))
+            self.scratch_union = sorted(offsets)
+            self.scratch_guarded = sorted(offsets - self.render_external)
+            # The camera-return re-guard: render-external offsets the C DOES write
+            # must reproduce the original's post-chain values there.
+            self.camera_guard = self.render_external & offsets
         return self.scratch_guarded
 
-    def compare_stage(self, actual, expected):
+    def compare_stage(self, actual, expected, stage=None):
         """Guarded-domain comparison plus the external-difference enumeration.
+
+        The capture-derived render-external scratch set (see
+        render_external_scratch) is excluded at every stage except camera-return,
+        where the reconstructed camera chain must reproduce the original's
+        post-chain scratch exactly (M12 grounded-runtime evidence: complete
+        16 KiB scratchpad compared at camera-return with 0 different bytes) --
+        a divergence there is a real failure.
 
         The 32 MB RAM image is compared in 64 KB chunks (memcmp on equal chunks);
         only divergent regions are scanned byte-wise. Divergent addresses are
@@ -210,6 +256,8 @@ class ContinuousRun:
         external_scratch = []
         external_scratch_total = 0
         scratch_guarded = set(self.scratch_guarded)
+        if stage == 'camera-return':
+            scratch_guarded |= self.camera_guard
         for off in range(0x4000):
             if actual.scratch[off] == expected.scratch[off]: continue
             if off in scratch_guarded: guarded_scratch.append(off)
@@ -227,12 +275,20 @@ class ContinuousRun:
                     result='passed' if not guarded_ram and not guarded_scratch else 'failed')
 
 
-def sequence(lib, caps, obs):
+def sequence(lib, caps, obs, scratch=None, union=None):
     # First pass: the guarded-scratch union on a throwaway run (the real sequence
-    # must start from the authenticated starting state, untouched).
-    scratch = ContinuousRun(lib, caps, obs).guarded_scratch()
+    # must start from the authenticated starting state, untouched). The union
+    # depends only on the compiled library, so the caller may compute it once
+    # and share it with the controls stage.
+    if scratch is None or union is None:
+        probe = ContinuousRun(lib, caps, obs)
+        scratch = probe.guarded_scratch()
+        union = probe.scratch_union
     run = ContinuousRun(lib, caps, obs)
     run.scratch_guarded = scratch
+    run.render_external = set(render_external_scratch(caps, obs))
+    run.scratch_union = union
+    run.camera_guard = run.render_external & set(union)
     rows = []
     failures = []
     for fr in run.frames:
@@ -242,13 +298,13 @@ def sequence(lib, caps, obs):
             row = fr['captures'].get(label)
             if row is None: continue
             expected = caps.load(row['name'])
-            result = run.compare_stage(snapshot, expected)
+            result = run.compare_stage(snapshot, expected, label)
             result['capture'] = row['name']
             if result['result'] != 'passed': failures.append((fr['counter'], label))
             stages[label] = result
         for index, (snapshot, row) in enumerate(zip(d.pushes, fr['pushes'])):
             expected = caps.load(row['name'])
-            result = run.compare_stage(snapshot, expected)
+            result = run.compare_stage(snapshot, expected, f'push-{index}')
             result['capture'] = row['name']
             if result['result'] != 'passed': failures.append((fr['counter'], f'push-{index}'))
             stages[f'push-{index}-{row["tier"]}'] = result
@@ -257,20 +313,27 @@ def sequence(lib, caps, obs):
         del d; caps.cache.clear(); gc.collect()
     return dict(frames=rows, failures=[dict(counter=c, stage=s) for c, s in failures],
                 guarded_scratch=[hex(0x70000000 + o) for o in scratch],
+                render_external_scratch=[hex(0x70000000 + o) for o in run.render_external],
                 result='passed' if not failures else 'failed')
 
 
-def controls(lib, caps, obs, folder):
+def controls(lib, caps, obs, folder, scratch_set=None, union=None):
     folder.mkdir(parents=True, exist_ok=True)
     rows = []
     frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
     middle = len(frames) // 2
     target = frames[middle]
-    scratch_set = ContinuousRun(lib, caps, obs).guarded_scratch()
+    if scratch_set is None or union is None:
+        probe = ContinuousRun(lib, caps, obs)
+        scratch_set = probe.guarded_scratch()
+        union = probe.scratch_union
 
     def measure(name, kind, mutate=None, restore=False):
         run = ContinuousRun(lib, caps, obs)
         run.scratch_guarded = scratch_set
+        run.render_external = set(render_external_scratch(caps, obs))
+        run.scratch_union = union
+        run.camera_guard = run.render_external & set(union)
         for fr in run.frames:
             caps.cache.clear()
             if restore and fr['counter'] == target['counter']:
@@ -290,7 +353,7 @@ def controls(lib, caps, obs, folder):
                 row = fr['captures'].get(label)
                 if row is None: continue
                 expected = caps.load(row['name'])
-                result = run.compare_stage(snapshot, expected)
+                result = run.compare_stage(snapshot, expected, label)
                 if result['result'] != 'passed':
                     return dict(control=name, kind=kind, frame=fr['counter'], result='rejected',
                                 first_divergent_stage=label, detail=result)
@@ -327,7 +390,7 @@ def controls(lib, caps, obs, folder):
         path = folder / 'wrong-gravity-step.c'
         path.open('x').write(source.replace(before, after))
         mlib = library(source=path, output=folder / 'wrong-gravity-step.so')
-        row = measure_compiled(mlib, 'wrong-gravity-step', caps, obs, target, scratch_set)
+        row = measure_compiled(mlib, 'wrong-gravity-step', caps, obs, target, scratch_set, union)
     except Exception as exc:
         row = dict(control='wrong-gravity-step', kind='compiled-defect', frame=target['counter'],
                    result='error', detail=str(exc)[:400])
@@ -337,9 +400,12 @@ def controls(lib, caps, obs, folder):
     return rows
 
 
-def measure_compiled(mlib, name, caps, obs, target, scratch_set):
+def measure_compiled(mlib, name, caps, obs, target, scratch_set, union):
     run = ContinuousRun(mlib, caps, obs)
     run.scratch_guarded = scratch_set
+    run.render_external = set(render_external_scratch(caps, obs))
+    run.scratch_union = union
+    run.camera_guard = run.render_external & set(union)
     for fr in run.frames:
         caps.cache.clear()
         d = run.run_frame(fr)
@@ -348,7 +414,7 @@ def measure_compiled(mlib, name, caps, obs, target, scratch_set):
             row = fr['captures'].get(label)
             if row is None: continue
             expected = caps.load(row['name'])
-            result = run.compare_stage(snapshot, expected)
+            result = run.compare_stage(snapshot, expected, label)
             if result['result'] != 'passed':
                 return dict(control=name, kind='compiled-defect', frame=fr['counter'],
                             result='rejected', first_divergent_stage=label, detail=result)
@@ -379,9 +445,14 @@ def main():
             raise ValueError('Wrong capture frame')
     caps.cache.clear()
     lib = library(output=a.output.with_suffix('.so'))
-    result = sequence(lib, caps, obs)
+    probe = ContinuousRun(lib, caps, obs)
+    scratch_set = probe.guarded_scratch()
+    union = probe.scratch_union
+    result = sequence(lib, caps, obs, scratch_set, union)
     if a.negative_controls:
-        result['negative_controls'] = controls(lib, caps, obs, a.output.parent / (a.output.stem + '-controls'))
+        result['negative_controls'] = controls(lib, caps, obs,
+                                               a.output.parent / (a.output.stem + '-controls'),
+                                               scratch_set, union)
     ok = result['result'] == 'passed'
     if a.negative_controls:
         ok &= all(c['result'] == ('clean' if c['kind'] == 'null-control' else 'rejected')
