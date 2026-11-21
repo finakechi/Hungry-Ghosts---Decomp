@@ -36,6 +36,7 @@ from resource_harness import ResourceEnv, library
 from hg_evidence_safety import digest
 
 P, CAM = 0x3f92d0, 0x3f9860
+EXTERNAL_SAMPLE = 8
 OBSERVATION = ROOT / 'evidence/m13/continuous-observation.json'
 PAD_INPUT = (0x3eaf00, 0x3eaf40)
 # Coordinator seam events (HG_GUEST_FRAME bytes from hg_frame_advance).
@@ -127,6 +128,7 @@ class ContinuousRun:
                 if a.raw[address] != b.raw[address]:
                     out[address] = b.raw[address]
             deltas[nxt['counter']] = out
+        self.caps.cache.clear()
         return deltas
 
     def inject_input(self, counter):
@@ -162,25 +164,52 @@ class ContinuousRun:
         return self.scratch_guarded
 
     def compare_stage(self, actual, expected):
-        """Guarded-domain comparison plus the external-difference enumeration."""
-        ram_diffs = [a for a in range(0x2000000) if actual.raw[a] != expected.raw[a]]
-        guarded_ram = [a for a in ram_diffs if in_guarded(a)]
-        external_ram = {}
-        for a in ram_diffs:
-            if in_guarded(a): continue
-            external_ram.setdefault(external_domain(a), []).append(a)
+        """Guarded-domain comparison plus the external-difference enumeration.
+
+        The 32 MB RAM image is compared in 64 KB chunks (memcmp on equal chunks);
+        only divergent regions are scanned byte-wise. Divergent addresses are
+        classified into guarded violations (kept in full) and external domains
+        (counted, with a bounded address sample retained) so results stay small
+        even when carried state diverges broadly from the capture."""
+        guarded_ram = []
+        external_counts = {}
+        external_samples = {}
+        chunk = 0x10000
+        for base in range(0, 0x2000000, chunk):
+            window = slice(base, base + chunk)
+            if actual.raw[window] == expected.raw[window]:
+                continue
+            for a in range(base, base + chunk):
+                if actual.raw[a] == expected.raw[a]:
+                    continue
+                if in_guarded(a):
+                    guarded_ram.append(a)
+                    continue
+                domain = external_domain(a)
+                external_counts[domain] = external_counts.get(domain, 0) + 1
+                sample = external_samples.get(domain)
+                if sample is None:
+                    external_samples[domain] = sample = []
+                if len(sample) < EXTERNAL_SAMPLE:
+                    sample.append(a)
         guarded_scratch = []
         external_scratch = []
+        external_scratch_total = 0
+        scratch_guarded = set(self.scratch_guarded)
         for off in range(0x4000):
             if actual.scratch[off] == expected.scratch[off]: continue
-            if off in self.scratch_guarded: guarded_scratch.append(off)
-            else: external_scratch.append(off)
+            if off in scratch_guarded: guarded_scratch.append(off)
+            else:
+                external_scratch_total += 1
+                if len(external_scratch) < EXTERNAL_SAMPLE: external_scratch.append(off)
         return dict(guarded_ram=[hex(a) for a in guarded_ram[:16]], guarded_ram_count=len(guarded_ram),
                     guarded_scratch=[hex(0x70000000 + o) for o in guarded_scratch[:16]],
                     guarded_scratch_count=len(guarded_scratch),
-                    external_ram={d: len(v) for d, v in sorted(external_ram.items())},
-                    external_ram_count=len(external_ram),
-                    external_scratch_count=len(external_scratch),
+                    external_ram={d: c for d, c in sorted(external_counts.items())},
+                    external_ram_count=len(external_counts),
+                    external_ram_samples={d: [hex(a) for a in v] for d, v in sorted(external_samples.items())},
+                    external_scratch_count=external_scratch_total,
+                    external_scratch_samples=[hex(0x70000000 + o) for o in external_scratch],
                     result='passed' if not guarded_ram and not guarded_scratch else 'failed')
 
 
@@ -211,6 +240,7 @@ def sequence(lib, caps, obs):
             stages[f'push-{index}-{row["tier"]}'] = result
         rows.append(dict(counter=fr['counter'], phase=fr['phase'], stages=stages,
                          external_calls=d.external_calls))
+        del d; caps.cache.clear(); gc.collect()
     return dict(frames=rows, failures=[dict(counter=c, stage=s) for c, s in failures],
                 guarded_scratch=[hex(0x70000000 + o) for o in scratch],
                 result='passed' if not failures else 'failed')
@@ -228,6 +258,7 @@ def controls(lib, caps, obs, folder):
         run = ContinuousRun(lib, caps, obs)
         run.scratch_guarded = scratch_set
         for fr in run.frames:
+            caps.cache.clear()
             if restore and fr['counter'] == target['counter']:
                 # Restore the authentic frame-start state (the coordinator-entry
                 # capture: the frame begins there, before any reconstructed write).
@@ -239,7 +270,8 @@ def controls(lib, caps, obs, folder):
             if fr['counter'] == target['counter'] and mutate:
                 run.mem.initial = bytes(run.mem.raw)
             d = run.run_frame(fr, mutate if fr['counter'] == target['counter'] else None)
-            if fr['counter'] != target['counter']: continue
+            if fr['counter'] != target['counter']:
+                del d; caps.cache.clear(); continue
             for label, snapshot in d.stage.items():
                 row = fr['captures'].get(label)
                 if row is None: continue
@@ -295,6 +327,7 @@ def measure_compiled(mlib, name, caps, obs, target, scratch_set):
     run = ContinuousRun(mlib, caps, obs)
     run.scratch_guarded = scratch_set
     for fr in run.frames:
+        caps.cache.clear()
         d = run.run_frame(fr)
         if fr['counter'] != target['counter']: continue
         for label, snapshot in d.stage.items():
