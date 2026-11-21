@@ -229,7 +229,10 @@ def controls(lib, caps, obs, folder):
         run.scratch_guarded = scratch_set
         for fr in run.frames:
             if restore and fr['counter'] == target['counter']:
-                fresh = caps.load(fr['captures']['dispatch-entry']['name'])
+                # Restore the authentic frame-start state (the coordinator-entry
+                # capture: the frame begins there, before any reconstructed write).
+                stage = fr['captures'].get('coordinator-entry') or fr['captures']['dispatch-entry']
+                fresh = caps.load(stage['name'])
                 run.mem.raw[:] = fresh.raw
                 run.mem.scratch[:] = fresh.scratch
             run.mem.watch = [(e['start'], e['end']) for e in run.external]
