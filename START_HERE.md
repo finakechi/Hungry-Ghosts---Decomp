@@ -1,5 +1,42 @@
 # Hungry Ghosts — start here
 
+## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Resume here.** M13 is complete for one original-game-observed continuous
+sequence: 22 consecutive frames (10164–10185) run from a single authenticated
+starting state — approach (6), wall contact (2), contact-turn with slides (4),
+release and braking (6), stopped (4) — with position history and the same-frame
+camera on every frame, and no captured-state restoration after the first frame.
+Local branch `research/m13-continuous-movement` (baseline main `3b52075` =
+M12 merged), HEAD `ba5b1f9`. **Not merged; no PR.** See
+[docs/M13.md](docs/M13.md).
+
+- **Reconstructed (byte-verified against ELF `a74248c5…3c61`):** the
+  coordinator `0012f850` observed prefix (the `3fa190` frame-counter increment
+  with its `bgez` wrap guard, `0031bb80` edge sync, `3f9ff8` clear, guarded
+  `46e118` increment) and the engine counter-advance body `001379f0`
+  (`46d930`/`46e110`, −1 clamp, mega-counter path). The coordinator's
+  engine-service jal targets are declared external seams; the camera-chain
+  matrix helpers `00143c60`/`00143d30`/`00143b90` run original instructions
+  through the owner bus in both M12 and M13 paths (regression test locks
+  routing).
+- **Continuity:** the original rewrites 0 player/camera struct bytes between
+  frames (11 obs2 pairs); the reconstructed frame reads none of the
+  inter-frame counters. Only the recorded pad input is supplied externally
+  between frames; everything else carries.
+- **Verification (at `ba5b1f9`):** continuous verifier 22/22 frames, 0 guarded
+  failures, every stage compared (`local/m13/continuous-verify-007.json`);
+  controls 7/7 (null clean, 6 rejected incl. a compiled defect); packet
+  221 words passes PS2DInfo `--require-all-bytes` and the project byte/JAL
+  verifier; synthetic suite 270/270; full M12 profile
+  `m12-20261121T162844Z-sf2p_o3e` 79/79 accepted, 0 reused.
+  [checks.json](evidence/m13/checks.json) holds commands, logs and verdicts.
+- **Limits:** verified for the obs3 corridor profile only; the `0012c790`
+  screen-space projection arrays and the coordinator engine services remain
+  external; the player dispatcher's non-observed states fail closed.
+
+**Next action.** Reconstruct the camera chain's screen-space projection body,
+or open M14 with the coordinator's first engine service `00198f60`.
 
 ## M12 verification automation — 2026-11-19
 

@@ -1,5 +1,65 @@
 # Hungry Ghosts — master handoff
 
+## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Resume here.** M13 is complete for the obs3 corridor sequence: 22 consecutive
+frames (10164–10185) executed from one authenticated starting state — approach
+(6), contact (2), contact-turn with wall slides (4), release/braking (6),
+stopped (4) — with position history and the same-frame camera on every frame
+and no captured-state restoration after the first frame. Branch
+`research/m13-continuous-movement`, baseline main `3b52075` (M12 merged),
+HEAD `ba5b1f9`. **Not merged; no PR.** Private Drive backup status is unrun.
+
+**Newly reconstructed (byte-verified against ELF `a74248c5…3c61`):** the
+coordinator `0012f850` observed prefix — the `3fa190` frame-counter increment
+with its `bgez` wrap guard (semantics confirmed live by obs3 coordinator stops),
+the `0031bb80` edge-counter sync, the `3f9ff8` clear and the guarded `46e118`
+increment — and the engine counter-advance body `001379f0` of `00137890`
+(`46d930`/`46e110` increments, −1 clamp, 108000-frame mega-counter path).
+Dispatch contract: the coordinator's engine-service jal targets are declared
+external seams (0 reconstructed-domain bytes in the inter-frame evidence);
+the camera-chain matrix helpers `00143c60`/`00143d30`/`00143b90` execute
+original instructions through the owner bus in both the M12 and the continuous
+paths (`test_player_continuous.py::test_frame_dispatch_routes_camera_helpers_to_interpreter`
+locks the routing).
+
+**Continuity:** inter-frame diffing of the original obs2 pairs (11 pairs,
+frames 1209–1220) shows 0 player/camera struct bytes rewritten between frames —
+only frame counters (+1), pad input on input-change frames, and external engine
+domains. The read-set instrumentation of one reconstructed frame confirms the
+path reads none of the inter-frame counters. Between frames only the recorded
+pad-area input is supplied externally; every other byte carries from the
+preceding reconstructed frame.
+
+**Verification (2026-11-21, at `ba5b1f9`):** continuous verifier
+`local/m13/continuous-verify-007.json` — 22/22 frames, 0 guarded failures;
+every stage compared per frame (coordinator-entry/counter, dispatch → grounded
+chain, history-copy, camera-entry/return at the `0013b6e0` seam, push stops);
+236 guarded scratch offsets and 169 render-external offsets computed from the
+original's own captures. Controls 7/7: null capture-restoration clean;
+corrupt-player, corrupt-camera, omitted-counter-advance, omitted-frame-advance,
+wrong-input-stick and the compiled wrong-gravity-step defect rejected. Packet:
+3 routines, 221 words, PS2DInfo `--require-all-bytes` and the project byte/JAL
+verifier pass. Synthetic suite 270/270. Full M12 regression profile
+`m12-20261121T162844Z-sf2p_o3e`: 79/79 accepted, 0 reused.
+See [docs/M13.md](docs/M13.md) and [checks.json](evidence/m13/checks.json).
+
+**Remaining blockers:** the `0012c790`-body screen-space projection arrays
+(`0x7c0–0x7ff`, `0x900`, `0x940`), the constant block `0x710..0x72f` and
+`0xba0..0xbaf` are render-facing external at every stage (all direct writers
+`jalr`-indirect; the deeper chain is not modeled). The coordinator's engine
+services remain external seams. Ghidra was not installed on MainPC; packet
+rows were synthesized from the authenticated ELF with PS2DInfo byte
+verification.
+
+**Required private inputs:** `local/m13/captures` (264 native obs3 stops),
+save-state slot 1 (M12 identity), `local/extracted/japan/SCPS_150.46`, PCSX2
+v2.8.2 AppImage `0c46bb6a…abea`, BIOS `c641edbd…3c4a`.
+
+**Next action.** Reconstruct the camera chain's screen-space projection body —
+the largest remaining divergence domain inside the reconstructed frame — or
+open M14 with the coordinator's first engine service `00198f60` to reclaim the
+declared-external seams.
 
 ## M12 verification automation — 2026-11-19
 

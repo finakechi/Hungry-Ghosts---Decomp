@@ -1,0 +1,231 @@
+{
+ "schema": "hg-m13-checks/v1",
+ "recorded_utc": "2026-11-21T17:45:00+00:00",
+ "result": "PASSED",
+ "baseline": "3b52075176f4a9cae1accba8a230167e0c7ef194",
+ "verified_commit": "ba5b1f910d371f8d2bd004e8faf8ffee952abdd7",
+ "source_sha256": {
+  "src/resource_loader.c": "1b328ab22c868debc9f02829f3015e0ec940274e04f742ab981641d57994d5a6",
+  "src/resource_loader.h": "9945d2a1da74e0a7384fd99ed995748bdb2cf59e2d5722746fe371d206736940"
+ },
+ "regression_inventory": {
+  "run": "m12-20261121T162844Z-sf2p_o3e",
+  "profile": "full",
+  "accepted": 79,
+  "reused": 0,
+  "executed": 79,
+  "passed": 74,
+  "expected-rejection": 5,
+  "completed_utc": "2026-11-21T17:17:04Z",
+  "summary_sha256": "a06da90c9314dcd8ddff26cdb78e7162b8cfae1c8484538b1e559574e3e3783d"
+ },
+ "checks": [
+  {
+   "command": [
+    "python",
+    "-B",
+    "-u",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+   ],
+   "origin": "m13-synthetic",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "log": "local/m13/logs/synthetic-final.log",
+   "log_sha256": "93c1f879beb48c557b0320b7a93937f259f12f34bce0a696cf784986f1b42858",
+   "note": "270/270 tests at the verified commit, including the dispatch-routing regression and M13 frame-advance contracts."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "tools/hg_m13_evidence.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--output",
+    "<fresh>/functions.json"
+   ],
+   "origin": "m13-packet",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "log": "local/m13/logs/packet-regen-final.log",
+   "log_sha256": "f97b7fc52ae34f0714b6bf30fc441d846aaf4db735066b9f087781f346c8d2af",
+   "note": "Regenerated fresh output is byte-identical (sha256 a4d5dac1beeae91901691dc9f8153981c4b0679bd9287358bcfec182f70c9274) to the committed analysis/player_frame/functions.json: 3 routines, 221 words. Rows synthesized from the authenticated ELF; Ghidra was not installed on MainPC for this session."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "$HG_PS2DINFO/tools/validate_evidence.py",
+    "analysis/player_frame/functions.json"
+   ],
+   "origin": "m13-packet-ps2dinfo",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "log": "local/m13/logs/packet-validate-final.log",
+   "log_sha256": "ff29b7ce325f5566b410f86434a7aa5925be4b54e35c97fef93799831d81e02a",
+   "note": "Structurally valid (PS2DInfo evidence schema)."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "$HG_PS2DINFO/tools/verify_elf_evidence.py",
+    "--require-all-bytes",
+    "$HG_ELF",
+    "analysis/player_frame/functions.json"
+   ],
+   "origin": "m13-packet-bytes",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "log": "local/m13/logs/packet-bytes-final.log",
+   "log_sha256": "646141d229d6372aa82f10d0e966e03179d261832781a5bb4e99c59501e0642e",
+   "note": "221/221 instructions verified against ELF bytes, 0 unknown, segments 1 (file-backed PT_LOAD scope only)."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "tools/verify_elf_evidence.py",
+    "--elf",
+    "$HG_ELF",
+    "--record",
+    "analysis/player_frame/functions.json"
+   ],
+   "origin": "m13-packet-project",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "log": "local/m13/logs/packet-project-final.log",
+   "log_sha256": "14712ca8afb926db1b317a14e26f76e57355ddc37403b78286d17a4e732eea1c",
+   "note": "3 function listings match original ELF bytes and JAL targets."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "local/m13/make-observation3.py",
+    "obs3",
+    "<fresh>/continuous-observation.json"
+   ],
+   "origin": "m13-observation",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "artifact": "evidence/m13/continuous-observation.json",
+   "artifact_sha256": "1fd97d01a7a0cbbe455741f74ac4987173b67058abde8c1214a8734d24ef7763",
+   "note": "Run obs3 bound deterministically: 264 captures, 22 complete frames 10164-10185, 0 unbound stops, 1 partial frame (10163) excluded. ELF a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61, ISO 8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e, PCSX2 v2.8.2 AppImage 0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea, BIOS c641edbd8fcc1ef363639710795a670850b4549efa0de7dbadabc2b6eb363c4a."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "tools/verify_player_continuous.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture-dir",
+    "local/m13/captures",
+    "--output",
+    "<fresh>/continuous.json"
+   ],
+   "origin": "m13-continuous",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "artifact": "local/m13/continuous-verify-007.json",
+   "artifact_sha256": "d09c7ddf94e7e39b9356e2aed1a399117d28504e128676102e4b92dde058603e",
+   "note": "22/22 frames passed with 0 guarded failures (schema hg-player-continuous/v1). Every stage compared per frame: coordinator-entry/counter, dispatch through grounded chain, history-copy, camera-entry/return (snapshotted at the 0013b6e0 seam), push stops. 236 guarded scratch offsets incl. the camera-return intersection; 169 render-external offsets computed from the original's own captures."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "tools/verify_player_continuous.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture-dir",
+    "local/m13/captures",
+    "--negative-controls",
+    "--output",
+    "<fresh>/continuous-controls.json"
+   ],
+   "origin": "m13-continuous-controls",
+   "expected": "mixed",
+   "result": "PASSED",
+   "returncode": 0,
+   "artifact": "local/m13/continuous-verify-007-controls/",
+   "note": "7/7: null-capture-restoration clean; corrupt-player-carry, corrupt-camera-carry, omitted-counter-advance, omitted-frame-advance, wrong-input-stick and compiled wrong-gravity-step all rejected."
+  },
+  {
+   "command": [
+    "python",
+    "-B",
+    "tools/hg_verify.py",
+    "run",
+    "--profile",
+    "full"
+   ],
+   "origin": "m12-regression-gate",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "artifact": "local/verification/m12-20261121T162844Z-sf2p_o3e/summary.json",
+   "artifact_sha256": "a06da90c9314dcd8ddff26cdb78e7162b8cfae1c8484538b1e559574e3e3783d",
+   "note": "Full M12 regression profile at the verified commit: 79/79 accepted, 0 reused. identity.hungry_ghosts.revision ba5b1f910d371f8d2bd004e8faf8ffee952abdd7, source_sha256 a481ac3f9fa0f30c32f37afbcd3d9c262815cc42ea61de24fbef5016c3539f03."
+  }
+ ],
+ "negative_control_sources": [
+  {
+   "control": "wrong-gravity-step",
+   "source": "local/m13/continuous-verify-007-controls/wrong-gravity-step.c",
+   "kind": "compiled-defect",
+   "note": "Compiled C replacement for hg_player_grounded; rejected by the continuous verifier."
+  }
+ ],
+ "additional_results": [
+  {
+   "check": "Inter-frame write evidence (offline, obs2 pairs 1209-1220)",
+   "result": "PASSED",
+   "reason": "0 player/camera struct bytes rewritten between original frames; only frame counters (+1), pad input on input-change frames, and external engine domains. Instrumented read-set of one reconstructed frame reads none of the inter-frame counters."
+  },
+  {
+   "check": "Coordinator 0012f850 dispatch contract disassembly",
+   "result": "PASSED",
+   "reason": "Authenticated ELF stream: jal targets 00198f60/0017f6d0/0017f2d0 (entry window), dispatcher 00158560, camera 0012c790, tail 0013b6e0/001430a0/00143100/0012bc70/0018c520/00143150/001431a0/0025c170/00182480/0013ce80/00137890/00189be0; matrix helpers 00143c60/00143d30/00143b90 absent from the coordinator and routed to the interpreter. See local/m13/coordinator-12f850.dump.txt."
+  },
+  {
+   "check": "Observed 3fa190 frame-counter semantics",
+   "result": "PASSED",
+   "reason": "obs3 coordinator-entry captures show the pre-frame value; coordinator-counter stops show +1 kept (the bgez guard does not reset it); the C hg_frame_advance matches byte-for-byte."
+  }
+ ],
+ "limitations": [
+  "Public command arguments use owner-private $HG_* substitutions; private logs and captures remain outside Git.",
+  "The continuous sequence is verified for the obs3 corridor profile only (22 frames 10164-10185: 6 approach, 2 contact, 4 contact-turn, 6 release, 4 stopped). No other route, save state or input sequence is claimed.",
+  "The coordinator's engine-service calls remain declared external host seams; their memory effects land in the enumerated external domains.",
+  "The original 0012c790-body screen-space projection arrays (0x7c0-0x7ff, 0x900, 0x940), the constant render block 0x710..0x72f and 0xba0..0xbaf are render-facing external at every stage; every direct writer is jalr-indirect and the composition does not model the deeper chain. The camera state 0x3f9860 and every scratch offset the reconstructed path writes remain guarded.",
+  "Frame 10163 was a partial capture and is excluded from the 22-frame sequence.",
+  "Ghidra was not installed on MainPC for this session; packet rows were synthesized from the authenticated ELF with PS2DInfo byte verification (see the m13-packet check)."
+ ],
+ "preserved_failed_attempts": [
+  {
+   "result": "FAILED",
+   "check": "Unconditional camera-return render stores (0xba0.w = 127.0 and the 0x710..0x72f constant block)",
+   "reason": "Failed the M12 turn-camera instruction differential: the original 0012c790 stream contains no stores to either region. Reverted in ba5b1f9; both regions are declared render-facing external at every stage."
+  }
+ ]
+}
