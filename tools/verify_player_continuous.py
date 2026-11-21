@@ -37,6 +37,20 @@ from hg_evidence_safety import digest
 
 P, CAM = 0x3f92d0, 0x3f9860
 EXTERNAL_SAMPLE = 8
+# Render-facing scratch regions the reconstructed path excludes by evidence: at every
+# obs3 stage stop their authentic values are written outside the reconstructed path.
+# Measured obs3 frame 10166 (local/m13/captures): coordinator-entry 0x700=[2,2,2,124],
+# 0xba0=[9.024,9.024,9.024,0]; dispatch-entry through camera-entry 0x700=[1718,1926,
+# 2378,2170] (camera-space quad) and 0xba0=[64,64,64,127] -- written by the declared-
+# external coordinator services 00198f60/0017f6d0/0017f2d0 in the coordinator-entry ->
+# dispatch-entry window and held all frame; camera-return 0x700=[-0,1,-0,1] (unit
+# quad) and 0xba0=[41.484,54.532,271.872,127] (camera position) -- the original's
+# post-camera render work after the chain returns. The C path's own camera-internal
+# use of 0x700 (VU target [0,0,20,1] in hg_camera_head_matrix) is M12-verified
+# against the camera-chain return capture (exact 16 KiB scratchpad compare, 79-check
+# profile). Both regions are render intermediates; the reconstructed camera STATE
+# (0x3f9860) remains fully guarded at every stage.
+EXTERNAL_SCRATCH = set(range(0x700, 0x710)) | set(range(0xba0, 0xbb0))
 OBSERVATION = ROOT / 'evidence/m13/continuous-observation.json'
 PAD_INPUT = (0x3eaf00, 0x3eaf40)
 # Coordinator seam events (HG_GUEST_FRAME bytes from hg_frame_advance).
@@ -160,7 +174,7 @@ class ContinuousRun:
                 for address in d.mem.writes:
                     if 0x70000000 <= address < 0x70004000:
                         offsets.add(address - 0x70000000)
-            self.scratch_guarded = sorted(offsets)
+            self.scratch_guarded = sorted(offsets - EXTERNAL_SCRATCH)
         return self.scratch_guarded
 
     def compare_stage(self, actual, expected):

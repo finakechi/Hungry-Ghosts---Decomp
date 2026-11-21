@@ -2278,10 +2278,19 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     HGProcessing *p=user;
     if(pc==0x31bb80) {hg_frame_edge_sync(&p->env);return 0;}
     if(pc==0x12f850) {hg_frame_advance(&p->env);return 0;}
+    /* Coordinator 0012f850 engine-service calls (authenticated jal targets
+     * 0012f8a8..0012f92c plus the counter routine 00137890), declared external
+     * on inter-frame write evidence. The matrix helpers 00143c60/00143d30/
+     * 00143b90 are NOT coordinator calls: they are the camera-chain rotations
+     * reached from 0012bd00/0012c790 (hg_camera_head_matrix/hg_camera_update)
+     * and must execute their original instructions, exactly as in the M12
+     * grounded path (they fall through to the owner bus, which interprets
+     * them with FP_SEAMS operand placement). Externalizing them left the head
+     * matrix identity and diverged the camera struct from the first frame. */
     if(pc==0x198f60 || pc==0x17f6d0 || pc==0x17f2d0 || pc==0x13b6e0 ||
        pc==0x1430a0 || pc==0x143100 || pc==0x12bc70 || pc==0x18c520 ||
        pc==0x143150 || pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
-       pc==0x13ce80 || pc==0x137890 || pc==0x143d30 || pc==0x143c60 || pc==0x143b90) {
+       pc==0x13ce80 || pc==0x137890) {
         p->outer->call(p->outer->user,HG_EXTERNAL_CALL,pc,0,0,0);
         return 0;
     }

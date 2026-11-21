@@ -134,6 +134,33 @@ class ContinuousTests(unittest.TestCase):
         f(C.byref(d.env))
         self.assertEqual(d.mem.load(0x3fa190), 6)
 
+    def test_frame_dispatch_routes_camera_helpers_to_interpreter(self):
+        """M13 dispatch contract: the camera-chain matrix helpers 00143c60/00143d30/
+        00143b90 (reached from 0012bd00/0012c790) are NOT coordinator services -- they
+        forward to the owner bus for original-instruction execution, exactly as in the
+        M12 grounded path. Only the authenticated 0012f850 coordinator jal targets
+        (0012f8a8..0012f92c) are declared external. Externalizing the helpers left the
+        head matrix identity and diverged the camera struct from the first continuous
+        frame."""
+        d = FrameDriver()
+        d.mem.store(0x3f92d0 + 0x18, 1, 1)  # player state byte: observed active path
+        f = self.lib.hg_player_frame_continuous
+        f.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; f.restype = None
+        f(C.byref(d.env), 0x1ff8000)
+        self.assertEqual(d.frames, [(0x50, 1), (0x50, 0)])  # no faults
+        for pc in (0x143c60, 0x143d30, 0x143b90):
+            self.assertIn(pc, d.calls)
+            self.assertNotIn(pc, d.externals)
+        coordinator = (0x198f60, 0x17f6d0, 0x17f2d0, 0x13b6e0, 0x1430a0, 0x143100,
+                       0x12bc70, 0x18c520, 0x143150, 0x1431a0, 0x25c170, 0x182480,
+                       0x13ce80)
+        self.assertEqual(d.externals, [0x198f60, 0x17f6d0, 0x17f2d0, 0x13b6e0,
+                                       0x1430a0, 0x143100, 0x12bc70, 0x18c520,
+                                       0x143150, 0x1431a0, 0x25c170, 0x182480,
+                                       0x13ce80])
+        for pc in coordinator:
+            self.assertNotIn(pc, d.calls)
+
 
 if __name__ == '__main__':
     unittest.main()
