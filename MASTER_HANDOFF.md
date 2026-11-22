@@ -1,18 +1,109 @@
 # Hungry Ghosts — master handoff
 
+## M15 connected camera projection and render-node state — 2026-11-22
+
+**Resume here.** Acceptance criteria met on the obs3 corridor. The work is
+uncommitted in worktree `decomp-m15`, branch `research/m15-camera-projection`,
+based on `main` = `535e43b691b9296912a06ba40f3450a6e71431da`. No remote branch,
+no PR. Identities: C source `cc38d26e…9017`, library `8459a230…6d4b`.
+Packets:
+- `analysis/render_nodes/functions.json` `a39b7a85…bed7` (1,527 instructions);
+- `analysis/model_draw/functions.json` `6e0efd59…5373` (2,574 instructions);
+- both checked with PS2DInfo `--require-all-bytes`.
+
+Full record: [docs/M15.md](docs/M15.md), [results.json](evidence/m15/results.json),
+[checks.json](evidence/m15/checks.json).
+
+**Attribution (original bytes + owner-local runtime).** After the camera at
+`0012f8cc`, the coordinator calls `0013b6e0`, `001430a0`, `00143100`,
+`0012bc70` (`0012f8f0`), `0018c520`, `00143150` (`0012f900`), `001431a0`,
+`0025c170`, `00182480`, `0013ce80` and `00137890`. Last-writer attribution
+from each native camera-return to the next coordinator-entry gives:
+- `0012bc70` (player model draw): `0x500–0x53f`, `0x700–0x72f` and `0xc80–0xd1f`,
+  through `00129020` and `00129e40`;
+- `00143150`: `0x780–0x7ff`, `0x900–0x94f` and `0xb80–0xbef`, through
+  `0019c8a0` and `002f7830`;
+- the remaining bytes: `0013ce80` and `0013b6e0`.
+
+The camera chain itself changes only `0x700` (14 bytes), `0x7b0` (12) and
+`0xba0` (10), all reproduced. M13's "`jalr`-indirect inside `0012c790`"
+statement is refuted. The brief's candidates `00138ed8`, `0015c580`,
+`0017fb58`, `00181874` and `0012ab80` hold static stores only, and neither
+target-range last writer reaches them.
+
+**Reconstruction.**
+- `hg_render_node_list`: service marks and the 0x20 frame around M8
+  `hg_actor_update_type2`.
+- `hg_camera_anchor_node` (`0019c8a0`, state 1).
+- `hg_camera_particle_field` (`002f7830`, state 1, variant 0).
+- `hg_player_model_draw` (`0012bc70` → `00123ee0` → `00124010` type 3 →
+  `00125f30` → `00129020` light mode 2.0 / `00129e40` shadow).
+- Host contracts: `HG_CALL_WIDE_A3` (`0xfffffff4`, 64-bit `a3` for `0014d4f0`
+  with tags `0x20064405dd413200` and `0x20072a2599423880`), and
+  `HG_GUEST_FRAME` now returns the entered frame's guest `sp` for the
+  `sp+70`/`sp+30` blocks.
+- `ee_subset` gains `div`/`divu` and VU0 `vmax`/`vmini` (bc and full forms).
+
+Out-of-domain paths domain-fault (0x70, 0x72, 0x74–0x78). The remaining
+callees and leaves run original instructions.
+
+**Integration.** `hg_player_frame_continuous` calls `0012bc70` and `00143150`
+at their original positions on the carried bus. The verifier's same-input
+checkpoints (`camera-chain`, `model-draw`, `render-node-tail`) compare write
+sets, values, all RAM below the stack and the full scratchpad. The
+inter-frame ownership oracle runs original `0012bc70` then `00143150` from
+the native camera-return. Native-stop exclusions (98 bytes) cover only later
+unreconstructed writers. The unreconstructed `0013ce80` RNG draws are
+measured from the native LCG states and replayed through original `0011ad58`.
+
+**Verification.**
+- Continuous: 22/22 frames, 386 stage comparisons. 26 controls: 24 defects
+  rejected (14 M15: arithmetic, missing writes, ordering, unconditional
+  stores, carry, RNG) and 2 null controls clean.
+- M14 on the final source: native 22/22 (9/9 controls), contracts 22/22
+  (682 calls), counter guard.
+- Synthetic: 298 tests, including the render-node and model-draw
+  differentials (exact original coverage, fail-closed paths, ten in-entry
+  mutants rejected).
+- Sanitizers: ASan+UBSan C harness; 43 tests against a UBSan library.
+- Historical: `m12-20261122T155330Z-veza3mwe` 79/79 accepted (74 passed, 5 expected rejections), 0 reused, after an M11 control-anchor fix (see docs/M15.md).
+
+**Limits.**
+- Observed corridor and observed states/modes only.
+- Render-stream packet bytes are compared same-input only.
+- The light-matrix bytes `0xc88–0xd1b` are verified at the `model-draw`
+  checkpoint and excluded at native stops while the later writer's value is
+  live.
+- GS timing, DMA and the unreconstructed tail services are external.
+- No byte-match, equivalence, recompilation or port claim.
+
+**Next action.** Make `0013ce80` interpreter-executable (MMI `div1` at
+`00153844` first) and reconstruct it.
+
+**Publication.** The M13/M14 post-merge reconciliation (README, docs/M14.md,
+both handoffs) from `decomp-m14-handoff` is carried here unchanged; that
+worktree was not modified. Commit, push, PR and backup all await owner approval.
+
 ## M14 continuous pre-dispatch engine services — 2026-11-21
 
-**Resume here.** M14 acceptance passed and the work is **uncommitted**. It sits
-in the Duo worktree on branch `duo/hungry-ghosts-m14-continuous-pre-r2z3n`,
-based on the local-only M13 HEAD `ec9f479`. `origin/main` is `3b52075`, and
-there is no M14 PR. The final C is `c6d6293d…bf83`. The repaired 10164–10165
-transition and all 22 uninterrupted frames pass the strict pre-dispatch
-comparison. All 320 checkpoints pass.
-The observed `0012f8a8..0012f8c4` window runs
-before player dispatch in the carried M13 frame. `00198f60` is C
-(`hg_pre_dispatch_service`); `0017f6d0` (`a0 = 003f9e30`) and `0017f2d0`
-(`a0 = 0`) run original instructions. A mandatory `00158560` pre-dispatch
-checkpoint is compared each frame.
+**Resume here (publication update, 2026-11-22).** M13 merged into `main`
+through [PR #16](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/16)
+(`8295c622`), and M14 was integrated into `main` via
+[PR #18](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/18)
+(`535e43b691b9296912a06ba40f3450a6e71431da`) after its original
+stacked [PR #17](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/17)
+merged into the M13 branch. PR #18 synthetic CI passed. The original M14
+commit is `9a12391`; CI-only receipt reuse fix `e8010b1` came later. The
+original acceptance was measured on C source `c6d6293d…bf83`, not on the
+merge commit; its receipts remain historical and have not been rewritten.
+
+M14 covers the obs3 corridor's 22 consecutive frames (10164–10185), with
+320/320 checkpoints, including the repaired render-bank and queue handoff at
+10165. The observed `0012f8a8..0012f8c4` service window precedes player
+dispatch on the carried M13 bus. `00198f60` is bounded C
+(`hg_pre_dispatch_service`), while `0017f6d0` (`a0 = 003f9e30`) and
+`0017f2d0` (`a0 = 0`) execute original instructions. Each frame checks
+memory before dispatcher `00158560`.
 
 **Review findings and corrections** (each checked against the ELF
 `a74248c5…3c61`):
@@ -90,10 +181,17 @@ host-modeled alternating GS field. General GS timing, DMA submission and the
 remaining post-camera services stay external. No byte matching, full-game
 equivalence, native port or static recompilation is claimed.
 
-**Next action.** The owner reviews the diff and decides on a local commit.
-Publishing requires M13 to be published first.
+**Next action.** Compare an original-byte and runtime investigation of
+the remaining indirect camera screen-space writers against the remaining
+post-camera service boundaries, then select one bounded M15 research
+objective. Neither a final technical route nor an M15 milestone is
+already selected.
 
 ## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Publication note (2026-11-22):** M13 was merged through PR #16,
+merge commit `8295c622`. The branch status and next-action text below
+are preserved as a dated, pre-merge historical record.
 
 **Resume here.** M13 is complete for the obs3 corridor sequence: 22 consecutive
 frames (10164–10185) executed from one authenticated starting state — approach
@@ -101,7 +199,7 @@ frames (10164–10185) executed from one authenticated starting state — approa
 stopped (4) — with position history and the same-frame camera on every frame
 and no captured-state restoration after the first frame. Branch
 `research/m13-continuous-movement`, baseline main `3b52075` (M12 merged),
-HEAD `ba5b1f9`. **Not merged; no PR.** Private Drive backup status is unrun.
+HEAD `ba5b1f9`. **Historical pre-merge status; M13 later merged via PR #16.** Private Drive backup status is unrun.
 
 **Newly reconstructed (byte-verified against ELF `a74248c5…3c61`):** the
 coordinator `0012f850` observed prefix — the `3fa190` frame-counter increment

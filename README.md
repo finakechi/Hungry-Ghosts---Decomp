@@ -43,6 +43,16 @@ merged through [PR #15](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull
 The owner-local verification runner covers all 79 historical checks.
 See the [M12 command guide](docs/M12.md#verification-automation).
 
+M13 connects 22 consecutive observed frames of player movement,
+collision response, history and camera state; merged through
+[PR #16](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/16).
+See [docs/M13.md](docs/M13.md).
+M14 adds the pre-dispatch service and render-bank handoff to that continuous
+sequence, with 320 verified checkpoints and bounded original-game evidence.
+Its original stacked PR #17 was integrated into `main` through
+[PR #18](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/18).
+See [docs/M14.md](docs/M14.md) and [evidence/m14/](evidence/m14/).
+
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 
 Private recovery tooling and verified GitHub integration are documented in

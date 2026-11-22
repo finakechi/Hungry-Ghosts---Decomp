@@ -35,47 +35,76 @@ from verify_resource_loader import EXPECTED, shared_module
 from resource_harness import ResourceEnv, library
 from hg_evidence_safety import digest
 import predispatch_differential as PD
+import render_node_differential as RN
 
 P, CAM = 0x3f92d0, 0x3f9860
 EXTERNAL_SAMPLE = 8
-def render_external_scratch(caps, obs):
-    """Scratch offsets the ORIGINAL itself rewrites outside the reconstructed path.
+# M15 render nodes reached by 00143150 (four 0x110-byte records at 00528430).
+NODE_RANGE = (0x528430, 0x528870)
+COORDINATOR_STAGES = ('coordinator-entry', 'coordinator-counter')
 
-    Computed from the authenticated observation captures, not hardcoded: the union
-    over consecutive frame pairs of (a) offsets changed between frame N's
-    camera-return and frame N+1's coordinator-entry (inter-frame render work after
-    the coordinator returns) and (b) offsets changed between coordinator-entry and
-    dispatch-entry of the same frame (the newly connected pre-dispatch services).
-    Connected writes are re-guarded at the pre-dispatch checkpoint. Measured obs3 examples: 0x700=[1718,1926,2378,2170]
-    and 0xba0=[64,64,64,127] at every dispatch-entry..camera-entry stop; 0x500 head
-    matrix rewritten inter-frame (10164 camera-return [0.699,0,0.715,0] -> 10165
-    coordinator-entry [4.2,0,0,0]); 0x7b0 screen-space pair 0,0 -> 41.916,13.167.
 
-    At the camera-return stage the offsets the reconstructed path actually WRITES
-    are guarded and must reproduce the original's post-chain values (they do:
-    0 guarded differences). The remaining set is never written by the C
-    composition and stays classified external at every stage, with the
-    authenticated evidence: the 0012c790 instruction stream itself contains no
-    stores to them, and every direct writer (00138ed8, 0015c580, 0017fb58,
-    00181874, 0012ab80) is jalr-indirect -- they are produced deeper in the
-    chain through paths the composition does not model. They include the
-    screen-space projection arrays 0x7c0-0x7ff (quad corners -6.7/65.3/28.94541
-    with camera-tracking depth, +72 offsets), 0x900 (normalized screen
-    coordinate, linear in the eye position), 0x940 (constant 165.8/180/495/1),
-    and the constant render block 0x710..0x72f (0,768,960,0,128,128,128,12)
-    with 0xba0..0xbaf (camera position, w=127.0) at every obs3 camera-return
-    stop. The reconstructed camera STATE (0x3f9860) and all RAM guarded
-    domains are compared at every stage."""
+def tail_oracle(caps, fr):
+    """Original 0012bc70 then 00143150 from fr's native camera-return capture (cached).
+
+    The coordinator calls 0012bc70 at 0012f8f0 and 00143150 at 0012f900, after
+    0013b6e0, 001430a0 and 00143100 and around 0018c520. Running exactly these
+    two reconstructed services from the camera-return capture is an oracle for
+    the bytes they produce: comparing its result with the next native
+    coordinator-entry separates those bytes from the inter-frame writes of
+    every other, unreconstructed service."""
+    if not hasattr(caps, 'tail_oracles'):
+        caps.tail_oracles = {}
+    key = fr['counter']
+    if key not in caps.tail_oracles:
+        native = caps.load(fr['captures']['camera-return']['name'])
+        row = RN.run_original(native, (RN.MODEL, RN.TAIL), caps.elfdata, caps.segments)
+        if row['identity_mismatches']:
+            raise ValueError('Model-draw/render-node oracle executed non-ELF instructions')
+        caps.tail_oracles[key] = dict(scratch=bytes(row['memory'].scratch),
+                                      writes=row['writes'], steps=row['steps'],
+                                      rng_calls=row['rng_calls'],
+                                      rng_after=RN.rng_state(row['memory']),
+                                      rng_before=RN.rng_state(native),
+                                      node=bytes(row['memory'].raw[NODE_RANGE[0]:NODE_RANGE[1]]))
+    return caps.tail_oracles[key]
+
+
+def inter_frame_ownership(caps, obs):
+    """Data-driven inter-frame ownership from the captures and the oracle.
+
+    external_scratch: scratch offsets whose next coordinator-entry value is
+    not the value original 00143150 leaves (other tail services 0013b6e0,
+    0012bc70, 0013ce80 ... and the main loop wrote them). These, and only
+    these, are excluded at the coordinator stages, and afterwards until
+    reconstructed code (the M14 window or later frame code) rewrites them.
+
+    rng_external: per frame, 0011ad58 draws made after 00143150 by
+    unreconstructed code (the LCG distance from camera-return to the next
+    coordinator-entry minus the oracle's own draws). The native draws of
+    0019c8a0 at 10172 come from the camera-return state with zero prior
+    steps, so the external consumer runs after 00143150. The host replays
+    these draws through the original 0011ad58 at the 0013ce80 seam.
+
+    node_unexplained must be zero: every inter-frame change of the four node
+    records is produced by 00143150, so the records are guarded at every stage."""
     frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
-    changed = set()
+    external, rng_external, unexplained = set(), {}, 0
     for fr, nxt in zip(frames, frames[1:]):
-        ret = caps.load(fr['captures']['camera-return']['name'])
+        oracle = tail_oracle(caps, fr)
         entry = caps.load(nxt['captures']['coordinator-entry']['name'])
-        disp = caps.load(nxt['captures']['dispatch-entry']['name'])
-        for off in range(0x4000):
-            if ret.scratch[off] != entry.scratch[off] or entry.scratch[off] != disp.scratch[off]:
-                changed.add(off)
-    return sorted(changed)
+        external.update(o for o in range(0x4000) if entry.scratch[o] != oracle['scratch'][o])
+        node = entry.raw[NODE_RANGE[0]:NODE_RANGE[1]]
+        unexplained += sum(x != y for x, y in zip(node, oracle['node']))
+        steps = RN.lcg_distance(oracle['rng_before'], RN.rng_state(entry)) - oracle['rng_calls']
+        if steps < 0 or RN.lcg_distance(oracle['rng_after'], RN.rng_state(entry)) != steps:
+            raise ValueError(f'RNG draws at {fr["counter"]} precede 00143150')
+        rng_external[fr['counter']] = steps
+    caps.cache.clear()
+    return dict(external_scratch=sorted(external), rng_external=rng_external,
+                node_unexplained=unexplained)
+
+
 OBSERVATION = ROOT / 'evidence/m13/continuous-observation.json'
 PAD_INPUT = (0x3eaf00, 0x3eaf40)
 # Coordinator seam events (HG_GUEST_FRAME bytes from hg_frame_advance).
@@ -126,11 +155,13 @@ COMPILED_SERVICE_CONTROLS = ('store-width-pre-fix', 'phase-step-sign', 't1-omitt
 RENDER_HANDOFF_CONTROL = 'omitted-packet-bank-switch'
 VERIFICATION_SOURCES = ('src/resource_loader.c', 'src/resource_loader.h',
                         'tools/verify_player_continuous.py', 'tools/predispatch_differential.py',
+                        'tools/render_node_differential.py',
                         'tools/verify_player_connected_runtime.py', 'tools/ee_subset.py')
+M15_COMPILED_CONTROLS = RN.MUTANTS
 
 
-def in_guarded(address):
-    for start, end in GUARDED_RANGES:
+def in_guarded(address, ranges=GUARDED_RANGES):
+    for start, end in ranges:
         if start <= address < end: return True
     return False
 
@@ -155,7 +186,12 @@ def render_handoff(actual, expected):
 
 
 class ContinuousDriver(G.GroundedDriver):
-    """GroundedDriver plus coordinator seam snapshots and the external-call log."""
+    """GroundedDriver plus coordinator seam snapshots and the external-call log.
+
+    M15: the 00143150 service marks bracket the C render-node list (snapshot
+    and write set for the same-input oracle); the camera chain is bracketed
+    from its first call 0015e1d0 to the 0013b6e0 seam. rng_external original
+    0011ad58 draws are replayed at the 0013ce80 seam (after 00143150)."""
     def __init__(self, mem, elfdata, segments, status):
         super().__init__(mem, elfdata, segments, status)
         self.external_calls = []
@@ -164,6 +200,13 @@ class ContinuousDriver(G.GroundedDriver):
         self.window_writes = None
         self._frame_writes = None
         self.frame_scratch_writes = None
+        self.tail_before = self.tail_after = self.tail_writes = None
+        self.model_before = self.model_after = self.model_writes = None
+        self._tail_outer = self._chain_outer = None
+        self.chain_writes = None
+        self.rng_external = 0
+        self.rng_replayed = 0
+        self.in_tail = False
 
     def snap(self):
         return super().snap()
@@ -176,7 +219,25 @@ class ContinuousDriver(G.GroundedDriver):
                                          if 0x70000000 <= addr < 0x70004000}
             return 1 - a
         if pc == 0xfffffff6:
-            self.service_c.append((a,b));return 0
+            self.service_c.append((a,b))
+            if a in (RN.TAIL, RN.MODEL) and b == 1:
+                if self.in_tail: raise ValueError('Nested M15 service marks')
+                self.in_tail = True
+                before = self.snap()
+                self._tail_outer, self.mem.writes = self.mem.writes, set()
+                if a == RN.TAIL: self.tail_before = before
+                else: self.model_before = before
+            elif a in (RN.TAIL, RN.MODEL) and b == 0:
+                writes = self.mem.writes
+                self.mem.writes = self._tail_outer | writes
+                if a == RN.TAIL: self.tail_writes, self.tail_after = writes, self.snap()
+                else: self.model_writes, self.model_after = writes, self.snap()
+                self.in_tail = False
+            return 0
+        if pc == V.GUEST_FRAME and self.in_tail:
+            # The 00143150 (0x20) and 0012bc70-chain frames must not alias the
+            # 0015fc10 (0x20) grounded-entry/return stage keys of GroundedDriver.
+            return super(G.GroundedDriver, self).external(pc, a, b, c, d)
         if pc == 0xfffffff7:
             # Writes between coordinator-counter and here are the window's.
             self.window_writes = self.mem.writes
@@ -188,6 +249,8 @@ class ContinuousDriver(G.GroundedDriver):
                 self._frame_writes, self.mem.writes = self.mem.writes, set()
             if (a, b) == (0x50, 1): self.coordinator_entry = self.stage['coordinator-entry']
             return 0
+        if pc == 0x15e1d0 and self.camera_entry is None:
+            self._chain_outer, self.mem.writes = self.mem.writes, set()
         if pc == 0xfffffff3:
             self.external_calls.append(hex(a))
             # 0013b6e0 is the first coordinator tail service after the camera chain
@@ -195,7 +258,13 @@ class ContinuousDriver(G.GroundedDriver):
             # immediately before it. Snapshot here: end-of-frame memory would also
             # include the 001379f0 counter advance, which runs after the stop.
             if a == 0x13b6e0:
+                self.chain_writes = self.mem.writes
+                self.mem.writes = self._chain_outer | self.chain_writes
                 self.stage['camera-return'] = self.snap()
+            if a == 0x13ce80:
+                for _ in range(self.rng_external):
+                    V.ConnectedRuntimeDriver.external(self, RN.RNG)
+                    self.rng_replayed += 1
             return 0
         return super().external(pc, a, b, c, d)
 
@@ -205,7 +274,7 @@ def observation():
 
 
 class ContinuousRun:
-    def __init__(self, lib, caps, obs, pad_delta=None):
+    def __init__(self, lib, caps, obs, pad_delta=None, ownership=None, replay_rng=True):
         self.lib = lib; self.caps = caps; self.obs = obs
         self.frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
         start_stage = 'coordinator-entry' if 'coordinator-entry' in self.frames[0]['captures'] else 'dispatch-entry'
@@ -214,8 +283,15 @@ class ContinuousRun:
         self.mem.initial = bytes(self.mem.raw)
         self.external = V.pad_dma_buffers(self.mem)
         self.mem.watch = [(e['start'], e['end']) for e in self.external]
-        self.scratch_guarded = None
-        self.render_external = None
+        # M15 RAM guards: the four render-node records (every inter-frame change
+        # explained by 00143150, see inter_frame_ownership) and the RNG state.
+        rng = RN.rng_state_address(self.mem)
+        self.guarded_ranges = GUARDED_RANGES + (NODE_RANGE, (rng, rng + 8))
+        self.ownership = ownership if ownership is not None else inter_frame_ownership(caps, obs)
+        if self.ownership['node_unexplained']:
+            raise ValueError('Render-node records changed outside 00143150')
+        self.inter_external = set(self.ownership['external_scratch'])
+        self.rng_external = self.ownership['rng_external'] if replay_rng else {}
         self.pad_delta = self._pad_deltas() if pad_delta is None else pad_delta
         if not hasattr(caps, 'window_oracles'):
             caps.window_oracles = {}
@@ -277,9 +353,41 @@ class ContinuousRun:
             samples = PD.window_difference_writers(result, after, native_after, native['writers'])
         return dict(kind=kind, same_input_result=same_input['result'], sampled_differences=samples)
 
+    def same_input(self, before, after, writes, entry, label):
+        """M15 same-input differential: original instructions for entry on
+        the reconstruction's own input snapshot, compared byte for byte."""
+        try:
+            oracle = RN.run_original(before, entry, self.caps.elfdata, self.caps.segments)
+        except ValueError as exc:
+            return dict(result='failed', service=label, error=str(exc)[:400])
+        result = RN.compare_same_input(after, writes, oracle, label)
+        if oracle['identity_mismatches']:
+            result['result'] = 'failed'
+        return result
+
+    def scratch_excluded(self, fr, label, capture):
+        """Scratch offsets excluded at one native stop (M15 ownership rule).
+
+        Only the inter-frame writes of unreconstructed services are excluded:
+        at both coordinator stops all of them; at later stops those not yet
+        rewritten by reconstructed code, i.e. minus the original M14 window's
+        write set and minus every offset the original changed since the
+        coordinator-counter stop (all code between that stop and camera return
+        is reconstructed in C or runs original instructions)."""
+        if label in COORDINATOR_STAGES:
+            return self.inter_external
+        counter = self.caps.load(fr['captures']['coordinator-counter']['name'])
+        native_after = self.caps.load(fr['captures']['dispatch-entry']['name'])
+        window = self.window_oracle(fr, counter, native_after)['writes']
+        stop = self.caps.load(capture)
+        rewritten = {a - 0x70000000 for a in window if 0x70000000 <= a < 0x70004000}
+        rewritten.update(o for o in range(0x4000) if stop.scratch[o] != counter.scratch[o])
+        return self.inter_external - rewritten
+
     def stage_results(self, d, fr, only_failures=False):
         """Every stage comparison for one frame, including the pre-dispatch
-        stage (against dispatch-entry) and its window-output comparison."""
+        stage (against dispatch-entry), its window-output comparison and the
+        M15 same-input render-node and camera-chain differentials."""
         stages = {}
         for label, snapshot in d.stage.items():
             row = fr['captures'].get('dispatch-entry' if label == 'pre-dispatch' else label)
@@ -287,7 +395,7 @@ class ContinuousRun:
                 if label == 'pre-dispatch': raise AssertionError('Missing native dispatch-entry capture')
                 continue
             expected = self.caps.load(row['name'])
-            result = self.compare_stage(snapshot, expected, label)
+            result = self.compare_stage(snapshot, expected, self.scratch_excluded(fr, label, row['name']))
             result['capture'] = row['name']
             stages[label] = result
             if label == 'coordinator-counter':
@@ -296,6 +404,17 @@ class ContinuousRun:
                 stages['pre-dispatch-window'] = self.compare_window(d, fr)
             if only_failures and any(r['result'] != 'passed' for r in stages.values()):
                 return stages
+        stages['camera-chain'] = self.same_input(d.camera_entry, d.stage['camera-return'],
+                                                 d.chain_writes, RN.CAMERA, '0012c790')
+        if only_failures and stages['camera-chain']['result'] != 'passed':
+            return stages
+        stages['model-draw'] = self.same_input(d.model_before, d.model_after, d.model_writes,
+                                               RN.MODEL, '0012bc70')
+        if only_failures and stages['model-draw']['result'] != 'passed':
+            return stages
+        stages['render-node-tail'] = self.same_input(d.tail_before, d.tail_after, d.tail_writes,
+                                                     RN.TAIL, '00143150')
+        stages['render-node-tail']['rng_replayed'] = d.rng_replayed
         return stages
 
     def _pad_deltas(self):
@@ -324,6 +443,7 @@ class ContinuousRun:
         for address, (value, width) in (mutate or {}).items():
             self.mem.store(address, value, width)
         driver = ContinuousDriver(self.mem, self.caps.elfdata, self.caps.segments, STATUS_VALUES[0])
+        driver.rng_external = self.rng_external.get(fr['counter'], 0)
         fn = getattr(self.lib, 'hg_player_frame_continuous')
         fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = None
         fn(C.byref(driver.env), 0x1ff8000)
@@ -333,48 +453,31 @@ class ContinuousRun:
         driver.stage['camera-entry'] = driver.camera_entry
         if 'camera-return' not in driver.stage:
             raise AssertionError('Missing camera-return seam coverage')
-        if 'pre-dispatch' not in driver.stage or driver.service_c != [(0x198f60,1),(0x198f60,0)]:
-            raise AssertionError('Missing or incomplete C pre-dispatch service')
+        if 'pre-dispatch' not in driver.stage or driver.service_c != [
+                (0x198f60,1),(0x198f60,0),(RN.MODEL,1),(RN.MODEL,0),(RN.TAIL,1),(RN.TAIL,0)]:
+            raise AssertionError('Missing or incomplete C pre-dispatch or render-node service')
         if driver.declared_registers != [(0x14f060, regs) for _, regs in driver.declared_registers] or \
                 len(driver.declared_registers) != 12 or driver.pending_registers is not None:
             raise AssertionError('Incomplete 0014f060 non-ABI register contract')
+        if driver.pending_wide is not None or driver.declared_wide.count((0x14d4f0, RN.SHADOW_TAG)) != 1 or \
+                any(row not in ((0x14d4f0, RN.PARTICLE_TAG), (0x14d4f0, RN.SHADOW_TAG))
+                    for row in driver.declared_wide):
+            raise AssertionError('Incomplete 0014d4f0 wide a3 contract')
+        if driver.rng_replayed != driver.rng_external:
+            raise AssertionError('External RNG draws not replayed')
         for target in (0x17f6d0,0x17f2d0):
             if not any(row['entry']==hex(target) for row in driver.modeled_calls):
                 raise AssertionError(f'Missing interpreted pre-dispatch service {target:#x}')
         return driver
 
-    def guarded_scratch(self):
-        """All scratchpad offsets written by the reconstructed path (empirical union),
-        minus the render-external set the original rewrites outside the path.
-
-        The raw write union is retained: at camera-return the intersection
-        (render_external offsets the C DOES write) is re-guarded, because there the
-        reconstructed chain must reproduce the original's post-chain values. The
-        render-external offsets the C never writes (the original's 0012c790-body
-        screen-space projection arrays 0x7c0-0x7ff/0x900/0x940) stay external at
-        every stage."""
-        if self.scratch_guarded is None:
-            offsets = set()
-            for fr in self.frames:
-                d = self.run_frame(fr)
-                offsets.update(d.frame_scratch_writes)
-            self.render_external = set(render_external_scratch(self.caps, self.obs))
-            self.scratch_union = sorted(offsets)
-            self.scratch_guarded = sorted(offsets - self.render_external)
-            # The camera-return re-guard: render-external offsets the C DOES write
-            # must reproduce the original's post-chain values there.
-            self.camera_guard = self.render_external & offsets
-        return self.scratch_guarded
-
-    def compare_stage(self, actual, expected, stage=None):
+    def compare_stage(self, actual, expected, excluded):
         """Guarded-domain comparison plus the external-difference enumeration.
 
-        The capture-derived render-external scratch set (see
-        render_external_scratch) is excluded at every stage except camera-return,
-        where the reconstructed camera chain must reproduce the original's
-        post-chain scratch exactly (M12 grounded-runtime evidence: complete
-        16 KiB scratchpad compared at camera-return with 0 different bytes) --
-        a divergence there is a real failure.
+        RAM: the guarded domains (player/camera structures, counters, edge
+        counters, history flag, sprite phases, M15 render-node records and RNG
+        state) must match; all other differences are classified into external
+        domains. Scratch: the complete 16 KiB is compared except the offsets
+        excluded by scratch_excluded for this stop.
 
         The 32 MB RAM image is compared in 64 KB chunks (memcmp on equal chunks);
         only divergent regions are scanned byte-wise. Divergent addresses are
@@ -392,7 +495,7 @@ class ContinuousRun:
             for a in range(base, base + chunk):
                 if actual.raw[a] == expected.raw[a]:
                     continue
-                if in_guarded(a):
+                if in_guarded(a, self.guarded_ranges):
                     guarded_ram.append(a)
                     continue
                 domain = external_domain(a)
@@ -405,20 +508,16 @@ class ContinuousRun:
         guarded_scratch = []
         external_scratch = []
         external_scratch_total = 0
-        scratch_guarded = set(self.scratch_guarded)
-        if stage == 'pre-dispatch':
-            scratch_guarded.update(range(0xb80,0xbb0))
-        if stage == 'camera-return':
-            scratch_guarded |= self.camera_guard
         for off in range(0x4000):
             if actual.scratch[off] == expected.scratch[off]: continue
-            if off in scratch_guarded: guarded_scratch.append(off)
+            if off not in excluded: guarded_scratch.append(off)
             else:
                 external_scratch_total += 1
                 if len(external_scratch) < EXTERNAL_SAMPLE: external_scratch.append(off)
         return dict(guarded_ram=[hex(a) for a in guarded_ram[:16]], guarded_ram_count=len(guarded_ram),
                     guarded_scratch=[hex(0x70000000 + o) for o in guarded_scratch[:16]],
                     guarded_scratch_count=len(guarded_scratch),
+                    scratch_compared=0x4000 - len(excluded),
                     external_ram={d: c for d, c in sorted(external_counts.items())},
                     external_ram_count=len(external_counts),
                     external_ram_samples={d: [hex(a) for a in v] for d, v in sorted(external_samples.items())},
@@ -427,20 +526,8 @@ class ContinuousRun:
                     result='passed' if not guarded_ram and not guarded_scratch else 'failed')
 
 
-def sequence(lib, caps, obs, scratch=None, union=None, pad_delta=None, render=None):
-    # First pass: the guarded-scratch union on a throwaway run (the real sequence
-    # must start from the authenticated starting state, untouched). The union
-    # depends only on the compiled library, so the caller may compute it once
-    # and share it with the controls stage.
-    if scratch is None or union is None:
-        probe = ContinuousRun(lib, caps, obs)
-        scratch = probe.guarded_scratch()
-        union = probe.scratch_union
-    run = ContinuousRun(lib, caps, obs, pad_delta)
-    run.scratch_guarded = scratch
-    run.render_external = set(render if render is not None else render_external_scratch(caps, obs))
-    run.scratch_union = union
-    run.camera_guard = run.render_external & set(union)
+def sequence(lib, caps, obs, ownership=None, pad_delta=None):
+    run = ContinuousRun(lib, caps, obs, pad_delta, ownership)
     rows = []
     failures = []
     for fr in run.frames:
@@ -450,40 +537,38 @@ def sequence(lib, caps, obs, scratch=None, union=None, pad_delta=None, render=No
                         if result['result'] != 'passed')
         for index, (snapshot, row) in enumerate(zip(d.pushes, fr['pushes'])):
             expected = caps.load(row['name'])
-            result = run.compare_stage(snapshot, expected, f'push-{index}')
+            result = run.compare_stage(snapshot, expected, run.scratch_excluded(fr, 'push', row['name']))
             result['capture'] = row['name']
             if result['result'] != 'passed': failures.append((fr['counter'], f'push-{index}'))
             stages[f'push-{index}-{row["tier"]}'] = result
         rows.append(dict(counter=fr['counter'], phase=fr['phase'], stages=stages,
-                         external_calls=d.external_calls))
+                         external_calls=d.external_calls, rng_replayed=d.rng_replayed))
+        print(fr['counter'], 'passed' if not any(c == fr['counter'] for c, _ in failures) else 'FAILED',
+              flush=True)
         del d; caps.cache.clear(); gc.collect()
     return dict(frames=rows, failures=[dict(counter=c, stage=s) for c, s in failures],
-                guarded_scratch=[hex(0x70000000 + o) for o in scratch],
-                render_external_scratch=[hex(0x70000000 + o) for o in run.render_external],
+                inter_frame_external_scratch=[hex(0x70000000 + o) for o in sorted(run.inter_external)],
+                rng_external={str(k): v for k, v in sorted(run.ownership['rng_external'].items())},
+                node_unexplained=run.ownership['node_unexplained'],
                 result='passed' if not failures else 'failed')
 
 
-def controls(lib, caps, obs, folder, scratch_set=None, union=None, pad_delta=None, render=None):
+def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
     folder.mkdir(parents=True, exist_ok=True)
     rows = []
     frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
     # Use the first real handoff for every control. The uninterrupted acceptance
     # run independently compares every subsequent frame.
     previous, target = frames[:2]
-    if scratch_set is None or union is None:
-        probe = ContinuousRun(lib, caps, obs)
-        scratch_set = probe.guarded_scratch()
-        union = probe.scratch_union
+    if ownership is None:
+        ownership = inter_frame_ownership(caps, obs)
 
-    def measure(name, kind, mutate=None, restore=False, post_mutate=None):
-        run = ContinuousRun(lib, caps, obs, pad_delta)
-        run.scratch_guarded = scratch_set
-        run.render_external = set(render if render is not None else render_external_scratch(caps, obs))
-        run.scratch_union = union
-        run.camera_guard = run.render_external & set(union)
+    def measure(name, kind, mutate=None, restore=False, post_mutate=None, replay_rng=True, at=None):
+        run = ContinuousRun(lib, caps, obs, pad_delta, ownership, replay_rng)
+        goal = target if at is None else next(fr for fr in frames if fr['counter'] == at)
         for fr in run.frames:
             caps.cache.clear()
-            if restore and fr['counter'] == target['counter']:
+            if restore and fr['counter'] == goal['counter']:
                 # Restore the authentic frame-start state (the coordinator-entry
                 # capture: the frame begins there, before any reconstructed write).
                 stage = fr['captures'].get('coordinator-entry') or fr['captures']['dispatch-entry']
@@ -491,24 +576,24 @@ def controls(lib, caps, obs, folder, scratch_set=None, union=None, pad_delta=Non
                 run.mem.raw[:] = fresh.raw
                 run.mem.scratch[:] = fresh.scratch
             run.mem.watch = [(e['start'], e['end']) for e in run.external]
-            if fr['counter'] == target['counter'] and mutate:
+            if fr['counter'] == goal['counter'] and mutate:
                 run.mem.initial = bytes(run.mem.raw)
-            d = run.run_frame(fr, mutate if fr['counter'] == target['counter'] else None)
+            d = run.run_frame(fr, mutate if fr['counter'] == goal['counter'] else None)
             if fr['counter'] == previous['counter'] and post_mutate:
                 for address,(value,width) in post_mutate.items():
                     run.mem.store(address,value,width)
-            if fr['counter'] != target['counter']:
+            if fr['counter'] != goal['counter']:
                 del d; caps.cache.clear(); continue
             for label, result in run.stage_results(d, fr, only_failures=True).items():
                 if result['result'] != 'passed':
                     return dict(control=name, kind=kind, frame=fr['counter'], result='rejected',
                                 first_divergent_stage=label, detail=result)
-            # The clean restoration control isolates the second frame's window.
+            # The clean restoration control isolates the target frame's window.
             if kind == 'null-control':
-                return dict(control=name, kind=kind, frame=target['counter'], result='clean',
+                return dict(control=name, kind=kind, frame=goal['counter'], result='clean',
                             note='restored target frame matched all compared stages')
             return dict(control=name, kind=kind, frame=fr['counter'], result='ESCAPED')
-        return dict(control=name, kind=kind, frame=target['counter'], result='error', detail='target frame not reached')
+        return dict(control=name, kind=kind, frame=goal['counter'], result='error', detail='target frame not reached')
 
     cases = [
         ('null-capture-restoration', 'null-control', None, dict(restore=True)),
@@ -519,52 +604,56 @@ def controls(lib, caps, obs, folder, scratch_set=None, union=None, pad_delta=Non
         ('omitted-counter-advance', 'continuity-corruption', {0x46e110: (0, 4)}, {}),
         ('omitted-frame-advance', 'continuity-corruption', {0x3fa190: (0, 4)}, {}),
         ('wrong-input-stick', 'input-counterfactual', {0x3eaf10: (0, 4)}, {}),
+        # M15: the anchor node's carried accumulator (node+60) after frame 10164.
+        ('corrupt-render-node-carry', 'continuity-corruption', None,
+         dict(post_mutate={0x528490: (0x3f800000, 4)})),
+        # M15: without the external RNG draws the carried LCG state diverges.
+        ('omitted-external-rng-draws', 'input-counterfactual', None, dict(replay_rng=False)),
+        ('null-capture-restoration-substate-1', 'null-control', None, dict(restore=True, at=10173)),
     ]
     for name, kind, mutate, kw in cases:
         try:
             row = measure(name, kind, mutate, **kw)
         except Exception as exc:
             row = dict(control=name, kind=kind, frame=target['counter'], result='error', detail=str(exc)[:400])
-        rows.append(row); print(name, row['result'], flush=True)
+        rows.append(row); print(name, row['result'], row.get('first_divergent_stage'), flush=True)
         with (folder / (name + '.result.json')).open('x') as out:
             json.dump(row, out, indent=2); out.write('\n')
         gc.collect()
     # Compiled defects (source mutation builds): the M12 gravity step, then
-    # 00198f60 store-width, arithmetic and register-contract defects. None
-    # mutates memory after execution.
+    # 00198f60 store-width, arithmetic and register-contract defects, then the
+    # M15 projection defects. None mutates memory after execution.
     source = (ROOT / 'src/resource_loader.c').read_text()
     before = 'uint32_t gravity=r8(e,a+0x4ad)==0?0x3da3d70au:0x3cf5c28fu;'
     after = 'uint32_t gravity=r8(e,a+0x4ad)==0?0x3cf5c28fu:0x3cf5c28fu;'
-    compiled = [('wrong-gravity-step', before, after)]
+    compiled = [('wrong-gravity-step', before, after, None)]
     for name in COMPILED_SERVICE_CONTROLS:
         _, old, new = PD.mutants(source)[name]
-        compiled.append((name, old, new))
+        compiled.append((name, old, new, None))
     compiled.append((RENDER_HANDOFF_CONTROL, 'w32(e,ctx+0x598,1u-bank);',
-                     'w32(e,ctx+0x598,bank);'))
-    for name, before, after in compiled:
+                     'w32(e,ctx+0x598,bank);', None))
+    for name, _, old, new, at in M15_COMPILED_CONTROLS:
+        compiled.append((name, old, new, at))
+    for name, before, after, at in compiled:
         try:
             if source.count(before) != 1: raise AssertionError(f'{name} target not unique')
             path = folder / f'{name}.c'
             path.open('x').write(source.replace(before, after))
             mlib = library(source=path, output=folder / f'{name}.so')
-            row = measure_compiled(mlib, name, caps, obs, target, scratch_set, union,
-                                   pad_delta, render)
+            goal = target if at is None else next(fr for fr in frames if fr['counter'] == at)
+            row = measure_compiled(mlib, name, caps, obs, goal, ownership, pad_delta)
         except Exception as exc:
             row = dict(control=name, kind='compiled-defect', frame=target['counter'],
                        result='error', detail=str(exc)[:400])
-        rows.append(row); print(row['control'], row['result'], flush=True)
+        rows.append(row); print(row['control'], row['result'], row.get('first_divergent_stage'), flush=True)
         with (folder / (row['control'] + '.result.json')).open('x') as out:
             json.dump(row, out, indent=2); out.write('\n')
         gc.collect()
     return rows
 
 
-def measure_compiled(mlib, name, caps, obs, target, scratch_set, union, pad_delta=None, render=None):
-    run = ContinuousRun(mlib, caps, obs, pad_delta)
-    run.scratch_guarded = scratch_set
-    run.render_external = set(render if render is not None else render_external_scratch(caps, obs))
-    run.scratch_union = union
-    run.camera_guard = run.render_external & set(union)
+def measure_compiled(mlib, name, caps, obs, target, ownership, pad_delta=None):
+    run = ContinuousRun(mlib, caps, obs, pad_delta, ownership)
     for fr in run.frames:
         caps.cache.clear()
         try:
@@ -583,11 +672,12 @@ def measure_compiled(mlib, name, caps, obs, target, scratch_set, union, pad_delt
                         result='rejected' if detected else 'ESCAPED',
                         first_divergent_stage='render-handoff' if detected else None,
                         detail=dict(handoff=handoff, window=window))
-        for label, result in run.stage_results(d, fr, only_failures=True).items():
-            if result['result'] != 'passed':
-                return dict(control=name, kind='compiled-defect', frame=fr['counter'],
-                            result='rejected', first_divergent_stage=label, detail=result)
-        return dict(control=name, kind='compiled-defect', frame=fr['counter'], result='ESCAPED')
+        stages = run.stage_results(d, fr)
+        failed = [label for label, result in stages.items() if result['result'] != 'passed']
+        return dict(control=name, kind='compiled-defect', frame=fr['counter'],
+                    result='rejected' if failed else 'ESCAPED',
+                    first_divergent_stage=failed[0] if failed else None, failed_stages=failed,
+                    detail={label: stages[label] for label in failed[:3]})
     return dict(control=name, kind='compiled-defect', frame=target['counter'], result='error')
 
 
@@ -620,19 +710,18 @@ def main():
             raise ValueError('Wrong capture frame')
     caps.cache.clear()
     lib = library(output=a.output.with_suffix('.so'))
-    probe = ContinuousRun(lib, caps, obs)
-    scratch_set = probe.guarded_scratch()
-    union = probe.scratch_union
-    result = sequence(lib, caps, obs, scratch_set, union, probe.pad_delta, probe.render_external)
+    ownership = inter_frame_ownership(caps, obs)
+    probe = ContinuousRun(lib, caps, obs, None, ownership)
+    result = sequence(lib, caps, obs, ownership, probe.pad_delta)
     if a.negative_controls:
         result['negative_controls'] = controls(lib, caps, obs,
                                                a.output.parent / (a.output.stem + '-controls'),
-                                               scratch_set, union, probe.pad_delta, probe.render_external)
+                                               ownership, probe.pad_delta)
     ok = result['result'] == 'passed'
     if a.negative_controls:
         ok &= all(c['result'] == ('clean' if c['kind'] == 'null-control' else 'rejected')
                   for c in result['negative_controls'])
-    result.update(schema='hg-player-continuous/v4', result='passed' if ok else 'failed', elf_sha256=EXPECTED,
+    result.update(schema='hg-player-continuous/v5', result='passed' if ok else 'failed', elf_sha256=EXPECTED,
                   observation_sha256=digest(OBSERVATION), frame_count=len(obs['frames']),
                   smoke_max_frames=a.max_frames, native_sp=hex(PD.NATIVE_SP),
                   verification_sources={n: digest(ROOT / n) for n in VERIFICATION_SOURCES},

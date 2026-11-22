@@ -181,6 +181,16 @@ class Machine:
                     product = sx(a,32) * sx(b,32) if fn == 0x18 else (a & 0xffffffff) * (b & 0xffffffff)
                     self.lo, self.hi = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
                     wordreg(rd, product)
+                elif fn in (0x1a,0x1b) and rd == 0 and sa == 0:
+                    # div / divu (M15 0019c8a0/002f7830): LO = quotient truncated toward
+                    # zero, HI = remainder, each sign-extended from 32 bits. The R5900
+                    # result for a zero divisor or INT_MIN / -1 is not investigated.
+                    left, right = (sx(a,32), sx(b,32)) if fn == 0x1a else (a & 0xffffffff, b & 0xffffffff)
+                    if right == 0:raise ValueError('integer division by zero outside investigated subset')
+                    if fn == 0x1a and left == -(1 << 31) and right == -1:
+                        raise ValueError('integer division overflow outside investigated subset')
+                    quotient = abs(left) // abs(right) * (1 if (left < 0) == (right < 0) else -1)
+                    self.lo, self.hi = sx(quotient,32) & MASK64, sx(left - quotient*right,32) & MASK64
                 elif fn == 0x0f and rs == rt == rd == 0 and sa in (0,0x10): pass  # sync / sync.p (M11 sound DI helper)
                 elif fn == 0x10: self.setreg(rd,self.hi)  # mfhi (M11 RNG 00114010)
                 elif fn == 0x12: self.setreg(rd,self.lo)  # mflo
@@ -356,6 +366,25 @@ class Machine:
                         if root == 0:raise ValueError('VRSQRT of zero outside investigated subset')
                         self.q=fp_signed_chop(fp_value(left[(word>>21)&3])/fp_value(root))
                         out=[]
+                    elif fn in tuple(range(0x10,0x18))+(0x2b,0x2f):
+                        # vmaxbc/vminibc/vmax/vmini (M15 0012bc70 chain, 00155814):
+                        # exact selection of one operand, no rounding or flags.
+                        # Ordered by sign-magnitude value; exponent-255, denormal
+                        # and mixed-sign-zero comparisons are outside the subset.
+                        other=[right[fn&3]]*4 if fn < 0x18 else right
+                        take_max=fn in range(0x10,0x14) or fn == 0x2b
+                        out=[]
+                        for lane,(x,y) in enumerate(zip(left,other)):
+                            if not mask&(8>>lane):
+                                out.append(0);continue
+                            for v in (x,y):
+                                exponent=(v>>23)&0xff
+                                if exponent == 0xff or (exponent == 0 and v&0x7fffff):
+                                    raise ValueError(f'VMAX/VMINI operand {v:08x} outside investigated subset')
+                            if not (x|y)&0x7fffffff and x != y:
+                                raise ValueError('VMAX/VMINI of +0 and -0 outside investigated subset')
+                            key=lambda v:-(v&0x7fffffff) if v&0x80000000 else v
+                            out.append((x if key(x)>=key(y) else y) if take_max else (x if key(x)<=key(y) else y))
                     elif fn in tuple(range(0x00,0x0c))+tuple(range(0x18,0x1c))+(0x1c,0x20,0x28,0x29,0x2a,0x2c):
                         if fn < 0x1c:other=[right[fn&3]]*4
                         elif fn in (0x1c,0x20):other=[self.q]*4  # vmulq / vaddq

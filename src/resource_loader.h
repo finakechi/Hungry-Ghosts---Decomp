@@ -206,6 +206,19 @@ void hg_frame_edge_sync(HGResourceEnv *);                        /* 0031bb80 */
 void hg_pre_dispatch_service(HGResourceEnv *);                   /* 00198f60 */
 void hg_counter_advance(HGResourceEnv *);
 void hg_frame_advance(HGResourceEnv *);                          /* 0012f850 observed prefix */
+/* M15 coordinator tail 00143150 and its observed render nodes (state 1;
+ * 002f7830 variant 0). Unobserved states fail closed. Emit HG_GUEST_FRAME
+ * (0x20, 0x80, 0xc0), the service marks 0xfffffff6 (0x143150, 1/0) and the
+ * host-only HG_CALL_WIDE_A3 seam 0xfffffff4 (low, high) that supplies the
+ * full 64-bit a3 for the next modeled 0014d4f0 call. */
+void hg_render_node_list(HGResourceEnv *);                       /* 00143150 seams + M8 walker */
+void hg_camera_anchor_node(HGResourceEnv *, uint32_t node);      /* 0019c8a0 */
+void hg_camera_particle_field(HGResourceEnv *, uint32_t node);   /* 002f7830 */
+void hg_render_node_list_fixed(HGResourceEnv *);
+/* M15 coordinator service 0012bc70: player model draw (observed type-3 model,
+ * light mode 2, shadow quad; other paths fail closed 0x74..0x78). HG_GUEST_FRAME
+ * (bytes, 1) must return the guest sp of the entered frame. */
+void hg_player_model_draw(HGResourceEnv *);                     /* 0012bc70 */
 /* M13/M14 continuous frame: counter prefix, pre-dispatch services, M10
  * dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history) and M9
  * same-frame camera on one carried bus. At frame end the host supplies the

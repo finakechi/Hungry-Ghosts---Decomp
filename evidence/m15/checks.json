@@ -1,0 +1,161 @@
+{
+ "schema": "hg-m15-checks/v1",
+ "recorded_utc": "2026-11-22T18:09:58+00:00",
+ "result": "PASSED",
+ "baseline": "535e43b691b9296912a06ba40f3450a6e71431da",
+ "baseline_note": "main after M14 PR #18; M15 changes are uncommitted working-tree files on this base.",
+ "verified_commit": null,
+ "environment": "$HG_ELF=local/extracted/japan/SCPS_150.46, $HG_PS2DINFO=local/references/PS2DInfo, $HG_CAPTURE_DIR=local/m13/captures; historical regression also $HG_JAPAN_ISO and $HG_PCSX2 (owner-local)",
+ "identities": {
+  "japanese_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+  "m13_observation_sha256": "1fd97d01a7a0cbbe455741f74ac4987173b67058abde8c1214a8734d24ef7763",
+  "library_sha256": "8459a2308850ffea70e8be4018efb123b3f4b2f18867b0d4ca8e32f42ad26d4b",
+  "private_decoder_sha256": "8945497c01ef82117131ea5954f6ad468ecfe05bb3985ee77bd5c1345330ec62"
+ },
+ "sources": {
+  "src/resource_loader.c": "cc38d26efaadd17bcaed5942ec617f2e209d779af7943fa3d33011b9a46f9017",
+  "src/resource_loader.h": "a428bed09735af3424865b55d20de37cc1c4cfbd95585af4be680af24a349bd4",
+  "tools/ee_subset.py": "22c401963a6cd16403a9c8d83824a386d6371c8edaf1d4494f94a2ecdb19e6aa",
+  "tools/verify_player_connected_runtime.py": "dc73f301c4ab0f6d6ce89f2ac9a3c6323e209040ca66b66bbdc74ce5f91e2d5a",
+  "tools/verify_player_continuous.py": "e04b036f0d59712cabe75a838bbe817112a085815daa4fe0d1d3ec8efe4c4b00",
+  "tools/render_node_differential.py": "1bdafb1dea473a1e43b9678d8d8d76c24ff674691aee31382dfdcdd43c0a694f",
+  "tools/hg_m15_evidence.py": "c3448b07f6353dc590e4c2fb5616c925be16759951fa1e1625a20771e807d2a0",
+  "tools/hg_m15_results.py": "7dd575ef665c991096ef7f676b9bc6c2f01292fd3749c4b59e83ab57797c4e46",
+  "tests/test_render_node_differential.py": "a833dbd627b40823f126caa28952d472d5bbef81618f8592f85079e21dc11fee",
+  "tests/test_model_draw_differential.py": "a205e2d10e590ddaf64b279bdc320aff1c17642c5adbaa2d1766c352841e1300",
+  "tests/test_player_continuous.py": "406b51e8ad976a4f2d30a88237fcb2eb04e744ee423cdf70546baa822bdc7802",
+  "analysis/render_nodes/functions.json": "a39b7a8583da32e82dba4938030de21430b62d8e297d0d4098485642a5d6bed7",
+  "analysis/model_draw/functions.json": "6e0efd593bd89abc4cf050080e52b40adca6905364490d448a9eed7cb2755373"
+ },
+ "checks": [
+  {
+   "id": "elf-identity",
+   "evidence": "original-byte",
+   "command": "sha256sum $HG_ELF",
+   "result": "passed",
+   "detail": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+  },
+  {
+   "id": "predispatch-packet-ps2dinfo",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (predispatch-packet-ps2dinfo)",
+   "result": "passed"
+  },
+  {
+   "id": "predispatch-packet-record",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (predispatch-packet-record)",
+   "result": "passed"
+  },
+  {
+   "id": "render-nodes-packet-ps2dinfo",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (render-nodes-packet-ps2dinfo)",
+   "result": "passed"
+  },
+  {
+   "id": "render-nodes-packet-record",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (render-nodes-packet-record)",
+   "result": "passed"
+  },
+  {
+   "id": "model-draw-packet-ps2dinfo",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (model-draw-packet-ps2dinfo)",
+   "result": "passed"
+  },
+  {
+   "id": "model-draw-packet-record",
+   "evidence": "original-byte",
+   "command": "see local/m15/m14-regression-2/run.sh (model-draw-packet-record)",
+   "result": "passed"
+  },
+  {
+   "id": "strict-build",
+   "evidence": "synthetic",
+   "command": "cc -std=c11 -O2 -Wall -Wextra -Werror -pedantic -fPIC -shared -Isrc src/resource_loader.c src/disc_read.c",
+   "result": "passed"
+  },
+  {
+   "id": "continuous-22-frames-with-controls",
+   "evidence": "runtime",
+   "command": "python3 -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --negative-controls --output $OUT/continuous.json",
+   "result": "passed",
+   "receipt_sha256": "f31c5b41cc6f41c1fa01636091b97ba3327133860190d3f3216aaf64790323d2",
+   "detail": "22 frames, 386 stage comparisons (camera-chain, model-draw, render-node-tail same-input each frame); 24/24 defects rejected, 2/2 null controls clean"
+  },
+  {
+   "id": "m14-native-window",
+   "evidence": "runtime",
+   "command": "python3 -B tools/verify_predispatch_window.py ... --negative-controls --output $OUT/native.json",
+   "result": "passed",
+   "receipt_sha256": "40e5f1ef2c01a4472698b39ebfc95a0528aba45468b542d38bcb7b5eae52f47d",
+   "detail": "22 frames, 9/9 controls detected; 2 diagnostics unobservable by design (as M14)"
+  },
+  {
+   "id": "m14-register-contracts",
+   "evidence": "runtime",
+   "command": "python3 -B tools/verify_predispatch_contracts.py ... --output $OUT/contracts.json",
+   "result": "passed",
+   "receipt_sha256": "46aca9069f06420e67cbf06b8f8751c849a2a5b216058b4294debe2c93869e6d",
+   "detail": "22 frames, 682 calls"
+  },
+  {
+   "id": "m14-counter-guard",
+   "evidence": "runtime",
+   "command": "python3 -B tools/verify_counter_guard.py ... --capture $HG_CAPTURE_DIR/obs3-010.json --output $OUT/counter.json",
+   "result": "passed",
+   "receipt_sha256": "c5dd3ca16ec1fcea3976a57e5b08de106cb2a3f4406b236375f6b89008856ff2"
+  },
+  {
+   "id": "m15-results",
+   "evidence": "runtime",
+   "command": "python3 -B tools/hg_m15_results.py --continuous ... --native ... --contracts ... --counter ... --output evidence/m15/results.json",
+   "result": "passed",
+   "receipt_sha256": "5f841cce607dd4d4b8c8db9f1a1a33ea787bff1406f6421f3b4761720ee7a917"
+  },
+  {
+   "id": "synthetic-suite",
+   "evidence": "synthetic",
+   "command": "python3 -B -m unittest discover -s tests",
+   "result": "passed",
+   "detail": "298 tests"
+  },
+  {
+   "id": "sanitizer-c-harness",
+   "evidence": "synthetic",
+   "command": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/resource_sanitizer.c src/resource_loader.c src/disc_read.c && ./sanitizer",
+   "result": "passed"
+  },
+  {
+   "id": "ubsan-python-suites",
+   "evidence": "synthetic",
+   "command": "library(sanitize=True): test_model_draw_differential, test_render_node_differential, test_player_continuous, test_predispatch_differential, test_actor_lists",
+   "result": "passed",
+   "detail": "43 tests"
+  },
+  {
+   "id": "historical-regression-superseded-1",
+   "evidence": "mixed",
+   "command": "python3 -B tools/hg_verify.py run --profile full",
+   "result": "invalid",
+   "detail": "m12-20261122T065025Z-yofckw8f: 16/79; the runner stopped because docs were edited during the run; superseded"
+  },
+  {
+   "id": "historical-regression-superseded-2",
+   "evidence": "mixed",
+   "command": "python3 -B tools/hg_verify.py run --profile full",
+   "result": "interrupted",
+   "detail": "m12-20261122T065944Z-lrj2ltje: 62/79 accepted (57 passed, 5 expected rejections), interrupted at turn-camera-saved-runtime by session teardown; source superseded by the 0012bc70 reconstruction, not resumed"
+  },
+  {
+   "id": "historical-regression",
+   "evidence": "mixed",
+   "command": "python3 -B tools/hg_verify.py run --profile full",
+   "result": "passed",
+   "detail": "m12-20261122T155330Z-veza3mwe: 79/79 accepted, 79 executed, 0 reused, 77 re-executed earlier attempts, state complete; resumed after the M11 constraint control anchor fix"
+  }
+ ]
+}
