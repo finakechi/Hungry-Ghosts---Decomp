@@ -79,7 +79,7 @@ class CapturedMemory:
 # Host bus seams for modeled original leaves called from reconstructed C:
 # entry -> (leading raw-bit FP operands placed in f12.., result in f0?).
 # Remaining bus operands go to a0.. in order. Verified against each listing.
-FP_SEAMS={0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,False),
+FP_SEAMS={0x155350:(1,False),0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,False),0x17d930:(1,False),
     0x13a060:(2,False),0x120830:(0,True),0x1204e0:(1,True),
     0x143560:(1,True),0x143620:(1,True),0x143c60:(1,False),0x143d30:(1,False),0x143b90:(1,False),
     0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False),
@@ -92,6 +92,11 @@ GUEST_FRAME=0xfffffff1
 # Host-only M12 seam: (callee entry, value) reports the actual return value of a
 # reconstructed C callee resolved inside the C composition. No guest effect.
 CALL_RETURN=0xfffffff2
+# Host-only M14 seam: (t0, t1, t2) for the next modeled call, which the C
+# supplies from the original caller's register assignments. No guest effect.
+CALL_T_REGS=0xfffffff5
+# Modeled callees that are verified to read non-ABI t0..t2 and must receive them.
+T_REGISTER_CALLEES={0x14f060}
 
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
@@ -101,6 +106,10 @@ class ConnectedRuntimeDriver(Driver):
         # Opt-in M11 contracts; defaults preserve the M8-M10 behaviour.
         self.guest_frame=0;self.cop0_status=None;self.constant_t0={}
         self.call_returns=[]
+        # M14 one-shot non-ABI registers {gpr: value} declared by C through
+        # CALL_T_REGS for the immediately following modeled call only.
+        self.pending_registers=None
+        self.declared_registers=[]
     def verify_executed(self,addresses):
         for address in addresses:
             offsets=[off+address-start for start,end,off in self.segments if start<=address and address+4<=end]
@@ -109,6 +118,9 @@ class ConnectedRuntimeDriver(Driver):
             if self.mem.initial[address:address+4]!=self.elfdata[offset:offset+4]:
                 raise ValueError(f'Runtime instruction differs from original ELF {address:#x}')
     def external(self,pc,a=0,b=0,c=0,d=0):
+        if pc==CALL_T_REGS:
+            if self.pending_registers is not None:raise ValueError('Unconsumed non-ABI register seam')
+            self.pending_registers={8:a,9:b,10:c};return 0
         self.calls.append((hex(pc),*[hex(v) for v in (a,b,c,d)]))
         if pc==0x119ac8:
             if c>0x2000000:raise ValueError('Unbounded memset')
@@ -130,6 +142,11 @@ class ConnectedRuntimeDriver(Driver):
         operands=(a,b,c,d)
         for index,value in enumerate(operands[:fp_count]):machine.fpr[12+index]=value
         for index,value in enumerate(operands[fp_count:],4):machine.reg[index]=value
+        extra,self.pending_registers=self.pending_registers,None
+        if (extra is not None)!=(pc in T_REGISTER_CALLEES and self.model_depth==0):
+            raise ValueError(f'Non-ABI register contract mismatch at {pc:#x}')
+        for index,value in (extra or {}).items():machine.reg[index]=value
+        if extra is not None:self.declared_registers.append((pc,dict(extra)))
         def memcall(cpu,target):
             return self.external(target,*(cpu.reg[i]&0xffffffff for i in (4,5,6,7)))
         machine.hooks={target:(lambda cpu,target=target:memcall(cpu,target)) for target in (0x119910,0x119ac8)}

@@ -1,0 +1,536 @@
+{
+ "schema": "hg-m14-checks/v1",
+ "recorded_utc": "2026-11-22T01:51:28+00:00",
+ "result": "PASSED",
+ "baseline": "ec9f479ed73699bdd335e73ac6d159bc5126c386",
+ "baseline_note": "M13 local HEAD (not on origin; origin/main is 3b52075). M14 changes are uncommitted working-tree files on that base; there is no M14 commit yet.",
+ "verified_commit": null,
+ "environment": "$HG_ELF=local/extracted/japan/SCPS_150.46, $HG_PS2DINFO=local/references/PS2DInfo, $HG_CAPTURE_DIR=local/m13/captures",
+ "identities": {
+  "japanese_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+  "ps2dinfo_required_tool_hashes": {
+   "verify_elf_evidence.py": "a11914de20492520565735ef4092d55126adafcd126d97271d6ff9819203fd1c",
+   "validate_evidence.py": "66fb9db3fae3675ca55232306363d6db8914f6aa28353b379caa52cc5be4e505",
+   "check_local_inputs.py": "29fc302f4ce2707fa2d9639fa36a375f0b98f8c5c9ec1298601aba56c247038e",
+   "ingest_evidence.py": "157cfa027e3534b38012d045f33edba0038d1f4fbaa607fdb224ad86db3e1ef6"
+  },
+  "m13_observation_sha256": "1fd97d01a7a0cbbe455741f74ac4987173b67058abde8c1214a8734d24ef7763",
+  "counter_capture_sha256": "e02826bc6d915cc330d0ba06fc3b41a068666789f432e337ced6ea35ba6ed300",
+  "library_sha256": "d149b780ec21ba95e13a06b98198afeb95bb4aac11050620faba77adb0e3e09e",
+  "contracts_mutant_library_sha256": "bd771fa16cfbf5a745ce8c1a5fda98773b57af1b6c6d1604e6c5995163e8e646",
+  "python": "3.14.9"
+ },
+ "source_sha256": {
+  "src/resource_loader.c": "c6d6293d0df182fbbe0347afb105a8029c797000e80d9876b44a5ea945c6bf83",
+  "src/resource_loader.h": "0010e6553dbe9d2544808ee016e6d0c1e60f14d257637003c8196df6159b7baf"
+ },
+ "verification_sources": {
+  "src/resource_loader.c": "c6d6293d0df182fbbe0347afb105a8029c797000e80d9876b44a5ea945c6bf83",
+  "src/resource_loader.h": "0010e6553dbe9d2544808ee016e6d0c1e60f14d257637003c8196df6159b7baf",
+  "tools/verify_player_continuous.py": "72af47d48048b1f6c583cd6fde27ba0c7c82d9f9217ebea756f98d0e9c52308b",
+  "tools/predispatch_differential.py": "bf175c6e59a03b3435c67d5eda55aeed479af0052b1d786da5cfe3db4cba8c91",
+  "tools/verify_player_connected_runtime.py": "e359a9456215edb7acd6fcfcc5ef7c340330183070480ff30664ed71e1e2a9d7",
+  "tools/ee_subset.py": "241d827288a9d5f2927111e31ad622e9fcf4363e0d77756a72878024cdfe323f",
+  "tools/verify_predispatch_window.py": "a4e5e7c62c53a9cfa8fe9c59afc0aa3044ef4ce916eb4719c41a073112c0023f",
+  "tools/verify_predispatch_contracts.py": "46b4877dda4f344bc51cfa06fcb70f09456743ae773bee0f0aa8b486be179d8b",
+  "tools/verify_counter_guard.py": "804d9222f4b3d42b37bd5f8c82fa9eb038f3976b38173018ee7a51dac0c052f8",
+  "tools/hg_m14_results.py": "c4f2f0b191dc8c8f3319a914b4a70ca942ea3468cc1068ed8614663bcc611602",
+  "tools/hg_m14_evidence.py": "84ae86ba296275d4b0e5d5c7250a6b6fc98a1330634fd5cd1b9872e1c68f0eab"
+ },
+ "regression_inventory": {
+  "run": "m12-20261122T003553Z-nmkuafkq",
+  "profile": "full",
+  "state": "complete",
+  "full_verdict": "passed",
+  "created_utc": "2026-11-22T00:35:53.842843+00:00",
+  "updated_utc": "2026-11-22T01:25:25.569028+00:00",
+  "counts": {
+   "passed": 74,
+   "expected-rejection": 5
+  },
+  "accepted": 79,
+  "reused": 0,
+  "executed": 79,
+  "revision": "ec9f479ed73699bdd335e73ac6d159bc5126c386",
+  "source_set_sha256": "7d48ab729ca54ebb0eec450bc62a6ccfe8fe38e8be302997ba96b262dbe8698d",
+  "recorded_resource_loader_c_sha256": [
+   "c6d6293d0df182fbbe0347afb105a8029c797000e80d9876b44a5ea945c6bf83"
+  ],
+  "recorded_resource_loader_c_occurrences": 29,
+  "summary": "local/verification/m12-20261122T003553Z-nmkuafkq/summary.json",
+  "summary_sha256": "c63b6389a41d6364e4039b57bf77cc308be473151ba33b6918b2c312d9a01f7b",
+  "note": "Final-source regression certifying the corrected M14 source.",
+  "completed_utc": "2026-11-22T01:25:25.545764+00:00",
+  "source_set_scope": "hg_verify canonical hash of src, tools, tests, ghidra_scripts, analysis, evidence and config. Adding evidence/m14/ changes it; excluding evidence/m14/* reproduces this value."
+ },
+ "superseded_regressions": [
+  {
+   "run": "m12-20261121T200143Z-78x2cdc0",
+   "profile": "full",
+   "state": "complete",
+   "full_verdict": "passed",
+   "created_utc": "2026-11-21T20:01:43.771841+00:00",
+   "updated_utc": "2026-11-21T20:49:52.993220+00:00",
+   "counts": {
+    "passed": 74,
+    "expected-rejection": 5
+   },
+   "accepted": 79,
+   "reused": 0,
+   "executed": 79,
+   "revision": "ec9f479ed73699bdd335e73ac6d159bc5126c386",
+   "source_set_sha256": "0df3fc5247ca9beba211d66313f9f686d30e756c56ff34c8690bacfbf8a96af3",
+   "recorded_resource_loader_c_sha256": [
+    "66d43cc0f435a97f45ba423c94ef1584eee1ff127abadc4ed06b2711b88c4897"
+   ],
+   "recorded_resource_loader_c_occurrences": 29,
+   "summary": "local/verification/m12-20261121T200143Z-78x2cdc0/summary.json",
+   "summary_sha256": "9ff027610d7464b1c2b40baff555b111d1a01743f8b6ee457dd46582599ee2ba",
+   "note": "Passed on the pre-correction source. It does not certify the corrected M14 source."
+  },
+  {
+   "run": "m12-20261121T193538Z-zgttv8o1",
+   "profile": "full",
+   "state": "running",
+   "full_verdict": "incomplete",
+   "created_utc": "2026-11-21T19:35:38.582360+00:00",
+   "updated_utc": "2026-11-21T19:35:46.592459+00:00",
+   "counts": {
+    "passed": 4,
+    "expected-rejection": 1,
+    "unrun": 74
+   },
+   "accepted": 5,
+   "reused": 0,
+   "executed": 5,
+   "revision": "ec9f479ed73699bdd335e73ac6d159bc5126c386",
+   "source_set_sha256": "0df3fc5247ca9beba211d66313f9f686d30e756c56ff34c8690bacfbf8a96af3",
+   "recorded_resource_loader_c_sha256": null,
+   "recorded_resource_loader_c_occurrences": 0,
+   "summary": "local/verification/m12-20261121T193538Z-zgttv8o1/summary.json",
+   "summary_sha256": "1ed22e22c1f5d24597e88d8dab24a02fb9f7a9ec291ec5eea5640c3a707f742d",
+   "note": "Interrupted after 5 of 79 gates; verdict incomplete. Not a pass."
+  }
+ ],
+ "original_window_traces": {
+  "path": "local/m14/original-window-{10164..10185}-v3.json",
+  "count": 22,
+  "schema": "hg-m14-feasibility/v1",
+  "generator": "tools/trace_predispatch.py (version not recorded in the traces)",
+  "assumed_sp": "0x1ff8000",
+  "use": "hg_m14_results.py reads them for service order, caller a0, zero non-stack RAM and scratch differences and zero instruction-identity mismatches. Their digests are in results.json frames.",
+  "note": "Produced before the sp correction: 113-134 stack-only RAM differences, 0 non-stack. The full-RAM oracle match at sp 0x01fffc70 is established separately by native.json on the final sources."
+ },
+ "checks": [
+  {
+   "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+   ],
+   "origin": "m14-synthetic",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/synthetic.exit",
+   "log": "local/m14/recovery-acceptance/synthetic.log",
+   "log_sha256": "c9902ceb46760327c071a6f462f09c9732445dd50220bac1301611ccd27cef1f",
+   "note": "Ran 288 tests, OK. The log does not echo its invocation; the command shown is the documented reproduction. The final regression's own synthetic-suite gate independently ran 288 tests on the same source set (m12-20261122T003553Z-nmkuafkq)."
+  },
+  {
+   "command": [
+    "bash",
+    "local/m14/recovery-acceptance/run.sh",
+    "packet"
+   ],
+   "origin": "m14-packet",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/packet.exit",
+   "log": "local/m14/recovery-acceptance/packet.log",
+   "log_sha256": "1bb2bfb8e79f276a250e0e9804a0304721f501175b281f6a7c930b31493dfaf0",
+   "note": "Regenerated the render-handoff packet with tools/hg_m14_evidence.py --render-handoff and ran PS2DInfo --require-all-bytes plus the project byte/JAL verifier on it and on analysis/pre_dispatch/functions.json: 690 + 743 = 1,433 original instruction words verified, 0 unknown; 4 + 3 listings match ELF bytes and JAL targets. The log records the expanded commands.",
+   "artifacts": {
+    "analysis/pre_dispatch/functions.json": "874e8c17948aa2e4a0757cb86c86bd419166f9141fd26fd99929b07b777bd164",
+    "local/m14/recovery-acceptance/render-handoff-functions.json": "0233c90ab1798592303d5e1e1443adc8d9438b6b823c94e6313db546874e81b3"
+   }
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/verify_predispatch_window.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture-dir",
+    "$HG_CAPTURE_DIR",
+    "--negative-controls",
+    "--output",
+    "<fresh>/native.json"
+   ],
+   "origin": "m14-native-window",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/native.exit",
+   "log": "local/m14/recovery-acceptance/native.log",
+   "log_sha256": "c622794ed0d8fac98da969a5479b90e98df6e20c801eafd6ec8cd88631724fc3",
+   "note": "22/22 frames; 0 native RAM, scratch and oracle differences; 21/21 phase handoffs; 9/9 required controls detected. Two diagnostic controls are unobservable on the captured state (see diagnostic_controls).",
+   "receipt": "local/m14/recovery-acceptance/native.json",
+   "receipt_sha256": "cf475eed9a049413b642438d02f5e09635baaf3f97d9a589e61d6db145355915"
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/verify_predispatch_contracts.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture-dir",
+    "$HG_CAPTURE_DIR",
+    "--output",
+    "<fresh>/contracts.json"
+   ],
+   "origin": "m14-contracts",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/contracts.exit",
+   "log": "local/m14/recovery-acceptance/contracts.log",
+   "log_sha256": "a9e664bc7cacc778de67ef943661725e9327f9fb579b79a7aeb4db244b65cdbc",
+   "note": "682/682 direct-call register contracts sufficient across 22 frames; t0/t1/t2 of 0014f060 each observable in 264/264 calls; 00152e90 a2/a3 observable in 0/22 (dead). Poisoned C-vs-original window: 0 RAM and 0 scratch differences on every frame. The pre-fix store-width mutant gives 325 differing RAM bytes and is rejected (measured on frame 10164 only).",
+   "receipt": "local/m14/recovery-acceptance/contracts.json",
+   "receipt_sha256": "f85f19b2b69c0195dcc2bfe38d393108d71bbbc6baea603a4146e8163f1ba86b"
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/verify_player_continuous.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture-dir",
+    "$HG_CAPTURE_DIR",
+    "--negative-controls",
+    "--output",
+    "<fresh>/continuous.json"
+   ],
+   "origin": "m14-continuous",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/continuous.exit",
+   "log": "local/m14/recovery-acceptance/continuous.log",
+   "log_sha256": "15075ccf7a9ae30c0facd20d6bc948d0b11d10ea43a3519752d2afd59b736a03",
+   "note": "Uninterrupted 22/22 frames (10164-10185) and 320/320 checkpoints, failures []. The 10165 render-handoff checkpoint matches bank ctx+0x598=1, stream +0x550=0x0063b480 and sort queue 0x00539470 with count 0. 11 defective controls rejected; the restored-frame null control is clean.",
+   "receipt": "local/m14/recovery-acceptance/continuous.json",
+   "receipt_sha256": "733fc528ad18af1bcfd2c176267a1313aa02f063d1ec8ad62645e42298049c5c"
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/verify_counter_guard.py",
+    "--elf",
+    "$HG_ELF",
+    "--ps2dinfo",
+    "$HG_PS2DINFO",
+    "--capture",
+    "$HG_CAPTURE_DIR/obs3-010.json",
+    "--output",
+    "<fresh>/counter.json"
+   ],
+   "origin": "m14-counter-guard",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/counter.exit",
+   "log": "local/m14/recovery-acceptance/counter.log",
+   "log_sha256": "e30a9c7b752c959f029eac89c0c42d928335e74c86b0c49a66c3df45a3136aef",
+   "note": "4/4 guard cases passed with 0 differences.",
+   "receipt": "local/m14/recovery-acceptance/counter.json",
+   "receipt_sha256": "621a163e5b587c483c3732e66971766db2cf33ffb96ea626c300770f158edea2"
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/hg_m14_results.py",
+    "--trace-dir",
+    "local/m14",
+    "--native",
+    "<fresh>/native.json",
+    "--continuous",
+    "<fresh>/continuous.json",
+    "--counter",
+    "<fresh>/counter.json",
+    "--contracts",
+    "<fresh>/contracts.json",
+    "--output",
+    "<fresh>/results.json"
+   ],
+   "origin": "m14-results",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/results.exit",
+   "log": "local/m14/recovery-acceptance/results.log",
+   "log_sha256": "5d237ba875d8bcbdce919c128a120bbeb4dd882ff9115ccdc07f64493eb08ea2",
+   "note": "Source-bound aggregation: every receipt's verification_sources hash matches the tracked file; 22 frames and 21 required controls. evidence/m14/results.json was regenerated from the same receipts on the unchanged source and is byte-identical to the private aggregate.",
+   "receipt": "evidence/m14/results.json",
+   "receipt_sha256": "eff1e03199b4190b9db4e27f6c3a2c8f1cb6801fc93915b76f727b8316d27b6a"
+  },
+  {
+   "command": [
+    "python3",
+    "-B",
+    "tools/hg_verify.py",
+    "run",
+    "--profile",
+    "full"
+   ],
+   "origin": "m12-regression-gate",
+   "expected": "passed",
+   "result": "PASSED",
+   "returncode": 0,
+   "exit_record": "local/m14/recovery-acceptance/full-regression.exit",
+   "log": "local/m14/recovery-acceptance/full-regression.log",
+   "log_sha256": "dedcce09ea93a4a59c62f1dc8881590cb4f8a6289ef7f94a1c551fd3becbaf09",
+   "note": "m12-20261122T003553Z-nmkuafkq: 79/79 gates accepted (74 passed, 5 expected-rejection), 0 reused, 0 retries. Started after results.json was written, on the corrected source (C c6d6293d...bf83, source set 7d48ab72...698d).",
+   "artifact": "local/verification/m12-20261122T003553Z-nmkuafkq/summary.json",
+   "artifact_sha256": "c63b6389a41d6364e4039b57bf77cc308be473151ba33b6918b2c312d9a01f7b"
+  }
+ ],
+ "continuous_controls": [
+  {
+   "control": "null-capture-restoration",
+   "kind": "null-control",
+   "result": "clean",
+   "first_divergent_stage": null,
+   "frame": 10165
+  },
+  {
+   "control": "corrupt-player-carry",
+   "kind": "continuity-corruption",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "corrupt-camera-carry",
+   "kind": "continuity-corruption",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "corrupt-service-phase-carry",
+   "kind": "continuity-corruption",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "omitted-counter-advance",
+   "kind": "continuity-corruption",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "omitted-frame-advance",
+   "kind": "continuity-corruption",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "wrong-input-stick",
+   "kind": "input-counterfactual",
+   "result": "rejected",
+   "first_divergent_stage": "constraint-entry",
+   "frame": 10165
+  },
+  {
+   "control": "wrong-gravity-step",
+   "kind": "compiled-defect",
+   "result": "rejected",
+   "first_divergent_stage": "floor-entry",
+   "frame": 10165
+  },
+  {
+   "control": "store-width-pre-fix",
+   "kind": "compiled-defect",
+   "result": "rejected",
+   "first_divergent_stage": "pre-dispatch-window",
+   "frame": 10165
+  },
+  {
+   "control": "phase-step-sign",
+   "kind": "compiled-defect",
+   "result": "rejected",
+   "first_divergent_stage": "coordinator-entry",
+   "frame": 10165
+  },
+  {
+   "control": "t1-omitted",
+   "kind": "compiled-defect",
+   "result": "rejected",
+   "first_divergent_stage": "pre-dispatch-window",
+   "frame": 10165
+  },
+  {
+   "control": "omitted-packet-bank-switch",
+   "kind": "compiled-defect",
+   "result": "rejected",
+   "first_divergent_stage": "render-handoff",
+   "frame": 10165
+  }
+ ],
+ "native_controls": [
+  {
+   "name": "omit-service",
+   "detected": true
+  },
+  {
+   "name": "wrong-order",
+   "detected": true
+  },
+  {
+   "name": "post-run-phase-mutation",
+   "detected": true
+  },
+  {
+   "name": "wrong-a0-17f2d0",
+   "detected": true
+  },
+  {
+   "name": "store-width-pre-fix",
+   "detected": true
+  },
+  {
+   "name": "missing-sq-zero",
+   "detected": true
+  },
+  {
+   "name": "phase-step-sign",
+   "detected": true
+  },
+  {
+   "name": "wrap-test-inverted",
+   "detected": true
+  },
+  {
+   "name": "t1-omitted",
+   "detected": true
+  }
+ ],
+ "diagnostic_controls": [
+  {
+   "name": "missing-delay-slot-17f6d0",
+   "kind": "runtime",
+   "detected": false,
+   "classification": "unobservable-on-captured-state",
+   "reason": "A skipped 0012f8b8 delay slot (a0=0x60) selects the same 0017f6d0 jump-table entry because both +0x10d bytes are 0."
+  },
+  {
+   "name": "152e90-pre-fix-arguments",
+   "kind": "compiled-contract",
+   "detected": false,
+   "classification": "unobservable-on-captured-state",
+   "reason": "00152e90 overwrites a2 and a3 before reading them; the pre-fix arguments are dead. Synthetic tests lock the call-site arguments instead."
+  }
+ ],
+ "negative_control_sources": [
+  {
+   "control": "omitted-packet-bank-switch",
+   "source": "local/m14/recovery-acceptance/continuous-controls/omitted-packet-bank-switch.c",
+   "sha256": "cef0108ed7e31a9a7061da4f76f17a806c803246239bc5a3a569c150fd597cb9"
+  },
+  {
+   "control": "phase-step-sign",
+   "source": "local/m14/recovery-acceptance/continuous-controls/phase-step-sign.c",
+   "sha256": "61bbd3b1883441202f5d01c2e55adb0b15c7e3ddf77946084aca411d1fe57d19"
+  },
+  {
+   "control": "store-width-pre-fix",
+   "source": "local/m14/recovery-acceptance/continuous-controls/store-width-pre-fix.c",
+   "sha256": "ec5f98de9365ba9de2ba49af96b5efb1283b022230dcf412bdd216a2939d91e5"
+  },
+  {
+   "control": "t1-omitted",
+   "source": "local/m14/recovery-acceptance/continuous-controls/t1-omitted.c",
+   "sha256": "ca991d827a735b30b20fe864b44df1adcf980be9c6fa03790d2f379c12da9f41"
+  },
+  {
+   "control": "wrong-gravity-step",
+   "source": "local/m14/recovery-acceptance/continuous-controls/wrong-gravity-step.c",
+   "sha256": "e5466db3cab1448db17476defbd6e596b210cb9cfe54f672bef9d01a17e65ae2"
+  },
+  {
+   "control": "store-width-pre-fix",
+   "source": "local/m14/recovery-acceptance/contracts-mutants/store-width-pre-fix.c",
+   "sha256": "ec5f98de9365ba9de2ba49af96b5efb1283b022230dcf412bdd216a2939d91e5"
+  },
+  {
+   "control": "152e90-pre-fix-arguments",
+   "source": "local/m14/recovery-acceptance/native-controls/152e90-pre-fix-arguments.c",
+   "sha256": "fc9d29371b7b80d9086b09c4a9a4433d0ec77781d2802998d057ceefae698c60"
+  },
+  {
+   "control": "missing-sq-zero",
+   "source": "local/m14/recovery-acceptance/native-controls/missing-sq-zero.c",
+   "sha256": "7219c6a6367af8e194258ca1d0421dddd847f1b5131f4ed2bc442fb46ce639c3"
+  },
+  {
+   "control": "phase-step-sign",
+   "source": "local/m14/recovery-acceptance/native-controls/phase-step-sign.c",
+   "sha256": "61bbd3b1883441202f5d01c2e55adb0b15c7e3ddf77946084aca411d1fe57d19"
+  },
+  {
+   "control": "store-width-pre-fix",
+   "source": "local/m14/recovery-acceptance/native-controls/store-width-pre-fix.c",
+   "sha256": "ec5f98de9365ba9de2ba49af96b5efb1283b022230dcf412bdd216a2939d91e5"
+  },
+  {
+   "control": "t1-omitted",
+   "source": "local/m14/recovery-acceptance/native-controls/t1-omitted.c",
+   "sha256": "ca991d827a735b30b20fe864b44df1adcf980be9c6fa03790d2f379c12da9f41"
+  },
+  {
+   "control": "wrap-test-inverted",
+   "source": "local/m14/recovery-acceptance/native-controls/wrap-test-inverted.c",
+   "sha256": "077d9cb38ba41057ee99a88f1478d1f285e7a014ab282e56ee40d7e0900fe7dd"
+  }
+ ],
+ "exclusions": [
+  "Native window: guest stack 0x01fe0000..0x01fffc6f (callee temporaries) excluded and counted (112-133 bytes per frame); 0x01fffc70..0x01ffffff compared.",
+  "Native window: captured libpad DMA buffers excluded.",
+  "Continuous: guest-stack and guest-stack-caller-frames remain external because the host-C coordinator does not materialize its own frame.",
+  "M13 external domains (render-facing projection arrays, coordinator tail services) are unchanged."
+ ],
+ "limitations": [
+  "The host models the observed alternating GS field from the starting state. General GS timing and DMA submission remain outside the reproduced handoff.",
+  "Live registers were not captured. gp and the caller a0 values are verified; sp=0x01fffc70 is inferred from an exact full-RAM match of the original window; other entry registers are zero in the oracle.",
+  "Capture RAM and scratchpad reads were sequential rather than atomic.",
+  "Inter-frame render, actor, kernel and tail-service state remains external.",
+  "Verified for the obs3 corridor profile (frames 10164-10185) only.",
+  "The M14 retail checks are not yet registered in the hg_verify inventory; the 79-gate regression covers M1-M12 historical checks on the M14 source.",
+  "The 690-word render-handoff packet is regenerated into ignored local/ and is not tracked; tools/hg_m14_evidence.py --render-handoff reproduces it from the ELF.",
+  "Functional reconstruction and original-instruction differentials do not establish byte-matching decompilation, full-game equivalence, a native port or static recompilation."
+ ],
+ "publication": "Commands use $HG_* substitutions. Private receipts, logs, captures, compiled controls and the ELF stay under ignored local/. Only hashes, counts, addresses and verdicts are committed."
+}

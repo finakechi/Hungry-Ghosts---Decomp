@@ -1,5 +1,98 @@
 # Hungry Ghosts — master handoff
 
+## M14 continuous pre-dispatch engine services — 2026-11-21
+
+**Resume here.** M14 acceptance passed and the work is **uncommitted**. It sits
+in the Duo worktree on branch `duo/hungry-ghosts-m14-continuous-pre-r2z3n`,
+based on the local-only M13 HEAD `ec9f479`. `origin/main` is `3b52075`, and
+there is no M14 PR. The final C is `c6d6293d…bf83`. The repaired 10164–10165
+transition and all 22 uninterrupted frames pass the strict pre-dispatch
+comparison. All 320 checkpoints pass.
+The observed `0012f8a8..0012f8c4` window runs
+before player dispatch in the carried M13 frame. `00198f60` is C
+(`hg_pre_dispatch_service`); `0017f6d0` (`a0 = 003f9e30`) and `0017f2d0`
+(`a0 = 0`) run original instructions. A mandatory `00158560` pre-dispatch
+checkpoint is compared each frame.
+
+**Review findings and corrections** (each checked against the ELF
+`a74248c5…3c61`):
+
+1. **P1-1 packet stores.** The C now issues `sq $zero,+10`, `sw +1c` and
+   64-bit `sd +20/+28/+30/+38` (`001991c0..d4`, `001992a0..b4`,
+   `001993d0..e4`). No store reaches the next header's byte 2. The dead
+   `0xfffffff4` high-lane seam is removed. The draft binary differs by exactly
+   325 bytes on poisoned buffers.
+2. **P2-1 contracts.** The C passes `0014f060`'s `t0 = 70000ba0`,
+   `t1 = ctx+5b0` and `t2 = record+18` through `HG_CALL_T_REGS` (`0xfffffff5`).
+   The seam is one-shot and fails closed on any other callee. `00152e90` gets
+   `a2` = final packet address and `a3` = ctx. A contracts smoke shows 31/31
+   direct calls sufficient under poisoned non-contract registers; `t0`/`t1`/`t2`
+   are each necessary, and the `152e90` `a2`/`a3` are dead.
+3. **P1-3 coverage.** `predispatch_differential.compare_window` requires the
+   reconstruction's window write set to equal the original-instruction write
+   set, with equal native values. It covers absolute addresses, scratch and the
+   four ctx packet streams relative to their cursors. It runs in the native,
+   contracts and continuous verifiers, and in the continuous controls, which
+   previously skipped `pre-dispatch`. The caller `sp = 0x01fffc70` makes the
+   original window match all 32 MiB RAM and the scratchpad. The native stack
+   exclusion is narrowed below it, and its differences are counted.
+4. **P2-2 controls.** Compiled store-width, `sq`-omission, phase-sign,
+   wrap-test and `t1` defects are added. The true `0012f8b8` delay-slot defect
+   is unobservable on the captured state (same jump-table entry), so it is a
+   recorded diagnostic.
+5. **P1-2 evidence.** Receipts record verifier sources and library hashes,
+   and `hg_m14_results.py` requires matching full-run receipts. The private
+   receipts stay under `local/`. Their RAM-free aggregate is committed as
+   [evidence/m14/results.json](evidence/m14/results.json).
+
+**Focused results** (historical, before the recovery fix; C `35f76ec6…e082`):
+52 focused synthetic tests pass, and
+UBSan gives 0 differences. The packet's 743 words pass PS2DInfo
+`--require-all-bytes` (`2e4a226`) and the JAL verifier. The counter guard
+passes 4/4 (`local/m14/counter-guard-002.json`). The native-window smoke
+(2 frames) and contracts smoke (1 frame) pass.
+
+**Recovery.** At 10165 the old path reused the previous render bank and the
+advanced sort-queue pointer/count. The frame composition now samples the GS
+field through a host input, flips the render bank, and runs original
+`00148970`, which resets the packet cursors and sort queue. Continuous
+receipts check those inputs at each coordinator stop and replay the original
+window on the carried input to diagnose any strict failure. Both the 743-word
+window packet and 690-word handoff packet pass the original-byte checks.
+
+**Acceptance** (final C `c6d6293d…bf83`, library `d149b780…e09e`, ELF
+`a74248c5…3c61`, PS2DInfo `2e4a226`):
+
+- **Continuous:** 22/22 frames and 320/320 checkpoints, uninterrupted.
+  11 defects rejected and the restored-frame null control clean. The 10165
+  render handoff matches bank 1, stream `+0x550 = 0x0063b480`, and queue
+  `0x00539470` with count 0.
+- **Native window:** 22/22 frames and 21/21 phase handoffs, with zero oracle
+  RAM and scratch differences. 9 required controls were detected. The
+  `0012f8b8` delay-slot skip and the pre-fix `00152e90` arguments are
+  unobservable on the captured state and stay diagnostic.
+- **Register contracts:** 682/682, with zero poisoned-buffer differences.
+- **Other checks:** 1,433 original words (743 + 690), counter guard 4/4 and
+  288/288 synthetic tests.
+- **Regression:** `m12-20261122T003553Z-nmkuafkq` accepted 79/79 gates
+  (0 reused, exit 0). It ran after the aggregate was written, on source set
+  `7d48ab72…698d`. The earlier `m12-20261121T200143Z-78x2cdc0` passed on
+  pre-correction C `66d43cc0…c4897` and does not certify this source.
+  `m12-20261121T193538Z-zgttv8o1` was interrupted at 5/79.
+
+[results.json](evidence/m14/results.json) and
+[checks.json](evidence/m14/checks.json) are the permanent records. See
+[docs/M14.md](docs/M14.md#recovery-verification) for commands, run
+chronology and the [commit set](docs/M14.md#commit-set).
+
+**Limits.** These results cover only the observed obs3 corridor and the
+host-modeled alternating GS field. General GS timing, DMA submission and the
+remaining post-camera services stay external. No byte matching, full-game
+equivalence, native port or static recompilation is claimed.
+
+**Next action.** The owner reviews the diff and decides on a local commit.
+Publishing requires M13 to be published first.
+
 ## M13 continuous player movement, collision and camera — 2026-11-21
 
 **Resume here.** M13 is complete for the obs3 corridor sequence: 22 consecutive
