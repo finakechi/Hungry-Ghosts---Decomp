@@ -104,6 +104,7 @@ class Machine:
         self.vf[0] = 0x3f800000 << 96
         self.vacc = [0] * 4
         self.q = 0
+        self.trace = None  # optional read-only instruction-boundary observer
 
     def put(self, address, data):
         self.mem.update((address + i, x) for i, x in enumerate(data))
@@ -143,6 +144,7 @@ class Machine:
                 self.pc = self.reg[31] & MASK64
                 continue
             pc = self.pc
+            if self.trace is not None:self.trace(self)
             self.executed.add(pc)
             word = self.load(pc, 4)
             op, rs, rt, rd, sa, fn = word >> 26, (word >> 21) & 31, (word >> 16) & 31, (word >> 11) & 31, (word >> 6) & 31, word & 63

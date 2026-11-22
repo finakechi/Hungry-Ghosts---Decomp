@@ -1,5 +1,41 @@
 # Hungry Ghosts — start here
 
+## M14 continuous pre-dispatch engine services — 2026-11-21
+
+**Resume here.** M14 acceptance passed for the obs3 corridor sequence. The
+work is **uncommitted** in the Duo worktree on branch
+`duo/hungry-ghosts-m14-continuous-pre-r2z3n`, based on M13 HEAD `ec9f479`.
+That base is local only; `origin/main` is still `3b52075` (M12). There is no
+M14 PR. The final C is `c6d6293d…bf83`.
+
+- **Delivered:** before player dispatch, each frame runs C `00198f60`
+  (`hg_pre_dispatch_service`, exact `sq`/`sw`/`sd` packet widths) and the
+  original `0017f6d0`/`0017f2d0`. Between frames, the C writes the field word
+  (`00149940`, host-modeled field) and flips the render bank (`00149870`).
+  Original `00148970` then resets the packet cursors and sort queue. The
+  player and camera frame from M13 continues on the carried state.
+- **Last verification:** 22/22 frames and 320/320 checkpoints, uninterrupted.
+  11 defects rejected and 1 clean control. Native window 22/22 with
+  9 controls detected. Two diagnostics are unobservable by design.
+  682/682 register contracts. 1,433 original words. Counter guard 4/4.
+  288 synthetic tests. Full regression `m12-20261122T003553Z-nmkuafkq`:
+  79/79, 0 reused, on the same source.
+  [results.json](evidence/m14/results.json) ·
+  [checks.json](evidence/m14/checks.json).
+- **Private inputs** (ignored `local/`): the Japanese ELF
+  `a74248c5…3c61`, PS2DInfo `2e4a226`, the M13 obs3 captures and the
+  `local/m14/original-window-*-v3.json` traces. The full regression also
+  needs the ISO and PCSX2 (`HG_JAPAN_ISO`, `HG_PCSX2`).
+- **Limits:** GS timing, DMA submission and later post-camera services are
+  external. No byte matching, full-game equivalence, port or recompilation is
+  claimed. See [docs/M14.md](docs/M14.md#limits).
+- **Blockers:** owner review and the local-commit decision. Publication
+  also requires M13 (`ec9f479`) to be published first.
+
+**Next action.** Review the M14 diff and evidence, then decide whether to
+commit the files listed in [docs/M14.md](docs/M14.md#commit-set) locally on
+top of `ec9f479`.
+
 ## M13 continuous player movement, collision and camera — 2026-11-21
 
 **Resume here.** M13 is complete for one original-game-observed continuous
