@@ -1,0 +1,19 @@
+{
+ "schema": "hg-m13-checks/v1",
+ "status": "pending-verification",
+ "commands": {
+  "synthetic-tests": "python -B -m unittest discover -s tests -v",
+  "m13-packet": "python -B tools/hg_m13_evidence.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --output <fresh>/functions.json",
+  "m13-packet-ps2dinfo": "python -B $HG_PS2DINFO/tools/validate_evidence.py analysis/player_frame/functions.json",
+  "m13-packet-bytes": "python -B $HG_PS2DINFO/tools/verify_elf_evidence.py --require-all-bytes $HG_ELF analysis/player_frame/functions.json",
+  "m13-packet-project": "python -B tools/verify_elf_evidence.py --elf $HG_ELF --record analysis/player_frame/functions.json",
+  "m13-observation": "python -B local/m13/make-observation3.py obs3 <fresh>/continuous-observation.json",
+  "m13-continuous": "python -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir local/m13/captures --output <fresh>/continuous.json",
+  "m13-continuous-controls": "python -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir local/m13/captures --negative-controls --output <fresh>/continuous-controls.json",
+  "m12-regression-gate": "python3 -B tools/hg_verify.py run --profile full"
+ },
+ "environment": {
+  "HG_ELF": "local/extracted/japan/SCPS_150.46",
+  "HG_PS2DINFO": "local/references/PS2DInfo"
+ }
+}

@@ -37,9 +37,9 @@ def validate_packet(packet):
             raise ValueError('Missing actor instruction/delay slot')
 
 
-def run(lib, data, segments):
+def run(lib, data, segments, *, functions=FUNCTIONS):
     rng = random.Random(0x1504608); coverage = set(); counts = {}
-    for entry, (name, arity) in FUNCTIONS.items():
+    for entry, (name, arity) in functions.items():
         for case in range(160):
             mem = Memory(data, segments); actor = 0x500000
             for a in (actor, actor+0x400):
@@ -87,6 +87,7 @@ def run(lib, data, segments):
             ee = m.run(entry, limit=20000)&0xffffffff
             if entry == 0x1429b0 and result != ee:raise AssertionError('Allocation return mismatch')
             if any(m.reg[i] != v for i,v in saved.items()):raise AssertionError('Callee-saved register mismatch')
+            if cd.errors or md.errors:raise RuntimeError((cd.errors, md.errors))
             compare(cd, md, f'{name}/{case}'); coverage.update(m.executed)
             counts[name] = counts.get(name, 0)+1
     return counts, coverage

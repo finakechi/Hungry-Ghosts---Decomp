@@ -251,10 +251,20 @@ def control_verdict(memory_first, final, registers):
     differing EE RAM/scratchpad bytes at an authenticated checkpoint, or a native register
     that differs from the value measured in this run. Missing measurements, driver errors
     and DMA-touch-only results never count."""
+    if final.get('external_dma', {}).get('modeled_accesses') or any(r['result'] == 'missing' for r in registers):
+        return 'error', [], []
     memory = memory_first is not None or bool(final['different_bytes'] or final['scratchpad']['different_bytes'])
     register = [r['register'] for r in registers if r['result'] == 'failed']
     basis = (['memory'] if memory else []) + (['register'] if register else [])
     return ('rejected' if basis else 'ESCAPED'), basis, register
+
+
+def airborne_refusal(exc):
+    errors = exc.args[0] if len(exc.args) == 1 else None
+    if not isinstance(errors, list) or len(errors) != 1:
+        return None
+    match = re.fullmatch(r"ValueError\('C path outside reconstructed domain \(code (0x[0-9a-f]+)\)'\)", errors[0])
+    return match[1] if match else None
 
 
 def controls(lib, caps, obs, folder):
@@ -291,7 +301,8 @@ def controls(lib, caps, obs, folder):
         try:
             row = measure(f'null-{phase}', fr, execute(lib, caps, fr, STATUS_VALUES[0]), 'null-control')
             clean = row['result'] == 'ESCAPED' and all(r['result'] == 'passed' for r in row['registers'])
-            row['result'] = 'clean' if clean else 'DIVERGED'
+            if row['result'] != 'error':
+                row['result'] = 'clean' if clean else 'DIVERGED'
         except Exception as exc: row = dict(control=f'null-{phase}', kind='null-control', frame=fr['counter'], result='error', detail=str(exc)[:500])
         rows.append(row); print(row['control'], row['result'], flush=True)
         with (folder / (row['control'] + '.result.json')).open('x') as out: json.dump(row, out, indent=2); out.write('\n')
@@ -329,10 +340,10 @@ def controls(lib, caps, obs, folder):
         execute(lib, caps, fr, STATUS_VALUES[0], mutate={P + 0x34: (0x42480000, 4)})   # y = 50
         row = dict(control='airborne-fails-closed', kind='fail-closed', frame=fr['counter'], result='ESCAPED')
     except AssertionError as exc:
-        codes = re.findall(r'outside reconstructed domain \(code (0x[0-9a-f]+)\)', str(exc))
-        closed = codes == ['0x50']   # exactly one refusal, the no-floor code
+        code = airborne_refusal(exc)
+        result = 'refused' if code == '0x50' else 'unexpected-refusal' if code else 'error'
         row = dict(control='airborne-fails-closed', kind='fail-closed', frame=fr['counter'],
-                   result='refused' if closed else 'error', detail=str(exc)[:300])
+                   result=result, refusal_code=code, detail=str(exc)[:300])
     rows.append(row); print(row['control'], row['result'], flush=True)
     with (folder / (row['control'] + '.result.json')).open('x') as out: json.dump(row, out, indent=2); out.write('\n')
     return rows

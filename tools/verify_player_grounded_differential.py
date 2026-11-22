@@ -104,11 +104,13 @@ def classify(c_errors, c_balanced, c_floor_type, reached, comparison=None, scrat
     genuine = comparison['different_bytes'] > 0 or scratch_bytes > 0
     row = dict(original_branches=reached, different_bytes=comparison['different_bytes'], scratch_bytes=scratch_bytes,
                differences=comparison['differences'][:8])
+    accesses = comparison['external_dma']['modeled_accesses']
+    if accesses:
+        return dict(result='failed', failure='external-dma-access', modeled_accesses=accesses[:8], **row)
     if genuine: return dict(result='failed', failure='measured-divergence', **row)
     if reached: return dict(result='failed', failure='unsupported-branch-not-refused', **row)
     if comparison['result'] != 'passed':
-        return dict(result='failed', failure='external-dma-access',
-                    modeled_accesses=comparison['external_dma']['modeled_accesses'][:8], **row)
+        return dict(result='error', detail=['Comparison failed without measured differences or DMA access'])
     return dict(result='passed', **row)
 
 

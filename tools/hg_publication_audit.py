@@ -6,8 +6,11 @@ Bounded instruction evidence and summarized measurements require human review.
 """
 import argparse
 import json
+from pathlib import Path
 import re
 import subprocess
+
+from hg_evidence_safety import digest
 
 PRIVATE = re.compile(r'(^|/)(local|extracted|bios|captures?)(/|$)|\.(iso|chd|elf|irx|bin|gpr|gbf|bundle|zip|tar|gz|png|jpg)$|(^|/)(PACK|STREAM)\.DAT$', re.I)
 PATTERNS = {
@@ -42,31 +45,60 @@ def audit(repo='.', base='origin/main', head='HEAD'):
         objects.append({'oid': oid, 'type': kind, 'path': path, 'size': len(data)})
         if kind not in ('blob', 'commit'):
             continue
-        try:
-            text = data.decode('utf-8')
-            if '\0' in text:
-                raise UnicodeError()
-        except UnicodeError:
-            findings.append({'oid': oid, 'path': path, 'kind': 'binary/non-UTF8'})
-            continue
-        for label, pattern in PATTERNS.items():
-            lines = [i + 1 for i, line in enumerate(text.splitlines()) if pattern.search(line)]
-            if lines:
-                findings.append({'oid': oid, 'path': path, 'kind': label, 'lines': lines})
+        findings.extend({'oid': oid, 'path': path, **finding} for finding in content_findings(data))
     return {'schema': 'hg-publication-audit/v1', 'base': base, 'head': head,
             'commits': commits, 'objects': objects, 'findings': findings,
             'result': 'review-required' if findings else 'no-heuristic-findings',
             'limits': 'Requires content review of source, bounded instruction evidence, licensing and summarized captures. Does not prove absence of every secret.'}
 
 
+def content_findings(data):
+    try:
+        text = data.decode('utf-8')
+        if '\0' in text:
+            raise UnicodeError()
+    except UnicodeError:
+        yield {'kind': 'binary/non-UTF8'}
+        return
+    for kind, pattern in PATTERNS.items():
+        lines = [i + 1 for i, line in enumerate(text.splitlines()) if pattern.search(line)]
+        if lines:
+            yield {'kind': kind, 'lines': lines}
+
+
+def worktree_paths(repo):
+    paths = set()
+    for args in (('diff', 'HEAD', '--name-only'), ('ls-files', '--others', '--exclude-standard')):
+        rows = subprocess.check_output(['git', '-C', str(repo), *args, '-z']).split(b'\0')
+        paths.update(Path(row.decode()) for row in rows if row)
+    return sorted(paths)
+
+
+def audit_worktree(repo='.'):
+    files, findings = [], []
+    for name in worktree_paths(repo):
+        path = Path(repo) / name
+        if path.is_symlink() or (path.exists() and not path.is_file()) or PRIVATE.search(name.as_posix()):
+            findings.append({'path': name.as_posix(), 'kind': 'private/unsupported worktree entry'})
+            continue
+        if path.is_file():
+            files.append({'path': name.as_posix(), 'size_bytes': path.stat().st_size, 'sha256': digest(path)})
+            findings.extend({'path': name.as_posix(), **finding} for finding in content_findings(path.read_bytes()))
+    return {'schema': 'hg-worktree-publication-scan/v1', 'files': files, 'findings': findings,
+            'result': 'review-required' if findings else 'no-heuristic-findings',
+            'limits': 'Working-file heuristics only. See the committed-object audit for history.'}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--base', default='origin/main'); p.add_argument('--head', default='HEAD')
     p.add_argument('--output', required=True)
-    a = p.parse_args(); report = audit(base=a.base, head=a.head)
+    p.add_argument('--worktree', action='store_true')
+    a = p.parse_args()
+    report = audit_worktree() if a.worktree else audit(base=a.base, head=a.head)
     with open(a.output, 'x') as f:
         json.dump(report, f, indent=2); f.write('\n')
-    print(report['result'] + ': ' + str(len(report['objects'])) + ' objects; ' + str(len(report['findings'])) + ' findings')
+    print(report['result'] + ': ' + str(len(report.get('objects', report.get('files', [])))) + ' objects; ' + str(len(report['findings'])) + ' findings')
     raise SystemExit(bool(report['findings']))
 
 

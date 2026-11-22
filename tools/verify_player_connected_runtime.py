@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'tests')]
 from ee_subset import Machine
+from hg_verify_build import build_path
 from resource_harness import Driver,ResourceEnv,library
 from verify_resource_loader import EXPECTED,shared_module
 from hg_evidence_safety import digest
@@ -455,7 +456,7 @@ def main():
     def setup():
         if digest(args.elf)!=EXPECTED:raise ValueError('Wrong original ELF')
         shared=shared_module(args.ps2dinfo);elfdata=args.elf.read_bytes();segments,_=shared.segments_from_elf(elfdata)
-        build_root=ROOT/'local/build';build_root.mkdir(parents=True,exist_ok=True)
+        build_root=build_path(ROOT / 'local/build');build_root.mkdir(parents=True,exist_ok=True)
         build=Path(tempfile.mkdtemp(prefix='player-connected-',dir=build_root))/'runtime.so'
         lib=library(output=build)
         return lib,elfdata,segments

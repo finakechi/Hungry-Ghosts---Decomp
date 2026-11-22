@@ -1905,6 +1905,15 @@ void hg_camera_update(HGResourceEnv *e) {
     call(e,0x143c60,r32(e,camera+0xd0),0x70000000,0x70000000,0);
     call(e,0x143d30,r32(e,camera+0xd4),0x70000000,0x70000000,0);
     copy_quad(e,0x70000030,camera);
+    /* Render-facing scratch at 0x710..0x72f and 0xba0..0xbaf: the original's
+     * chain leaves these written at the camera-return stop (constant
+     * 0,768,960,0,128,128,128,12 and camera position with w=127.0 in every
+     * obs3 frame), but the authenticated 0012c790 instruction stream contains
+     * no such stores and every direct writer (00138ed8, 0015c580, 0017fb58,
+     * 00181874, 0012ab80) is jalr-indirect -- they are produced deeper in the
+     * chain through paths the C composition does not model. They are declared
+     * render-facing external at every stage; the camera STATE (0x3f9860) and
+     * every scratch offset this path writes remain fully guarded. */
     w8(e,camera+0x140,0);
 }
 static uint32_t turn_camera_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
@@ -2208,4 +2217,116 @@ void hg_player_grounded_fixed(HGResourceEnv *e,uint32_t a) {
     HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
     p.env.load=process_load;p.env.store=process_store;p.env.call=grounded_process_call;
     hg_player_grounded(&p.env,a);
+}
+
+
+/* M13: the observed per-frame engine advance that the original executes
+ * between the end of one reconstructed frame and the next dispatcher entry.
+ *
+ * 0031bb80 (hg_frame_edge_sync): four per-frame edge counters are copied to
+ * their previous slots and cleared (3fa040 -> 3fa050; 3f9e34/3f9e38/3f9e3c
+ * +0x210 -> +0x220). Called by the coordinator 0012f850 every frame.
+ *
+ * hg_counter_advance: the observed 001379f0-region advance, guarded by the
+ * byte 0x2f78(gp) = 0x3fcee8 (0 in all observed corridor frames): 46d930 += 1
+ * and 46e110 += 1, keeping the original's -1 clamp.
+ *
+ * hg_frame_advance: the observed prefix of the per-frame coordinator
+ * 0012f850 (12f850..12f8a4): 3fa190 += 1 with the original's negative-wrap
+ * reset (bgez guard), the edge sync, halfword 3f9ff8 = 0, and the guarded 46e118 += 1.
+ * The coordinator's engine service calls (00198f60, 0017f6d0, 0017f2d0,
+ * 0013b6e0, ...) are declared external through the host-only HG_EXTERNAL_CALL
+ * seam: their memory effects are outside every reconstructed domain
+ * (inter-frame write evidence). The observed corridor frames run 0012f850
+ * (not its sibling 0012f950): the selector byte 3f9f3e is 0.
+ *
+ * hg_player_frame_continuous: one continuous frame = coordinator prefix,
+ * M10 dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history), the
+ * M9 same-frame camera, the declared external coordinator tail and the
+ * 001379f0 engine counter advance, all on one carried bus. The controller
+ * input (pad area) is an external per-frame input; nothing else is restored
+ * between frames. */
+#define HG_EXTERNAL_CALL 0xfffffff3u
+static const uint32_t frame_guard=0x3fcee8u; /* byte 0x2f78(gp), gp = 0x3f9f70 */
+
+void hg_frame_edge_sync(HGResourceEnv *e) {
+    w32(e,0x3fa050,r32(e,0x3fa040));
+    w32(e,0x3fa040,0);
+    w32(e,0x3f9e34+0x220,r32(e,0x3f9e34+0x210));
+    w32(e,0x3f9e34+0x210,0);
+    w32(e,0x3f9e38+0x220,r32(e,0x3f9e38+0x210));
+    w32(e,0x3f9e38+0x210,0);
+    w32(e,0x3f9e3c+0x220,r32(e,0x3f9e3c+0x210));
+    w32(e,0x3f9e3c+0x210,0);
+}
+void hg_counter_advance(HGResourceEnv *e) {
+    if(r8(e,frame_guard)!=0)return;
+    w32(e,0x46d930,r32(e,0x46d930)+1u);
+    w32(e,0x46e110,r32(e,0x46e110)+1u);
+    if(r32(e,0x46e110)==0xffffffffu)w32(e,0x46e110,0xffffffffu);
+    /* 137a40..137aa4 mega-counter path: reachable only after 108000 frames
+     * (46d930 >= 0x1a5e0); never observed in the retail captures. Reconstructed
+     * for the listing; the corridor frames always take the early return. */
+    if((uint32_t)r32(e,0x46d930)<108000u)return;
+    w32(e,0x46d908,r32(e,0x46d908)+1u);
+    int32_t m=(int32_t)r32(e,0x46d908);
+    if(m<0)w32(e,0x46d908,0);      /* bgez guard: negative wrap resets */
+    else if(m>=3)w32(e,0x46d908,3); /* clamped at 3 */
+    w32(e,0x46d930,0);
+}
+void hg_frame_advance(HGResourceEnv *e) {
+    call(e,HG_GUEST_FRAME,0x50,1,0,0); /* coordinator-entry seam (0012f850) */
+    w32(e,0x3fa190,r32(e,0x3fa190)+1u);
+    if((int32_t)r32(e,0x3fa190)<0)w32(e,0x3fa190,0); /* bgez guard: negative wrap resets */
+    call(e,0x31bb80,0,0,0,0);
+    w16(e,0x3f9ff8,0);
+    if(r8(e,frame_guard)==0)w32(e,0x46e118,r32(e,0x46e118)+1u);
+    call(e,HG_GUEST_FRAME,0x50,0,0,0); /* coordinator-counter seam (0012f8a8) */
+}
+static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x31bb80) {hg_frame_edge_sync(&p->env);return 0;}
+    if(pc==0x12f850) {hg_frame_advance(&p->env);return 0;}
+    /* Coordinator 0012f850 engine-service calls (authenticated jal targets
+     * 0012f8a8..0012f92c plus the counter routine 00137890), declared external
+     * on inter-frame write evidence. The matrix helpers 00143c60/00143d30/
+     * 00143b90 are NOT coordinator calls: they are the camera-chain rotations
+     * reached from 0012bd00/0012c790 (hg_camera_head_matrix/hg_camera_update)
+     * and must execute their original instructions, exactly as in the M12
+     * grounded path (they fall through to the owner bus, which interprets
+     * them with FP_SEAMS operand placement). Externalizing them left the head
+     * matrix identity and diverged the camera struct from the first frame. */
+    if(pc==0x198f60 || pc==0x17f6d0 || pc==0x17f2d0 || pc==0x13b6e0 ||
+       pc==0x1430a0 || pc==0x143100 || pc==0x12bc70 || pc==0x18c520 ||
+       pc==0x143150 || pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
+       pc==0x13ce80 || pc==0x137890) {
+        p->outer->call(p->outer->user,HG_EXTERNAL_CALL,pc,0,0,0);
+        return 0;
+    }
+    return grounded_process_call(user,pc,a,b,c,d);
+}
+void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    HGResourceEnv *bus=&p.env;
+    bus->load=process_load;bus->store=process_store;bus->call=frame_process_call;
+    hg_frame_advance(bus);     /* 0012f850 prefix: 3fa190, edge sync, 3f9ff8, 46e118 */
+    call(bus,HG_EXTERNAL_CALL,0x198f60,0,0,0); /* coordinator services between the */
+    call(bus,HG_EXTERNAL_CALL,0x17f6d0,0,0,0); /* counter stop and the dispatcher */
+    call(bus,HG_EXTERNAL_CALL,0x17f2d0,0,0,0);
+    hg_player_dispatch(bus);   /* walk, C 0015ebc0, C 0015fc10/0015e420, history */
+    hg_camera_update(bus);     /* same-frame camera on the floor-corrected position */
+    /* Coordinator tail (0012f850 after the camera return): external services,
+     * then the engine routine 00137890 whose 001379f0 body advances 46d930 and
+     * 46e110 (hg_counter_advance). */
+    call(bus,HG_EXTERNAL_CALL,0x13b6e0,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x1430a0,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x143100,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x12bc70,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x18c520,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x143150,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x1431a0,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x25c170,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);
+    call(bus,HG_EXTERNAL_CALL,0x13ce80,0,0,0);
+    hg_counter_advance(bus);   /* 00137890's 001379f0 body: 46d930/46e110 */
 }

@@ -1,5 +1,72 @@
 # Hungry Ghosts — start here
 
+## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Resume here.** M13 is complete for one original-game-observed continuous
+sequence: 22 consecutive frames (10164–10185) run from a single authenticated
+starting state — approach (6), wall contact (2), contact-turn with slides (4),
+release and braking (6), stopped (4) — with position history and the same-frame
+camera on every frame, and no captured-state restoration after the first frame.
+Local branch `research/m13-continuous-movement` (baseline main `3b52075` =
+M12 merged), HEAD `ba5b1f9`. **Not merged; no PR.** See
+[docs/M13.md](docs/M13.md).
+
+- **Reconstructed (byte-verified against ELF `a74248c5…3c61`):** the
+  coordinator `0012f850` observed prefix (the `3fa190` frame-counter increment
+  with its `bgez` wrap guard, `0031bb80` edge sync, `3f9ff8` clear, guarded
+  `46e118` increment) and the engine counter-advance body `001379f0`
+  (`46d930`/`46e110`, −1 clamp, mega-counter path). The coordinator's
+  engine-service jal targets are declared external seams; the camera-chain
+  matrix helpers `00143c60`/`00143d30`/`00143b90` run original instructions
+  through the owner bus in both M12 and M13 paths (regression test locks
+  routing).
+- **Continuity:** the original rewrites 0 player/camera struct bytes between
+  frames (11 obs2 pairs); the reconstructed frame reads none of the
+  inter-frame counters. Only the recorded pad input is supplied externally
+  between frames; everything else carries.
+- **Verification (at `ba5b1f9`):** continuous verifier 22/22 frames, 0 guarded
+  failures, every stage compared (`local/m13/continuous-verify-007.json`);
+  controls 7/7 (null clean, 6 rejected incl. a compiled defect); packet
+  221 words passes PS2DInfo `--require-all-bytes` and the project byte/JAL
+  verifier; synthetic suite 270/270; full M12 profile
+  `m12-20261121T162844Z-sf2p_o3e` 79/79 accepted, 0 reused.
+  [checks.json](evidence/m13/checks.json) holds commands, logs and verdicts.
+- **Limits:** verified for the obs3 corridor profile only; the `0012c790`
+  screen-space projection arrays and the coordinator engine services remain
+  external; the player dispatcher's non-observed states fail closed.
+
+**Next action.** Reconstruct the camera chain's screen-space projection body,
+or open M14 with the coordinator's first engine service `00198f60`.
+
+## M12 verification automation — 2026-11-19
+
+M12 merged through [PR #15](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/15)
+at `3b52075176f4a9cae1accba8a230167e0c7ef194`. Main CI passed on Python
+3.10 and 3.14. The automation milestone is on
+`automation/m12-verification-stage1` in `decomp-m12`.
+
+From that worktree, run `python3 -B tools/hg_verify.py plan --profile full`
+and `python3 -B tools/hg_verify.py run --profile full`. Set `HG_PCSX2`
+to the approved binary for the saved M4–M7 inputs. The focused profile
+retains eight gates. See the [M12 command guide](docs/M12.md#verification-automation).
+
+MainPC accepted 79/79 historical checks in run `m12-20261120T021536Z-q6tug_5i`.
+The synthetic suite passed 259 tests. The saved M12 replay matched 130
+stages across 118 captures, 36 register comparisons and 11 handoffs. It
+rejected 14 mutations, passed two null controls and observed the expected airborne
+refusal `0x50`. The M12 instruction differential measured 551 equal and
+49 expected refusals. The M11 frame cross-check matched all 36 checkpoints.
+
+The clean run took 53m29s against the historical 47m31s, including 31.7s
+outside the child commands. Resume revalidated and reused all 79 receipts
+in 21.5s without executing a verifier. The missing-input run
+accounted for all 79 checks and exited with an incomplete verdict.
+Reports remain in ignored `local/verification/`. Final review replayed all
+79 verdicts through the corrected classifier and passed 260 synthetic tests.
+
+**Next action.** Profile check 70, the 600-case M11 instruction differential,
+using the saved inputs and preserving its comparison contract.
+
 ## M12 connected grounded movement and environmental response — 2026-11-19
 
 **Resume here.** M12 is complete for one original-game-observed connected
@@ -14,7 +81,8 @@ M11 constraint, M10 dispatcher and M9 camera. Local branch
 `research/m12-grounded-movement` (baseline main `35360c9b…4c`): implementation
 `95364d6`, evidence `ffa6ef3`, review fixes `28d7c80`, then the corrected
 documentation/evidence commit.
-**Pushed for pull-request review (not merged); no private M12 Drive backup.** Detail: [docs/M12.md](docs/M12.md).
+**Merged through PR #15.** Private M12 Drive backup status is **unrun**.
+See [docs/M12.md](docs/M12.md).
 
 - **Evidence:** run `obs2`, 139 native stops (all PC-bound); 12 complete frames
   1209–1220: approach 2, contact 3, contact-turn 3, release 4. The 10 native
@@ -53,10 +121,9 @@ documentation/evidence commit.
   frame starts from a captured entry state. No general collision, autonomous
   inter-frame execution, all-C, byte-match or whole-game claim.
 - **Publication:** on 2026-11-19 Noah chose to publish the packet with its 628
-  original instruction words included, as for M1–M11; the branch is pushed and a
-  pull request opened. Merge and a private backup are not authorized.
-- **Blockers:** none. **ONE next action:** Noah reviews and decides on merging the
-  M12 pull request. No M13 or final technical objective is selected.
+  original instruction words included, as for M1–M11. PR #15 is merged. The
+  automation section above records the current continuation. Any M13 work and
+  the final technical objective remain deferred.
 
 Earlier milestone sections below retain their historical status and next-action
 wording; M12 above is the current resume point.

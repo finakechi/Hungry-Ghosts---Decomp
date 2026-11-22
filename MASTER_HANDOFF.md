@@ -1,14 +1,111 @@
 # Hungry Ghosts — master handoff
 
+## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Resume here.** M13 is complete for the obs3 corridor sequence: 22 consecutive
+frames (10164–10185) executed from one authenticated starting state — approach
+(6), contact (2), contact-turn with wall slides (4), release/braking (6),
+stopped (4) — with position history and the same-frame camera on every frame
+and no captured-state restoration after the first frame. Branch
+`research/m13-continuous-movement`, baseline main `3b52075` (M12 merged),
+HEAD `ba5b1f9`. **Not merged; no PR.** Private Drive backup status is unrun.
+
+**Newly reconstructed (byte-verified against ELF `a74248c5…3c61`):** the
+coordinator `0012f850` observed prefix — the `3fa190` frame-counter increment
+with its `bgez` wrap guard (semantics confirmed live by obs3 coordinator stops),
+the `0031bb80` edge-counter sync, the `3f9ff8` clear and the guarded `46e118`
+increment — and the engine counter-advance body `001379f0` of `00137890`
+(`46d930`/`46e110` increments, −1 clamp, 108000-frame mega-counter path).
+Dispatch contract: the coordinator's engine-service jal targets are declared
+external seams (0 reconstructed-domain bytes in the inter-frame evidence);
+the camera-chain matrix helpers `00143c60`/`00143d30`/`00143b90` execute
+original instructions through the owner bus in both the M12 and the continuous
+paths (`test_player_continuous.py::test_frame_dispatch_routes_camera_helpers_to_interpreter`
+locks the routing).
+
+**Continuity:** inter-frame diffing of the original obs2 pairs (11 pairs,
+frames 1209–1220) shows 0 player/camera struct bytes rewritten between frames —
+only frame counters (+1), pad input on input-change frames, and external engine
+domains. The read-set instrumentation of one reconstructed frame confirms the
+path reads none of the inter-frame counters. Between frames only the recorded
+pad-area input is supplied externally; every other byte carries from the
+preceding reconstructed frame.
+
+**Verification (2026-11-21, at `ba5b1f9`):** continuous verifier
+`local/m13/continuous-verify-007.json` — 22/22 frames, 0 guarded failures;
+every stage compared per frame (coordinator-entry/counter, dispatch → grounded
+chain, history-copy, camera-entry/return at the `0013b6e0` seam, push stops);
+236 guarded scratch offsets and 169 render-external offsets computed from the
+original's own captures. Controls 7/7: null capture-restoration clean;
+corrupt-player, corrupt-camera, omitted-counter-advance, omitted-frame-advance,
+wrong-input-stick and the compiled wrong-gravity-step defect rejected. Packet:
+3 routines, 221 words, PS2DInfo `--require-all-bytes` and the project byte/JAL
+verifier pass. Synthetic suite 270/270. Full M12 regression profile
+`m12-20261121T162844Z-sf2p_o3e`: 79/79 accepted, 0 reused.
+See [docs/M13.md](docs/M13.md) and [checks.json](evidence/m13/checks.json).
+
+**Remaining blockers:** the `0012c790`-body screen-space projection arrays
+(`0x7c0–0x7ff`, `0x900`, `0x940`), the constant block `0x710..0x72f` and
+`0xba0..0xbaf` are render-facing external at every stage (all direct writers
+`jalr`-indirect; the deeper chain is not modeled). The coordinator's engine
+services remain external seams. Ghidra was not installed on MainPC; packet
+rows were synthesized from the authenticated ELF with PS2DInfo byte
+verification.
+
+**Required private inputs:** `local/m13/captures` (264 native obs3 stops),
+save-state slot 1 (M12 identity), `local/extracted/japan/SCPS_150.46`, PCSX2
+v2.8.2 AppImage `0c46bb6a…abea`, BIOS `c641edbd…3c4a`.
+
+**Next action.** Reconstruct the camera chain's screen-space projection body —
+the largest remaining divergence domain inside the reconstructed frame — or
+open M14 with the coordinator's first engine service `00198f60` to reclaim the
+declared-external seams.
+
+## M12 verification automation — 2026-11-19
+
+M12 merged through [PR #15](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/15)
+at `3b52075176f4a9cae1accba8a230167e0c7ef194`. Main CI passed on Python
+3.10 and 3.14. The automation milestone is on
+`automation/m12-verification-stage1` in `decomp-m12`.
+
+From that worktree, run `python3 -B tools/hg_verify.py plan --profile full`
+and `python3 -B tools/hg_verify.py run --profile full`. Set `HG_PCSX2`
+to the approved binary for the saved M4–M7 inputs. The focused profile
+retains eight gates. See the [M12 command guide](docs/M12.md#verification-automation).
+
+MainPC accepted 79/79 historical checks in run `m12-20261120T021536Z-q6tug_5i`.
+The synthetic suite passed 259 tests. The saved M12 replay matched 130
+stages across 118 captures, 36 register comparisons and 11 handoffs. It
+rejected 14 mutations, passed two null controls and observed the expected airborne
+refusal `0x50`. The M12 instruction differential measured 551 equal and
+49 expected refusals. The M11 frame cross-check matched all 36 checkpoints.
+
+The clean run took 53m29s against the historical 47m31s, including 31.7s
+outside the child commands. Resume revalidated and reused all 79 receipts
+in 21.5s without executing a verifier. The missing-input run
+accounted for all 79 checks and exited with an incomplete verdict.
+Reports remain in ignored `local/verification/`. Final review replayed all
+79 verdicts through the corrected classifier and passed 260 synthetic tests.
+
+Clean run source fingerprint
+`6987cea8e4d3df90ffcfa8d8d714b43052c2e9aef3d5e73b09dbfd7138d6a7f8`.
+The build used Python 3.14.9, GCC 16.2.1 and PS2DInfo
+`2e4a226e00d33ab35391aacade71b55826e5f52f`. Final source fingerprint
+`2021f3332cfdb7bd6da61a675846f0b78d68a885e9ac5edb7e22ea530b925fef`
+includes the escaped-control classification correction and its regression test.
+
+**Next action.** Profile check 70, the 600-case M11 instruction differential,
+using the saved inputs and preserving its comparison contract.
+
 ## M12 connected grounded movement and environmental response — 2026-11-19
 
 **Resume here.** M12 is complete for one bounded original Japanese connected
 movement sequence: oblique side-wall contact, slide, turning in contact and
-release, with the grounded floor response, history and same-frame camera. It is on
-local branch `research/m12-grounded-movement` in worktree `decomp-m12`. Baseline
+release, with the grounded floor response, history and same-frame camera. It was
+authored on `research/m12-grounded-movement`. Baseline
 main `35360c9b73f2ceb7b3ebc4c60a21f4ca5b570a4c`; implementation `95364d6`, evidence
 `ffa6ef3`, independent-review fixes `28d7c80`, then the corrected
-documentation/evidence commit. **Pushed for pull-request review, not merged; no private M12 Drive backup.**
+documentation/evidence commit. **Merged through PR #15.** Private M12 Drive backup status is **unrun**.
 
 **Gate 1 (original observation):** freshly hashed identities (ISO, SYSTEM.CNF
 BOOT2, disc-extracted ELF equal to the working ELF, PCSX2 AppImage, BIOS image,
@@ -76,10 +173,9 @@ wall (head tier), `+4ad = 0`; gravity variants differential-only; unsupported
 floor paths fail closed; inter-frame effects come from each captured entry state.
 No general collision, autonomous inter-frame execution, all-C, byte-match, port or
 whole-game claim. **Publication:** on 2026-11-19 Noah chose to publish the packet
-with its 628 original instruction words, as for M1–M11; branch pushed and pull
-request opened, not merged, no backup. **Blockers:** none. **ONE next action:**
-Noah reviews and decides on merging the M12 pull request. M13 and the final
-technical goal are not selected.
+with its 628 original instruction words, as for M1–M11. PR #15 is merged. The
+current continuation is the automation section above. Any M13 work and the final
+technical goal remain deferred.
 
 ## M11 connected static movement constraint — 2026-11-18
 

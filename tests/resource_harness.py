@@ -3,6 +3,7 @@ import ctypes as C
 import subprocess
 from pathlib import Path
 from disc_harness import State, Env, READ32, SYNC, READ, ERROR
+from hg_verify_build import build_path
 
 ROOT=Path(__file__).resolve().parents[1]
 LOAD=C.CFUNCTYPE(C.c_uint32,C.c_void_p,C.c_uint32,C.c_uint32)
@@ -29,7 +30,9 @@ EXTERNAL_ARITIES={0x119ac8:3,0x1041e0:1,0x103d60:1,0x103d80:2,0x103da0:0,
 
 
 def library(source=None,output=None,sanitize=False):
-    output=output or ROOT/'local/build/resource_loader.so'
+    output = output or ROOT / 'local/build/resource_loader.so'
+    if output.is_relative_to(ROOT / 'local'):
+        output = build_path(output)
     output.parent.mkdir(parents=True,exist_ok=True)
     args=['cc','-std=c11','-O2','-Wall','-Wextra','-Werror','-pedantic','-fPIC','-shared',
           '-I'+str(ROOT/'src'),str(source or ROOT/'src/resource_loader.c'),str(ROOT/'src/disc_read.c'),'-o',str(output)]
