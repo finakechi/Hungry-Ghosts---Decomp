@@ -1,0 +1,3537 @@
+{
+  "schema": "hg-m14-results/v1",
+  "result": "passed",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "packet_sha256": "874e8c17948aa2e4a0757cb86c86bd419166f9141fd26fd99929b07b777bd164",
+  "source_sha256": "c6d6293d0df182fbbe0347afb105a8029c797000e80d9876b44a5ea945c6bf83",
+  "build_sha256": {
+    "native": "d149b780ec21ba95e13a06b98198afeb95bb4aac11050620faba77adb0e3e09e",
+    "continuous": "d149b780ec21ba95e13a06b98198afeb95bb4aac11050620faba77adb0e3e09e",
+    "counter": "d149b780ec21ba95e13a06b98198afeb95bb4aac11050620faba77adb0e3e09e",
+    "contracts": "d149b780ec21ba95e13a06b98198afeb95bb4aac11050620faba77adb0e3e09e"
+  },
+  "receipts": {
+    "native.json": "cf475eed9a049413b642438d02f5e09635baaf3f97d9a589e61d6db145355915",
+    "continuous.json": "733fc528ad18af1bcfd2c176267a1313aa02f063d1ec8ad62645e42298049c5c",
+    "counter.json": "621a163e5b587c483c3732e66971766db2cf33ffb96ea626c300770f158edea2",
+    "contracts.json": "f85f19b2b69c0195dcc2bfe38d393108d71bbbc6baea603a4146e8163f1ba86b"
+  },
+  "comparison_domain": {
+    "native_ram": "0x00000000..0x01ffffff minus captured libpad DMA buffers and the guest stack below the verified 0012f8a8 sp 0x01fffc70",
+    "excluded_stack": "0x01fe0000..0x01fffc6f: transient callee frames (counted)",
+    "native_scratch": "complete 0x70000000..0x70003fff",
+    "window": "exact original-instruction write set: absolute outputs, scratch and four ctx packet streams compared relative to their cursors",
+    "continuous": "M13 domains, 12 sprite phases, and the pre-dispatch window write set"
+  },
+  "contract_summary": {
+    "0x155350": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {}
+    },
+    "0x153020": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {}
+    },
+    "0x152c50": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {}
+    },
+    "0x14a0a0": {
+      "calls": 286,
+      "sufficient": 286,
+      "probes": {}
+    },
+    "0x14f060": {
+      "calls": 264,
+      "sufficient": 264,
+      "probes": {
+        "drop-t0": {
+          "observable": 264,
+          "calls": 264
+        },
+        "drop-t1": {
+          "observable": 264,
+          "calls": 264
+        },
+        "drop-t2": {
+          "observable": 264,
+          "calls": 264
+        }
+      }
+    },
+    "0x152e90": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {
+        "drop-a2": {
+          "observable": 0,
+          "calls": 22
+        },
+        "drop-a3": {
+          "observable": 0,
+          "calls": 22
+        }
+      }
+    },
+    "0x17f6d0": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {}
+    },
+    "0x17f2d0": {
+      "calls": 22,
+      "sufficient": 22,
+      "probes": {}
+    }
+  },
+  "frames": [
+    {
+      "counter": 10164,
+      "original_trace_sha256": "a4f58c1f296e471352e6277f549385b8c3c0350f0c9b2d73d459503e17454efc",
+      "original_steps": 18999,
+      "original_executed_addresses": 2591,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x42518981",
+        "actual": "0x424fefe7",
+        "expected": "0x424fefe7"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10165,
+      "original_trace_sha256": "259879b8e03d94799878f9e8fb18fa9cc60018e6d4b45de4e208ff39539ccfec",
+      "original_steps": 19045,
+      "original_executed_addresses": 2594,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x424fefe7",
+        "actual": "0x424e564d",
+        "expected": "0x424e564d"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10166,
+      "original_trace_sha256": "9b35a6b951f17973e419efabba2cd59ac450dcb2d76c332e674cb5da0bed4177",
+      "original_steps": 19012,
+      "original_executed_addresses": 2602,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x424e564d",
+        "actual": "0x424cbcb3",
+        "expected": "0x424cbcb3"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10167,
+      "original_trace_sha256": "0db974e97018d75fde2a01988a5ae2a5b3d6bc985731537c54f5f266e84ad06b",
+      "original_steps": 19056,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x424cbcb3",
+        "actual": "0x424b2319",
+        "expected": "0x424b2319"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10168,
+      "original_trace_sha256": "27a7cf6c7d94620be2c4638a42a6c7c15e9d83ad8183898e71e81e26250dc521",
+      "original_steps": 19010,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x424b2319",
+        "actual": "0x4249897f",
+        "expected": "0x4249897f"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10169,
+      "original_trace_sha256": "a583019d3aee0c08644bbb632dc7e5e70976ff83889ef824ebbb39c37343da4b",
+      "original_steps": 19056,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 133,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4249897f",
+        "actual": "0x4247efe5",
+        "expected": "0x4247efe5"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10170,
+      "original_trace_sha256": "6c9963f0e50e15c5e1575f728f74674cbddf396f7d429b99ee2b8cccd20f14a9",
+      "original_steps": 19015,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4247efe5",
+        "actual": "0x4246564b",
+        "expected": "0x4246564b"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10171,
+      "original_trace_sha256": "ed18032286d600f6265893fc0eb117d29306c2bb7d26c01e22d7d07b8888d8e5",
+      "original_steps": 19061,
+      "original_executed_addresses": 2606,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 112,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4246564b",
+        "actual": "0x4244bcb1",
+        "expected": "0x4244bcb1"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10172,
+      "original_trace_sha256": "e7b12f5e53960d616cb5895e947c80e24190540a2c432290ef32a4f980763edc",
+      "original_steps": 19015,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 116,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4244bcb1",
+        "actual": "0x42432317",
+        "expected": "0x42432317"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10173,
+      "original_trace_sha256": "f25af8cb1d0ac63d96ebf9a172267456ee7b7509852701355cdcbc5afe2823f3",
+      "original_steps": 19061,
+      "original_executed_addresses": 2606,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 116,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x42432317",
+        "actual": "0x4241897d",
+        "expected": "0x4241897d"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10174,
+      "original_trace_sha256": "16f9c1ede73e0abc26236e984515f41c52d88bd2e6c79f0949ac614a6afbaafe",
+      "original_steps": 19015,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 116,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4241897d",
+        "actual": "0x423fefe3",
+        "expected": "0x423fefe3"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10175,
+      "original_trace_sha256": "1013f74a18829f8f0befe5294fd95e9ea9ff9c8e06ba51744236a80637e8924e",
+      "original_steps": 19066,
+      "original_executed_addresses": 2606,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 116,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x423fefe3",
+        "actual": "0x423e5649",
+        "expected": "0x423e5649"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10176,
+      "original_trace_sha256": "4095ef96fbc7965326e3bdb0f363b9a9ea623bfe12e61768fe8af04152402cca",
+      "original_steps": 19017,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x423e5649",
+        "actual": "0x423cbcaf",
+        "expected": "0x423cbcaf"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10177,
+      "original_trace_sha256": "4560edc97f1c9e29b96f2422b7c8d3bacd4ff47e306bf52b4d8fec363c625dc6",
+      "original_steps": 19063,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x423cbcaf",
+        "actual": "0x423b2315",
+        "expected": "0x423b2315"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10178,
+      "original_trace_sha256": "7e6d69b90f2fe32ef24c32915b9cf15a144890651bf5ef096404bf80e47e5e4f",
+      "original_steps": 19017,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x423b2315",
+        "actual": "0x4239897b",
+        "expected": "0x4239897b"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10179,
+      "original_trace_sha256": "6023a132297a8a23551fb4e348cdfa9d7a981f787339153472e51c071bf50fb5",
+      "original_steps": 19068,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4239897b",
+        "actual": "0x4237efe1",
+        "expected": "0x4237efe1"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10180,
+      "original_trace_sha256": "4951aabab4eaef34c4ab3b27c8ab4fb8e03986a197e18bbe731c82cae33e13ee",
+      "original_steps": 19022,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4237efe1",
+        "actual": "0x42365647",
+        "expected": "0x42365647"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10181,
+      "original_trace_sha256": "1dc7ab772a4e5a06c8369c904f6bd008a335ff7703a0895314dd1b835ba5ac26",
+      "original_steps": 19068,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x42365647",
+        "actual": "0x4234bcad",
+        "expected": "0x4234bcad"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "push-0-head": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10182,
+      "original_trace_sha256": "e0194378a00cf731927cb436598f03ec8a62e2876e202abec828f38583b6e7b2",
+      "original_steps": 19022,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x4234bcad",
+        "actual": "0x42332313",
+        "expected": "0x42332313"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10183,
+      "original_trace_sha256": "b5e6655f2fdbc93cf7d23164023746e6790fe405f047d89c1c371fd6d213ce6c",
+      "original_steps": 19068,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x42332313",
+        "actual": "0x42318979",
+        "expected": "0x42318979"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10184,
+      "original_trace_sha256": "0e412a455eddd8998dfea037b96604b7be747497e15d3e8ce7f2fd913d148c70",
+      "original_steps": 19027,
+      "original_executed_addresses": 2600,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x42318979",
+        "actual": "0x422fefdf",
+        "expected": "0x422fefdf"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    },
+    {
+      "counter": 10185,
+      "original_trace_sha256": "f6fa6f5d9f9b2ee205f184ac7c103b6b9821c1fe908f028626e35ebef88d34f2",
+      "original_steps": 19073,
+      "original_executed_addresses": 2603,
+      "original_nonstack_difference_count": 0,
+      "original_scratch_difference_count": 0,
+      "original_instruction_mismatches": 0,
+      "native_ram_difference_count": 0,
+      "native_scratch_difference_count": 0,
+      "native_dma_difference_count": 0,
+      "native_excluded_stack_difference_count": 113,
+      "oracle_full_ram_difference_count": 0,
+      "window_write_set": {
+        "absolute": 308,
+        "scratch": 368,
+        "streams": [
+          174,
+          322,
+          12302,
+          5108
+        ]
+      },
+      "poisoned_differential": {
+        "result": "passed",
+        "ram_differences": 0,
+        "first_ram_differences": [],
+        "scratch_differences": 0,
+        "first_scratch_differences": [],
+        "identity_mismatches": 0
+      },
+      "phase": {
+        "before": "0x422fefdf",
+        "actual": "0x422e5645",
+        "expected": "0x422e5645"
+      },
+      "continuous_stages": {
+        "coordinator-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "coordinator-counter": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "render-handoff": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "pre-dispatch-window": {
+          "result": "passed",
+          "guarded_ram_count": null,
+          "guarded_scratch_count": null,
+          "window_absolute_outputs": 308,
+          "window_scratch_outputs": 368
+        },
+        "constraint-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-query-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "floor-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "grounded-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-return": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "history-copy": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        },
+        "camera-entry": {
+          "result": "passed",
+          "guarded_ram_count": 0,
+          "guarded_scratch_count": 0,
+          "window_absolute_outputs": null,
+          "window_scratch_outputs": null
+        }
+      }
+    }
+  ],
+  "phase_handoffs": [
+    {
+      "from_counter": 10164,
+      "to_counter": 10165,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10165,
+      "to_counter": 10166,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10166,
+      "to_counter": 10167,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10167,
+      "to_counter": 10168,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10168,
+      "to_counter": 10169,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10169,
+      "to_counter": 10170,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10170,
+      "to_counter": 10171,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10171,
+      "to_counter": 10172,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10172,
+      "to_counter": 10173,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10173,
+      "to_counter": 10174,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10174,
+      "to_counter": 10175,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10175,
+      "to_counter": 10176,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10176,
+      "to_counter": 10177,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10177,
+      "to_counter": 10178,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10178,
+      "to_counter": 10179,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10179,
+      "to_counter": 10180,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10180,
+      "to_counter": 10181,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10181,
+      "to_counter": 10182,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10182,
+      "to_counter": 10183,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10183,
+      "to_counter": 10184,
+      "phase_matches": true
+    },
+    {
+      "from_counter": 10184,
+      "to_counter": 10185,
+      "phase_matches": true
+    }
+  ],
+  "native_negative_controls": [
+    {
+      "name": "omit-service",
+      "detected": true,
+      "first_ram_differences": [
+        "0x39e98c",
+        "0x39e98d",
+        "0x39e98e",
+        "0x39e9ac"
+      ],
+      "first_scratch_differences": [
+        "0x70000ba0",
+        "0x70000ba1",
+        "0x70000ba2",
+        "0x70000ba3"
+      ]
+    },
+    {
+      "name": "wrong-order",
+      "detected": true,
+      "first_ram_differences": [],
+      "first_scratch_differences": [
+        "0x70000b82",
+        "0x70000b83",
+        "0x70000b86",
+        "0x70000b87"
+      ]
+    },
+    {
+      "name": "post-run-phase-mutation",
+      "detected": true,
+      "first_ram_differences": [
+        "0x39e98f"
+      ],
+      "first_scratch_differences": []
+    },
+    {
+      "name": "wrong-a0-17f2d0",
+      "detected": true,
+      "first_ram_differences": [
+        "0x3eb040",
+        "0x3eb041",
+        "0x3eb042",
+        "0x73b5e3"
+      ],
+      "first_scratch_differences": [
+        "0x70000700",
+        "0x70000701",
+        "0x70000702",
+        "0x70000703"
+      ]
+    },
+    {
+      "name": "store-width-pre-fix",
+      "detected": true,
+      "first_ram_differences": [],
+      "first_scratch_differences": []
+    },
+    {
+      "name": "missing-sq-zero",
+      "detected": true,
+      "first_ram_differences": [],
+      "first_scratch_differences": []
+    },
+    {
+      "name": "phase-step-sign",
+      "detected": true,
+      "first_ram_differences": [
+        "0x39e98c",
+        "0x39e98d",
+        "0x39e98e",
+        "0x39e9ac"
+      ],
+      "first_scratch_differences": []
+    },
+    {
+      "name": "wrap-test-inverted",
+      "detected": true,
+      "first_ram_differences": [
+        "0x39e96e",
+        "0x39e96f",
+        "0x39e98c",
+        "0x39e98d"
+      ],
+      "first_scratch_differences": []
+    },
+    {
+      "name": "t1-omitted",
+      "detected": true,
+      "first_ram_differences": [
+        "0x53b8a8",
+        "0x53b8a9",
+        "0x53b8aa",
+        "0x53b8ab"
+      ],
+      "first_scratch_differences": []
+    }
+  ],
+  "continuous_negative_controls": [
+    {
+      "name": "null-capture-restoration",
+      "result": "clean",
+      "first_divergent_stage": null
+    },
+    {
+      "name": "corrupt-player-carry",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "corrupt-camera-carry",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "corrupt-service-phase-carry",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "omitted-counter-advance",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "omitted-frame-advance",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "wrong-input-stick",
+      "result": "rejected",
+      "first_divergent_stage": "constraint-entry"
+    },
+    {
+      "name": "wrong-gravity-step",
+      "result": "rejected",
+      "first_divergent_stage": "floor-entry"
+    },
+    {
+      "name": "store-width-pre-fix",
+      "result": "rejected",
+      "first_divergent_stage": "pre-dispatch-window"
+    },
+    {
+      "name": "phase-step-sign",
+      "result": "rejected",
+      "first_divergent_stage": "coordinator-entry"
+    },
+    {
+      "name": "t1-omitted",
+      "result": "rejected",
+      "first_divergent_stage": "pre-dispatch-window"
+    },
+    {
+      "name": "omitted-packet-bank-switch",
+      "result": "rejected",
+      "first_divergent_stage": "render-handoff"
+    }
+  ],
+  "counter_guard": [
+    {
+      "guard": 0,
+      "counter_before": 107998,
+      "expected": {
+        "0x46d930": "0x1a5df",
+        "0x46e110": "0xd",
+        "0x46d908": "0x1"
+      },
+      "actual": {
+        "0x46d930": "0x1a5df",
+        "0x46e110": "0xd",
+        "0x46d908": "0x1"
+      },
+      "first_differences": [],
+      "difference_count": 0,
+      "instruction_count": 27,
+      "result": "passed"
+    },
+    {
+      "guard": 0,
+      "counter_before": 107999,
+      "expected": {
+        "0x46d930": "0x0",
+        "0x46e110": "0xd",
+        "0x46d908": "0x2"
+      },
+      "actual": {
+        "0x46d930": "0x0",
+        "0x46e110": "0xd",
+        "0x46d908": "0x2"
+      },
+      "first_differences": [],
+      "difference_count": 0,
+      "instruction_count": 40,
+      "result": "passed"
+    },
+    {
+      "guard": 1,
+      "counter_before": 107999,
+      "expected": {
+        "0x46d930": "0x1a5df",
+        "0x46e110": "0xc",
+        "0x46d908": "0x1"
+      },
+      "actual": {
+        "0x46d930": "0x1a5df",
+        "0x46e110": "0xc",
+        "0x46d908": "0x1"
+      },
+      "first_differences": [],
+      "difference_count": 0,
+      "instruction_count": 13,
+      "result": "passed"
+    },
+    {
+      "guard": 1,
+      "counter_before": 108000,
+      "expected": {
+        "0x46d930": "0x0",
+        "0x46e110": "0xc",
+        "0x46d908": "0x2"
+      },
+      "actual": {
+        "0x46d930": "0x0",
+        "0x46e110": "0xc",
+        "0x46d908": "0x2"
+      },
+      "first_differences": [],
+      "difference_count": 0,
+      "instruction_count": 26,
+      "result": "passed"
+    }
+  ],
+  "limitations": [
+    "The host models the observed alternating GS field from the starting state. General GS timing and DMA submission remain outside the reproduced handoff.",
+    "Live registers were not captured. gp and the caller a0 values are verified; sp=0x01fffc70 is inferred from an exact full-RAM match of the original window; other entry registers are zero in the oracle.",
+    "Capture RAM and scratchpad reads were sequential rather than atomic.",
+    "Inter-frame render, actor, kernel and tail-service state remains external."
+  ]
+}

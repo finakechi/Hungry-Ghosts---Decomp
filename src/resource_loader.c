@@ -2228,26 +2228,134 @@ void hg_player_grounded_fixed(HGResourceEnv *e,uint32_t a) {
  * +0x210 -> +0x220). Called by the coordinator 0012f850 every frame.
  *
  * hg_counter_advance: the observed 001379f0-region advance, guarded by the
- * byte 0x2f78(gp) = 0x3fcee8 (0 in all observed corridor frames): 46d930 += 1
- * and 46e110 += 1, keeping the original's -1 clamp.
+ * byte 0x2f78(gp) = 0x3eaee8 (0 in all observed corridor frames): guard-clear
+ * increments 46d930/46e110; either guard state continues to the threshold.
  *
  * hg_frame_advance: the observed prefix of the per-frame coordinator
  * 0012f850 (12f850..12f8a4): 3fa190 += 1 with the original's negative-wrap
  * reset (bgez guard), the edge sync, halfword 3f9ff8 = 0, and the guarded 46e118 += 1.
- * The coordinator's engine service calls (00198f60, 0017f6d0, 0017f2d0,
- * 0013b6e0, ...) are declared external through the host-only HG_EXTERNAL_CALL
- * seam: their memory effects are outside every reconstructed domain
- * (inter-frame write evidence). The observed corridor frames run 0012f850
+ * M14 connects 00198f60 in C and 0017f6d0/0017f2d0 in the instruction model.
+ * Later coordinator calls remain HG_EXTERNAL_CALL seams. The observed frames run 0012f850
  * (not its sibling 0012f950): the selector byte 3f9f3e is 0.
  *
  * hg_player_frame_continuous: one continuous frame = coordinator prefix,
  * M10 dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history), the
- * M9 same-frame camera, the declared external coordinator tail and the
- * 001379f0 engine counter advance, all on one carried bus. The controller
- * input (pad area) is an external per-frame input; nothing else is restored
- * between frames. */
+ * M9 same-frame camera, the declared external coordinator tail, the
+ * 001379f0 engine counter advance and the CPU-side render handoff, all on
+ * one carried bus. Pad input and GS field timing are external inputs. */
 #define HG_EXTERNAL_CALL 0xfffffff3u
-static const uint32_t frame_guard=0x3fcee8u; /* byte 0x2f78(gp), gp = 0x3f9f70 */
+static const uint32_t frame_guard=0x3eaee8u; /* byte 0x2f78(gp), gp = 0x3e7f70 */
+
+/* 00198f60: bounded pre-dispatch sprite/packet service. The observed array
+ * at 0039e960 contains twelve records and a negative sentinel. +0c is the
+ * carried animation phase; +08 is its wrap limit, +10 its signed step.
+ *
+ * Packet stores follow the original widths exactly. A header writes only
+ * bytes 0-1 (sh), 3 (sb) and 4-7 (sw); byte 2 and bytes 8-15 are never
+ * written. A 0x40-byte quad packet then issues `sq $zero,0x10` (16 bytes),
+ * `sw +1c` and four 64-bit `sd` stores at +20/+28/+30/+38 (0x1991c0..d4,
+ * 0x1992a0..b4, 0x1993d0..e4). No store reaches +40, the next header. */
+#define HG_CALL_T_REGS 0xfffffff5u /* host seam: t0,t1,t2 of the next call */
+static uint32_t sprite_fp_int(int32_t value) {
+    return value?fp_encode(0,(uint32_t)value,0):0;
+}
+static void sprite_sd(HGResourceEnv *e,uint32_t dst,uint64_t value) {
+    w32(e,dst,(uint32_t)value);w32(e,dst+4,(uint32_t)(value>>32));
+}
+static void sprite_packet(HGResourceEnv *e,uint32_t ctx,uint32_t kind,uint32_t data) {
+    uint32_t at=r32(e,ctx+0x550);
+    w8(e,at+3,kind);w32(e,at+4,data);w16(e,at,3);
+    w32(e,ctx+0x550,at+0x10);
+}
+static void sprite_quad_packet(HGResourceEnv *e,uint32_t ctx,uint64_t xy,uint64_t last) {
+    uint32_t at=r32(e,ctx+0x550);
+    w8(e,at+3,0x10);w32(e,at+4,0);w16(e,at,3);
+    w32(e,ctx+0x550,at+0x40);
+    for(uint32_t i=0;i<16;i+=4)w32(e,at+0x10+i,0);   /* sq $zero,0x10 */
+    w32(e,at+0x1c,0x50000002);
+    sprite_sd(e,at+0x20,0x1000000000008001ull);
+    sprite_sd(e,at+0x28,14);
+    sprite_sd(e,at+0x30,xy);
+    sprite_sd(e,at+0x38,last);
+}
+void hg_pre_dispatch_service(HGResourceEnv *e) {
+    uint32_t ctx=r32(e,0x3e7f70+0x3098),s=0x39e960;
+    uint32_t packet=r32(e,ctx+0x550);
+    call(e,0xfffffff6u,0x198f60,1,0,0);
+    /* 00198f74/7c: f12 is 0x477fff00, a0 is the packet cursor. */
+    call(e,0x155350,0x477fff00,packet,0,0);
+    w32(e,0x70000b80,0);w32(e,0x70000b88,0x44000000);
+    w32(e,0x70000b8c,0x42800000);w32(e,0x70000b84,0);
+    call(e,0x153020,5,0x1d0,2,0x70000b80);
+    ctx=r32(e,0x3e7f70+0x3098);
+    call(e,0x152c50,5,0x1d0,2,(uint32_t)(int32_t)(int16_t)r16(e,ctx+0x5c0));
+    for(unsigned record=0;record<=12;record++,s+=0x20) {
+        int32_t index=(int8_t)r8(e,s);
+        if(index<0) {
+            if(record!=12) {domain_fault(e,0x61);return;}
+            break;
+        }
+        if(record==12 || index>3 || r8(e,s+1)!=0 ||
+           (r8(e,s+2)!=0 && r8(e,s+2)!=3 && r8(e,s+2)!=9)) {
+            domain_fault(e,0x62);return;
+        }
+        int32_t rem=index%8,quot=index/8;
+        uint32_t fr=sprite_fp_int(rem),fq=sprite_fp_int(quot);
+        uint32_t f6=fmul(e,fr,0x42800000),f5=fmul(e,fq,0x42800000);
+        uint32_t f4=fadd(e,0x44d80000,f6);
+        uint32_t f2=fadd(e,0x44f20000,f5);
+        uint32_t f0=fadd(e,f4,0x42800000);
+        w32(e,0x70000b80,f4);w32(e,0x70000b88,f0);
+        w32(e,0x70000b84,fsub(e,f2,r32(e,s+0x14)));
+        uint32_t f1=fadd(e,f2,0x42800000);
+        w32(e,0x70000b8c,fadd(e,r32(e,s+0x14),f1));
+        w32(e,0x70000b90,0);
+        w32(e,0x70000b94,r32(e,s+0xc));
+        w32(e,0x70000b98,r32(e,s+8));
+        w32(e,0x70000b9c,fadd(e,r32(e,s+8),r32(e,s+0xc)));
+        uint32_t color=r32(e,s+4);
+        w32(e,0x70000ba0,color);w32(e,0x70000ba4,color);
+        w32(e,0x70000ba8,color);w32(e,0x70000bac,0x42fe0000);
+        uint64_t xy=((uint64_t)(uint32_t)(quot*64+64)<<48) |
+                    ((uint64_t)(uint32_t)(quot*64)<<32) |
+                    ((uint64_t)(uint32_t)(rem*64+64)<<16) |
+                    (uint32_t)(rem*64);
+        ctx=r32(e,0x3e7f70+0x3098);
+        sprite_quad_packet(e,ctx,xy,0x40);
+        sprite_packet(e,ctx,0x30,0x381850+48u*(uint32_t)(int8_t)r8(e,s+3));
+        call(e,0x14a0a0,5,1,(uint32_t)(int32_t)(int8_t)r8(e,s+2),0);
+        ctx=r32(e,0x3e7f70+0x3098);
+        sprite_quad_packet(e,ctx,r8(e,s+2)==0?1:0,0x4a);
+        /* 0014f060 reads non-ABI t0/t1/t2 as well as a0..a3: t0 = 70000ba0
+         * (0x199278), t2 = s0+18 (0x19927c), t1 = ctx+5b0 with ctx reloaded
+         * after the packet stores (0x1992b8, delay slot 0x1992c0). */
+        ctx=r32(e,0x3e7f70+0x3098);
+        call(e,HG_CALL_T_REGS,0x70000ba0,ctx+0x5b0,s+0x18,0);
+        call(e,0x14f060,5,1,0x70000b80,0x70000b90);
+        uint32_t step=r32(e,s+0x10);
+        if(r8(e,s+1)!=0)step=fmul(e,step,r32(e,0x3f9f30));
+        uint32_t phase=fadd(e,r32(e,s+0xc),step);
+        if(flt(e,phase,0))phase=fadd(e,phase,r32(e,s+8)); /* add.s f0,f1,f0 */
+        w32(e,s+0xc,phase);
+        if(!fle(e,phase,r32(e,s+8)))w32(e,s+0xc,fsub(e,phase,r32(e,s+8)));
+    }
+    ctx=r32(e,0x3e7f70+0x3098);
+    sprite_packet(e,ctx,0x30,0x381910);
+    sprite_quad_packet(e,ctx,0,0x4a);
+    /* 0x1993e8..0x199410: a2 is the final 0x30 packet's address (cursor
+     * before its increment) and a3 the context. a2/a3 are original
+     * arguments even though 00152e90 overwrites them before reading. */
+    ctx=r32(e,0x3e7f70+0x3098);
+    packet=r32(e,ctx+0x550);
+    sprite_packet(e,ctx,0x30,0x381880);
+    call(e,0x152e90,5,0x381880,packet,ctx);
+    call(e,0x14a0a0,5,0,0,0);
+    ctx=r32(e,0x3e7f70+0x3098);
+    packet=r32(e,ctx+0x550);
+    w8(e,packet+3,0x60);w32(e,packet+4,0);w16(e,packet,0);
+    w32(e,ctx+0x550,packet+0x10);
+    call(e,0xfffffff6u,0x198f60,0,0,0);
+}
 
 void hg_frame_edge_sync(HGResourceEnv *e) {
     w32(e,0x3fa050,r32(e,0x3fa040));
@@ -2260,13 +2368,14 @@ void hg_frame_edge_sync(HGResourceEnv *e) {
     w32(e,0x3f9e3c+0x210,0);
 }
 void hg_counter_advance(HGResourceEnv *e) {
-    if(r8(e,frame_guard)!=0)return;
-    w32(e,0x46d930,r32(e,0x46d930)+1u);
-    w32(e,0x46e110,r32(e,0x46e110)+1u);
-    if(r32(e,0x46e110)==0xffffffffu)w32(e,0x46e110,0xffffffffu);
+    if(r8(e,frame_guard)==0) {
+        w32(e,0x46d930,r32(e,0x46d930)+1u);
+        w32(e,0x46e110,r32(e,0x46e110)+1u);
+        if(r32(e,0x46e110)==0xffffffffu)w32(e,0x46e110,0xffffffffu);
+    }
     /* 137a40..137aa4 mega-counter path: reachable only after 108000 frames
      * (46d930 >= 0x1a5e0); never observed in the retail captures. Reconstructed
-     * for the listing; the corridor frames always take the early return. */
+     * for the listing. Both guard states reach this threshold check. */
     if((uint32_t)r32(e,0x46d930)<108000u)return;
     w32(e,0x46d908,r32(e,0x46d908)+1u);
     int32_t m=(int32_t)r32(e,0x46d908);
@@ -2287,16 +2396,17 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     HGProcessing *p=user;
     if(pc==0x31bb80) {hg_frame_edge_sync(&p->env);return 0;}
     if(pc==0x12f850) {hg_frame_advance(&p->env);return 0;}
+    if(pc==0x198f60) {hg_pre_dispatch_service(&p->env);return 0;}
     /* Coordinator 0012f850 engine-service calls (authenticated jal targets
-     * 0012f8a8..0012f92c plus the counter routine 00137890), declared external
-     * on inter-frame write evidence. The matrix helpers 00143c60/00143d30/
+ * 0012f8a8..0012f92c plus the counter routine 00137890). The first three
+     * are connected above; the later calls are declared external. Matrix helpers 00143c60/00143d30/
      * 00143b90 are NOT coordinator calls: they are the camera-chain rotations
      * reached from 0012bd00/0012c790 (hg_camera_head_matrix/hg_camera_update)
      * and must execute their original instructions, exactly as in the M12
      * grounded path (they fall through to the owner bus, which interprets
      * them with FP_SEAMS operand placement). Externalizing them left the head
      * matrix identity and diverged the camera struct from the first frame. */
-    if(pc==0x198f60 || pc==0x17f6d0 || pc==0x17f2d0 || pc==0x13b6e0 ||
+    if(pc==0x13b6e0 ||
        pc==0x1430a0 || pc==0x143100 || pc==0x12bc70 || pc==0x18c520 ||
        pc==0x143150 || pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
        pc==0x13ce80 || pc==0x137890) {
@@ -2305,14 +2415,28 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     }
     return grounded_process_call(user,pc,a,b,c,d);
 }
+static void frame_prepare_packets(HGResourceEnv *e) {
+    uint32_t ctx=r32(e,0x3e7f70+0x3098);
+    uint32_t bank=r32(e,ctx+0x598);
+    uint32_t field=call(e,HG_RENDER_FIELD,r32(e,ctx+0x59c),0,0,0);
+    if(bank>1 || field>1) {domain_fault(e,0x63);return;}
+    w32(e,ctx+0x59c,field);  /* 00149940: store GS CSR bit 13 */
+    w32(e,ctx+0x598,1u-bank); /* 00149870..80: select next render bank */
+    /* 0011d93c calls this at the start of the next render iteration.
+     * Original instructions rebuild packet prefixes/cursors from the bank's
+     * table and reset the sort queue through 0014906c -> 00155330. */
+    call(e,0x148970,0,0,0,0);
+}
+
 void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
     HGResourceEnv *bus=&p.env;
     bus->load=process_load;bus->store=process_store;bus->call=frame_process_call;
     hg_frame_advance(bus);     /* 0012f850 prefix: 3fa190, edge sync, 3f9ff8, 46e118 */
-    call(bus,HG_EXTERNAL_CALL,0x198f60,0,0,0); /* coordinator services between the */
-    call(bus,HG_EXTERNAL_CALL,0x17f6d0,0,0,0); /* counter stop and the dispatcher */
-    call(bus,HG_EXTERNAL_CALL,0x17f2d0,0,0,0);
+    call(bus,0x198f60,0,0,0,0);
+    call(bus,0x17f6d0,0x3f9e30,0,0,0); /* 0012f8b8 delay-slot a0 */
+    call(bus,0x17f2d0,0,0,0,0);         /* 0012f8c0 delay-slot a0 */
+    call(bus,0xfffffff7u,0,0,0,0);      /* before 00158560 executes */
     hg_player_dispatch(bus);   /* walk, C 0015ebc0, C 0015fc10/0015e420, history */
     hg_camera_update(bus);     /* same-frame camera on the floor-corrected position */
     /* Coordinator tail (0012f850 after the camera return): external services,
@@ -2329,4 +2453,5 @@ void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x13ce80,0,0,0);
     hg_counter_advance(bus);   /* 00137890's 001379f0 body: 46d930/46e110 */
+    frame_prepare_packets(bus);
 }

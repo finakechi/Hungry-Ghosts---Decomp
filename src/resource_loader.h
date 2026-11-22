@@ -199,14 +199,19 @@ void hg_player_grounded_fixed(HGResourceEnv *, uint32_t);
  * coordinator 0012f850 (3fa190 increment with the negative-wrap reset,
  * 0031bb80 edge sync, 3f9ff8 clear, guarded 46e118 increment) and the
  * observed engine counter advance (46d930/46e110, guarded). Both guards read
- * the byte 0x2f78(gp) = 0x3fcee8. Unobserved engine service calls stay host
- * seams (HG_EXTERNAL_CALL 0xfffffff3), not guest effects. */
+ * the byte 0x2f78(gp) = 0x3eaee8 for gp = 0x3e7f70. M14 executes 00198f60
+ * in C and its two neighboring calls through the original-instruction model;
+ * later unobserved engine calls retain HG_EXTERNAL_CALL seams. */
 void hg_frame_edge_sync(HGResourceEnv *);                        /* 0031bb80 */
+void hg_pre_dispatch_service(HGResourceEnv *);                   /* 00198f60 */
 void hg_counter_advance(HGResourceEnv *);
 void hg_frame_advance(HGResourceEnv *);                          /* 0012f850 observed prefix */
-/* M13 continuous frame: engine counters, coordinator prefix, the M10
- * dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history) and the
- * M9 same-frame camera on one carried bus. */
+/* M13/M14 continuous frame: counter prefix, pre-dispatch services, M10
+ * dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history) and M9
+ * same-frame camera on one carried bus. At frame end the host supplies the
+ * next GS CSR field bit through HG_RENDER_FIELD (a0 = previous field), and
+ * models 00148970's CPU-side packet setup. */
+#define HG_RENDER_FIELD 0xfffffff8u
 void hg_player_frame_continuous(HGResourceEnv *, uint32_t frame);
 void hg_player_frame_continuous_fixed(HGResourceEnv *, uint32_t frame);
 #endif
