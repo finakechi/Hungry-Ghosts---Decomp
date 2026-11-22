@@ -1905,15 +1905,14 @@ void hg_camera_update(HGResourceEnv *e) {
     call(e,0x143c60,r32(e,camera+0xd0),0x70000000,0x70000000,0);
     call(e,0x143d30,r32(e,camera+0xd4),0x70000000,0x70000000,0);
     copy_quad(e,0x70000030,camera);
-    /* Render-facing scratch at 0x710..0x72f and 0xba0..0xbaf: the original's
-     * chain leaves these written at the camera-return stop (constant
-     * 0,768,960,0,128,128,128,12 and camera position with w=127.0 in every
-     * obs3 frame), but the authenticated 0012c790 instruction stream contains
-     * no such stores and every direct writer (00138ed8, 0015c580, 0017fb58,
-     * 00181874, 0012ab80) is jalr-indirect -- they are produced deeper in the
-     * chain through paths the C composition does not model. They are declared
-     * render-facing external at every stage; the camera STATE (0x3f9860) and
-     * every scratch offset this path writes remain fully guarded. */
+    /* M15 ownership (original-instruction runs from every native camera-entry
+     * reproduce camera-return exactly): 0012c790 itself writes only
+     * 70000700..70f (0012bd00/0012c640), 700007b0..7bf (0015e1d0) and
+     * 70000ba0..bab (0012c3d0), all by direct jal. 70000710..72f and
+     * 70000bac..baf at camera return are pre-dispatch window outputs (0017f2d0
+     * -> 00181510, stores 00181874..00181908; 00198f60 at 00199198), and
+     * 700007c0..7ff, 70000900..94f come from the coordinator tail 00143150
+     * (hg_render_node_list). No store to them belongs here. */
     w8(e,camera+0x140,0);
 }
 static uint32_t turn_camera_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
@@ -2357,6 +2356,380 @@ void hg_pre_dispatch_service(HGResourceEnv *e) {
     call(e,0xfffffff6u,0x198f60,0,0,0);
 }
 
+/* M15: coordinator tail service 00143150 (0012f900) and the two observed
+ * render nodes that produce the camera-relative screen-space scratch:
+ * 0019c8a0 writes 70000900..94f (anchor sprite and its local-to-world row)
+ * and 002f7830 writes 70000780..7ff (billboard/quad corner rows) and
+ * 70000b80..bef. Both nodes run after the camera chain on its outputs: the
+ * view matrix 70000000..3f (0012c790), the camera position/forward 003f9860/
+ * 003f9890 and the camera pitch/yaw 003f9930/003f9934.
+ *
+ * VU lane products are exact-then-chop with a zero or underflowed product
+ * stored as +0 (the instruction model's VU lanes); COP1 mul.s keeps the
+ * sign of a zero product (fmul). Unobserved node states and variants fail
+ * closed (domain fault 0x70..0x72). */
+#define HG_CALL_WIDE_A3 0xfffffff4u /* host seam: full 64-bit a3 of the next call */
+#define HG_SERVICE_MARK 0xfffffff6u
+static uint32_t vmul(HGResourceEnv *e,uint32_t a,uint32_t b) {
+    uint32_t fault=0,v=fp_mul_bits(a,b,&fault);
+    if(fault)domain_fault(e,3);
+    return (v&0x7fffffffu)==0?0:v;
+}
+static uint32_t fdiv(HGResourceEnv *e,uint32_t a,uint32_t b) { return fp_op(e,8,a,b); }
+/* lqc2 vf,src; v<op>.<mask> vfd,vf,ft.x; sqc2 vfd,dst: unmasked lanes keep src. */
+static void vq_scale(HGResourceEnv *e,uint32_t dst,uint32_t src,uint32_t s,unsigned mask) {
+    uint32_t v[4];
+    for(int i=0;i<4;i++)v[i]=r32(e,src+i*4);
+    for(int i=0;i<4;i++)if(mask&(8u>>i))v[i]=vmul(e,v[i],s);
+    for(int i=0;i<4;i++)w32(e,dst+i*4,v[i]);
+}
+static void vq_mul(HGResourceEnv *e,uint32_t dst,uint32_t a,uint32_t b) {
+    uint32_t v[4];
+    for(int i=0;i<4;i++)v[i]=vmul(e,r32(e,a+i*4),r32(e,b+i*4));
+    for(int i=0;i<4;i++)w32(e,dst+i*4,v[i]);
+}
+static void vq_add(HGResourceEnv *e,uint32_t dst,uint32_t a,uint32_t b,unsigned mask) {
+    uint32_t v[4];
+    for(int i=0;i<4;i++) {
+        v[i]=r32(e,a+i*4);
+        if(mask&(8u>>i))v[i]=vadd(e,v[i],r32(e,b+i*4));
+    }
+    for(int i=0;i<4;i++)w32(e,dst+i*4,v[i]);
+}
+/* vmul.xyz, vaddy.x, vaddz.x, qmfc2: ((a.x*b.x)+(a.y*b.y))+(a.z*b.z). */
+static uint32_t vdot3(HGResourceEnv *e,uint32_t a,uint32_t b) {
+    uint32_t p[3];
+    for(int i=0;i<3;i++)p[i]=vmul(e,r32(e,a+i*4),r32(e,b+i*4));
+    return vadd(e,vadd(e,p[0],p[1]),p[2]);
+}
+static void identity_to(HGResourceEnv *e,uint32_t dst) {
+    for(uint32_t i=0;i<64;i+=16)copy_quad(e,dst+i,0x3db2b0+i);
+}
+static void close_packet_stream(HGResourceEnv *e) {
+    uint32_t slot=r32(e,0x3e7f70+0x3098)+0x550;
+    w8(e,r32(e,slot)+3,0x60);w32(e,r32(e,slot)+4,0);w16(e,r32(e,slot),0);
+    w32(e,slot,r32(e,slot)+0x10);
+}
+/* 0019c8a0 observed state 1 (node+18 == 1); sub-state node+19 0..2. */
+static void anchor_draw(HGResourceEnv *e,uint32_t node) {
+    const uint32_t s3=node+0x50;
+    w32(e,0x70000b80,0);w32(e,0x70000b84,0xbfc00000u);   /* (0,-1.5,1.2,1) */
+    w32(e,0x70000b88,0x3f99999au);w32(e,0x70000b8c,0x3f800000u);
+    vu_transform(e,0x70000000,0x70000b80,node+0x30);    /* camera-chain view matrix */
+    for(uint32_t l=0;l<3;l++) {                         /* drift along camera forward */
+        uint32_t k=fmul(e,fmul(e,0x3cf5c28fu,r32(e,0x3f9890+4*l)),r32(e,s3+0x1c));
+        w32(e,node+0x30+4*l,fadd(e,r32(e,node+0x30+4*l),k));
+    }
+    call(e,0x155350,0,r32(e,r32(e,0x3e7f70+0x3098)+0x550),0,0);
+    w32(e,0x70000908,0);w32(e,0x70000904,0x3f800000u);
+    identity_to(e,0x70000910);
+    copy_quad(e,0x70000940,node+0x30);                  /* local-to-world row 3 */
+    call(e,0x14a0a0,5,2,3,0);
+    w32(e,0x70000900,r32(e,s3+0x10));
+    w32(e,0x7000090c,r32(e,s3+0x40));
+    call(e,0x1503f0,r32(e,s3+0x18),5,0x70000900,0x3a0490);
+    w32(e,0x7000090c,r32(e,s3+0x44));
+    call(e,0x1503f0,r32(e,s3+0x18),5,0x70000900,0x3a0500);
+    call(e,0x14a0a0,5,0,0,0);
+    close_packet_stream(e);
+}
+void hg_camera_anchor_node(HGResourceEnv *e,uint32_t node) {
+    const uint32_t s3=node+0x50;
+    call(e,HG_GUEST_FRAME,0x80,1,0,0);
+    /* 0019c8d8..ec copy two gp constants to guest stack locals only. */
+    if(r8(e,node+0x18)!=1) {domain_fault(e,0x70);call(e,HG_GUEST_FRAME,0x80,0,0,0);return;}
+    uint32_t sub=r8(e,node+0x19);
+    if(sub==0) {                                        /* 0019c988: new texture pair */
+        w32(e,s3+0x10,0);w32(e,s3+0x1c,0);
+        uint32_t r1=call(e,0x11ad58,0,0,0,0);
+        w32(e,s3+0x40,sra32(sra32(r1,16)<<7,15));
+        uint32_t r2=call(e,0x11ad58,0,0,0,0);
+        w32(e,s3+0x44,sra32(sra32(r2,16)<<7,15));
+        w8(e,node+0x19,r8(e,node+0x19)+1u);
+        sub=1;                                          /* falls into 0019c9c8 */
+    }
+    if(sub==1) {                                        /* 0019c9c8: wait for release */
+        if(r8(e,0x3f976c)!=0)w32(e,s3+0x10,0);
+        else {
+            int advance=1;
+            if(r8(e,0x3f976d)<2) {
+                uint32_t v=fadd(e,r32(e,s3+0x10),0x3c83126fu);
+                w32(e,s3+0x10,v);
+                advance=!flt(e,v,0x40800000u);
+            }
+            if(advance) {w8(e,node+0x19,r8(e,node+0x19)+1u);w32(e,s3+0x10,0);w32(e,s3+0x1c,0);}
+        }
+    } else if(sub==2) {                                 /* 0019ca38: active */
+        uint32_t sum=r8(e,0x3e7f70+0x2f78)+r8(e,0x3fa067);
+        sum+=r8(e,0x3e7f70+0x2f74);sum+=r8(e,0x3f976f);
+        if(sum!=0 || r8(e,0x3f92d1)==0)w8(e,node+0x19,0);
+        else {
+            w32(e,s3+0x10,fadd(e,r32(e,s3+0x10),0x3c83126fu));
+            w32(e,s3+0x1c,fadd(e,r32(e,s3+0x1c),0x3f4ccccdu));
+            if(!fle(e,r32(e,s3+0x10),0x3fb33333u))w8(e,node+0x19,0);
+            anchor_draw(e,node);
+        }
+    }
+    if((r8(e,0x3f9753)&15u)!=0) {                       /* 0019ccc8 */
+        if(r32(e,s3+0xb8)==0)w32(e,s3+0xb8,call(e,0x196ad0,0x2bf,0,0,0));
+    } else {
+        uint32_t other=r32(e,s3+0xb8);
+        if(other!=0) {w8(e,other+0x18,2);w32(e,s3+0xb8,0);}
+    }
+    call(e,HG_GUEST_FRAME,0x80,0,0,0);
+}
+/* 002f7830 helpers: wrap one lane into [-64,64] (stored only when wrapped),
+ * a rotated quad at the particle (70000780 matrix, 700007c0 corners from
+ * 003c9c50) and its emission through 0014d4f0 with the 64-bit GIF tag in a3. */
+static void particle_wrap(HGResourceEnv *e,uint32_t at) {
+    for(uint32_t l=0;l<12;l+=4) {
+        uint32_t v=r32(e,at+l);
+        if(!fle(e,v,0x42800000u))w32(e,at+l,fsub(e,v,0x43000000u));
+        else if(flt(e,v,0xc2800000u))w32(e,at+l,fadd(e,v,0x43000000u));
+    }
+}
+static void particle_quad(HGResourceEnv *e,uint32_t pitch,uint32_t yaw,int with_yaw) {
+    uint32_t row[12],t[4],p[4];
+    identity_to(e,0x70000780);
+    call(e,0x143c60,pitch,0x70000780,0x70000780,0);
+    if(with_yaw)call(e,0x143d30,yaw,0x70000780,0x70000780,0);
+    for(int i=0;i<4;i++) {p[i]=r32(e,0x70000b90+i*4);t[i]=r32(e,0x700007b0+i*4);}
+    for(int i=0;i<12;i++)row[i]=r32(e,0x70000780+i*4);
+    for(int i=0;i<3;i++)t[i]=vadd(e,t[i],p[i]);         /* vadd.xyz row3 += position */
+    for(int i=0;i<12;i++)w32(e,0x70000780+i*4,row[i]);
+    for(int i=0;i<4;i++)w32(e,0x700007b0+i*4,t[i]);
+    for(uint32_t k=0;k<4;k++)vu_transform(e,0x70000780,0x3c9c50+16*k,0x700007c0+16*k);
+}
+static void particle_emit(HGResourceEnv *e) {
+    call(e,HG_CALL_WIDE_A3,0xdd413200u,0x20064405u,0,0);
+    call(e,0x14d4f0,5,0x700007c0,0x70000be0,0xdd413200u);
+}
+void hg_camera_particle_field(HGResourceEnv *e,uint32_t node) {
+    const uint32_t s3=node+0x50,dirs=node+0x90,speeds=node+0xd4,layers=node+0x60;
+    call(e,HG_GUEST_FRAME,0xc0,1,0,0);
+    uint32_t variant=r32(e,node+8);
+    if(r8(e,node+0x18)!=1 || variant!=0) {domain_fault(e,0x72);call(e,HG_GUEST_FRAME,0xc0,0,0,0);return;}
+    for(uint32_t i=0;i<3;i++) {                         /* 002f7c28: layer directions */
+        identity_to(e,0x700007c0);
+        call(e,0x143c60,r32(e,node+0x40),0x700007c0,0x700007c0,0);
+        call(e,0x143d30,r32(e,node+0x44),0x700007c0,0x700007c0,0);
+        call(e,0x143b90,r32(e,node+0x48),0x700007c0,0x700007c0,0);
+        w32(e,0x70000bc0,0);w32(e,0x70000bc8,0x3f800000u);
+        w32(e,0x70000bcc,0x3f800000u);w32(e,0x70000bc4,0);
+        vu_transform(e,0x700007c0,0x70000bc0,dirs+16*i);
+    }
+    for(int l=0;l<4;l++)                                /* 002f80c8: camera delta */
+        w32(e,0x70000b80+l*4,vsub(e,r32(e,s3+l*4),r32(e,0x3f9860+l*4)));
+    for(uint32_t i=0;i<3;i++) {                         /* 002f8168: scroll layers */
+        vq_scale(e,0x70000bb0,dirs+16*i,r32(e,speeds+4*i),15);
+        vq_add(e,0x70000b90,0x70000b80,0x70000bb0,15);
+        vq_add(e,layers+16*i,0x70000b90,layers+16*i,15);
+        particle_wrap(e,layers+16*i);
+        w32(e,layers+16*i+12,0);
+    }
+    uint32_t ctx=r32(e,0x3e7f70+0x3098);
+    call(e,0x155350,0,r32(e,ctx+0x550),0,0);
+    uint32_t resource=call(e,0x138370,r32(e,0x3f457c),0x09000000u,0,0);
+    call(e,0x152aa0,5,resource,0,0);
+    uint32_t slot=r32(e,0x3e7f70+0x3098)+0x550;
+    w8(e,r32(e,slot)+3,0x30);w32(e,r32(e,slot)+4,0x3e7f70-0x7890);
+    w16(e,r32(e,slot),3);w32(e,slot,r32(e,slot)+0x10);
+    call(e,0x14a0a0,5,1,3,0);
+    vq_scale(e,0x70000bb0,0x3e57c0+16*variant,r32(e,node+0xe0),15);
+    for(uint32_t group=0;group<4;group++) {
+        copy_quad(e,0x70000bd0,0x3c9c90+16*group);
+        for(uint32_t k=0;k<32;k++) {
+            if(k>=16)vq_scale(e,0x70000ba0,0x3c9ad0+16*(k-16),0xc2800000u,14);
+            else vq_scale(e,0x70000ba0,0x3c9ad0+16*k,0x42800000u,15);
+            vq_mul(e,0x70000ba0,0x70000bd0,0x70000ba0);
+            vq_add(e,0x70000b90,layers+16*(k%3),0x70000ba0,15);
+            particle_wrap(e,0x70000b90);
+            if(flt(e,vdot3(e,0x3f9890,0x70000b90),0x3e23d70au))continue;   /* behind camera */
+            uint32_t dist=call(e,0x143530,vdot3(e,0x70000b90,0x70000b90),0,0,0);
+            if(fle(e,dist,0x42080000u) || !flt(e,dist,0x42800000u))continue; /* 34 < d < 64 */
+            uint32_t t=fdiv(e,fsub(e,dist,0x42080000u),0x41f00000u);
+            uint32_t fade=call(e,0x143560,fmul(e,0x40490fdbu,t),0,0,0);
+            if(!fle(e,fade,0x3f800000u))fade=0x3f800000u;
+            else if(flt(e,fade,0))fade=0;
+            vq_scale(e,0x70000ba0,0x70000bb0,fade,15);
+            vq_add(e,0x70000b90,0x70000b90,0x3f9860,15);  /* camera-relative to world */
+            w32(e,0x70000b9c,0x3f800000u);
+            uint32_t pitch=r32(e,0x3f9930);
+            uint32_t tilt=fdiv(e,flt(e,pitch,0)?fneg(pitch):pitch,0x3fa0d97cu);
+            particle_quad(e,pitch,r32(e,0x3f9934),1);     /* camera-facing billboard */
+            uint32_t facing=fsub(e,0x3f800000u,tilt);
+            if(flt(e,facing,0))facing=0;
+            vq_scale(e,0x70000be0,0x70000ba0,facing,15);
+            particle_emit(e);
+            particle_quad(e,0x3fc90fdbu,0,0);             /* horizontal quad */
+            vq_scale(e,0x70000be0,0x70000ba0,tilt,15);
+            particle_emit(e);
+        }
+    }
+    call(e,0x14a0a0,5,0,0,0);
+    close_packet_stream(e);
+    copy_quad(e,s3,0x3f9860);                           /* camera position for next delta */
+    call(e,HG_GUEST_FRAME,0xc0,0,0,0);
+}
+/* M15: coordinator service 0012bc70 (0012f8f0), the player model draw. It runs
+ * after camera return and before 00143150; its light setup 00129020 and ground
+ * shadow 00129e40 leave 70000700..71f (shadow colour, normalized model-space
+ * light direction), 70000500..53f (shadow matrix) and 70000c80..d1f (light
+ * matrices). Observed path only: model type 3 (+50 & ff), light mode 2.0
+ * (+1ac), shadow mode 3 (+50 & 30000000), no point lights. Other paths fail
+ * closed (0x74..0x79). 00125d60, 00128de0, 00126180, 00128e80, 00151c40 and
+ * every leaf execute original instructions through the bus. HG_GUEST_FRAME
+ * (bytes, 1) returns the guest sp of the entered frame: 00151c40 and 0014d4f0
+ * receive pointers to the original's stack parameter blocks. */
+static void model_light_setup(HGResourceEnv *e,uint32_t model,uint32_t lights,uint32_t attenuation) {
+    uint32_t sp=call(e,HG_GUEST_FRAME,0x90,1,0,0);    /* 00129020 */
+    const uint32_t light=r32(e,model+0x10);
+    copy_quad(e,sp+0x60,model+0x40);
+    uint32_t type=r32(e,model+0x50)&0xffu;
+    if(type==0x40||type==0x20||type==0x0e||type==0x0d||type==0x02 ||
+       !feq(e,r32(e,model+0x1ac),0x40000000u)) {domain_fault(e,0x77);call(e,HG_GUEST_FRAME,0x90,0,0,0);return;}
+    w32(e,sp+0x70,model);w32(e,sp+0x7c,0x70000d00);w32(e,sp+0x74,lights);w32(e,sp+0x78,attenuation);
+    w32(e,sp+0x80,r32(e,light+0x20));w32(e,sp+0x84,2);w32(e,sp+0x88,2);
+    uint32_t count=call(e,0x151c40,sp+0x70,0,0,0);
+    for(uint32_t l=0;l<12;l+=4)w32(e,0x70000700+l,r32(e,model+0x190+l));
+    w32(e,0x7000070c,0);
+    vu_transform(e,r32(e,0x3e7f70+0x2a40)+0x50,0x70000700,0x70000700);  /* to model space */
+    /* 00129348: 70000710.xyz = v * rsqrt(v.v), .w = 0 + v.w */
+    uint32_t v[4],q;
+    for(int i=0;i<4;i++)v[i]=r32(e,0x70000700+4*i);
+    q=fp_op(e,9,0x3f800000u,vdot3(e,0x70000700,0x70000700));
+    uint32_t w=vadd(e,0,v[3]);
+    for(int i=0;i<3;i++)w32(e,0x70000710+4*i,vmul(e,v[i],q));
+    w32(e,0x7000071c,w);
+    w32(e,lights+0x08,r32(e,0x70000710));w32(e,lights+0x18,r32(e,0x70000714));
+    w32(e,lights+0x28,r32(e,0x70000718));w32(e,lights+0x38,0);
+    uint32_t dist=call(e,0x143530,vdot3(e,0x70000700,0x70000700),0,0,0);
+    uint32_t range=fadd(e,r32(e,model+0x1a8),r32(e,light+0x20));
+    if(!flt(e,dist,range) || (r32(e,model+0x50)&0x00200000u)==0 || count!=0) {
+        domain_fault(e,0x78);call(e,HG_GUEST_FRAME,0x90,0,0,0);return;
+    }
+    uint32_t fade=fsub(e,0x3f800000u,fdiv(e,dist,range));
+    for(uint32_t l=0;l<12;l+=4)
+        w32(e,attenuation+0x20+l,fmul(e,fade,fmul(e,r32(e,model+0x19c+l),r32(e,model+0x40+l))));
+    w32(e,attenuation+0x2c,0);
+    copy_quad(e,attenuation+0x30,r32(e,0x3e7f70+0x3080)+0x10);
+    w32(e,attenuation+0x3c,fadd(e,0x4b000000u,fmul(e,0x43000000u,r32(e,model+0x4c))));
+    w8(e,model+0x1c,0);
+    call(e,HG_GUEST_FRAME,0x90,0,0,0);
+}
+static void model_shadow_quad(HGResourceEnv *e,uint32_t model,uint32_t stream) {
+    uint32_t sp=call(e,HG_GUEST_FRAME,0x70,1,0,0);    /* 00129e40 */
+    identity_to(e,0x70000500);
+    w32(e,0x70000514,0x40866666u);w32(e,0x70000500,0x40866666u);   /* scale 4.2 */
+    call(e,0x143c60,0xbfc90fdbu,0x70000500,0x70000500,0);         /* -pi/2 about x */
+    uint32_t bone=r32(e,r32(e,model+0x58)+4u*r8(e,model+0x0d));
+    copy_quad(e,0x70000530,bone+0x30);
+    for(uint32_t k=0;k<4;k++)vu_transform(e,0x70000500,0x37bab0+16*k,sp+0x30+16*k);
+    w32(e,0x70000700,0x40000000u);w32(e,0x70000704,0x40000000u);
+    w32(e,0x70000708,0x40000000u);w32(e,0x7000070c,0x42f80000u);   /* (2,2,2,124) */
+    call(e,0x14a0a0,stream,2,2,0);
+    call(e,HG_CALL_WIDE_A3,0x99423880u,0x20072a25u,0,0);
+    call(e,0x14d4f0,stream,sp+0x30,0x70000700,0x99423880u);
+    call(e,0x14a0a0,stream,0,0,0);
+    call(e,HG_GUEST_FRAME,0x70,0,0,0);
+}
+static void model_draw_mesh(HGResourceEnv *e) {          /* 00125f30 */
+    call(e,HG_GUEST_FRAME,0x10,1,0,0);
+    const uint32_t gp=0x3e7f70;
+    uint32_t model=r32(e,gp+0x2a30),light=r32(e,model+0x50)&0x00f00000u;
+    if(light==0x00200000u||light==0x00100000u)model_light_setup(e,model,0x70000c80,0x70000cc0);
+    else if(light==0x00400000u) {domain_fault(e,0x76);call(e,HG_GUEST_FRAME,0x10,0,0,0);return;}
+    model=r32(e,gp+0x2a30);
+    uint32_t shadow=r32(e,model+0x50)&0x30000000u;
+    if(shadow==0x30000000u)model_shadow_quad(e,model,r32(e,gp+0x2a50));
+    else if(shadow==0x10000000u) {domain_fault(e,0x76);call(e,HG_GUEST_FRAME,0x10,0,0,0);return;}
+    model=r32(e,gp+0x2a30);
+    uint32_t data=r32(e,model+0x14);
+    if(data!=0) {
+        if((r32(e,model+0x50)&0x01000000u)!=0) {domain_fault(e,0x76);call(e,HG_GUEST_FRAME,0x10,0,0,0);return;}
+        call(e,0x152aa0,r32(e,gp+0x2a50),data,0,0);
+        uint32_t slot=r32(e,gp+0x3098)+4u*r32(e,gp+0x2a50)+0x53c;
+        w8(e,r32(e,slot)+3,0x30);w32(e,r32(e,slot)+4,gp-0x7890);
+        w16(e,r32(e,slot),3);w32(e,slot,r32(e,slot)+0x10);
+        w32(e,gp+0x2a14,0);
+    }
+    call(e,HG_GUEST_FRAME,0x10,0,0,0);
+}
+static void model_draw_type(HGResourceEnv *e,uint32_t object) {   /* 00124010 */
+    call(e,HG_GUEST_FRAME,0x140,1,0,0);
+    uint32_t word=r32(e,object+0x50);
+    if((word&0xffu)!=3) {domain_fault(e,0x75);call(e,HG_GUEST_FRAME,0x140,0,0,0);return;}
+    call(e,0x128de0,0x3f800000u,word,0,0);
+    model_draw_mesh(e);
+    call(e,0x126180,0,0,0,0);
+    call(e,0x128e80,0,0,0,0);
+    if(r32(e,0x3e7f70+0x2a24)!=0)domain_fault(e,0x75);   /* 00125d10 */
+    call(e,HG_GUEST_FRAME,0x140,0,0,0);
+}
+static uint32_t model_draw(HGResourceEnv *e,uint32_t owner,uint32_t mode) {   /* 00123ee0 */
+    call(e,HG_GUEST_FRAME,0x30,1,0,0);
+    const uint32_t object=owner+0x90;
+    uint32_t drawn=0;
+    if((r32(e,owner+0xe0)&0xc0000000u)!=0) {
+        if(mode==1)domain_fault(e,0x74);                    /* 0018c9c0 visibility test */
+        else if(feq(e,0,r32(e,object+0x4c)))drawn=1;
+        else {
+            uint32_t kind=r32(e,object+0x50)&0x0f000000u;
+            uint32_t list=r32(e,0x3e7f70+0x3098)+0x310;
+            if(kind==0x04000000u)call(e,0x125d60,1,list,owner,0);
+            else if(kind==0x02000000u)call(e,0x125d60,5,list,owner,0);
+            else if(kind==0x01000000u)call(e,0x125d60,2,list,owner,0);
+            model_draw_type(e,object);
+            drawn=1;
+        }
+    }
+    call(e,HG_GUEST_FRAME,0x30,0,0,0);
+    return drawn;
+}
+/* 0012bc70: draw the player model (00123ee0 with a1 = 0) after updating the
+ * player +e0 draw bits: cleared while any of gp+2f78, 003f9e3a, 003f9f3d is
+ * set, otherwise 0x30000000 set. Skipped while 003f92d1 is zero. */
+void hg_player_model_draw(HGResourceEnv *e) {
+    const uint32_t player=0x3f92d0;
+    call(e,HG_SERVICE_MARK,0x12bc70,1,0,0);
+    call(e,HG_GUEST_FRAME,0x10,1,0,0);
+    if(r8(e,player+1)!=0) {
+        if(r8(e,0x3e7f70+0x2f78)!=0 || r8(e,0x3f9e3a)!=0 || r8(e,0x3f9f3d)!=0)
+            w32(e,player+0xe0,r32(e,player+0xe0)&0xcfffffffu);
+        else w32(e,player+0xe0,r32(e,player+0xe0)|0x30000000u);
+        model_draw(e,player,0);
+    }
+    call(e,HG_GUEST_FRAME,0x10,0,0,0);
+    call(e,HG_SERVICE_MARK,0x12bc70,0,0,0);
+}
+/* 00143150 is the M8 list walker hg_actor_update_type2 (list 00539458, next
+ * +24 read in the jalr delay slot before the +1c callback, counter gp+2f68 =
+ * 003eaed8). M15 adds only the host seams for the continuous composition:
+ * service marks around it and its original 0x20 guest frame, so its callbacks
+ * run at the original stack depth. Observed callbacks 0019c8a0 and 002f7830
+ * are C (routed by the bus); 001a6dc0 and 002a20b0 execute original
+ * instructions through the bus. */
+void hg_render_node_list(HGResourceEnv *e) {
+    call(e,HG_SERVICE_MARK,0x143150,1,0,0);
+    call(e,HG_GUEST_FRAME,0x20,1,0,0);
+    hg_actor_update_type2(e);
+    call(e,HG_GUEST_FRAME,0x20,0,0,0);
+    call(e,HG_SERVICE_MARK,0x143150,0,0,0);
+}
+static uint32_t render_node_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGProcessing *p=user;
+    if(pc==0x19c8a0) {hg_camera_anchor_node(&p->env,a);return 0;}
+    if(pc==0x2f7830) {hg_camera_particle_field(&p->env,a);return 0;}
+    return p->outer->call(p->outer->user,pc,a,b,c,d);
+}
+/* Synthetic-differential entry: 00143150 with only its two C callbacks routed
+ * to C; every other call (including 00138370) goes to the caller's bus. */
+void hg_render_node_list_fixed(HGResourceEnv *e) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;p.env.call=render_node_process_call;
+    hg_render_node_list(&p.env);
+}
+
 void hg_frame_edge_sync(HGResourceEnv *e) {
     w32(e,0x3fa050,r32(e,0x3fa040));
     w32(e,0x3fa040,0);
@@ -2397,9 +2770,15 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     if(pc==0x31bb80) {hg_frame_edge_sync(&p->env);return 0;}
     if(pc==0x12f850) {hg_frame_advance(&p->env);return 0;}
     if(pc==0x198f60) {hg_pre_dispatch_service(&p->env);return 0;}
+    /* M15: 00143150 render-node list and its observed C callbacks. */
+    if(pc==0x143150) {hg_render_node_list(&p->env);return 0;}
+    if(pc==0x12bc70) {hg_player_model_draw(&p->env);return 0;}
+    if(pc==0x19c8a0) {hg_camera_anchor_node(&p->env,a);return 0;}
+    if(pc==0x2f7830) {hg_camera_particle_field(&p->env,a);return 0;}
     /* Coordinator 0012f850 engine-service calls (authenticated jal targets
  * 0012f8a8..0012f92c plus the counter routine 00137890). The first three
-     * are connected above; the later calls are declared external. Matrix helpers 00143c60/00143d30/
+     * and 00143150/0012bc70 (M15) are connected above; the other calls are declared
+     * external. Matrix helpers 00143c60/00143d30/
      * 00143b90 are NOT coordinator calls: they are the camera-chain rotations
      * reached from 0012bd00/0012c790 (hg_camera_head_matrix/hg_camera_update)
      * and must execute their original instructions, exactly as in the M12
@@ -2407,8 +2786,8 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
      * them with FP_SEAMS operand placement). Externalizing them left the head
      * matrix identity and diverged the camera struct from the first frame. */
     if(pc==0x13b6e0 ||
-       pc==0x1430a0 || pc==0x143100 || pc==0x12bc70 || pc==0x18c520 ||
-       pc==0x143150 || pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
+       pc==0x1430a0 || pc==0x143100 || pc==0x18c520 ||
+       pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
        pc==0x13ce80 || pc==0x137890) {
         p->outer->call(p->outer->user,HG_EXTERNAL_CALL,pc,0,0,0);
         return 0;
@@ -2439,15 +2818,15 @@ void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     call(bus,0xfffffff7u,0,0,0,0);      /* before 00158560 executes */
     hg_player_dispatch(bus);   /* walk, C 0015ebc0, C 0015fc10/0015e420, history */
     hg_camera_update(bus);     /* same-frame camera on the floor-corrected position */
-    /* Coordinator tail (0012f850 after the camera return): external services,
-     * then the engine routine 00137890 whose 001379f0 body advances 46d930 and
-     * 46e110 (hg_counter_advance). */
+    /* Coordinator tail (0012f850 after the camera return): external services
+     * around the C player model draw 0012bc70 and render-node list 00143150, then the engine routine 00137890
+     * whose 001379f0 body advances 46d930 and 46e110 (hg_counter_advance). */
     call(bus,HG_EXTERNAL_CALL,0x13b6e0,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x1430a0,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x143100,0,0,0);
-    call(bus,HG_EXTERNAL_CALL,0x12bc70,0,0,0);
+    call(bus,0x12bc70,0,0,0,0);                /* 0012f8f0: M15 C player model draw */
     call(bus,HG_EXTERNAL_CALL,0x18c520,0,0,0);
-    call(bus,HG_EXTERNAL_CALL,0x143150,0,0,0);
+    call(bus,0x143150,0,0,0,0);                /* 0012f900: M15 C render-node list */
     call(bus,HG_EXTERNAL_CALL,0x1431a0,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x25c170,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);

@@ -1,42 +1,90 @@
 # Hungry Ghosts — start here
 
+## M15 connected camera projection and render-node state — 2026-11-22
+
+**Resume here.** M15 is implemented and verified on the obs3 corridor, and
+its acceptance criteria are met. The work is **uncommitted** in worktree
+`decomp-m15` on branch `research/m15-camera-projection`, based on `main`
+`535e43b`. There is no M15 remote branch or PR. Final C is `cc38d26e…9017`.
+See [docs/M15.md](docs/M15.md).
+
+- **Delivered:** the screen-space and render scratch (`0x500–0x53f`,
+  `0x700–0x72f`, `0x7c0–0x7ff`, `0x900–0x94f`, `0xb80–0xbef`, `0xc80–0xd1f`)
+  is produced after camera return, not by the `0012c790` body as M13 assumed.
+  Its producers are now C on the carried bus:
+  - the player model draw `0012bc70` (light setup `00129020`, ground shadow
+    `00129e40`);
+  - the render-node list `00143150` (M8 walker reuse) with the anchor sprite
+    `0019c8a0` and the particle field `002f7830`.
+
+  No captured values are injected and nothing is stored at camera return.
+- **Last verification:**
+  - 22/22 frames and 386 stage comparisons, with same-input `camera-chain`,
+    `model-draw` and `render-node-tail` checkpoints every frame (0 differences);
+  - 26 controls: 24 defects rejected, 2 null controls clean;
+  - M14 native 22/22 (9/9 controls), contracts 22/22, counter guard;
+  - packets: 743 + 1,527 + 2,574 words;
+  - 298 synthetic tests and the sanitizers;
+  - historical regression `m12-20261122T155330Z-veza3mwe`: 79/79 accepted, 0 reused.
+- **Private inputs** (ignored `local/`): ELF `a74248c5…3c61`, PS2DInfo
+  `2e4a226`, M13 obs3 captures, `local/m15/r5900dis.py`. The historical
+  regression also needs the ISO and PCSX2 (`HG_JAPAN_ISO`, `HG_PCSX2`).
+- **Limits:** 98 scratch bytes stay excluded at native stops, written later by
+  the unreconstructed `0013ce80`/`0013b6e0` (or later main-loop code for the
+  light matrices). Render-stream packet bytes are compared same-input only.
+  Only the observed state, variant and model modes are reconstructed; others
+  fail closed.
+- **Blockers:** owner review and the commit decision.
+
+**Next action.** Make `0013ce80` interpreter-executable (first gap: MMI `div1`
+`70a4001a` at `00153844`) and reconstruct it. That removes most of the
+remaining native-stop scratch exclusions and the replayed external RNG draws.
+
 ## M14 continuous pre-dispatch engine services — 2026-11-21
 
-**Resume here.** M14 acceptance passed for the obs3 corridor sequence. The
-work is **uncommitted** in the Duo worktree on branch
-`duo/hungry-ghosts-m14-continuous-pre-r2z3n`, based on M13 HEAD `ec9f479`.
-That base is local only; `origin/main` is still `3b52075` (M12). There is no
-M14 PR. The final C is `c6d6293d…bf83`.
+**Resume here (publication update, 2026-11-22).** M13 merged into `main`
+through [PR #16](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/16)
+(`8295c622`); M14 first merged into the M13 branch through
+[PR #17](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/17), then
+into `main` through [PR #18](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/18)
+(`535e43b691b9296912a06ba40f3450a6e71431da`). The PR #18 synthetic CI
+passed. Original M14 commit `9a12391` and later receipt-resume fix `e8010b1`
+are published. The acceptance records retain their pre-commit source identity;
+no post-merge retail rerun is claimed.
 
-- **Delivered:** before player dispatch, each frame runs C `00198f60`
-  (`hg_pre_dispatch_service`, exact `sq`/`sw`/`sd` packet widths) and the
-  original `0017f6d0`/`0017f2d0`. Between frames, the C writes the field word
-  (`00149940`, host-modeled field) and flips the render bank (`00149870`).
-  Original `00148970` then resets the packet cursors and sort queue. The
-  player and camera frame from M13 continues on the carried state.
-- **Last verification:** 22/22 frames and 320/320 checkpoints, uninterrupted.
-  11 defects rejected and 1 clean control. Native window 22/22 with
-  9 controls detected. Two diagnostics are unobservable by design.
-  682/682 register contracts. 1,433 original words. Counter guard 4/4.
-  288 synthetic tests. Full regression `m12-20261122T003553Z-nmkuafkq`:
-  79/79, 0 reused, on the same source.
-  [results.json](evidence/m14/results.json) ·
-  [checks.json](evidence/m14/checks.json).
-- **Private inputs** (ignored `local/`): the Japanese ELF
-  `a74248c5…3c61`, PS2DInfo `2e4a226`, the M13 obs3 captures and the
-  `local/m14/original-window-*-v3.json` traces. The full regression also
-  needs the ISO and PCSX2 (`HG_JAPAN_ISO`, `HG_PCSX2`).
-- **Limits:** GS timing, DMA submission and later post-camera services are
-  external. No byte matching, full-game equivalence, port or recompilation is
-  claimed. See [docs/M14.md](docs/M14.md#limits).
-- **Blockers:** owner review and the local-commit decision. Publication
-  also requires M13 (`ec9f479`) to be published first.
+- **Delivered:** C `00198f60` pre-dispatch service, original-instruction
+  `0017f6d0`/`0017f2d0`, host-modeled GS field/bank handoff, and original
+  `00148970` render setup on the carried M13 player/camera state.
+- **Last original-game verification:** frames 10164–10185 (22/22), 320/320
+  checkpoints, native window 22/22, 682/682 register contracts, 1,433
+  original words, and 20 effective defect detections (11 continuous, 9 native).
+  One continuous null control passed; two native diagnostics were unobservable.
+  The final-source M12 historical regression
+  `m12-20261122T003553Z-nmkuafkq` accepted 79/79 checks, 0 reused;
+  the M14 synthetic suite passed 288/288. See
+  [results.json](evidence/m14/results.json),
+  [checks.json](evidence/m14/checks.json), and [docs/M14.md](docs/M14.md).
+- **Private inputs:** Japanese ELF `a74248c5…3c61`, pinned PS2DInfo
+  `2e4a226`, and M13 obs3 captures under ignored `local/`. The 79-check
+  historical regression also needs the authorized ISO and PCSX2.
+- **Limits:** observed corridor and modeled alternating field only;
+  general GS timing, DMA submission, indirect camera screen-space writers,
+  and remaining post-camera services are not fully reconstructed.
+  No byte-match, full-game equivalence, recompilation, or port claim.
+- **Blockers:** none for M13/M14 publication. M15 scope and the project's
+  eventual technical objective remain undecided.
 
-**Next action.** Review the M14 diff and evidence, then decide whether to
-commit the files listed in [docs/M14.md](docs/M14.md#commit-set) locally on
-top of `ec9f479`.
+**Next action.** Investigate the remaining camera screen-space indirect-call
+writers and their saved runtime evidence, compare their value against the
+remaining post-camera services, then select one bounded M15 research objective.
+Preserve historical receipts and source hashes rather than relabeling them as
+post-merge measurements.
 
 ## M13 continuous player movement, collision and camera — 2026-11-21
+
+**Publication note (2026-11-22):** M13 merged through PR #16. The
+following verification and branch details record its earlier local
+development state; the M13 next-action note was superseded by M14.
 
 **Resume here.** M13 is complete for one original-game-observed continuous
 sequence: 22 consecutive frames (10164–10185) run from a single authenticated
@@ -44,7 +92,7 @@ starting state — approach (6), wall contact (2), contact-turn with slides (4),
 release and braking (6), stopped (4) — with position history and the same-frame
 camera on every frame, and no captured-state restoration after the first frame.
 Local branch `research/m13-continuous-movement` (baseline main `3b52075` =
-M12 merged), HEAD `ba5b1f9`. **Not merged; no PR.** See
+M12 merged), HEAD `ba5b1f9`. **Historical pre-merge status; M13 later merged via PR #16.** See
 [docs/M13.md](docs/M13.md).
 
 - **Reconstructed (byte-verified against ELF `a74248c5…3c61`):** the

@@ -172,7 +172,9 @@ DEFECTS = [
     ('omitted-sound-request', 4282, 'call(e,0x156ad0,r16(e,0x3e0850u+offset),0x1000,player_sound_volume_127(volume),0x40);', '(void)offset;'),
     ('history-before-correction', 4282, '    call(e,HG_GUEST_FRAME,0x70,1,0,0);\n    constraint_origin(e,a,head);', '    call(e,HG_GUEST_FRAME,0x70,1,0,0);copy_quad(e,a+0x390,a+0x30);\n    constraint_origin(e,a,head);'),
     ('camera-uses-proposed-position', 4283, '    call(e,HG_GUEST_FRAME,0x70,1,0,0);\n    constraint_origin(e,a,head);', '    call(e,HG_GUEST_FRAME,0x70,1,0,0);m11_proposed_x=r32(e,a+0x30);\n    constraint_origin(e,a,head);'),
-    ('missing-guest-frame', 4283, 'call(e,HG_GUEST_FRAME,0x70,1,0,0);', ''),
+    # Anchored on the 00160420 entry's following statement: M15's 00129e40 also
+    # opens a 0x70 guest frame, so the bare call text is no longer unique.
+    ('missing-guest-frame', 4283, '    call(e,HG_GUEST_FRAME,0x70,1,0,0);\n    constraint_origin(e,a,head);', '    constraint_origin(e,a,head);'),
 ]
 # Two-site mutations complete a defect whose second edit is elsewhere.
 SECOND = {

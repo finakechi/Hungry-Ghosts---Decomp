@@ -196,7 +196,10 @@ class ContinuousTests(unittest.TestCase):
 
     def test_frame_dispatch_routes_camera_helpers_to_interpreter(self):
         """Camera helpers and the two neighboring engine services route to the
-        instruction interpreter; the bounded 00198f60 service executes in C."""
+        instruction interpreter; the bounded 00198f60 service and (M15) the
+        00143150 render-node list and 0012bc70 player model draw execute in C.
+        With an empty list 00539458 and no player draw bits they only enter
+        and leave their guest frames."""
         d = FrameDriver()
         ctx = 0x500000
         d.mem.store(0x3eb008, ctx)
@@ -207,7 +210,12 @@ class ContinuousTests(unittest.TestCase):
         f = self.lib.hg_player_frame_continuous
         f.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; f.restype = None
         f(C.byref(d.env), 0x1ff8000)
-        self.assertEqual(d.frames, [(0x50, 1), (0x50, 0)])  # no faults
+        # 0012bc70 enters 00123ee0 (0x30), which returns: player +e0 has no draw bits.
+        self.assertEqual(d.frames, [(0x50, 1), (0x50, 0), (0x10, 1), (0x30, 1), (0x30, 0), (0x10, 0),
+                                    (0x20, 1), (0x20, 0)])  # no faults
+        marks = [row for row in d.call_args if row[0] == 0xfffffff6 and row[1] == 0x143150]
+        self.assertEqual(marks, [(0xfffffff6, 0x143150, 1, 0, 0), (0xfffffff6, 0x143150, 0, 0, 0)])
+        self.assertIn((0xfffffff6, 0x12bc70, 1, 0, 0), d.call_args)
         for pc in (0x143c60, 0x143d30, 0x143b90):
             self.assertIn(pc, d.calls)
             self.assertNotIn(pc, d.externals)
@@ -221,8 +229,8 @@ class ContinuousTests(unittest.TestCase):
                        0x12bc70, 0x18c520, 0x143150, 0x1431a0, 0x25c170, 0x182480,
                        0x13ce80)
         self.assertEqual(d.externals, [0x13b6e0,
-                                       0x1430a0, 0x143100, 0x12bc70, 0x18c520,
-                                       0x143150, 0x1431a0, 0x25c170, 0x182480,
+                                       0x1430a0, 0x143100, 0x18c520,
+                                       0x1431a0, 0x25c170, 0x182480,
                                        0x13ce80])
         for pc in coordinator:
             self.assertNotIn(pc, d.calls)

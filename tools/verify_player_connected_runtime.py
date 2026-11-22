@@ -83,11 +83,15 @@ FP_SEAMS={0x155350:(1,False),0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,F
     0x13a060:(2,False),0x120830:(0,True),0x1204e0:(1,True),
     0x143560:(1,True),0x143620:(1,True),0x143c60:(1,False),0x143d30:(1,False),0x143b90:(1,False),
     0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False),
-    0x145630:(1,False)}  # M12: C 0015e420 floor probe, f12 = segment rise
+    0x145630:(1,False),  # M12: C 0015e420 floor probe, f12 = segment rise
+    0x143530:(1,True),0x1503f0:(1,False),  # M15: 002f7830 distance, 0019c8a0 sprite
+    0x128de0:(1,False)}  # M15: 00124010 passes f12 = 1.0, a0 = model type word
 # Host-only fail-closed signal from C paths outside the reconstructed domain.
 DOMAIN_FAULT=0xfffffff0
 # Host-only M11 seam: (bytes, 1) enters and (bytes, 0) leaves a reconstructed
 # function's original guest frame, so modeled callees run at its stack depth.
+# Entering returns the guest sp of the entered frame (M15: 00129020/00129e40
+# pass stack parameter blocks to original callees); leaving returns 0.
 GUEST_FRAME=0xfffffff1
 # Host-only M12 seam: (callee entry, value) reports the actual return value of a
 # reconstructed C callee resolved inside the C composition. No guest effect.
@@ -97,6 +101,11 @@ CALL_RETURN=0xfffffff2
 CALL_T_REGS=0xfffffff5
 # Modeled callees that are verified to read non-ABI t0..t2 and must receive them.
 T_REGISTER_CALLEES={0x14f060}
+# Host-only M15 seam: (low, high) of the full 64-bit a3 for the next modeled
+# call. 002f7830 passes the GIF tag 0x20064405dd413200 to 0014d4f0, whose
+# callee 0014d070 stores it with sd t2 (t2 = a3). No guest effect.
+CALL_WIDE_A3=0xfffffff4
+WIDE_A3_CALLEES={0x14d4f0}
 
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
@@ -110,6 +119,7 @@ class ConnectedRuntimeDriver(Driver):
         # CALL_T_REGS for the immediately following modeled call only.
         self.pending_registers=None
         self.declared_registers=[]
+        self.pending_wide=None;self.declared_wide=[]
     def verify_executed(self,addresses):
         for address in addresses:
             offsets=[off+address-start for start,end,off in self.segments if start<=address and address+4<=end]
@@ -121,6 +131,9 @@ class ConnectedRuntimeDriver(Driver):
         if pc==CALL_T_REGS:
             if self.pending_registers is not None:raise ValueError('Unconsumed non-ABI register seam')
             self.pending_registers={8:a,9:b,10:c};return 0
+        if pc==CALL_WIDE_A3:
+            if self.pending_wide is not None:raise ValueError('Unconsumed wide-register seam')
+            self.pending_wide=(b<<32)|a;return 0
         self.calls.append((hex(pc),*[hex(v) for v in (a,b,c,d)]))
         if pc==0x119ac8:
             if c>0x2000000:raise ValueError('Unbounded memset')
@@ -131,7 +144,8 @@ class ConnectedRuntimeDriver(Driver):
         if pc==DOMAIN_FAULT:raise ValueError(f'C path outside reconstructed domain (code {a:#x})')
         if pc==GUEST_FRAME:
             if b not in (0,1) or a&15 or (b==0 and self.guest_frame<a):raise ValueError('Invalid guest frame seam')
-            self.guest_frame+=a if b else -a;return 0
+            self.guest_frame+=a if b else -a
+            return (0x1ff0800-self.guest_frame)&0xffffffff if b else 0
         if pc==CALL_RETURN:self.call_returns.append((a,b));return 0
         machine=Machine();machine.mem=self.mem;machine.reg[28]=0x3e7f70
         machine.cop0_status=self.cop0_status
@@ -147,6 +161,12 @@ class ConnectedRuntimeDriver(Driver):
             raise ValueError(f'Non-ABI register contract mismatch at {pc:#x}')
         for index,value in (extra or {}).items():machine.reg[index]=value
         if extra is not None:self.declared_registers.append((pc,dict(extra)))
+        wide,self.pending_wide=self.pending_wide,None
+        if (wide is not None)!=(pc in WIDE_A3_CALLEES and self.model_depth==0):
+            raise ValueError(f'Wide a3 contract mismatch at {pc:#x}')
+        if wide is not None:
+            if wide&0xffffffff!=d:raise ValueError('Wide a3 low word differs from the a3 operand')
+            machine.reg[7]=wide;self.declared_wide.append((pc,wide))
         def memcall(cpu,target):
             return self.external(target,*(cpu.reg[i]&0xffffffff for i in (4,5,6,7)))
         machine.hooks={target:(lambda cpu,target=target:memcall(cpu,target)) for target in (0x119910,0x119ac8)}
