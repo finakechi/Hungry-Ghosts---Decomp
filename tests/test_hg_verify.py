@@ -194,6 +194,11 @@ class ReceiptTests(unittest.TestCase):
             (orphan / 'result.json').write_text('partial')
             self.assertIsNone(runner.reusable(root, basis))
             self.assertEqual((orphan / 'result.json').read_text(), 'partial')
+            # Force equal timestamps so this case is deterministic.
+            stamp = max(old.stat().st_mtime_ns, orphan.stat().st_mtime_ns)
+            os.utime(old, ns=(stamp, stamp))
+            os.utime(orphan, ns=(stamp, stamp))
+            self.assertIsNone(runner.reusable(root, basis))
 
     def test_timeout_and_lock_cannot_produce_a_completion_receipt(self):
         with tempfile.TemporaryDirectory() as location:

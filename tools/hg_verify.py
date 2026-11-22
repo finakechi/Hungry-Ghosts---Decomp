@@ -335,6 +335,10 @@ def reusable(folder, basis):
     attempts = sorted(folder.glob('attempt-*'), key=lambda path: path.stat().st_mtime_ns, reverse=True)
     if not attempts:
         return None
+    # Tied directory timestamps cannot establish which attempt is newest.
+    # Fail closed instead of reusing an earlier completed receipt.
+    if len(attempts) > 1 and attempts[0].stat().st_mtime_ns == attempts[1].stat().st_mtime_ns:
+        return None
     directory = attempts[0]
     try:
         row = read_json(directory / 'receipt.json')
