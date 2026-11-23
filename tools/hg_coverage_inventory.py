@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Source-backed decompilation coverage inventory (M17).
+"""Source-backed decompilation coverage inventory (M17, front end added in M18).
 
 Classifies every candidate function of analysis/function-inventory.json:
 
@@ -20,10 +20,14 @@ Classifies every candidate function of analysis/function-inventory.json:
 C entries come from the original-address annotations `/* 00xxxxxx */` on
 prototypes in src/*.h; a C function is classified only if its body is found
 in src/*.c. Byte counts use the inventory body ranges (instruction bytes).
-Runtime-loaded AREA code is reported separately (not in the ELF inventory).
+Runtime-loaded AREA/overlay code (e.g. the M18 title overlay 00a87800) is
+reported separately (c_entries_outside_inventory; not in the ELF inventory).
 
     python3 -B tools/hg_coverage_inventory.py [--baseline REF] \
         [--interpreted local/m17/out/interpreted.json] --output evidence/m17/coverage.json
+    python3 -B tools/hg_coverage_inventory.py --baseline f759bf5 \
+        --interpreted local/m17/out/interpreted-002.json \
+        --interpreted local/m18/out/connected-run.json --output evidence/m18/coverage.json
 """
 import argparse
 import json
@@ -46,8 +50,8 @@ def git_text(ref, path):
 
 
 def sources(ref=None):
-    names = ('src/resource_loader.h', 'src/game_lifecycle.h', 'src/disc_read.h',
-             'src/resource_loader.c', 'src/game_lifecycle.c', 'src/disc_read.c')
+    names = ('src/resource_loader.h', 'src/game_lifecycle.h', 'src/disc_read.h', 'src/front_end.h',
+             'src/resource_loader.c', 'src/game_lifecycle.c', 'src/disc_read.c', 'src/front_end.c')
     if ref:
         return {n: git_text(ref, n) for n in names}
     return {n: (ROOT / n).read_text() if (ROOT / n).exists() else '' for n in names}

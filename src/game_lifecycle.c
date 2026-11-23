@@ -949,11 +949,14 @@ void hg_main_init(HGResourceEnv *e) {
 }
 /* One iteration of the 0011d830 main loop (0011d938..0011d9fc), split at
  * the return of the mode dispatcher 00143240 for the host connected frame. */
-static void main_frame_head(HGResourceEnv *e) {
+static void main_frame_services(HGResourceEnv *e) {
     w32(e,0x95e308,0);
     call(e,0x148970,0,0,0,0);
     call(e,0x13d970,0,0,0,0);
     call(e,0x156740,0,0,0,0);
+}
+static void main_frame_head(HGResourceEnv *e) {
+    main_frame_services(e);
     call(e,0x143240,0,0,0,0);
 }
 static void main_frame_tail(HGResourceEnv *e) {
@@ -977,6 +980,13 @@ static void main_frame_tail(HGResourceEnv *e) {
 void hg_main_frame(HGResourceEnv *e) {
     main_frame_head(e);
     main_frame_tail(e);
+}
+/* Host unit (M18): the same loop body entered at the 00143240 call of frame
+ * N and left at the 00143240 call of frame N+1 (the native stop point). */
+void hg_main_unit(HGResourceEnv *e) {
+    call(e,0x143240,0,0,0,0);
+    main_frame_tail(e);
+    main_frame_services(e);
 }
 
 /* 0011df10 (INTC 2, vblank start) and 0011df80 (INTC 3, vblank end),

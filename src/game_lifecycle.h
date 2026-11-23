@@ -49,6 +49,8 @@ void hg_gameplay_teardown(HGResourceEnv *);                     /* 0012f800 */
 #define HG_WAIT_INTERRUPT 0xfffffffau
 void hg_main_init(HGResourceEnv *);                             /* 0011d830 */
 void hg_main_frame(HGResourceEnv *);
+/* M18 host unit: 00143240 call of frame N to the 00143240 call of N+1. */
+void hg_main_unit(HGResourceEnv *);
 void hg_boot_mode(HGResourceEnv *);                             /* 00121810 */
 uint32_t hg_logo_sequence_step(HGResourceEnv *, uint32_t table, uint32_t first,
                                uint32_t kind, uint32_t id, uint32_t last); /* 001219e0 */

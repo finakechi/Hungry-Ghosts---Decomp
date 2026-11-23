@@ -398,6 +398,51 @@ void hg_pad_service(HGResourceEnv *e) {
     w32(e,G(0x2fc8),r8(e,0x3fa1b8)?y^0x80000000u:y);
 }
 
+/* ---- new-game state -------------------------------------------------- */
+
+/* 001418b0: install the button configuration (4 u16 at src) at gp+2f60/5c/58/54. */
+void hg_controls_apply(HGResourceEnv *e,uint32_t src) {
+    w16(e,G(0x2f60),r16(e,src));w16(e,G(0x2f5c),r16(e,src+2));
+    w16(e,G(0x2f58),r16(e,src+4));w16(e,G(0x2f54),r16(e,src+6));
+}
+/* 00141810: copy the option settings gp+2f20.. into the game state and
+ * continue (j, not a call) into 001418b0 with 003fa1bc. */
+void hg_options_to_game(HGResourceEnv *e) {
+    uint32_t c0=r16(e,G(0x2f20)),c1=r16(e,G(0x2f22)),c2=r16(e,G(0x2f24)),c3=r16(e,G(0x2f26));
+    w16(e,0x3fa1bc,c0);w16(e,0x3fa1be,c1);w16(e,0x3fa1c0,c2);w16(e,0x3fa1c2,c3);
+    uint32_t b29=r8(e,G(0x2f29)),b2c=r8(e,G(0x2f2c)),h30=r16(e,G(0x2f30)),h32=r16(e,G(0x2f32));
+    uint32_t b2a=r8(e,G(0x2f2a)),b2d=r8(e,G(0x2f2d));
+    w8(e,0x3fa1b9,b29);w8(e,0x3fa1cc,b2c);w16(e,0x3fa208,h30);w16(e,0x3fa20a,h32);
+    uint32_t b2e=r8(e,G(0x2f2e));
+    w8(e,0x3fa1cf,b2a);
+    uint32_t b2f=r8(e,G(0x2f2f));
+    w8(e,0x3fa1cd,b2d);
+    uint32_t b36=r8(e,G(0x2f36));
+    w8(e,0x3fa1ce,b2e);w8(e,0x3fa205,b2f);w8(e,0x3fa1b8,b36);
+    hg_controls_apply(e,0x3fa1bc);
+}
+/* 00141980: new-game state. Clears 003fa180..+73fc0 (00119ac8), area triple
+ * (1,0,0), empty name (0011af00 with the empty format 003db280), default
+ * flags and counters, four 0011f0c0 setups, then the option copy 00141810. */
+void hg_new_game_state(HGResourceEnv *e) {
+    call(e,0x119ac8,0x3fa180,0,0x73fc0,0);
+    w8(e,0x3fa1b0,1);
+    call(e,0x11af00,0x3fa194,0x3db280,0,0);
+    w8(e,0x3fa200,0);w8(e,0x3fa201,0);w8(e,0x46e0f1,1);w8(e,0x3fa202,0xff);
+    w8(e,0x46e12d,0);w8(e,0x3fa1c8,0x1e);w32(e,0x46d90c,0xffffffffu);
+    w8(e,0x46e12e,0);w8(e,0x46e12f,0);
+    static const uint32_t ff[]={0x3fa203,0x3fa204,0x46d91a,0x46d890,0x46d891,0x46d892,0x3fa206,
+                                0x46d924,0x46d925,0x46d919,0x46d926,0x46d927};
+    for(uint32_t i=0;i<sizeof ff/sizeof ff[0];i++)w8(e,ff[i],0xff);
+    w32(e,0x3fa1d0,0xa0);w32(e,0x3fa1d4,0xa0);w32(e,0x3fa1d8,0x32);w32(e,0x3fa1dc,0x32);
+    w32(e,0x3fa1ac,1);
+    call(e,0x11f0c0,0,0,1,2);
+    call(e,0x11f0c0,1,0,1,2);
+    call(e,0x11f0c0,0,3,1,2);
+    call(e,0x11f0c0,1,3,1,2);
+    call(e,0x141810,0,0,0,0);
+}
+
 /* ---- title ---------------------------------------------------------- */
 
 /* 00147f10: clear the 0x490-byte menu/card block and the render quad. */
@@ -455,9 +500,34 @@ uint32_t hg_title_card_scan(HGResourceEnv *e) {
     call(e,HG_GUEST_FRAME,0x120,0,0,0);
     return s0;
 }
+/* 00a87de0 (overlay A0_B09): title-screen memory-card poll, state = mode +b.
+ * 0: clear (00147f10) and scan; 1: scan until 002cf020 reports, then set the
+ * save flag 70000410 (1 only for "save data found") and a 15-frame wait at
+ * mode +1e; 2: count the wait down (unless hold) and rescan. Returns 1 in
+ * state 2: the title may then complete its transitions. */
+uint32_t hg_title_card_poll(HGResourceEnv *e,uint32_t hold) {
+    uint32_t b=blk(e),st=r8(e,b+0xb);
+    if(st==2) {
+        if(hold)return 1;
+        uint32_t t=(r16(e,b+0x1e)-1u)&0xffffu;
+        w16(e,b+0x1e,t);
+        if(!t)w8(e,blk(e)+0xb,0);
+        return 1;
+    }
+    if(st==0) {w8(e,b+0xb,1);call(e,0x147f10,0,0,0,0);}
+    else if(st!=1)return 0;
+    uint32_t v=call(e,0x2cf020,0,0,0,0);
+    if(!v)return 0;
+    w32(e,SAVE_FLAG,v==1?1u:0u);
+    w16(e,blk(e)+0x1e,0xf);
+    b=blk(e);
+    w8(e,b+0xb,r8(e,b+0xb)+1u);
+    return 0;
+}
 /* 00a87880 (overlay A0_B09): title presentation and menu, minor = mode +9.
  * Returns 1 when a choice (mode +11) is confirmed, 3 on the attract timeout.
- * The overlay's scene/draw helpers 00a87de0, 00a87ed0, 00a88660 are bus calls. */
+ * 00a87de0 is the C card poll below; the overlay draw/scene helpers 00a87ed0
+ * and 00a88660 are bus calls. */
 uint32_t hg_title_menu(HGResourceEnv *e) {
     uint32_t b=blk(e),minor=r8(e,b+9),s0;
     switch(minor) {
@@ -695,8 +765,12 @@ int hg_front_end_call(HGResourceEnv *e,uint32_t pc,uint32_t a,uint32_t b,uint32_
     case 0x13d910:hg_pad_clear_buttons(e,a);return 1;
     case 0x13dad0:hg_pad_clear_port(e,a);return 1;
     case 0x147f10:hg_menu_clear(e);return 1;
+    case 0x141980:hg_new_game_state(e);return 1;
+    case 0x141810:hg_options_to_game(e);return 1;
+    case 0x1418b0:hg_controls_apply(e,a);return 1;
     case 0x2cf020:*result=hg_title_card_scan(e);return 1;
     case 0xa87880:*result=hg_title_menu(e);return 1;
+    case 0xa87de0:*result=hg_title_card_poll(e,a);return 1;
     case 0x162750:*result=hg_pause_menu(e);return 1;
     case 0x161cf0:hg_menu_cursor(e,a,b);return 1;
     default:return 0;

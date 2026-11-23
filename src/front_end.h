@@ -48,8 +48,12 @@ void hg_pad_clear_buttons(HGResourceEnv *, uint32_t pad);              /* 0013d9
 void hg_pad_clear_port(HGResourceEnv *, uint32_t pad);                 /* 0013dad0 */
 
 void hg_menu_clear(HGResourceEnv *);                                   /* 00147f10 */
+void hg_new_game_state(HGResourceEnv *);                               /* 00141980 */
+void hg_options_to_game(HGResourceEnv *);                              /* 00141810 */
+void hg_controls_apply(HGResourceEnv *, uint32_t src);                 /* 001418b0 */
 uint32_t hg_title_card_scan(HGResourceEnv *);                          /* 002cf020 */
 uint32_t hg_title_menu(HGResourceEnv *);                               /* 00a87880 */
+uint32_t hg_title_card_poll(HGResourceEnv *, uint32_t hold);           /* 00a87de0 */
 uint32_t hg_pause_menu(HGResourceEnv *);                               /* 00162750 */
 void hg_menu_cursor(HGResourceEnv *, uint32_t cell, uint32_t limit);    /* 00161cf0 */
 
