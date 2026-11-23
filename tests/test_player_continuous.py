@@ -226,14 +226,21 @@ class ContinuousTests(unittest.TestCase):
         self.assertEqual(d.calls[-1], 0x148970)
         self.assertNotIn(0x198f60,d.calls+d.externals)
         coordinator = (0x13b6e0, 0x1430a0, 0x143100,
-                       0x12bc70, 0x18c520, 0x143150, 0x1431a0, 0x25c170, 0x182480,
-                       0x13ce80)
+                       0x12bc70, 0x18c520, 0x143150, 0x1431a0, 0x25c170, 0x182480)
         self.assertEqual(d.externals, [0x13b6e0,
                                        0x1430a0, 0x143100, 0x18c520,
-                                       0x1431a0, 0x25c170, 0x182480,
-                                       0x13ce80])
+                                       0x1431a0, 0x25c170, 0x182480])
         for pc in coordinator:
             self.assertNotIn(pc, d.calls)
+        # M16: 0013ce80 is a C service now (state bytes zero: a silent return);
+        # the frame router consumes it before the bus, its marks are emitted
+        # and no area dispatch happens.
+        self.assertNotIn(0x13ce80, d.calls)
+        self.assertNotIn(0x13ce80, d.externals)
+        self.assertNotIn(0xa8b800, d.calls)
+        self.assertNotIn(0xfffffff9, d.calls)
+        late = [row for row in d.call_args if row[0] == 0xfffffff6 and row[1] == 0x13ce80]
+        self.assertEqual(late, [(0xfffffff6, 0x13ce80, 1, 0, 0), (0xfffffff6, 0x13ce80, 0, 0, 0)])
 
 
 if __name__ == '__main__':

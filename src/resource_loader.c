@@ -2370,6 +2370,7 @@ void hg_pre_dispatch_service(HGResourceEnv *e) {
  * closed (domain fault 0x70..0x72). */
 #define HG_CALL_WIDE_A3 0xfffffff4u /* host seam: full 64-bit a3 of the next call */
 #define HG_SERVICE_MARK 0xfffffff6u
+#define HG_CALL_EXTRA_FP 0xfffffff9u /* host seam: f16 raw bits of the next modeled call */
 static uint32_t vmul(HGResourceEnv *e,uint32_t a,uint32_t b) {
     uint32_t fault=0,v=fp_mul_bits(a,b,&fault);
     if(fault)domain_fault(e,3);
@@ -2716,6 +2717,32 @@ void hg_render_node_list(HGResourceEnv *e) {
     call(e,HG_GUEST_FRAME,0x20,0,0,0);
     call(e,HG_SERVICE_MARK,0x143150,0,0,0);
 }
+/* M16 coordinator tail service 0013ce80 (called at 0012f924 with the unused
+ * a0 = 003f97f0 set in the delay slot). The body gates on the three state
+ * bytes 003fa1b0/b1/b2 and dispatches the AREA1-resident render body:
+ *   (1,0,0): the observed corridor path. f12 = 0x415f78d5, f13 = 0x461c4000,
+ *     f14 = 0xc61c4000, f15 = 0x461c4000 (mov.s f15,f13), f16 = 0x40400000,
+ *     entry 0xa8b800. The area body and its ELF callees execute their
+ *     original instructions through the bus; the shared LCG draw count
+ *     (0011ad58) comes from that real execution, one draw normally and
+ *     three when [gp+2f80] % (draw % 180 + 40) == 0 (frame 10178).
+ *   (1,0,1) and (0,5,0): unobserved calling states; fail closed (0x79/0x7a).
+ *   Every other state returns without effects, exactly as the original.
+ * HG_CALL_EXTRA_FP supplies the f16 raw bits for the next modeled call;
+ * f12..f15 travel in a0..a3 (FP_SEAMS order). */
+void hg_late_frame_service(HGResourceEnv *e) {
+    uint32_t s0=r8(e,0x3fa1b0),s1=r8(e,0x3fa1b1),s2=r8(e,0x3fa1b2);
+    call(e,HG_SERVICE_MARK,0x13ce80,1,0,0);
+    if(s0==1 && s1==0 && s2==0) {
+        call(e,HG_CALL_EXTRA_FP,0x40400000,0,0,0);  /* f16 = 3.0 */
+        call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);
+    } else if(s0==1 && s1==0 && s2==1) {
+        domain_fault(e,0x79);   /* unobserved area render variant */
+    } else if(s0==0 && s1==5 && s2==0) {
+        domain_fault(e,0x7a);   /* unobserved area sprite entry */
+    }
+    call(e,HG_SERVICE_MARK,0x13ce80,0,0,0);
+}
 static uint32_t render_node_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
     HGProcessing *p=user;
     if(pc==0x19c8a0) {hg_camera_anchor_node(&p->env,a);return 0;}
@@ -2770,11 +2797,13 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     if(pc==0x31bb80) {hg_frame_edge_sync(&p->env);return 0;}
     if(pc==0x12f850) {hg_frame_advance(&p->env);return 0;}
     if(pc==0x198f60) {hg_pre_dispatch_service(&p->env);return 0;}
-    /* M15: 00143150 render-node list and its observed C callbacks. */
+    /* M15: 00143150 render-node list and its observed C callbacks;
+     * M16: 0013ce80 late-frame render service (0012f924). */
     if(pc==0x143150) {hg_render_node_list(&p->env);return 0;}
     if(pc==0x12bc70) {hg_player_model_draw(&p->env);return 0;}
     if(pc==0x19c8a0) {hg_camera_anchor_node(&p->env,a);return 0;}
     if(pc==0x2f7830) {hg_camera_particle_field(&p->env,a);return 0;}
+    if(pc==0x13ce80) {hg_late_frame_service(&p->env);return 0;}
     /* Coordinator 0012f850 engine-service calls (authenticated jal targets
  * 0012f8a8..0012f92c plus the counter routine 00137890). The first three
      * and 00143150/0012bc70 (M15) are connected above; the other calls are declared
@@ -2788,7 +2817,7 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     if(pc==0x13b6e0 ||
        pc==0x1430a0 || pc==0x143100 || pc==0x18c520 ||
        pc==0x1431a0 || pc==0x25c170 || pc==0x182480 ||
-       pc==0x13ce80 || pc==0x137890) {
+       pc==0x137890) {
         p->outer->call(p->outer->user,HG_EXTERNAL_CALL,pc,0,0,0);
         return 0;
     }
@@ -2830,7 +2859,15 @@ void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     call(bus,HG_EXTERNAL_CALL,0x1431a0,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x25c170,0,0,0);
     call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);
-    call(bus,HG_EXTERNAL_CALL,0x13ce80,0,0,0);
+    call(bus,0x13ce80,0,0,0,0);            /* 0012f924: M16 C late-frame render service */
     hg_counter_advance(bus);   /* 00137890's 001379f0 body: 46d930/46e110 */
     frame_prepare_packets(bus);
+    /* M16 narrow dependency: the main-loop frame tick [gp+2f80] += 1 runs
+     * between dispatch and the next coordinator-entry (authenticated
+     * lw/addiu/sw sequences at 00121bf4..00121c04 and 0012d208..0012d218;
+     * every observed corridor frame increments exactly once). The AREA1
+     * render body's three-draw condition reads the cell, so without the
+     * tick the carried value is stale and the frame-10178 draws diverge
+     * (counterfactual: 0x3fc4 -> 3 draws, stale 0x3fb6 -> 1 draw). */
+    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+1);
 }

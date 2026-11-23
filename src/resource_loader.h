@@ -219,11 +219,22 @@ void hg_render_node_list_fixed(HGResourceEnv *);
  * light mode 2, shadow quad; other paths fail closed 0x74..0x78). HG_GUEST_FRAME
  * (bytes, 1) must return the guest sp of the entered frame. */
 void hg_player_model_draw(HGResourceEnv *);                     /* 0012bc70 */
+/* M16 coordinator service 0013ce80 (0012f924): gate on 003fa1b0/b1/b2 and
+ * dispatch the AREA1-resident render body 0xa8b800 (observed state 1,0,0;
+ * other calling states fail closed 0x79/0x7a, non-calling states return
+ * without effects). The area body and its ELF callees execute original
+ * instructions; the shared LCG draws arise from that execution. Emits
+ * HG_SERVICE_MARK (0x13ce80, 1/0) and HG_CALL_EXTRA_FP (f16 of the next
+ * modeled call). */
+void hg_late_frame_service(HGResourceEnv *);                    /* 0013ce80 */
 /* M13/M14 continuous frame: counter prefix, pre-dispatch services, M10
  * dispatcher (walk/turn, C 0015ebc0, C 0015fc10/0015e420, history) and M9
  * same-frame camera on one carried bus. At frame end the host supplies the
  * next GS CSR field bit through HG_RENDER_FIELD (a0 = previous field), and
- * models 00148970's CPU-side packet setup. */
+ * models 00148970's CPU-side packet setup. At frame end the main-loop
+ * frame tick [gp+2f80] += 1 (authenticated at 00121bf4/0012d208) runs
+ * between dispatch and the next coordinator-entry; the AREA1 render
+ * body's three-draw condition reads it. */
 #define HG_RENDER_FIELD 0xfffffff8u
 void hg_player_frame_continuous(HGResourceEnv *, uint32_t frame);
 void hg_player_frame_continuous_fixed(HGResourceEnv *, uint32_t frame);

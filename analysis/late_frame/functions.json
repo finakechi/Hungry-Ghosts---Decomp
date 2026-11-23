@@ -1,0 +1,1003 @@
+{
+  "schema": "ps2-evidence/v1",
+  "program": {
+    "game": "Hungry Ghosts",
+    "build_id": "japan",
+    "executable": "SCPS_150.46",
+    "sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "processor": "EE/R5900",
+    "reported_language": "r5900:LE:32:default",
+    "endianness": "little",
+    "address_space": "ram",
+    "instruction_encoding": "ee-mips32",
+    "load_address": "0x00100000",
+    "address_context": "Original unrelocated file-backed EE PT_LOAD; M16 synthesized rows."
+  },
+  "provenance": {
+    "classification": "observed",
+    "observation_date": "2026-11-22",
+    "source": "Authenticated Japanese ELF and the M13 obs3 continuous observation; rows decoded by the private M15 R5900 decoder.",
+    "tool": "local/m15/r5900dis.py",
+    "tool_version": "M15",
+    "tool_sha256": "8945497c01ef82117131ea5954f6ad468ecfe05bb3985ee77bd5c1345330ec62",
+    "retrieval_method": "file-backed EE PT_LOAD instruction extraction",
+    "truncated": false,
+    "limitations": [
+      "Observed bounded paths only; interpreter and C equivalence are separate runtime and synthetic checks.",
+      "The text column is an analysis aid; bytes are authoritative."
+    ]
+  },
+  "functions": [
+    {
+      "entry": "0x0013ce80",
+      "name": "late_frame_service_0013ce80",
+      "complete": false,
+      "body_ranges": [
+        {
+          "start": "0x0013ce80",
+          "end_exclusive": "0x0013cfc4"
+        }
+      ],
+      "instructions": [
+        {
+          "address": "0x0013ce80",
+          "text": "addiu sp, sp, -0x10",
+          "bytes": "f0ffbd27"
+        },
+        {
+          "address": "0x0013ce84",
+          "text": "lui at, 0x0040",
+          "bytes": "4000013c"
+        },
+        {
+          "address": "0x0013ce88",
+          "text": "sd ra, 0x0(sp)",
+          "bytes": "0000bfff"
+        },
+        {
+          "address": "0x0013ce8c",
+          "text": "addiu v1, zero, 0x2",
+          "bytes": "02000324"
+        },
+        {
+          "address": "0x0013ce90",
+          "text": "lbu a1, -0x5e50(at)",
+          "bytes": "b0a12590"
+        },
+        {
+          "address": "0x0013ce94",
+          "text": "beq a1, v1, 0x0013cfb8",
+          "bytes": "4800a310"
+        },
+        {
+          "address": "0x0013ce98",
+          "text": "addiu a0, zero, 0x1",
+          "bytes": "01000424"
+        },
+        {
+          "address": "0x0013ce9c",
+          "text": "beq a1, a0, 0x0013cf10",
+          "bytes": "1c00a410"
+        },
+        {
+          "address": "0x0013cea0",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cea4",
+          "text": "beq a1, zero, 0x0013ceb8",
+          "bytes": "0400a010"
+        },
+        {
+          "address": "0x0013cea8",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013ceac",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "42000010"
+        },
+        {
+          "address": "0x0013ceb0",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013ceb4",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013ceb8",
+          "text": "lui at, 0x0040",
+          "bytes": "4000013c"
+        },
+        {
+          "address": "0x0013cebc",
+          "text": "lbu a0, -0x5e4f(at)",
+          "bytes": "b1a12490"
+        },
+        {
+          "address": "0x0013cec0",
+          "text": "addiu v1, zero, 0x5",
+          "bytes": "05000324"
+        },
+        {
+          "address": "0x0013cec4",
+          "text": "beq a0, v1, 0x0013ced8",
+          "bytes": "04008310"
+        },
+        {
+          "address": "0x0013cec8",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cecc",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "3a000010"
+        },
+        {
+          "address": "0x0013ced0",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013ced4",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013ced8",
+          "text": "lui at, 0x0040",
+          "bytes": "4000013c"
+        },
+        {
+          "address": "0x0013cedc",
+          "text": "lbu v1, -0x5e4e(at)",
+          "bytes": "b2a12390"
+        },
+        {
+          "address": "0x0013cee0",
+          "text": "beq v1, zero, 0x0013cef0",
+          "bytes": "03006010"
+        },
+        {
+          "address": "0x0013cee4",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cee8",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "33000010"
+        },
+        {
+          "address": "0x0013ceec",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cef0",
+          "text": "lui v0, 0x41e8",
+          "bytes": "e841023c"
+        },
+        {
+          "address": "0x0013cef4",
+          "text": "mtc1 v0, $f12",
+          "bytes": "00608244"
+        },
+        {
+          "address": "0x0013cef8",
+          "text": "mtc1 zero, $f13",
+          "bytes": "00688044"
+        },
+        {
+          "address": "0x0013cefc",
+          "text": "jal 0x00a8bab0",
+          "bytes": "ac2e2a0c"
+        },
+        {
+          "address": "0x0013cf00",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf04",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "2c000010"
+        },
+        {
+          "address": "0x0013cf08",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf0c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf10",
+          "text": "lui at, 0x0040",
+          "bytes": "4000013c"
+        },
+        {
+          "address": "0x0013cf14",
+          "text": "lbu v1, -0x5e4f(at)",
+          "bytes": "b1a12390"
+        },
+        {
+          "address": "0x0013cf18",
+          "text": "beq v1, zero, 0x0013cf28",
+          "bytes": "03006010"
+        },
+        {
+          "address": "0x0013cf1c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf20",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "25000010"
+        },
+        {
+          "address": "0x0013cf24",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf28",
+          "text": "lui at, 0x0040",
+          "bytes": "4000013c"
+        },
+        {
+          "address": "0x0013cf2c",
+          "text": "lbu v1, -0x5e4e(at)",
+          "bytes": "b2a12390"
+        },
+        {
+          "address": "0x0013cf30",
+          "text": "beq v1, a0, 0x0013cf88",
+          "bytes": "15006410"
+        },
+        {
+          "address": "0x0013cf34",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf38",
+          "text": "beq v1, zero, 0x0013cf48",
+          "bytes": "03006010"
+        },
+        {
+          "address": "0x0013cf3c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf40",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "1d000010"
+        },
+        {
+          "address": "0x0013cf44",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf48",
+          "text": "lui v0, 0x415f",
+          "bytes": "5f41023c"
+        },
+        {
+          "address": "0x0013cf4c",
+          "text": "ori v1, v0, 0x78d5",
+          "bytes": "d5784334"
+        },
+        {
+          "address": "0x0013cf50",
+          "text": "lui v0, 0x461c",
+          "bytes": "1c46023c"
+        },
+        {
+          "address": "0x0013cf54",
+          "text": "ori v0, v0, 0x4000",
+          "bytes": "00404234"
+        },
+        {
+          "address": "0x0013cf58",
+          "text": "mtc1 v0, $f13",
+          "bytes": "00688244"
+        },
+        {
+          "address": "0x0013cf5c",
+          "text": "mtc1 v1, $f12",
+          "bytes": "00608344"
+        },
+        {
+          "address": "0x0013cf60",
+          "text": "lui v0, 0xc61c",
+          "bytes": "1cc6023c"
+        },
+        {
+          "address": "0x0013cf64",
+          "text": "ori v1, v0, 0x4000",
+          "bytes": "00404334"
+        },
+        {
+          "address": "0x0013cf68",
+          "text": "lui v0, 0x4040",
+          "bytes": "4040023c"
+        },
+        {
+          "address": "0x0013cf6c",
+          "text": "mtc1 v1, $f14",
+          "bytes": "00708344"
+        },
+        {
+          "address": "0x0013cf70",
+          "text": "mtc1 v0, $f16",
+          "bytes": "00808244"
+        },
+        {
+          "address": "0x0013cf74",
+          "text": "jal 0x00a8b800",
+          "bytes": "002e2a0c"
+        },
+        {
+          "address": "0x0013cf78",
+          "text": "mov.s $f15, $f13",
+          "bytes": "c66b0046"
+        },
+        {
+          "address": "0x0013cf7c",
+          "text": "beq zero, zero, 0x0013cfb8",
+          "bytes": "0e000010"
+        },
+        {
+          "address": "0x0013cf80",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf84",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cf88",
+          "text": "lui v0, 0x412f",
+          "bytes": "2f41023c"
+        },
+        {
+          "address": "0x0013cf8c",
+          "text": "ori v1, v0, 0x78d5",
+          "bytes": "d5784334"
+        },
+        {
+          "address": "0x0013cf90",
+          "text": "lui v0, 0x433e",
+          "bytes": "3e43023c"
+        },
+        {
+          "address": "0x0013cf94",
+          "text": "mtc1 v1, $f12",
+          "bytes": "00608344"
+        },
+        {
+          "address": "0x0013cf98",
+          "text": "mtc1 v0, $f13",
+          "bytes": "00688244"
+        },
+        {
+          "address": "0x0013cf9c",
+          "text": "lui v1, 0x4353",
+          "bytes": "5343033c"
+        },
+        {
+          "address": "0x0013cfa0",
+          "text": "lui v0, 0x4100",
+          "bytes": "0041023c"
+        },
+        {
+          "address": "0x0013cfa4",
+          "text": "mtc1 v1, $f15",
+          "bytes": "00788344"
+        },
+        {
+          "address": "0x0013cfa8",
+          "text": "mtc1 v0, $f16",
+          "bytes": "00808244"
+        },
+        {
+          "address": "0x0013cfac",
+          "text": "mtc1 zero, $f14",
+          "bytes": "00708044"
+        },
+        {
+          "address": "0x0013cfb0",
+          "text": "jal 0x00a8b800",
+          "bytes": "002e2a0c"
+        },
+        {
+          "address": "0x0013cfb4",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0013cfb8",
+          "text": "ld ra, 0x0(sp)",
+          "bytes": "0000bfdf"
+        },
+        {
+          "address": "0x0013cfbc",
+          "text": "jr ra",
+          "bytes": "0800e003"
+        },
+        {
+          "address": "0x0013cfc0",
+          "text": "addiu sp, sp, 0x10",
+          "bytes": "1000bd27"
+        }
+      ],
+      "references": [],
+      "interpretation": "Reconstructed as hg_late_frame_service. Reads the three state bytes 003fa1b0/b1/b2 and dispatches the AREA1 render body: state (1,0,0) calls 0xa8b800 with f12 = 0x415f78d5, f13 = 0x461c4000, f14 = 0xc61c4000, f15 = 0x461c4000 (mov.s f15,f13), f16 = 0x40400000; state (1,0,1) calls 0xa8b800 with f12 = 0x412f78d5, f13 = 0x433e0000, f14 = 0, f15 = 0x43530000, f16 = 0x41000000; state (0,5,0) calls 0xa8bab0 with f12 = 0x41e80000, f13 = 0. Every other state returns without effects. Only (1,0,0) is observed in the 10164..10185 corridor; the other two calling states fail closed in C.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "9a2b0dd837339afc55c89e3afe94fb1c6b15e5ac8e579d81e9963d836760e6b8",
+      "snapshot_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    },
+    {
+      "entry": "0x001537f0",
+      "name": "late_frame_grid_layout_001537f0",
+      "complete": false,
+      "body_ranges": [
+        {
+          "start": "0x001537f0",
+          "end_exclusive": "0x00153950"
+        }
+      ],
+      "instructions": [
+        {
+          "address": "0x001537f0",
+          "text": "lui v1, 0x009e",
+          "bytes": "9e00033c"
+        },
+        {
+          "address": "0x001537f4",
+          "text": "addiu v1, v1, -0x4490",
+          "bytes": "70bb6324"
+        },
+        {
+          "address": "0x001537f8",
+          "text": "sw v1, 0x3090(gp)",
+          "bytes": "903083af"
+        },
+        {
+          "address": "0x001537fc",
+          "text": "lw v1, 0x3090(gp)",
+          "bytes": "9030838f"
+        },
+        {
+          "address": "0x00153800",
+          "text": "sw a0, 0x0(v1)",
+          "bytes": "000064ac"
+        },
+        {
+          "address": "0x00153804",
+          "text": "lw v1, 0x3090(gp)",
+          "bytes": "9030838f"
+        },
+        {
+          "address": "0x00153808",
+          "text": "sw a1, 0x4(v1)",
+          "bytes": "040065ac"
+        },
+        {
+          "address": "0x0015380c",
+          "text": "lw a1, 0x3098(gp)",
+          "bytes": "9830858f"
+        },
+        {
+          "address": "0x00153810",
+          "text": "lw v1, 0x3090(gp)",
+          "bytes": "9030838f"
+        },
+        {
+          "address": "0x00153814",
+          "text": "lh a1, 0x5c0(a1)",
+          "bytes": "c005a584"
+        },
+        {
+          "address": "0x00153818",
+          "text": "div a1, a0",
+          "bytes": "1a00a400"
+        },
+        {
+          "address": "0x0015381c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x00153820",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x00153824",
+          "text": "mflo a1",
+          "bytes": "12280000"
+        },
+        {
+          "address": "0x00153828",
+          "text": "mtc1 a1, $f0",
+          "bytes": "00008544"
+        },
+        {
+          "address": "0x0015382c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x00153830",
+          "text": "cvt.s.w $f0, $f0",
+          "bytes": "20008046"
+        },
+        {
+          "address": "0x00153834",
+          "text": "swc1 $f0, 0x8(v1)",
+          "bytes": "080060e4"
+        },
+        {
+          "address": "0x00153838",
+          "text": "lw a1, 0x3098(gp)",
+          "bytes": "9830858f"
+        },
+        {
+          "address": "0x0015383c",
+          "text": "lw v1, 0x3090(gp)",
+          "bytes": "9030838f"
+        },
+        {
+          "address": "0x00153840",
+          "text": "lh a1, 0x5c0(a1)",
+          "bytes": "c005a584"
+        },
+        {
+          "address": "0x00153844",
+          "text": "div1 zero, a1, a0",
+          "bytes": "1a00a470"
+        },
+        {
+          "address": "0x00153848",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0015384c",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x00153850",
+          "text": "mflo1 a0, zero, zero",
+          "bytes": "12200070"
+        },
+        {
+          "address": "0x00153854",
+          "text": "mtc1 a0, $f0",
+          "bytes": "00008444"
+        },
+        {
+          "address": "0x00153858",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0015385c",
+          "text": "cvt.s.w $f0, $f0",
+          "bytes": "20008046"
+        },
+        {
+          "address": "0x00153860",
+          "text": "swc1 $f0, 0xc(v1)",
+          "bytes": "0c0060e4"
+        },
+        {
+          "address": "0x00153864",
+          "text": "lw a1, 0x3090(gp)",
+          "bytes": "9030858f"
+        },
+        {
+          "address": "0x00153868",
+          "text": "lw v1, 0x0(a1)",
+          "bytes": "0000a38c"
+        },
+        {
+          "address": "0x0015386c",
+          "text": "addiu v1, v1, 0x1",
+          "bytes": "01006324"
+        },
+        {
+          "address": "0x00153870",
+          "text": "slt at, zero, v1",
+          "bytes": "2a080300"
+        },
+        {
+          "address": "0x00153874",
+          "text": "beq at, zero, 0x00153948",
+          "bytes": "34002010"
+        },
+        {
+          "address": "0x00153878",
+          "text": "daddu a2, zero, zero",
+          "bytes": "2d300000"
+        },
+        {
+          "address": "0x0015387c",
+          "text": "daddu v1, zero, zero",
+          "bytes": "2d180000"
+        },
+        {
+          "address": "0x00153880",
+          "text": "lui a0, 0x3f00",
+          "bytes": "003f043c"
+        },
+        {
+          "address": "0x00153884",
+          "text": "mtc1 a0, $f2",
+          "bytes": "00108444"
+        },
+        {
+          "address": "0x00153888",
+          "text": "lw a0, 0x4(a1)",
+          "bytes": "0400a48c"
+        },
+        {
+          "address": "0x0015388c",
+          "text": "addiu a0, a0, 0x1",
+          "bytes": "01008424"
+        },
+        {
+          "address": "0x00153890",
+          "text": "slt at, zero, a0",
+          "bytes": "2a080400"
+        },
+        {
+          "address": "0x00153894",
+          "text": "beq at, zero, 0x00153930",
+          "bytes": "26002010"
+        },
+        {
+          "address": "0x00153898",
+          "text": "daddu t0, zero, zero",
+          "bytes": "2d400000"
+        },
+        {
+          "address": "0x0015389c",
+          "text": "daddu a3, zero, zero",
+          "bytes": "2d380000"
+        },
+        {
+          "address": "0x001538a0",
+          "text": "mtc1 a2, $f0",
+          "bytes": "00008644"
+        },
+        {
+          "address": "0x001538a4",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x001538a8",
+          "text": "cvt.s.w $f3, $f0",
+          "bytes": "e0008046"
+        },
+        {
+          "address": "0x001538ac",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x001538b0",
+          "text": "lw a1, 0x3098(gp)",
+          "bytes": "9830858f"
+        },
+        {
+          "address": "0x001538b4",
+          "text": "mtc1 t0, $f0",
+          "bytes": "00008844"
+        },
+        {
+          "address": "0x001538b8",
+          "text": "lw a0, 0x3090(gp)",
+          "bytes": "9030848f"
+        },
+        {
+          "address": "0x001538bc",
+          "text": "cvt.s.w $f1, $f0",
+          "bytes": "60008046"
+        },
+        {
+          "address": "0x001538c0",
+          "text": "addiu t0, t0, 0x1",
+          "bytes": "01000825"
+        },
+        {
+          "address": "0x001538c4",
+          "text": "lh a1, 0x5c0(a1)",
+          "bytes": "c005a584"
+        },
+        {
+          "address": "0x001538c8",
+          "text": "lwc1 $f0, 0x8(a0)",
+          "bytes": "080080c4"
+        },
+        {
+          "address": "0x001538cc",
+          "text": "mula.s $f0, $f3",
+          "bytes": "1a000346"
+        },
+        {
+          "address": "0x001538d0",
+          "text": "addu a0, v1, a0",
+          "bytes": "21206400"
+        },
+        {
+          "address": "0x001538d4",
+          "text": "mtc1 a1, $f0",
+          "bytes": "00008544"
+        },
+        {
+          "address": "0x001538d8",
+          "text": "addu a0, a0, a3",
+          "bytes": "21208700"
+        },
+        {
+          "address": "0x001538dc",
+          "text": "cvt.s.w $f0, $f0",
+          "bytes": "20008046"
+        },
+        {
+          "address": "0x001538e0",
+          "text": "msub.s $f0, $f2, $f0",
+          "bytes": "1d100046"
+        },
+        {
+          "address": "0x001538e4",
+          "text": "swc1 $f0, 0x10(a0)",
+          "bytes": "100080e4"
+        },
+        {
+          "address": "0x001538e8",
+          "text": "lw a0, 0x3090(gp)",
+          "bytes": "9030848f"
+        },
+        {
+          "address": "0x001538ec",
+          "text": "lw a1, 0x3098(gp)",
+          "bytes": "9830858f"
+        },
+        {
+          "address": "0x001538f0",
+          "text": "lwc1 $f0, 0xc(a0)",
+          "bytes": "0c0080c4"
+        },
+        {
+          "address": "0x001538f4",
+          "text": "lh a1, 0x5c2(a1)",
+          "bytes": "c205a584"
+        },
+        {
+          "address": "0x001538f8",
+          "text": "mul.s $f1, $f0, $f1",
+          "bytes": "42000146"
+        },
+        {
+          "address": "0x001538fc",
+          "text": "addu a0, v1, a0",
+          "bytes": "21206400"
+        },
+        {
+          "address": "0x00153900",
+          "text": "addu a0, a0, a3",
+          "bytes": "21208700"
+        },
+        {
+          "address": "0x00153904",
+          "text": "mtc1 a1, $f0",
+          "bytes": "00008544"
+        },
+        {
+          "address": "0x00153908",
+          "text": "nop",
+          "bytes": "00000000"
+        },
+        {
+          "address": "0x0015390c",
+          "text": "cvt.s.w $f0, $f0",
+          "bytes": "20008046"
+        },
+        {
+          "address": "0x00153910",
+          "text": "sub.s $f0, $f1, $f0",
+          "bytes": "01080046"
+        },
+        {
+          "address": "0x00153914",
+          "text": "swc1 $f0, 0x14(a0)",
+          "bytes": "140080e4"
+        },
+        {
+          "address": "0x00153918",
+          "text": "lw a1, 0x3090(gp)",
+          "bytes": "9030858f"
+        },
+        {
+          "address": "0x0015391c",
+          "text": "lw a0, 0x4(a1)",
+          "bytes": "0400a48c"
+        },
+        {
+          "address": "0x00153920",
+          "text": "addiu a0, a0, 0x1",
+          "bytes": "01008424"
+        },
+        {
+          "address": "0x00153924",
+          "text": "slt a0, t0, a0",
+          "bytes": "2a200401"
+        },
+        {
+          "address": "0x00153928",
+          "text": "bne a0, zero, 0x001538b0",
+          "bytes": "e1ff8014"
+        },
+        {
+          "address": "0x0015392c",
+          "text": "addiu a3, a3, 0x10",
+          "bytes": "1000e724"
+        },
+        {
+          "address": "0x00153930",
+          "text": "lw a0, 0x0(a1)",
+          "bytes": "0000a48c"
+        },
+        {
+          "address": "0x00153934",
+          "text": "addiu a2, a2, 0x1",
+          "bytes": "0100c624"
+        },
+        {
+          "address": "0x00153938",
+          "text": "addiu a0, a0, 0x1",
+          "bytes": "01008424"
+        },
+        {
+          "address": "0x0015393c",
+          "text": "slt a0, a2, a0",
+          "bytes": "2a20c400"
+        },
+        {
+          "address": "0x00153940",
+          "text": "bne a0, zero, 0x00153888",
+          "bytes": "d1ff8014"
+        },
+        {
+          "address": "0x00153944",
+          "text": "addiu v1, v1, 0x210",
+          "bytes": "10026324"
+        },
+        {
+          "address": "0x00153948",
+          "text": "jr ra",
+          "bytes": "0800e003"
+        },
+        {
+          "address": "0x0015394c",
+          "text": "nop",
+          "bytes": "00000000"
+        }
+      ],
+      "references": [],
+      "interpretation": "Interpreter-backed leaf of the 0013ce80 area body. Builds a 0x10-stride grid of cell positions at [gp+3090]: +8/+c = (width / a0) with the same quotient computed through both multiply/divide pipelines (div at 00153818, div1 at 00153844, the M16 interpreter extension), then per-cell (x, y) = (row*stride - size, col*stride - size) clipped at 0. Executed as original instructions in the connected pipeline.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "1f22a41a1dd45413a259807058a5fec26e6f872b449c3b57d637fd5d1234b462",
+      "snapshot_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    },
+    {
+      "entry": "0x00121bf4",
+      "name": "main_loop_frame_tick_00121bf4",
+      "complete": false,
+      "body_ranges": [
+        {
+          "start": "0x00121bf4",
+          "end_exclusive": "0x00121c08"
+        }
+      ],
+      "instructions": [
+        {
+          "address": "0x00121bf4",
+          "text": "lw v1, 0x2f80(gp)",
+          "bytes": "802f838f"
+        },
+        {
+          "address": "0x00121bf8",
+          "text": "lui at, 0x7000",
+          "bytes": "0070013c"
+        },
+        {
+          "address": "0x00121bfc",
+          "text": "lw a3, 0xc0(at)",
+          "bytes": "c000278c"
+        },
+        {
+          "address": "0x00121c00",
+          "text": "addiu v1, v1, 0x1",
+          "bytes": "01006324"
+        },
+        {
+          "address": "0x00121c04",
+          "text": "sw v1, 0x2f80(gp)",
+          "bytes": "802f83af"
+        }
+      ],
+      "references": [],
+      "interpretation": "The main-loop frame tick reconstructed at the end of the connected frame: lw v1, 0x2f80(gp); addiu v1, v1, 1; sw v1, 0x2f80(gp). Executed between dispatch and the next coordinator-entry; the identical sequence appears at 0012d208..0012d218. The AREA1 render body reads the cell for its three-draw condition.",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "cfbaf01de4eaf214ef5321199191d83bb01c9dd1e64508b18509eb676f5c6f0f",
+      "snapshot_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    },
+    {
+      "entry": "0x0012d208",
+      "name": "main_loop_frame_tick_0012d208",
+      "complete": false,
+      "body_ranges": [
+        {
+          "start": "0x0012d208",
+          "end_exclusive": "0x0012d21c"
+        }
+      ],
+      "instructions": [
+        {
+          "address": "0x0012d208",
+          "text": "lw v1, 0x2f80(gp)",
+          "bytes": "802f838f"
+        },
+        {
+          "address": "0x0012d20c",
+          "text": "lui at, 0x7000",
+          "bytes": "0070013c"
+        },
+        {
+          "address": "0x0012d210",
+          "text": "lw a2, 0xc0(at)",
+          "bytes": "c000268c"
+        },
+        {
+          "address": "0x0012d214",
+          "text": "addiu v1, v1, 0x1",
+          "bytes": "01006324"
+        },
+        {
+          "address": "0x0012d218",
+          "text": "sw v1, 0x2f80(gp)",
+          "bytes": "802f83af"
+        }
+      ],
+      "references": [],
+      "interpretation": "The corridor main-loop dispatcher copy of the frame tick (identical to 00121bf4..00121c04).",
+      "verification_status": "original-byte-verified",
+      "source": "src/resource_loader.c",
+      "original_listing_sha256": "58e8415632f99a12ece9b84316f5cbed61f6fa6bb9e1b02351ece8f2ba3fa081",
+      "snapshot_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    }
+  ]
+}

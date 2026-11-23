@@ -1,0 +1,146 @@
+{
+  "schema": "hg-m16-checks/v1",
+  "recorded_utc": "2026-11-23T01:34:44.655794+00:00",
+  "result": "PASSED",
+  "base": "4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68",
+  "base_note": "main at the M15 PR #19 merge; M16 changes are working-tree files on this base.",
+  "verified_commit": null,
+  "environment": "$HG_ELF=local/extracted/japan/SCPS_150.46, $HG_PS2DINFO=local/references/PS2DInfo, $HG_CAPTURE_DIR=local/m13/captures, $HG_AREA_IMAGE=original Japan ISO (owner-local); historical regression also $HG_JAPAN_ISO and $HG_PCSX2",
+  "identities": {
+    "japanese_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "japan_iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+    "area1_sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+    "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+    "pcsx2_appimage_sha256": "0c46bb6aa88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+    "private_decoder_sha256": "8945497c01ef82117131ea5954f6ad468ecfe05bb3985ee77bd5c1345330ec62",
+    "library_sha256": "b17b7a84b8eac2b23590c1b311bbc741ff6912e76d1dd9069f3b22e7ad1e9cf7"
+  },
+  "sources": {
+    "src/resource_loader.c": "4b50cf835315d496ed587ef9d914c482c2417224ef1bf13664109b2e98890ad1",
+    "src/resource_loader.h": "c91ce378005916ae179800de8e7cb97c7f8b93b6c64bd3382b72d3f28eaa3801",
+    "tools/ee_subset.py": "6a38ddcd890ea388ed009d365663f66079d43ee822c0f5ad515ec946bfcf899b",
+    "tools/verify_player_connected_runtime.py": "c8e7074367b0be6e1f543a2825e0e076e572df90a86c12413998145ee20a4fce",
+    "tools/verify_player_continuous.py": "fc1e1d9c2fdd89ab27dc3bb7ad4930ff771aa5b1df280662ba7419f27bf95ca0",
+    "tools/render_node_differential.py": "144c194f88cc5373b8449a72cad3361ebd52043fb15b98dc130f7fd26866e7f0",
+    "tools/hg_m16_evidence.py": "1a6a401b1c1c852e4ad5df78e6dfd47a20bf920e28ddc99087b3af6f95e241c4",
+    "tools/hg_m16_results.py": "e899fda5fdfe76daeb2e63b931f0b80487dcee8b917dcf22b3aea15d804dd1f4",
+    "tests/test_ee_subset_div1.py": "2289a7a2f5d316da6f0bfe82c46828ac58e6584f6728108684973d57d69df52b",
+    "tests/test_late_frame_differential.py": "54384a7aab15a8704386578523f258fb6563c53de060807dccba60e2cbcdf6f6",
+    "tests/test_player_continuous.py": "6ef136de7acd7423bb03127d9d7ebf4ee2505911e35a2c428a1f3add2eabfe67",
+    "analysis/late_frame/functions.json": "ed8d552634e9d6a34399605550432e5f0f51de283e6d72915efab766b7138fa2",
+    "analysis/late_frame/area.json": "9f0dc430dc713cecc55d26510f66669892b1ecd09f63d1d14787fab73d57d71e"
+  },
+  "receipts": {
+    "continuous": "b75e38cb084410d09e2d962fb341005b8dc5a7302fda9cdc10b9671834782036",
+    "native": "fcd2d9dd8fe05ccd6f0b18ba520e61cced029d39b89e5779b9fda1b7618d0224",
+    "contracts": "5565075ce146b06a7f0d7c339e8dd4f86f10413b5b1d0adf69f8afbe57a67a30",
+    "counter": "c14b6cf560e55e030c3965f146508ebcd8ccb0e7c40897e4d888186dcdcb8e1b"
+  },
+  "checks": [
+    {
+      "id": "elf-identity",
+      "evidence": "original-byte",
+      "command": "sha256sum $HG_ELF",
+      "result": "passed",
+      "detail": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    },
+    {
+      "id": "area-identity",
+      "evidence": "original-byte",
+      "command": "sha256sum A1_B00.BIN (from $HG_AREA_IMAGE)",
+      "result": "passed",
+      "detail": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+    },
+    {
+      "id": "late-frame-packet-ps2dinfo",
+      "evidence": "original-byte",
+      "command": "python3 -B tools/hg_m16_evidence.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --output analysis/late_frame/functions.json --area-output analysis/late_frame/area.json --image $HG_AREA_IMAGE",
+      "result": "passed",
+      "detail": "179 ELF instructions; 451 raw AREA instructions"
+    },
+    {
+      "id": "late-frame-packet-record",
+      "evidence": "original-byte",
+      "command": "python3 -B tools/verify_elf_evidence.py --elf $HG_ELF --record analysis/late_frame/functions.json",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "strict-build",
+      "evidence": "synthetic",
+      "command": "cc -std=c11 -O2 -Wall -Wextra -Werror -pedantic -fPIC -shared -Isrc src/resource_loader.c src/disc_read.c",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "div1-unit-tests",
+      "evidence": "synthetic",
+      "command": "python3 -B -m unittest tests.test_ee_subset_div1 -v",
+      "result": "passed",
+      "detail": "17 tests"
+    },
+    {
+      "id": "late-frame-synthetic-differential",
+      "evidence": "synthetic",
+      "command": "python3 -B -m unittest discover -s tests -p \"test_late_frame*\" -v",
+      "result": "passed",
+      "detail": "9 tests"
+    },
+    {
+      "id": "continuous-22-frames-with-controls",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --negative-controls --output $OUT/continuous.json",
+      "result": "passed",
+      "detail": "22 frames, 33 negative controls"
+    },
+    {
+      "id": "m14-native-window",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_predispatch_window.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --negative-controls --output $OUT/native.json",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "m14-register-contracts",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_predispatch_contracts.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --output $OUT/contracts.json",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "m14-counter-guard",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_counter_guard.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture $HG_CAPTURE_DIR/obs3-010.json --output $OUT/counter.json",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "synthetic-suite",
+      "evidence": "synthetic",
+      "command": "python3 -B -m unittest discover -s tests",
+      "result": "passed",
+      "detail": "324 tests"
+    },
+    {
+      "id": "sanitizer-c-harness",
+      "evidence": "synthetic",
+      "command": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/resource_sanitizer.c src/resource_loader.c src/disc_read.c && ./sanitizer",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "ubsan-python-suites",
+      "evidence": "synthetic",
+      "command": "library(sanitize=True): test_model_draw_differential, test_render_node_differential, test_player_continuous, test_predispatch_differential, test_actor_lists",
+      "result": "passed",
+      "detail": "43 tests"
+    },
+    {
+      "id": "historical-regression",
+      "evidence": "regression",
+      "command": "python3 -B tools/hg_verify.py run --profile full  (HG_JAPAN_ISO, HG_PCSX2)",
+      "result": "passed",
+      "detail": "Run m12-20261123T004321Z-iwwr_uz2\ngrounded-synthetic passed (6.83s)\ngrounded-packet passed (0.22s)\ngrounded-shared-bytes passed (0.22s)\ngrounded-bytes-jal passed (0.22s)\nordinary-a1-zero-control expected-rejection (1.78s)\ngrounded-saved-runtime passed (248.83s)\nsynthetic-suite passed (125.85s)\ndisc-read-instructions passed (0.78s)\nresource-loader-instructions passed (16.46s)\nresource-rebase-instructions passed (3.69s)\nresource-fixup-and-pack-instructions passed (23.18s)\narea-lifecycle-instructions passed (50.53s)\npython-compile passed (0.38s)\nengine-preparation-instructions passed (19.94s)\nactor-lists-instructions passed (17.39s)\nfixup-saved-runtime passed (7.49s)\narea-and-pack-saved-runtime passed (16.19s)\nretail-input-identity passed (2.58s)\nengine-saved-runtime passed (17.51s)\nactor-setup-instructions passed (34.75s)\nactor-setup-saved-runtime passed (8.11s)\nordinary-player-instructions passed (21.34s)\nconnected-player-instructions passed (55.61s)\nplayer-transition-instructions passed (65.05s)\nordinary-input-saved-runtime passed (2.39s)\nconnected-player-negative-controls expected-rejection (8.94s)\nactor-setup-negative-controls expected-rejection (8.82s)\nactor-lists-negative-controls expected-rejection (9.02s)\nsanitizer-build passed (1.33s)\nsanitizer-run passed (0.13s)\nactor-lists-packet passed (0.22s)\nactor-lists-bytes-jal passed (0.24s)\nactor-setup-packet passed (0.22s)\nactor-setup-bytes-jal passed (0.22s)\nactor-math-packet passed (0.22s)\nactor-math-bytes-jal passed (0.22s)\narea-overlay-packet passed (0.22s)\narea-lifecycle-packet passed (0.22s)\narea-lifecycle-bytes-jal passed (0.23s)\ndisc-read-packet passed (0.22s)\ndisc-read-bytes-jal passed (0.22s)\nengine-preparation-packet passed (0.22s)\nengine-preparation-bytes-jal passed (0.22s)\npack-finalization-packet passed (0.22s)\npack-finalization-bytes-jal passed (0.22s)\nconnected-player-packet passed (0.22s)\nconnected-player-bytes-jal passed (0.22s)\nconnected-player-saved-runtime passed (72.85s)\nordinary-player-packet passed (0.22s)\nordinary-player-bytes-jal passed (0.22s)\nplayer-transition-negative-controls expected-rejection (6.69s)\nresource-fixup-packet passed (0.22s)\nresource-fixup-bytes-jal passed (0.22s)\nresource-loader-packet passed (0.22s)\nresource-loader-bytes-jal passed (0.22s)\ncommitted-publication-audit passed (0.22s)\nworktree-publication-audit passed (0.27s)\nworktree-diff-check passed (0.06s)\nturn-camera-packet passed (0.22s)\nturn-camera-bytes-jal passed (0.22s)\nturn-camera-shared-bytes passed (0.22s)\nturn-camera-instructions passed (163.10s)\nturn-camera-saved-runtime passed (564.00s)\nturn-camera-synthetic passed (12.54s)\nwalk-camera-synthetic passed (2.42s)\nwalk-camera-packet passed (0.22s)\nwalk-camera-shared-bytes passed (0.22s)\nwalk-camera-bytes-jal passed (0.23s)\nwalk-dispatch-instructions passed (25.55s)\nwalk-camera-saved-runtime passed (185.77s)\nwalk-dependency-survey passed (26.93s)\nconstraint-synthetic passed (5.05s)\nconstraint-packet passed (0.22s)\nconstraint-shared-bytes passed (0.22s)\nconstraint-bytes-jal passed (0.23s)\nconstraint-saved-runtime passed (209.09s)\nconstraint-differential passed (768.92s)\ngrounded-differential passed (165.83s)\ngrounded-m11-frames passed (46.46s)\n79/79 gates accepted, 0 reused. /home/noah/Projects/Hungry Ghosts/decomp-m16/local/verification/m12-20261123T004321Z-iwwr_uz2/summary.md\n"
+    }
+  ]
+}
