@@ -637,8 +637,10 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None, lifecycle=False):
     run = ContinuousRun(lib, caps, obs, pad_delta, ownership, lifecycle)
     rows = []
     failures = []
+    executed = set()          # original words interpreted on the connected path (not oracles)
     for fr in run.frames:
         d = run.run_frame(fr)
+        executed.update(d.executed)
         stages = run.stage_results(d, fr)
         failures.extend((fr['counter'], label) for label, result in stages.items()
                         if result['result'] not in ('passed', 'skipped'))
@@ -661,6 +663,7 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None, lifecycle=False):
                 inter_frame_external_scratch=[hex(0x70000000 + o) for o in sorted(run.inter_external)],
                 rng_total={str(k): v for k, v in sorted(run.ownership['rng_total'].items())},
                 node_unexplained=run.ownership['node_unexplained'],
+                interpreted_pcs=[f'{pc:08x}' for pc in sorted(executed)],
                 result='passed' if not failures else 'failed')
 
 
