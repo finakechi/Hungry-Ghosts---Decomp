@@ -13,7 +13,7 @@ from hg_content.hgscript import (Collection, Event, Record, ScriptError,  # noqa
                                  looks_like_hgscript, parse_pool,
                                  parse_record, stored_layout_matches)
 
-from .hg_content_util import make_fixture_member  # noqa: E402
+from hg_content_util import make_fixture_member  # noqa: E402
 
 
 def refs(collection):

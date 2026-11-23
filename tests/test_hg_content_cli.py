@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'tools'))
 
-from .hg_content_util import make_fixture_member, pack_with_members  # noqa: E402
+from hg_content_util import make_fixture_member, pack_with_members  # noqa: E402
 
 CLI = Path(__file__).resolve().parent.parent / 'tools' / 'hg_content' / 'cli.py'
 

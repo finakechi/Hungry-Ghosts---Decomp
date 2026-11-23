@@ -55,12 +55,10 @@ and was not changed.
 ## Reproduction commands
 
 ```sh
-# 0. Synthetic suite (no retail inputs required)
-python3 -B -m unittest tests.test_hg_content_pack \
-                        tests.test_hg_content_flk5 \
-                        tests.test_hg_content_hgscript \
-                        tests.test_hg_content_index \
-                        tests.test_hg_content_cli -v
+# 0. Synthetic suite (no retail inputs required). Use discovery, as CI does:
+#    the tests import the shared helper tests/hg_content_util.py as a
+#    top-level module, which requires tests/ on sys.path.
+python3 -B -m unittest discover -s tests -p 'test_hg_content_*.py' -v
 
 # 1. Full corpus verification pass (authenticated; retail-only, private outputs)
 python3 -B tools/hg_content/cli.py corpus "$HG_JAPAN_ISO" \

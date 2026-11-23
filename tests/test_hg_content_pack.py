@@ -11,12 +11,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'tools'))
 
 from hg_content.pack import Pack, PackError  # noqa: E402
 
-from .hg_content_util import build_pack, pack_with_members  # noqa: E402
+from hg_content_util import build_pack, pack_with_members  # noqa: E402
 
 
 def open_pack(blob):
     import io
-    from .hg_content_util import FakeISO, read_at
+    from hg_content_util import FakeISO, read_at
     fp = io.BytesIO(blob)
     iso = FakeISO({'/DATA/PACK.DAT': dict(lba=0, size_bytes=len(blob))})
     return Pack(fp, iso, iso.files['/DATA/PACK.DAT'], read_at)
@@ -25,7 +25,7 @@ def open_pack(blob):
 class TestPackParsing(unittest.TestCase):
     def test_valid_single_directory(self):
         blob, fp, iso = pack_with_members([b'ABCD', b'FLK5', None, b'x' * 100])
-        from .hg_content_util import read_at
+        from hg_content_util import read_at
         pack = Pack(fp, iso, iso.files['/DATA/PACK.DAT'], read_at)
         counts = pack.member_counts()
         self.assertEqual(counts, dict(directory_count=1, member_count=4,
@@ -79,7 +79,7 @@ class TestPackParsing(unittest.TestCase):
 
     def test_deterministic_inventory(self):
         blob, fp, iso = pack_with_members([b'FLK5', b'other', None])
-        from .hg_content_util import read_at
+        from hg_content_util import read_at
         results = []
         for _ in range(2):
             pack = Pack(fp, iso, iso.files['/DATA/PACK.DAT'], read_at)
@@ -90,7 +90,7 @@ class TestPackParsing(unittest.TestCase):
 
     def test_member_range_checks(self):
         blob, fp, iso = pack_with_members([b'0123456789'])
-        from .hg_content_util import read_at
+        from hg_content_util import read_at
         pack = Pack(fp, iso, iso.files['/DATA/PACK.DAT'], read_at)
         member = next(pack.all_members())
         self.assertEqual(pack.read_member_range(member, 2, 4), b'2345')
