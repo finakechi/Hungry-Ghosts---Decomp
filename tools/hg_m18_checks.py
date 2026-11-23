@@ -82,7 +82,7 @@ def tail(path, pattern):
 
 
 def scrub(text):
-    return re.sub(r'/home/[^ ]*?/(?=local/)', '', text or '')
+    return re.sub(r'/home/.*?/(?=local/)', '', text or '')
 
 
 def boundaries(native):
@@ -226,6 +226,11 @@ def main():
         key = {'lifecycle-sequence-synthetic': 'lifecycle-sequence', 'm14-register-contracts': 'm14-contracts',
                'm14-counter-guard': 'm14-counter'}.get(id_, id_)
         line = tail(o / logname, pattern) or ''
+        r = load(o / receipt) if id_.startswith('native-') else None
+        if r:
+            line = (f"{r['compared_bytes']} bytes compared, {len(r['mismatches'])} mismatches, "
+                    f"{len(r['uncaptured_reads'])} uncaptured reads, controls "
+                    f"{sum(c['rejected'] for c in r['negative_controls'])}/{len(r['negative_controls'])} rejected")
         add(id_, 'synthetic' if id_ == 'lifecycle-sequence-synthetic' else
             ('model-differential' if 'differential' in id_ or 'negative' in id_ else 'runtime'),
             command, verdict(summary.get(key)), line[:400], o / receipt)
