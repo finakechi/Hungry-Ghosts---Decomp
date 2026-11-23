@@ -3,9 +3,22 @@
   "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
   "tables": [
     {
+      "address": "0x003dadf0",
+      "file_offset": "0x2db5f0",
+      "user": "00121810 major (jump table)",
+      "words": [
+        "0x00121850",
+        "0x00121888",
+        "0x001218a0",
+        "0x00121928",
+        "0x00121968",
+        "0x001219a8"
+      ]
+    },
+    {
       "address": "0x003dae10",
       "file_offset": "0x2db610",
-      "user": "00121be0 major",
+      "user": "00121be0 major (jump table)",
       "words": [
         "0x00121c38",
         "0x00121ef8",
@@ -18,7 +31,7 @@
     {
       "address": "0x003daec0",
       "file_offset": "0x2db6c0",
-      "user": "0012d1c0 major",
+      "user": "0012d1c0 major (jump table)",
       "words": [
         "0x0012d248",
         "0x0012d500",
@@ -31,7 +44,7 @@
     {
       "address": "0x003daee0",
       "file_offset": "0x2db6e0",
-      "user": "0012d9a0 minor",
+      "user": "0012d9a0 minor (jump table)",
       "words": [
         "0x0012d9d8",
         "0x0012da30",
@@ -45,7 +58,7 @@
     {
       "address": "0x003daf00",
       "file_offset": "0x2db700",
-      "user": "0012e700 sub",
+      "user": "0012e700 sub (jump table)",
       "words": [
         "0x0012e750",
         "0x0012e840",
@@ -54,6 +67,50 @@
         "0x0012ed30",
         "0x0012ef60",
         "0x0012f070"
+      ]
+    },
+    {
+      "address": "0x003db290",
+      "file_offset": "0x2dba90",
+      "user": "0012dd60 render reset quad copied to [gp+3098]+3f0 (data)",
+      "words": [
+        "0x00000000",
+        "0x00000000",
+        "0x00000000",
+        "0x00000000"
+      ]
+    },
+    {
+      "address": "0x003e0170",
+      "file_offset": "0x2e0970",
+      "user": "0012dbd0 PACK base table gp-7e00 (data)",
+      "words": [
+        "0x00000000",
+        "0x00000033",
+        "0x00000037",
+        "0x00000000"
+      ]
+    },
+    {
+      "address": "0x003e0180",
+      "file_offset": "0x2e0980",
+      "user": "0012dbd0 PACK stride table gp-7df0 (data)",
+      "words": [
+        "0x00000005",
+        "0x00000003",
+        "0x00000005",
+        "0x00000000"
+      ]
+    },
+    {
+      "address": "0x003e01a0",
+      "file_offset": "0x2e09a0",
+      "user": "0012dd60 AREA directory halfwords gp-7dd0 (data)",
+      "words": [
+        "0x00510050",
+        "0x00530052",
+        "0x00000051",
+        "0x00000000"
       ]
     }
   ]

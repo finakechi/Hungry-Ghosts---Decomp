@@ -47,8 +47,19 @@ void hg_gameplay_teardown(HGResourceEnv *);                     /* 0012f800 */
  * HG_WAIT_INTERRUPT delivers pending interrupt handlers (no guest effect of
  * its own). EE timer register stores (0x10000000/0x10000010) are bus stores. */
 #define HG_WAIT_INTERRUPT 0xfffffffau
-void hg_main_init(HGResourceEnv *);
+void hg_main_init(HGResourceEnv *);                             /* 0011d830 */
 void hg_main_frame(HGResourceEnv *);
+void hg_boot_mode(HGResourceEnv *);                             /* 00121810 */
+uint32_t hg_logo_sequence_step(HGResourceEnv *, uint32_t table, uint32_t first,
+                               uint32_t kind, uint32_t id, uint32_t last); /* 001219e0 */
+void hg_lifecycle_mode(HGResourceEnv *);                        /* 00121be0 */
+uint32_t hg_vblank_start_handler(HGResourceEnv *);              /* 0011df10 */
+uint32_t hg_vblank_end_handler(HGResourceEnv *);                /* 0011df80 */
+/* Host connected frame: coordinator entry of frame N to the coordinator
+ * entry of frame N+1 through the lifecycle layer (see game_lifecycle.c).
+ * Returns 1 when it stopped at the next coordinator call. HG_WAIT_INTERRUPT
+ * is reported to the outer bus, then the C vblank handlers run. */
+uint32_t hg_game_frame_connected(HGResourceEnv *, uint32_t frame);
 /* Bus router for the functions above: returns 1 and sets *result when pc is
  * one of the lifecycle entries reconstructed here. */
 int hg_lifecycle_call(HGResourceEnv *, uint32_t pc, uint32_t a, uint32_t b,

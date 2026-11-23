@@ -4,10 +4,11 @@
 Rows cover the main loop 0011d830, the mode dispatcher/setters 00143240,
 00143300, 001432c0 and the gameplay-mode state machine (0012d1c0 and its
 reconstructed callees). Bytes come from the file-backed EE PT_LOAD; the text
-column is an analysis aid from the private local/m15 R5900 decoder. The three
-jump tables read by 0012d1c0, 0012d9a0 and 0012e700 are emitted separately
-(tables.json) as original data words with their ELF file offsets, so the
-synthetic differential can run without the ELF.
+column is an analysis aid from the private local/m15 R5900 decoder. The jump
+tables read by the mode state machines and the small data tables read by the
+area/PACK selection and the render reset are emitted separately (tables.json)
+as original data words with their ELF file offsets, so the synthetic
+differential and lifecycle sequence can run without the ELF.
 
     python3 -B tools/hg_m17_evidence.py --elf "$HG_ELF" --ps2dinfo "$HG_PS2DINFO" \
         --output analysis/game_lifecycle/functions.json \
@@ -31,6 +32,18 @@ ROWS = (
      'the two 0011dfd0 waits, EE timer setup, then per frame 0095e308 = 0, the render/engine '
      'services, the mode dispatcher 00143240, the vblank wait on 0095e308, 00149890/001496e0 and '
      '[gp+2f84] += 1.'),
+    (0x11df10, 0x11df80, 'vblank_start_handler_0011df10', 'hg_vblank_start_handler (INTC 2): DI helper '
+     '0010cca0, 0095e308 += 1 (the main loop wait flag), 0095e300 += 1, wake the loader thread '
+     '[003f8e34] when the block 003f8e00 is active.'),
+    (0x11df80, 0x11dfc8, 'vblank_end_handler_0011df80', 'hg_vblank_end_handler (INTC 3): wake the '
+     'priority loader thread [003f6db4] when the block 003f6d80 is active.'),
+    (0x121810, 0x1219d4, 'boot_mode_00121810', 'hg_boot_mode: the initial mode installed by main '
+     '(first resource request 00130150(0,0), fades, logo/movie steps, then mode 00121be0).'),
+    (0x1219e0, 0x121bd4, 'logo_sequence_step_001219e0', 'hg_logo_sequence_step: one timed logo/notice '
+     'sequence (300-frame timer at mode +1a, 00123370 draw, chained requests).'),
+    (0x121be0, 0x12266c, 'lifecycle_mode_00121be0', 'hg_lifecycle_mode: title, new game (clears '
+     '003fa180..0046e140 and sets area triple (0,9,0)), continue, load and area-select states; major 2 '
+     'installs the gameplay mode 0012d1c0. Also performs the frame tick gp+2f80 at 00121bf4.'),
     (0x143240, 0x1432b4, 'mode_dispatch_00143240', 'hg_mode_dispatch: points 700000c0 at the mode '
      'block gp+2dc0, promotes state 1/4 to 2 and calls the handler at +4 for state 1, 2 or 4.'),
     (0x1432c0, 0x143300, 'mode_init_001432c0', 'hg_mode_init: writes handler, state 1 and clears '
@@ -62,8 +75,13 @@ ROWS = (
     (0x12fa00, 0x12fb30, 'gameplay_event_flags_0012fa00', 'hg_gameplay_event_flags: pause (1), '
      'menu (2|4|8|0x10) requests.'),
 )
-TABLES = ((0x3dae10, 6, '00121be0 major'), (0x3daec0, 6, '0012d1c0 major'),
-          (0x3daee0, 7, '0012d9a0 minor'), (0x3daf00, 7, '0012e700 sub'))
+TABLES = ((0x3dadf0, 6, '00121810 major (jump table)'), (0x3dae10, 6, '00121be0 major (jump table)'),
+          (0x3daec0, 6, '0012d1c0 major (jump table)'), (0x3daee0, 7, '0012d9a0 minor (jump table)'),
+          (0x3daf00, 7, '0012e700 sub (jump table)'),
+          (0x3db290, 4, '0012dd60 render reset quad copied to [gp+3098]+3f0 (data)'),
+          (0x3e0170, 4, '0012dbd0 PACK base table gp-7e00 (data)'),
+          (0x3e0180, 4, '0012dbd0 PACK stride table gp-7df0 (data)'),
+          (0x3e01a0, 4, '0012dd60 AREA directory halfwords gp-7dd0 (data)'))
 
 
 def row(elf, segments, entry, end, dis):

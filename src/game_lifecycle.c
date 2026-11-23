@@ -38,6 +38,7 @@ static void copy_quad(HGResourceEnv *e,uint32_t dst,uint32_t src) {
 #define HG_DOMAIN_FAULT 0xfffffff0u
 #define HG_GUEST_FRAME 0xfffffff1u
 #define HG_CALL_T_REGS 0xfffffff5u
+#define HG_CALL_FP_REGS 0xfffffffbu  /* host seam: f12, f13, f14 of the next call */
 
 static uint32_t blk(HGResourceEnv *e) { return r32(e,MODE_PTR); }
 static void set8(HGResourceEnv *e,uint32_t off,uint32_t v) { w8(e,blk(e)+off,v); }
@@ -448,9 +449,14 @@ static void gameplay_warp(HGResourceEnv *e) {
     w16(e,0x3fa1a8,v);
     call(e,0x12e2c0,0,0,0,0);
 }
-static void gameplay_active(HGResourceEnv *e) {
+/* 0012e840..0012e864: coordinator selector and call; 0012e868..: the
+ * remainder of the active frame. Split only so the host connected frame can
+ * stop at the coordinator entry; hg_gameplay_frame runs both in order. */
+static void gameplay_active_coordinator(HGResourceEnv *e) {
     if(r8(e,0x3f9f3e))call(e,0x12f950,0,0,0,0);
     else call(e,0x12f850,0,0,0,0);
+}
+static void gameplay_active_after(HGResourceEnv *e) {
     if(r8(e,0x3f9e39)) {call(e,0x12e6d0,0,0,0,0);return;}
     uint32_t flags=call(e,0x12fa00,0,0,0,0);
     if(flags&1u) {
@@ -475,6 +481,10 @@ static void gameplay_active(HGResourceEnv *e) {
     else {w8(e,0x3f99b4,0);w8(e,0x3f99da,0);w8(e,0x3f9e07,0);}
     call(e,0x1404f0,0,0,0,0);
     call(e,0x139040,8,0,1,0);
+}
+static void gameplay_active(HGResourceEnv *e) {
+    gameplay_active_coordinator(e);
+    gameplay_active_after(e);
 }
 /* 0012e700: active gameplay (minor 1). */
 void hg_gameplay_frame(HGResourceEnv *e) {
@@ -612,6 +622,308 @@ void hg_gameplay_frame(HGResourceEnv *e) {
     }
 }
 
+/* 001219e0: one timed logo/notice sequence step (a0 = sprite table, a1 =
+ * first resource, a2/a3 = follow-up request, t0 = request 4 at the end).
+ * 00123370 receives f12 = f13 = 128.0 and f14 = 0 through HG_CALL_FP_REGS. */
+static void logo_draw(HGResourceEnv *e,uint32_t table) {
+    call(e,HG_CALL_FP_REGS,0x43000000u,0x43000000u,0,0);
+    call(e,0x123370,4,table,0xf0,0);
+}
+uint32_t hg_logo_sequence_step(HGResourceEnv *e,uint32_t table,uint32_t first,uint32_t kind,
+                               uint32_t id,uint32_t last) {
+    uint32_t p=blk(e)+9,minor=r8(e,p);
+    if(minor==0) {
+        call(e,0x130150,1,first,0,0);
+        inc8(e,9);
+        return 0;
+    }
+    if(minor==1) {
+        if(r8(e,LOADER_BUSY))return 0;
+        w8(e,p,minor+1u);
+        w16(e,blk(e)+0x1a,300);
+        call(e,0x1390b0,8,0,0,0);
+        logo_draw(e,table);
+        call(e,0x130150,kind,id,0,0);
+        return 0;
+    }
+    if(minor==2) {
+        logo_draw(e,table);
+        uint32_t t=r16(e,blk(e)+0x1a);
+        if(t)w16(e,blk(e)+0x1a,t-1u);
+        if(r16(e,blk(e)+0x1a) || r8(e,LOADER_BUSY))return 0;
+        call(e,0x139040,8,0,0,0);
+        if(last)call(e,0x130150,1,4,0,0);
+        inc8(e,9);
+        return 0;
+    }
+    if(minor==3) {
+        logo_draw(e,table);
+        if(r8(e,LOADER_BUSY))return 0;
+        return r8(e,FADE_STATE)==2?1:0;
+    }
+    return 0;
+}
+/* 00121810: initial (boot) mode installed by main. */
+void hg_boot_mode(HGResourceEnv *e) {
+    uint32_t b=blk(e),major=r8(e,b+8);
+    switch(major) {
+    case 0:
+        call(e,0x139010,0,0,0,0);
+        inc8(e,8);
+        call(e,0x130150,0,0,0,0);
+        return;
+    case 1:
+        if(!r8(e,LOADER_BUSY))w8(e,b+8,major+1u);
+        return;
+    case 2: {
+        uint32_t minor=r8(e,b+9);
+        if(minor==0) {
+            call(e,0x1390b0,0xff,0,0,0);
+            call(e,0x147f10,0,0,0,0);
+            inc8(e,9);
+        } else if(minor==1 && call(e,0x2cdef0,0,0,0,0)) {
+            inc8(e,8);
+            set8(e,9,0);
+        }
+        return;
+    }
+    case 3:
+        call(e,HG_CALL_T_REGS,0,0,0,0);
+        if(call(e,0x1219e0,G(-0x7e80),0x6a,0,0x6d)) {inc8(e,8);set8(e,9,0);}
+        return;
+    case 4:
+        call(e,HG_CALL_T_REGS,1,0,0,0);
+        if(call(e,0x1219e0,G(-0x7eb0),0x54,1,1)) {inc8(e,8);set8(e,9,0);}
+        return;
+    case 5:
+        if(r8(e,LOADER_BUSY))return;
+        w32(e,0x700000f8,0);
+        call(e,0x143300,0x121be0,0,0,0);
+        return;
+    default:
+        return;
+    }
+}
+
+static uint32_t request_kind_for_system(HGResourceEnv *e) {
+    return r16(e,G(0x2f34))?8u:7u;
+}
+/* 00121be0: lifecycle (title, new game, continue, area select) mode.
+ * Major 2 installs the gameplay mode 0012d1c0. */
+void hg_lifecycle_mode(HGResourceEnv *e) {
+    w32(e,0x700000c4,1);
+    w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);
+    uint32_t b=blk(e),major=r8(e,b+8);
+    switch(major) {
+    case 0: {
+        uint32_t minor=r8(e,b+9);
+        if(minor==0) {
+            uint32_t sub=r8(e,b+0xa);
+            if(sub==0) {
+                w32(e,0x70000410,0);
+                call(e,0x130150,1,0x50,0,0);
+                inc8(e,0xa);
+            } else if(sub==1) {
+                if(r8(e,LOADER_BUSY))return;
+                call(e,0x26ff90,4,0,0,0);
+                call(e,0x1390b0,6,0,0,0);
+                uint32_t kind=request_kind_for_system(e);
+                w32(e,0x3f4d5c,0);
+                uint32_t v=r16(e,G(0x2f34));
+                w16(e,0x700000fe,v);
+                call(e,0x130150,1,kind,0,0);
+                inc8(e,0xa);
+            } else if(sub==2) {
+                call(e,0x270c30,PLAYER,0,0,0);
+                if(r8(e,LOADER_BUSY))return;
+                call(e,0x119ac8,0x3fa180,0,0x73fc0,0);
+                w8(e,0x3fa1b0,0);
+                w8(e,0x3fa1b1,9);
+                uint32_t v=r16(e,G(0x2f34));
+                w8(e,0x3fa1b2,0);
+                w16(e,0x3fa1c4,v);
+                call(e,0x130150,2,call(e,0x12dbd0,1,0,0,0),0,0);
+                inc8(e,9);
+                set8(e,0xa,0);
+            }
+        } else if(minor==1) {
+            call(e,0x270c30,PLAYER,0,0,0);
+            if(r8(e,LOADER_BUSY))return;
+            w8(e,b+9,r8(e,b+9)+1u);
+            call(e,0x139040,6,0,0,0);
+        } else if(minor==2) {
+            w8(e,b+9,minor+1u);
+            call(e,0x147f10,0,0,0,0);
+        } else if(minor==3) {
+            uint32_t v=call(e,0x2cf020,0,0,0,0);
+            if(!v)return;
+            w32(e,0x70000410,v==1?1u:0u);
+            set8(e,8,1);set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0xc,0);
+            if(r32(e,0x700000f8)==2)set8(e,0x12,1);
+            else {set8(e,0x11,0);set8(e,0x12,r32(e,0x700000f8));}
+        }
+        return;
+    }
+    case 1: {
+        uint32_t v=call(e,0xa87880,0,0,0,0);
+        if(v==3) {
+            call(e,0x156550,0,0,0,0);
+            set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0x12,0);
+        } else if(v==1) {
+            call(e,0x156550,1,0,0,0);
+            w32(e,FLAG_CC,0);
+            set8(e,8,2);
+            uint32_t m=blk(e),choice=r8(e,m+0x11);
+            if(choice==0) {w32(e,FLAG_CC,0);w8(e,m+8,2);}
+            else if(choice==1) {w32(e,FLAG_CC,1);w8(e,m+8,3);}
+            else if(choice==2)w8(e,m+8,4);
+            else w8(e,m+8,5);
+            set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0xc,0);
+        }
+        return;
+    }
+    case 2:
+        call(e,0x143300,0x12d1c0,0,0,0);
+        return;
+    case 3: {
+        uint32_t minor=r8(e,b+9);
+        if(minor==2) {
+            uint32_t v=call(e,0x2cf5c0,0,0,0,0);
+            if(v==1) {
+                call(e,0x139040,8,0,0,0);
+                w32(e,FLAG_CC,1);
+                set8(e,8,2);set8(e,9,0);set8(e,0xa,0);
+            } else if(v==2) {
+                call(e,0x139010,0,0,0,0);
+                set8(e,8,1);set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0x12,1);
+            }
+            return;
+        }
+        if(minor==0) {
+            if(r8(e,LOADER_BUSY))return;
+            w8(e,b+9,minor+1u);
+            call(e,0x130150,1,0x69,0,0);
+        } else if(minor!=1)return;
+        if(r8(e,LOADER_BUSY))return;
+        call(e,0x1390b0,8,0,0,0);
+        call(e,0x147f10,0,0,0,0);
+        inc8(e,9);
+        set8(e,0xa,0);
+        return;
+    }
+    case 4: {
+        uint32_t minor=r8(e,b+9);
+        if(minor==0) {
+            if(!call(e,0x1620d0,0,0,0,0))return;
+            uint32_t now=r16(e,G(0x2f34)),was=r16(e,0x700000fe);
+            if(was==now) {set8(e,9,2);return;}
+            uint32_t kind=now?8u:7u;
+            uint32_t v=r16(e,G(0x2f34));
+            w16(e,0x700000fe,v);
+            w16(e,0x3fa1c4,v);
+            call(e,0x130150,1,kind,0,0);
+            inc8(e,9);
+            return;
+        }
+        if(minor==1 && r8(e,LOADER_BUSY))return;
+        if(minor!=1 && minor!=2)return;
+        set8(e,8,1);set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0x12,1);
+        return;
+    }
+    case 5: {
+        uint32_t minor=r8(e,b+9);
+        switch(minor) {
+        case 0: {
+            uint32_t i=0;
+            for(uint32_t n=0;n<15;n++) {
+                if(r8(e,G(0x2efc)+i))break;
+                i++;
+                if(i>=15)i=0;
+            }
+            set8(e,0xb,i);
+            set8(e,0xc,(r8(e,G(0x2f0c)+i)&1u)?0u:1u);
+            set8(e,0xe,0);
+            inc8(e,9);
+        }
+            /* falls through */
+        case 1: {
+            uint32_t m=blk(e);
+            w8(e,m+9,r8(e,m+9)+1u);
+            call(e,0x130150,1,3,0,0);
+        }
+            /* falls through */
+        case 2:
+            if(r8(e,LOADER_BUSY))return;
+            call(e,0x1390b0,8,0,0,0);
+            inc8(e,9);
+            set8(e,0xa,0);
+            return;
+        case 3: {
+            uint32_t v=call(e,0x122bd0,0,0,0,0);
+            if(v==2) {
+                uint32_t m=blk(e);
+                if(r8(e,m+0xe)==0) {
+                    w8(e,m+8,1);
+                    set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);set8(e,0x12,1);
+                } else {
+                    w8(e,m+8,0);
+                    set8(e,9,0);set8(e,0xa,0);set8(e,0xb,0);
+                    w32(e,0x700000f8,2);
+                }
+            } else if(v==1) {
+                inc8(e,9);
+                set8(e,0xa,0);set8(e,0xd,0);set8(e,0xe,1);
+            }
+            return;
+        }
+        case 4: {
+            uint32_t sub=r8(e,b+0xa);
+            switch(sub) {
+            case 0: {
+                call(e,0x141980,0,0,0,0);
+                uint32_t m=blk(e);
+                w8(e,0x46e121,r8(e,m+0xb));
+                w16(e,0x3fa1c4,r8(e,m+0xc));
+                w8(e,m+0xa,r8(e,m+0xa)+1u);
+            }
+                /* falls through */
+            case 1:
+                if(!call(e,0x336e90,blk(e)+0xd,1,0,0))return;
+                inc8(e,0xa);
+                set8(e,0xd,0);
+                return;
+            case 2:
+                call(e,0x141570,0,0,0,0);
+                if(r8(e,0x3f9f43)<2)return;
+                call(e,0x139040,8,0,0,0);
+                inc8(e,0xa);
+                call(e,0x156d50,0x3ca3d70au,0,2,0);
+                call(e,0x156ce0,0,0,0,0);
+                return;
+            case 3:
+                call(e,0x141570,0,0,0,0);
+                if(r8(e,FADE_STATE)!=2)return;
+                inc8(e,0xa);
+                render_reset(e);
+                return;
+            case 4:
+                w8(e,b+9,1);
+                set8(e,0xa,0);
+                call(e,0x156e60,0,0,0,0);
+                return;
+            default:
+                return;
+            }
+        }
+        default:
+            return;
+        }
+    }
+    default:
+        return;
+    }
+}
+
 /* 0011d830 up to the main loop (0011d830..0011d934). */
 void hg_main_init(HGResourceEnv *e) {
     call(e,0x11db30,0,0,0,0);
@@ -635,13 +947,16 @@ void hg_main_init(HGResourceEnv *e) {
     w32(e,0x10000010,0x83);
     w32(e,0x10000000,0);
 }
-/* One iteration of the 0011d830 main loop (0011d938..0011d9fc). */
-void hg_main_frame(HGResourceEnv *e) {
+/* One iteration of the 0011d830 main loop (0011d938..0011d9fc), split at
+ * the return of the mode dispatcher 00143240 for the host connected frame. */
+static void main_frame_head(HGResourceEnv *e) {
     w32(e,0x95e308,0);
     call(e,0x148970,0,0,0,0);
     call(e,0x13d970,0,0,0,0);
     call(e,0x156740,0,0,0,0);
     call(e,0x143240,0,0,0,0);
+}
+static void main_frame_tail(HGResourceEnv *e) {
     call(e,0x139240,0,0,0,0);
     call(e,0x1467b0,0,0,0,0);
     call(e,0x13da80,0,0,0,0);
@@ -658,6 +973,75 @@ void hg_main_frame(HGResourceEnv *e) {
     call(e,0x1496e0,0,0,0,0);
     w32(e,0x10000000,0);
     w32(e,G(0x2f84),r32(e,G(0x2f84))+1u);
+}
+void hg_main_frame(HGResourceEnv *e) {
+    main_frame_head(e);
+    main_frame_tail(e);
+}
+
+/* 0011df10 (INTC 2, vblank start) and 0011df80 (INTC 3, vblank end),
+ * registered by main through 00103c40. 0010cca0 is the DI helper and
+ * 00104e10 the iWakeupThread wrapper (kernel seams); the trailing sync/ei
+ * only change CP0 Status, which is not memory and is not modeled here. */
+uint32_t hg_vblank_start_handler(HGResourceEnv *e) {
+    call(e,0x10cca0,0,0,0,0);
+    w32(e,0x95e308,r32(e,0x95e308)+1u);
+    uint32_t active=r16(e,0x3f8e30);
+    w32(e,0x95e300,r32(e,0x95e300)+1u);
+    if(active==1)call(e,0x104e10,r32(e,0x3f8e34),0,0,0);
+    return 0;
+}
+uint32_t hg_vblank_end_handler(HGResourceEnv *e) {
+    call(e,0x10cca0,0,0,0,0);
+    if(r16(e,0x3f6db0)==1)call(e,0x104e10,r32(e,0x3f6db4),0,0,0);
+    return 0;
+}
+
+/* Host connected frame (M17): one unit from the coordinator entry of frame N
+ * to the coordinator entry of frame N+1, through the reconstructed lifecycle
+ * layer. The coordinator body is the M13-M16 connected C (hg_coordinator_frame);
+ * the rest of 0012e700's active frame, the main-loop tail, the vblank
+ * interrupt handlers, the next loop head, 00143240, 0012d1c0, 0012d9a0 and
+ * 0012e700 run as C. 001496e0's CPU-side GS field and render-bank effects use
+ * the existing M14 model (hg_render_field_bank); 00148970 and all other
+ * callees go to the outer bus (original instructions or declared externals).
+ * The unit stops when the next active frame reaches its coordinator call. */
+typedef struct {
+    HGResourceEnv env;
+    HGResourceEnv *outer;
+    uint32_t frame;
+    uint32_t suspended;
+} HGConnected;
+static uint32_t connected_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d) {
+    HGConnected *p=user;
+    HGResourceEnv *e=&p->env;
+    uint32_t result;
+    if(pc==HG_WAIT_INTERRUPT) {
+        p->outer->call(p->outer->user,HG_WAIT_INTERRUPT,0,0,0,0);
+        hg_vblank_start_handler(e);
+        hg_vblank_end_handler(e);
+        return 0;
+    }
+    if(pc==0x12e700) {
+        uint32_t m=blk(e);
+        if(r8(e,m+0xa)==1 && !r8(e,0x3f9f3e)) {p->suspended=1;return 0;}
+        hg_gameplay_frame(e);
+        return 0;
+    }
+    if(pc==0x1496e0) {hg_render_field_bank(p->outer);return 0;}
+    if(pc==0x12f850 || pc==0x12f950) {domain_fault(e,0x84);return 0;}
+    if(hg_lifecycle_call(e,pc,a,b,c,d,&result))return result;
+    return p->outer->call(p->outer->user,pc,a,b,c,d);
+}
+uint32_t hg_game_frame_connected(HGResourceEnv *outer,uint32_t frame) {
+    HGConnected p;
+    p.env=*outer;p.env.user=&p;p.env.call=connected_call;
+    p.outer=outer;p.frame=frame;p.suspended=0;
+    hg_coordinator_frame(outer,frame);     /* 0012f850 from the carried entry state */
+    gameplay_active_after(&p.env);         /* rest of 0012e700 sub 1 */
+    main_frame_tail(&p.env);               /* after 00143240 returned */
+    main_frame_head(&p.env);               /* next iteration up to the coordinator call */
+    return p.suspended;
 }
 
 int hg_lifecycle_call(HGResourceEnv *e,uint32_t pc,uint32_t a,uint32_t b,uint32_t c,uint32_t d,uint32_t *result) {
@@ -681,6 +1065,10 @@ int hg_lifecycle_call(HGResourceEnv *e,uint32_t pc,uint32_t a,uint32_t b,uint32_
     case 0x12fa00:*result=hg_gameplay_event_flags(e);return 1;
     case 0x12f7d0:hg_gameplay_request_exit(e);return 1;
     case 0x12f800:hg_gameplay_teardown(e);return 1;
+    case 0x11df10:*result=hg_vblank_start_handler(e);return 1;
+    case 0x121810:hg_boot_mode(e);return 1;
+    case 0x121be0:hg_lifecycle_mode(e);return 1;
+    case 0x11df80:*result=hg_vblank_end_handler(e);return 1;
     default:return 0;
     }
 }

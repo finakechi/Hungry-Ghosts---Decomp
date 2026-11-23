@@ -49,9 +49,13 @@ CONTRACT = {
     0x282160: A, 0x2821f0: A, 0x270c30: A2, 0x12c3d0: A, 0x13a4c0: A,
     0x1404f0: A2, 0x156550: A, 0x1385b0: A2, 0x2cfa90: A, 0x12dbd0: A,
     0x143300: A, 0x149890: A2, 0x11da00: A3, 0x103c40: A3, 0x104aa8: A,
-    0x1432c0: A,
+    0x1432c0: A, 0x104e10: A, 0x123370: A3 + ('f12', 'f13', 'f14'),
+    0x1219e0: A4 + ('t0',), 0x336e90: A2,
 }
+FP_IN_SLOT = {0x156d50}            # f12 travels in the first bus slot
+HG_CALL_FP_REGS = 0xfffffffb
 GPR = {'a0': 4, 'a1': 5, 'a2': 6, 'a3': 7, 't0': 8, 't1': 9, 't2': 10}
+FPR = {'f12': 12, 'f13': 13, 'f14': 14}
 
 # (entry, end_exclusive, frame bytes, C symbol, argument count, returns)
 FUNCTIONS = {
@@ -73,6 +77,11 @@ FUNCTIONS = {
     0x12f7d0: (0x12f7fc, 0, 'hg_gameplay_request_exit', 0, False),
     0x12f800: (0x12f84c, 0x10, 'hg_gameplay_teardown', 0, False),
     0x11d830: (0x11d938, 0x10, 'hg_main_init', 0, False),
+    0x11df10: (0x11df80, 0x10, 'hg_vblank_start_handler', 0, True),
+    0x11df80: (0x11dfc8, 0x10, 'hg_vblank_end_handler', 0, True),
+    0x121810: (0x1219d4, 0x10, 'hg_boot_mode', 0, False),
+    0x1219e0: (0x121bd4, 0x50, 'hg_logo_sequence_step', 5, True),
+    0x121be0: (0x12266c, 0x10, 'hg_lifecycle_mode', 0, False),
 }
 MAIN_FRAME = (0x11d938, 0x11da00)        # loop body; entered at its head
 STOPS = {0x11d830: 0x11d938}              # main's init falls into its loop head
@@ -174,6 +183,7 @@ def run_original(code, entry, end, bus, script, args=(), sp=SP, start=None, stop
     machine.mem = bus
     machine.reg[28] = GP
     machine.reg[29] = sp
+    machine.cop0_status = 0      # only the handlers' trailing `ei` touches it
     for i, value in enumerate(args):
         machine.reg[4 + i] = value
     body = range(entry, end)
@@ -183,7 +193,7 @@ def run_original(code, entry, end, bus, script, args=(), sp=SP, start=None, stop
             contract = CONTRACT.get(pc, ())
             row = {}
             for name in contract:
-                row[name] = (cpu.fpr[12] if name == 'f12' else cpu.reg[GPR[name]]) & 0xffffffff
+                row[name] = (cpu.fpr[FPR[name]] if name in FPR else cpu.reg[GPR[name]]) & 0xffffffff
             bus.events.append(('c', pc, tuple(sorted(row.items()))))
             return script(pc, bus)
         return fire
@@ -257,6 +267,9 @@ def run_c(lib, name, bus, script, args=(), sp=SP, frame=0):
             if pc == HG_CALL_T_REGS:
                 pending.update(t0=a, t1=b, t2=c)
                 return 0
+            if pc == HG_CALL_FP_REGS:
+                pending.update(f12=a, f13=b, f14=c)
+                return 0
             if pc == HG_GUEST_FRAME:
                 return (sp - a) & 0xffffffff if b else 0
             if pc == HG_DOMAIN_FAULT:
@@ -266,13 +279,13 @@ def run_c(lib, name, bus, script, args=(), sp=SP, frame=0):
                 bus.events.append(('c', pc, ()))
                 return script(pc, bus)
             contract = CONTRACT.get(pc, ())
-            slots = dict(zip(('f12',) + A3 if 'f12' in contract else A4, (a, b, c, d)))
+            slots = dict(zip(('f12',) + A3 if pc in FP_IN_SLOT else A4, (a, b, c, d)))
             undeclared = [k for k, v in slots.items() if v and k not in contract]
             if undeclared:
                 errors.append(f'C passes undeclared {undeclared} to {pc:#x}')
             row = {}
             for name in contract:
-                if name in ('t0', 't1', 't2'):
+                if name in ('t0', 't1', 't2') or (name in FPR and pc not in FP_IN_SLOT):
                     if name not in pending:
                         errors.append(f'missing {name} for {pc:#x}')
                     row[name] = pending.get(name, 0) & 0xffffffff

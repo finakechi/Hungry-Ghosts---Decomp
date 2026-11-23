@@ -21,7 +21,7 @@ class LifecycleDifferential(unittest.TestCase):
 
     def test_every_function_matches_original_with_full_reachable_coverage(self):
         report = V.run(self.code, self.lib, self.bases, 800, 17)
-        self.assertEqual(len(report), 19)
+        self.assertEqual(len(report), 24)
         for entry, row in report.items():
             with self.subTest(entry=entry, function=row['function']):
                 self.assertEqual(row['failures'], 0, row['first_failures'])

@@ -29,13 +29,14 @@ EXTERNAL_ARITIES={0x119ac8:3,0x1041e0:1,0x103d60:1,0x103d80:2,0x103da0:0,
                   0x12fcf0:1,0x12ff20:1,0x12ffa0:1}
 
 
-def library(source=None,output=None,sanitize=False):
+def library(source=None,output=None,sanitize=False,extra=()):
     output = output or ROOT / 'local/build/resource_loader.so'
     if output.is_relative_to(ROOT / 'local'):
         output = build_path(output)
     output.parent.mkdir(parents=True,exist_ok=True)
     args=['cc','-std=c11','-O2','-Wall','-Wextra','-Werror','-pedantic','-fPIC','-shared',
-          '-I'+str(ROOT/'src'),str(source or ROOT/'src/resource_loader.c'),str(ROOT/'src/disc_read.c'),'-o',str(output)]
+          '-I'+str(ROOT/'src'),str(source or ROOT/'src/resource_loader.c'),str(ROOT/'src/disc_read.c'),
+          *[str(x) for x in extra],'-o',str(output)]
     if sanitize:args[1:1]=['-fsanitize=undefined','-fno-sanitize-recover=all']
     subprocess.run(args,check=True)
     lib=C.CDLL(str(output))

@@ -71,6 +71,20 @@ SPECS = {
     0x12f7d0: dict(cells=STATE),
     0x12f800: dict(cells=[]),
     0x11d830: dict(cells=[], returns={0x11dfd0: ((1, 1, 0, 0, 1), (0, 1), (2, 0, 3))}),
+    0x11df10: dict(cells=[(0x95e308, 4, (0, 1, 0xffffffff)), (0x95e300, 4, (0, 19436)),
+                          (0x3f8e30, 2, (0, 1, 2)), (0x3f8e34, 4, (17, 0x2a))]),
+    0x11df80: dict(cells=[(0x3f6db0, 2, (0, 1, 3)), (0x3f6db4, 4, (17, 0x2b))]),
+    0x121810: dict(cells=STATE + COMMON, returns={0x2cdef0: (0, 1), 0x1219e0: (0, 1)}),
+    0x1219e0: dict(cells=STATE + COMMON + [(M + 0x1a, 2, (0, 1, 2, 300))],
+                   args=[(0x3e00f0, 0x3e00c0), (0x6a, 0x54), (0, 1), (0x6d, 1), (0, 1)]),
+    0x121be0: dict(cells=STATE + COMMON + [(0x700000f8, 4, (0, 1, 2)), (M + 0x11, 1, (0, 1, 2, 3)),
+                                            (M + 0xe, 1, (0, 1)), (GP + 0x2f34, 2, (0, 1, 0xffff)),
+                                            (0x700000fe, 2, (0, 1, 0xffff)), (0x3f9f43, 1, (0, 1, 2, 3)),
+                                            (GP + 0x3098, 4, (0x500000,))]
+                   + [(GP + 0x2efc + i, 1, (0, 0, 0, 1)) for i in range(15)]
+                   + [(GP + 0x2f0c + i, 1, (0, 1)) for i in range(15)],
+                   returns={0x2cf020: (0, 1, 2), 0xa87880: (0, 1, 3), 0x2cf5c0: (0, 1, 2), 0x1620d0: (0, 1),
+                            0x122bd0: (0, 1, 2), 0x336e90: (0, 1)}),
 }
 # Focused templates: half the random cases overlay one of these to reach
 # deep paths (they only fix control cells; all other cells stay random).
@@ -80,6 +94,12 @@ FOCUS = {
                [(M + 8, 1, 0), (M + 9, 1, 1)], [(M + 8, 1, 0), (M + 9, 1, 0), (M + 0xa, 1, 3)],
                [(M + 8, 1, 0), (M + 9, 1, 0), (M + 0xa, 1, 5)]],
     0x12d680: [[(M + 9, 1, 0), (M + 0xa, 1, 1), (GP + 0x2d7c, 1, 0)], [(M + 9, 1, 1)]],
+    0x121be0: [[(M + 8, 1, 0), (M + 9, 1, 0), (GP + 0x2d7c, 1, 0)], [(M + 8, 1, 0), (M + 9, 1, 3)],
+               [(M + 8, 1, 1)], [(M + 8, 1, 3)], [(M + 8, 1, 4), (M + 9, 1, 0)],
+               [(M + 8, 1, 5), (M + 9, 1, 0), (GP + 0x2d7c, 1, 0)], [(M + 8, 1, 5), (M + 9, 1, 3)],
+               [(M + 8, 1, 5), (M + 9, 1, 0)] + [(GP + 0x2efc + i, 1, 0) for i in range(15)],
+               [(M + 8, 1, 5), (M + 9, 1, 4)], [(M + 8, 1, 5), (M + 9, 1, 4), (M + 0xa, 1, 2), (0x3f9f43, 1, 2)]],
+    0x1219e0: [[(M + 9, 1, 2), (M + 0x1a, 2, 1), (GP + 0x2d7c, 1, 0)], [(M + 9, 1, 3), (GP + 0x2d7c, 1, 0)]],
     0x12d9a0: [[(M + 9, 1, 5), (0x700000cc, 4, 3)]],
     0x12dd60: [[(M + 0xa, 1, 0), (M + 0xb, 1, 1), (GP + 0x2d7c, 1, 0)],
                [(M + 0xa, 1, 4)], [(M + 0xa, 1, 1), (GP + 0x2d7c, 1, 0), (GP + 0x2f40, 1, 2)]],
@@ -118,7 +138,8 @@ def body_words(code, entry, end):
     return words
 
 
-TABLES = {0x12d240: (0x3daec0, 6), 0x12d9d0: (0x3daee0, 7), 0x12e748: (0x3daf00, 7)}
+TABLES = {0x12d240: (0x3daec0, 6), 0x12d9d0: (0x3daee0, 7), 0x12e748: (0x3daf00, 7),
+          0x121c2c: (0x3dae10, 6), 0x121844: (0x3dadf0, 6)}
 
 
 def reachable(code, entry, end, stop=None):
