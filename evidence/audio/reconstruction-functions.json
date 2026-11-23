@@ -1,0 +1,62 @@
+{
+  "generated_by": "decomp-audio/src/audio/audio_engine.h + tools/hg_audio/verify_audio.py boundaries",
+  "kind": "reconstructed-original-ee-functions",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "verification_kinds": {
+    "instruction-differential": "original bytes interpreted by the shared EE-subset interpreter vs reconstructed C, randomized inputs, full memory-effect comparison",
+    "original-data": "authenticated M7 resources (PACK 0x6b/0x51, 0x85/0x94) reproduce the recorded successful endpoints and slot effects",
+    "synthetic": "deterministic synthetic fixtures and negative controls"
+  },
+  "functions": [
+    {"entry": "0x00156a50", "end": "0x00156f20", "symbol": "hg_audio_register_entry", "verified_by": ["synthetic", "original-data"]},
+    {"entry": "0x00157060", "end": "0x001573c0", "symbol": "hg_audio_register_worker", "verified_by": ["synthetic", "original-data"]},
+    {"entry": "0x00156f20", "end": "0x00156fc0", "symbol": "hg_audio_transfer_setup", "verified_by": ["synthetic"]},
+    {"entry": "0x00156fc0", "end": "0x00157060", "symbol": "hg_audio_align16", "verified_by": ["synthetic"]},
+    {"entry": "0x002b4db0", "end": "0x002b4df0", "symbol": "hg_audio_slot_find", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b4df0", "end": "0x002b4f68", "symbol": "hg_audio_bank_register", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b4f68", "end": "0x002b4f88", "symbol": "hg_audio_bank_index", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b4f88", "end": "0x002b4fc4", "symbol": "hg_audio_slot_active", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b4fc8", "end": "0x002b5004", "symbol": "hg_audio_slot_state", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5008", "end": "0x002b50e0", "symbol": "hg_audio_table_lookup4", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b50e0", "end": "0x002b5178", "symbol": "hg_audio_table_lookup6", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5178", "end": "0x002b5224", "symbol": "hg_audio_table_lookup1", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5228", "end": "0x002b523c", "symbol": "hg_audio_null8", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5240", "end": "0x002b5278", "symbol": "hg_audio_slot_range18", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5278", "end": "0x002b52bc", "symbol": "hg_audio_slot_range20", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b52c0", "end": "0x002b52ec", "symbol": "hg_audio_slot_swap", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b52f0", "end": "0x002b5318", "symbol": "hg_audio_slot_get", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b5318", "end": "0x002b53a0", "symbol": "hg_audio_bank_register_wrapper", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b53a0", "end": "0x002b5424", "symbol": "hg_audio_slot_bank", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b54e8", "end": "0x002b55a8", "symbol": "hg_audio_slot_clear", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002b55a8", "end": "0x002b55e8", "symbol": "hg_audio_slots_init", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002a99b8", "end": "0x002a9b60", "symbol": "hg_audio_open_channel_a", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002a9b68", "end": "0x002a9d18", "symbol": "hg_audio_open_channel_b", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002a9050", "end": "0x002a9180", "symbol": "hg_audio_channel_init_a", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002a9180", "end": "0x002a9298", "symbol": "hg_audio_channel_init_b", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002ad478", "end": "0x002ad690", "symbol": "hg_audio_play", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002ad748", "end": "0x002ad800", "symbol": "hg_audio_cancel", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002a94b8", "end": "0x002a9538", "symbol": "hg_audio_channel_command", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002ae998", "end": "0x002ae9b8", "symbol": "hg_audio_next_sequence", "verified_by": ["instruction-differential"]},
+    {"entry": "0x002adcf0", "end": "0x002add90", "symbol": "hg_audio_bank_bind", "verified_by": ["instruction-differential"]}
+  ],
+  "external_seams_host_modeled": [
+    {"entry": "0x0010cca0", "note": "EE interrupt disable (EI/DI), modeled"},
+    {"entry": "0x0010cce8", "note": "EE interrupt enable (EI/DI), modeled"},
+    {"entry": "0x001041e0", "note": "FlushCache(0), EE kernel syscall 0x64"},
+    {"entry": "0x00104320", "note": "sceSifSetDma, EE kernel syscall 0x77"},
+    {"entry": "0x00104300", "note": "sceSifDmaStat, EE kernel syscall 0x76"},
+    {"entry": "0x0010af40", "note": "SIF-side allocation, modeled"},
+    {"entry": "0x0010b0a8", "note": "SIF0_MSCOM send, modeled"},
+    {"entry": "0x002a74d0", "note": "audio tick source, modeled"},
+    {"entry": "0x001165d0", "note": "time math helper, modeled"},
+    {"entry": "0x00116320", "note": "time math helper, modeled"},
+    {"entry": "0x002ad358", "note": "play variant tail, modeled"},
+    {"entry": "0x002adab0", "note": "flag/stream service call, modeled"}
+  ],
+  "counts": {
+    "reconstructed_functions": 30,
+    "instruction_differential": 26,
+    "external_models": 12
+  },
+  "note": "Models are documented contracts, never counted as reconstruction. The 0x0015xxxx registration family is verified via the authenticated M7 resources and synthetic phase-machine tests; the remaining 26 are verified case-by-case against interpreted original bytes."
+}
