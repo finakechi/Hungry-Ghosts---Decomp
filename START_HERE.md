@@ -5,9 +5,10 @@
 **Resume here.** M16 reconstructs the coordinator tail service `0013ce80`
 (called at `0012f924`, between `00182480` and `00137890`) as the connected C
 service `hg_late_frame_service` and removes the external RNG draw-count
-replay. The work is **uncommitted** in worktree `decomp-m16` on branch
+replay. The work is committed **locally only** (implementation `4ccc411`,
+evidence/docs `0adc83b`) in worktree `decomp-m16` on branch
 `research/m16-late-frame-render-rng`, based on `main` `4d016e9f` (the M15
-PR #19 merge). See [docs/M16.md](docs/M16.md).
+PR #19 merge). Nothing is pushed; no PR or merge. See [docs/M16.md](docs/M16.md).
 
 - **Delivered:**
   - the service gate (state bytes `003fa1b0/b1/b2`) dispatches the

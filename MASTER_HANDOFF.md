@@ -4,8 +4,9 @@
 
 **Resume here.** The M16 work is implemented in worktree `decomp-m16` on
 branch `research/m16-late-frame-render-rng`, based on `main` =
-`4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` (the M15 PR #19 merge). Nothing is
-committed or pushed yet. Full record: [docs/M16.md](docs/M16.md),
+`4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` (the M15 PR #19 merge). Local
+commits only: implementation `4ccc411`, evidence/docs `0adc83b`; nothing
+is pushed and there is no PR. Full record: [docs/M16.md](docs/M16.md),
 [results.json](evidence/m16/results.json), [checks.json](evidence/m16/checks.json).
 
 **Delivered.** The coordinator tail service `0013ce80` (called at `0012f924`,
