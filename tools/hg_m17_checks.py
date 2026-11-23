@@ -153,11 +153,12 @@ def main():
                                   + (f", pack C {r['pack']['c']:#x} native {r['pack']['native']:#x}" if r['pack'] else '')),
             o / name)
     seq = load(a.output_dir / 'lifecycle-sequence.json')
+    hs = [] if seq is None else [s['state']['handler'] for s in seq['states']]
     add('lifecycle-sequence-synthetic', 'synthetic',
         'python3 -B tools/run_lifecycle_sequence.py --frames 1500 --output evidence/m17/lifecycle-sequence.json',
         verdict(None if seq is None else not seq['faults']),
         '' if seq is None else (f"{len(seq['states'])} distinct mode states, {len(seq['requests'])} resource requests, "
-                                f"handlers {' -> '.join(dict.fromkeys(s['state']['handler'] for s in seq['states']))}"
+                                f"handlers {' -> '.join(h for i, h in enumerate(hs) if i == 0 or hs[i - 1] != h)}"
                                 " (collapsed), faults 0"))
     for id_, command, logname, pattern in (
             ('synthetic-suite', 'python3 -B -m unittest discover -s tests', 'synthetic-001.log', r'^Ran \d+ tests'),
@@ -169,21 +170,21 @@ def main():
              'tests.test_lifecycle_differential', 'ubsan-001.log', r'^Ran \d+ tests'),
             ('m14-native-window', 'python3 -B tools/verify_predispatch_window.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO '
              '--capture-dir $HG_CAPTURE_DIR --negative-controls --output local/m17/out/m14-native-001.json',
-             'm14-native-001.log', r'.'),
+             'm14-native-001.log', r'^passed \d+ frames'),
             ('m14-register-contracts', 'python3 -B tools/verify_predispatch_contracts.py --elf $HG_ELF '
              '--ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --output local/m17/out/m14-contracts-001.json',
-             'm14-contracts-001.log', r'.'),
+             'm14-contracts-001.log', r'^passed '),
             ('m14-counter-guard', 'python3 -B tools/verify_counter_guard.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO '
              '--capture $HG_CAPTURE_DIR/obs3-010.json --output local/m17/out/m14-counter-001.json',
-             'm14-counter-001.log', r'.'),
+             'm14-counter-001.log', r' passed$'),
             ('historical-regression', 'python3 -B tools/hg_verify.py run --profile full  (HG_JAPAN_ISO, HG_PCSX2)',
-             'historical-regression-001.log', r'gates accepted')):
+             'historical-regression-002.log', r'gates accepted')):
         path = o / logname
         text = path.read_text() if path.exists() else None
         rc = re.findall(r'^rc=(\d+)$', text, re.M) if text else []
         result = 'not-run' if not rc else ('passed' if rc[-1] == '0' else 'failed')
         line = tail(path, pattern) or ''
-        line = re.sub(r'/home/[^ ]+', '<owner-local>', line)
+        line = re.sub(r'/home/.*?/(?=local/)', '', line)[:400]
         add(id_, 'synthetic' if id_ in ('synthetic-suite', 'sanitizer-lifecycle-harness', 'ubsan-lifecycle-suites')
             else ('regression' if id_ == 'historical-regression' else 'runtime'), command, result, line, path)
     sources = {n: sha(ROOT / n) for n in SOURCES}
