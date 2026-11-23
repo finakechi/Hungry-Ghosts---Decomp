@@ -1,12 +1,95 @@
 # Hungry Ghosts — master handoff
 
+## M16 connected late-frame render and RNG reconstruction — 2026-11-22
+
+**Resume here.** The M16 work is implemented in worktree `decomp-m16` on
+branch `research/m16-late-frame-render-rng`, based on `main` =
+`4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` (the M15 PR #19 merge). Nothing is
+committed or pushed yet. Full record: [docs/M16.md](docs/M16.md),
+[results.json](evidence/m16/results.json), [checks.json](evidence/m16/checks.json).
+
+**Delivered.** The coordinator tail service `0013ce80` (called at `0012f924`,
+between `00182480` and `00137890`) is reconstructed as the connected C service
+`hg_late_frame_service`: it reads the three state bytes `003fa1b0/b1/b2` and,
+on the observed corridor state (1,0,0), dispatches the AREA1-resident render
+body `0xa8b800` with `f12..f16 = 0x415f78d5, 0x461c4000, 0xc61c4000,
+0x461c4000, 0x40400000` (unobserved calling states fail closed 0x79/0x7a;
+all other states return silently). The area body and its ELF callees
+(`00155350`, `0014a0a0`, `00150b30`, `00153180`, `00149e50`, `001537f0`,
+`00154100`, `00154e30`, `00154df0`, `0011ad58` …) execute their **original
+instructions** through the interpreter; every executed address is
+identity-checked against the authenticated ELF PT_LOAD or the authenticated
+AREA1/A1_B00.BIN (`8ec765c7…a788`).
+
+- **Interpreter:** MMI `div1` (`70a4001a` at `00153844`) and `mflo1`
+  (`70002012`) are implemented (signed 32-bit truncated division into
+  LO1/HI1, LO/HI untouched; zero divisor and `INT_MIN / -1` fail closed;
+  PCSX2 v2.8.2 `iR5900MultDiv.cpp` as the edge-case reference), with 17
+  deterministic unit tests.
+- **Connected RNG:** the shared LCG `0011ad58` draw count comes from the real
+  execution of the reconstructed trees — one draw per frame, three at frame
+  10178 when `[gp+2f80] % (draw % 180 + 40) == 0`. The M15 external
+  per-frame draw-count replay is **deleted**. The frame-level
+  `rng-continuity` stage requires the interpreted draws to equal the native
+  LCG distance from camera return to the next coordinator entry exactly.
+- **Narrow dependency:** the main-loop frame tick `[gp+2f80] += 1`
+  (authenticated `lw/addiu/sw` sequences at `00121bf4..00121c04` /
+  `0012d208..0012d218`) runs between dispatch and the next coordinator
+  entry; the reconstructed pipeline performs it at the end of
+  `hg_player_frame_continuous` and the cell is a guarded RAM domain. Without
+  the tick the frame-10178 three-draw condition reads a stale value
+  (counterfactual: native `0x3fc4` → 3 draws, stale `0x3fb6` → 1 draw).
+
+**Scratchpad exclusions.** The bytes the completed `0013ce80` reconstruction
+produces (`0x796–0x7ba`, parts of `0xb81–0xb9f`) are no longer excluded at
+native stops. The remaining exclusions are attributed from writer evidence to
+`0013b6e0` and to the light-matrix rewriter after `00182480` (proven not to be
+`0013ce80`: its executed tree never writes `0xc88–0xd1b`).
+
+**Verification.** *(final receipts in evidence/m16)*
+
+- Continuous corridor: 22/22 frames (10164–10185) with per-frame same-input
+  checkpoints `camera-chain`, `model-draw`, `render-node-tail`,
+  `late-frame` and `rng-continuity`;
+- M14 native window 22/22 (9/9 controls), register contracts 22/22, counter
+  guard, re-run on the final M16 sources;
+- Negative controls: 2 null controls clean; the defects (extra RNG draw,
+  quotient-plus-one `div1`, omitted area dispatch via the extra-FP dispatch
+  contract, unconditional scratch store, mark placement, missing/double
+  frame tick, coordinator ordering, and the M13–M15 defects) rejected by
+  their intended comparators;
+- Evidence: 179 ELF + 451 AREA original-byte instructions;
+- Synthetic suite 324/324, sanitizers, and the historical regression
+  `m12-20261123T004321Z-iwwr_uz2` (79/79 accepted, 74 passed + 5 expected
+  rejections, 79 executed, 0 reused, verdict passed): see checks.json.
+
+**Control-observability findings (measured):** the five FP operands
+`f12..f16` do not affect the observed AREA body output, and every observed
+frame divides `0x280` by 10 exactly, so the wrong-FP and ceiling-division
+defects are unobservable on this corridor and were replaced by observable
+controls (see docs/M16.md). The first corridor run also exposed and fixed a
+real defect in the interpreter control seam (a bound-method injection made
+`div1` crash instead of diverging).
+
+**Limits.** Observed obs3 corridor only; the AREA body's other entry states
+and the unobserved calling states are fail-closed; packet bytes are compared
+same-input only; `0013b6e0`, `001430a0`, `00143100`, `0018c520`, `001431a0`,
+`0025c170`, `00182480` and later main-loop code (including the light-matrix
+rewriter) remain external seams; GS timing and DMA stay external. No
+byte-match, full-game equivalence, static recompilation or native port is
+claimed.
+
+**Next action.** Owner review and the commit/push/PR decision.
+
 ## M15 connected camera projection and render-node state — 2026-11-22
 
-**Resume here.** Acceptance criteria met on the obs3 corridor. The work is
-uncommitted in worktree `decomp-m15`, branch `research/m15-camera-projection`,
-based on `main` = `535e43b691b9296912a06ba40f3450a6e71431da`. No remote branch,
-no PR. Identities: C source `cc38d26e…9017`, library `8459a230…6d4b`.
-Packets:
+**Resume here.** Acceptance criteria met on the obs3 corridor. The work was
+implemented on branch `research/m15-camera-projection` (implementation commit
+`6f592f9`) based on `main` = `535e43b691b9296912a06ba40f3450a6e71431da`, and
+is **merged into `main`** as `4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` via
+PR [#19](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/19). The
+pre-merge draft wording ("uncommitted … no PR") is historical. Identities:
+C source `cc38d26e…9017`, library `8459a230…6d4b`. Packets:
 - `analysis/render_nodes/functions.json` `a39b7a85…bed7` (1,527 instructions);
 - `analysis/model_draw/functions.json` `6e0efd59…5373` (2,574 instructions);
 - both checked with PS2DInfo `--require-all-bytes`.
@@ -77,8 +160,8 @@ measured from the native LCG states and replayed through original `0011ad58`.
 - GS timing, DMA and the unreconstructed tail services are external.
 - No byte-match, equivalence, recompilation or port claim.
 
-**Next action.** Make `0013ce80` interpreter-executable (MMI `div1` at
-`00153844` first) and reconstruct it.
+**Next action.** Completed by M16 (above): `0013ce80` is interpreter-executable
+(MMI `div1` implemented) and reconstructed as a connected C service.
 
 **Publication.** The M13/M14 post-merge reconciliation (README, docs/M14.md,
 both handoffs) from `decomp-m14-handoff` is carried here unchanged; that

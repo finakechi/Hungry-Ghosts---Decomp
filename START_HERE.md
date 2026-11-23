@@ -1,12 +1,65 @@
 # Hungry Ghosts — start here
 
+## M16 connected late-frame render and RNG reconstruction — 2026-11-22
+
+**Resume here.** M16 reconstructs the coordinator tail service `0013ce80`
+(called at `0012f924`, between `00182480` and `00137890`) as the connected C
+service `hg_late_frame_service` and removes the external RNG draw-count
+replay. The work is **uncommitted** in worktree `decomp-m16` on branch
+`research/m16-late-frame-render-rng`, based on `main` `4d016e9f` (the M15
+PR #19 merge). See [docs/M16.md](docs/M16.md).
+
+- **Delivered:**
+  - the service gate (state bytes `003fa1b0/b1/b2`) dispatches the
+    AREA1-resident render body `0xa8b800` on the observed state (1,0,0)
+    with `f12..f16 = 0x415f78d5, 0x461c4000, 0xc61c4000, 0x461c4000,
+    0x40400000`; unobserved calling states fail closed (0x79/0x7a), all
+    other states return silently;
+  - the area body and its ELF callees execute **original instructions**
+    through the interpreter, identity-checked against the authenticated ELF
+    and AREA1/A1_B00.BIN;
+  - MMI `div1`/`mflo1` interpreter support (17 deterministic unit tests;
+    zero divisor and `INT_MIN / -1` fail closed);
+  - the shared LCG `0011ad58` draws arise from real execution (one per
+    frame, three at frame 10178); the M15 external draw replay is deleted;
+  - the main-loop frame tick `[gp+2f80] += 1` is reconstructed at the end
+    of `hg_player_frame_continuous` and guarded.
+- **Last verification (owner-local, on the final source):**
+  - 22/22 frames with per-frame same-input `camera-chain`, `model-draw`,
+    `render-node-tail`, `late-frame` and `rng-continuity` checkpoints;
+  - negative controls: 2 null clean, 31 defects rejected by their intended
+    comparators (extra RNG draw, quotient-plus-one `div1`, omitted area
+    dispatch via the extra-FP contract, unconditional scratch store, mark
+    placement, missing/double frame tick, coordinator ordering, and the
+    M13–M15 defect set);
+  - M14 native window 22/22 (9/9), register contracts 22/22, counter guard,
+    re-run on the final source;
+  - 179 ELF + 451 AREA original-byte instructions; synthetic suite 324/324;
+    sanitizers; historical regression `m12-20261123T004321Z-iwwr_uz2`:
+    79/79 accepted (74 passed, 5 expected rejections), 0 reused. See
+    [checks.json](evidence/m16/checks.json).
+- **Private inputs** (ignored `local/`): ELF `a74248c5…3c61`, Japan ISO
+  `8ca1513c…994e`, PS2DInfo `2e4a226`, M13 obs3 captures,
+  `local/m15/r5900dis.py`. The historical regression also needs the ISO and
+  PCSX2 v2.8.2 `0c46bb6a…abea` (`HG_JAPAN_ISO`, `HG_PCSX2`).
+- **Limits:** observed obs3 corridor only; the five FP operands `f12..f16`
+  are measured not to affect the observed AREA body output; packet bytes
+  compared same-input only; remaining coordinator services and the
+  light-matrix rewriter stay external seams (the bytes they produce stay
+  excluded at native stops). No byte-match, equivalence, recompilation or
+  port claim.
+- **Blockers:** owner review and the commit decision.
+
+**Next action.** Owner review of the M16 diff; then commit, push and PR per
+project convention (no publication is performed by the agent).
+
 ## M15 connected camera projection and render-node state — 2026-11-22
 
-**Resume here.** M15 is implemented and verified on the obs3 corridor, and
-its acceptance criteria are met. The work is **uncommitted** in worktree
-`decomp-m15` on branch `research/m15-camera-projection`, based on `main`
-`535e43b`. There is no M15 remote branch or PR. Final C is `cc38d26e…9017`.
-See [docs/M15.md](docs/M15.md).
+**Resume here (superseded by M16 above).** M15 is implemented and verified
+on the obs3 corridor, and its acceptance criteria are met. The work was
+implemented on branch `research/m15-camera-projection` (implementation commit
+`6f592f9`) and is **merged into `main`** as `4d016e9f` via PR #19. Final C is
+`cc38d26e…9017`. See [docs/M15.md](docs/M15.md).
 
 - **Delivered:** the screen-space and render scratch (`0x500–0x53f`,
   `0x700–0x72f`, `0x7c0–0x7ff`, `0x900–0x94f`, `0xb80–0xbef`, `0xc80–0xd1f`)
@@ -36,9 +89,10 @@ See [docs/M15.md](docs/M15.md).
   fail closed.
 - **Blockers:** owner review and the commit decision.
 
-**Next action.** Make `0013ce80` interpreter-executable (first gap: MMI `div1`
-`70a4001a` at `00153844`) and reconstruct it. That removes most of the
-remaining native-stop scratch exclusions and the replayed external RNG draws.
+**Next action (completed by M16).** `0013ce80` is now interpreter-executable
+(MMI `div1` `70a4001a` at `00153844` was the first gap) and reconstructed.
+That removes most of the remaining native-stop scratch exclusions and the
+replayed external RNG draws.
 
 ## M14 continuous pre-dispatch engine services — 2026-11-21
 
