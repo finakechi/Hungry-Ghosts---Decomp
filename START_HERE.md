@@ -2,13 +2,16 @@
 
 ## M16 connected late-frame render and RNG reconstruction — 2026-11-22
 
-**Resume here.** M16 reconstructs the coordinator tail service `0013ce80`
-(called at `0012f924`, between `00182480` and `00137890`) as the connected C
-service `hg_late_frame_service` and removes the external RNG draw-count
-replay. The work is committed **locally only** (implementation `4ccc411`,
-evidence/docs `0adc83b`) in worktree `decomp-m16` on branch
-`research/m16-late-frame-render-rng`, based on `main` `4d016e9f` (the M15
-PR #19 merge). Nothing is pushed; no PR or merge. See [docs/M16.md](docs/M16.md).
+**Resume here (post-merge).** M16 reconstructs coordinator tail service
+`0013ce80` (called at `0012f924`, between `00182480` and `00137890`) as the
+connected C service `hg_late_frame_service` and removes external RNG draw-count
+replay. It **merged into `main`** through [PR #20](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/20)
+at `46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b` (2026-11-23 02:14 UTC;
+November 22 Eastern). The original `decomp-m16` branch
+`research/m16-late-frame-render-rng` was based on M15 merge `4d016e9f`;
+implementation `4ccc411`, evidence/docs `0adc83b`, and final branch head
+`467d43091392da5cd8bee197e1670d22b53eb890` are historical source identities.
+See [docs/M16.md](docs/M16.md).
 
 - **Delivered:**
   - the service gate (state bytes `003fa1b0/b1/b2`) dispatches the
@@ -49,10 +52,19 @@ PR #19 merge). Nothing is pushed; no PR or merge. See [docs/M16.md](docs/M16.md)
   light-matrix rewriter stay external seams (the bytes they produce stay
   excluded at native stops). No byte-match, equivalence, recompilation or
   port claim.
-- **Blockers:** owner review and the commit decision.
+- **Post-merge checks:** GitHub Actions synthetic Python 3.10/3.14 passed
+  on the merge commit ([run #45099073034](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/45099073034));
+  seven published source hashes match `checks.json`. In an owner-terminal
+  repair, three silent-success historical logs were restored to their recorded
+  empty bytes after preserving the post-run notes under ignored
+  `local/m16/receipt-repair-_1z_ckwv/`; all three receipt seals and artifact
+  hashes then validated. No new original-game test was run post-merge.
+- **Research gap:** 58 precise scratchpad bytes remain excluded at native
+  stops: 8 attributed to `0013b6e0`, and 50 to an unidentified light-matrix
+  writer after `00182480`. M17 scope and the eventual project goal remain open.
 
-**Next action.** Owner review of the M16 diff; then commit, push and PR per
-project convention (no publication is performed by the agent).
+**Next action.** Trace original last-writer ownership and call ordering for
+those 58 bytes, identifying the light-matrix writer before scoping M17.
 
 ## M15 connected camera projection and render-node state — 2026-11-22
 

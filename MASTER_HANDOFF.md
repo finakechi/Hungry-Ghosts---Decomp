@@ -2,11 +2,15 @@
 
 ## M16 connected late-frame render and RNG reconstruction — 2026-11-22
 
-**Resume here.** The M16 work is implemented in worktree `decomp-m16` on
-branch `research/m16-late-frame-render-rng`, based on `main` =
-`4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` (the M15 PR #19 merge). Local
-commits only: implementation `4ccc411`, evidence/docs `0adc83b`; nothing
-is pushed and there is no PR. Full record: [docs/M16.md](docs/M16.md),
+**Resume here (post-merge).** M16 was developed in worktree `decomp-m16`,
+branch `research/m16-late-frame-render-rng`, from M15 merge
+`4d016e9f898c7c0fd857eeb6c34cfcc5d7686b68` (PR #19). Its implementation
+`4ccc411`, evidence/docs `0adc83b`, and final branch head `467d430` were
+**merged into `main` through [PR #20](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/20)**
+as `46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b` (2026-11-23 02:14 UTC;
+November 22 Eastern). The owner-terminal review still found the M16 worktree
+at branch head `467d430` with only untracked `docs/M16-session-transcript.md`;
+that does not make the merge pending. Full record: [docs/M16.md](docs/M16.md),
 [results.json](evidence/m16/results.json), [checks.json](evidence/m16/checks.json).
 
 **Delivered.** The coordinator tail service `0013ce80` (called at `0012f924`,
@@ -64,6 +68,22 @@ native stops. The remaining exclusions are attributed from writer evidence to
   `m12-20261123T004321Z-iwwr_uz2` (79/79 accepted, 74 passed + 5 expected
   rejections, 79 executed, 0 reused, verdict passed): see checks.json.
 
+**Post-merge verification and receipt provenance.** GitHub Actions
+[run #45099073034](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/45099073034)
+passed the synthetic Python 3.10 and 3.14 jobs on the actual merge commit;
+seven published source files also matched their recorded M16 SHA-256 hashes.
+These are not retail reruns: `checks.json` retains its original pre-commit
+`verified_commit: null`, hashes and owner-local results. The owner-terminal
+receipt review found that three historical `output.log` files had received
+post-run notes: their receipt seals remained valid, but artifact hashes did
+**not** match the recorded empty logs. This contradicts the earlier transcript
+claim that the annotated artifacts validated. The notes were preserved under
+ignored `local/m16/receipt-repair-_1z_ckwv/`, the three `output.log` files
+restored to their original empty bytes, and `validate_seals.py` then reported
+three valid seals, three matching artifact sets and `ALL RECEIPTS VALID`.
+No regression suite, original-byte or retail/emulator test was rerun for this
+repair; private evidence and saved original results remain owner-local.
+
 **Control-observability findings (measured):** the five FP operands
 `f12..f16` do not affect the observed AREA body output, and every observed
 frame divides `0x280` by 10 exactly, so the wrong-FP and ceiling-division
@@ -80,7 +100,10 @@ rewriter) remain external seams; GS timing and DMA stay external. No
 byte-match, full-game equivalence, static recompilation or native port is
 claimed.
 
-**Next action.** Owner review and the commit/push/PR decision.
+**Next action.** Read-only original-byte/runtime last-writer investigation
+of the remaining 58 sparse scratchpad exclusions (8 bytes attributed to
+`0013b6e0` and 50 to an unidentified light-matrix writer after `00182480`),
+then choose a bounded M17 implementation scope. No M17 work is claimed.
 
 ## M15 connected camera projection and render-node state — 2026-11-22
 
