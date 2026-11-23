@@ -22,10 +22,45 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'tools' / 'hg_au
 from hg_identify import ISO, read_at  # noqa: E402
 from audio_guest import AudioHarness, SLOT_TABLE, ID_TABLE  # noqa: E402
 
-ISO_PATH = Path(os.environ.get('HG_JAPAN_ISO',
-                        str(Path(__file__).resolve().parent.parent.parent
-                            / 'Hungry Ghosts (Japan).iso')))
+# Retail-only: runs only when the owner supplies the image explicitly. Without
+# HG_JAPAN_ISO the class is skipped (public CI); with it, a missing,
+# unreadable or mismatching file fails. There is no default path.
+ISO_ENV = os.environ.get('HG_JAPAN_ISO', '')
+ISO_PATH = Path(ISO_ENV) if ISO_ENV else None
 ISO_SHA256 = '8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e'
+
+# One full-image hash per process: the verified digest is reused only while
+# the file's identity (device, inode, size, mtime) is unchanged.
+_AUTH_CACHE = {}
+
+
+def _identity(path):
+    st = os.stat(path)
+    return (st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns)
+
+
+def _authenticate(path):
+    """Return None when path is the authenticated image, else a reason."""
+    try:
+        key = (str(path.resolve()), _identity(path))
+    except OSError as exc:
+        return f'HG_JAPAN_ISO={path}: cannot access image ({exc})'
+    digest = _AUTH_CACHE.get(key)
+    if digest is None:
+        try:
+            h = hashlib.sha256()
+            with open(path, 'rb') as fp:
+                for chunk in iter(lambda: fp.read(4 * 1024 * 1024), b''):
+                    h.update(chunk)
+            if _identity(path) != key[1]:
+                return f'HG_JAPAN_ISO={path}: image changed while hashing'
+        except OSError as exc:
+            return f'HG_JAPAN_ISO={path}: cannot read image ({exc})'
+        digest = _AUTH_CACHE[key] = h.hexdigest()
+    if digest != ISO_SHA256:
+        return (f'HG_JAPAN_ISO={path}: SHA-256 {digest} is not the '
+                f'authenticated Japan ISO {ISO_SHA256} - reauthenticate')
+    return None
 MEMBER_SHA = {
     (0x6b, 0x51): '3776b4159cacfe36e86648c459b99542e9a5ce29fc64dc8aa5111751ffc8284f',
     (0x85, 0x94): '142042dbd0ffe40be0d7f55272434759f247fdb5e099b4c67e8ccd6b447a789f',
@@ -55,14 +90,13 @@ def _members():
             yield dir_id, flags, blob, expect_sha
 
 
+@unittest.skipUnless(ISO_PATH, 'retail-only: set HG_JAPAN_ISO to the '
+                     'authenticated Japan ISO to run')
 class OriginalDataTests(unittest.TestCase):
     def _auth(self):
-        with open(ISO_PATH, 'rb') as fp:
-            h = hashlib.sha256()
-            for chunk in iter(lambda: fp.read(4 * 1024 * 1024), b''):
-                h.update(chunk)
-            self.assertEqual(h.hexdigest(), ISO_SHA256,
-                             'ISO identity changed - reauthenticate')
+        reason = _authenticate(ISO_PATH)
+        if reason:
+            self.fail(reason)
 
     def test_registration_matches_m7_evidence(self):
         self._auth()

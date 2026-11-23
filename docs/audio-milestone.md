@@ -134,7 +134,9 @@ committed.
   successful endpoint and slot effects (tests/test_hg_audio_original.py).
 - **Synthetic suites**: 43 test methods across bank registration,
   malformed inputs, repeated registration, channel/command ring, play/
-  cancel, determinism, ADPCM fixtures.
+  cancel, determinism, ADPCM fixtures, disassembler checks (including
+  `sync` stype formatting), plus the 3 retail-only M7 endpoint tests,
+  which skip without `HG_JAPAN_ISO` (46 methods in all).
 - **Negative controls** (tests/test_hg_audio_engine.py
   `NegativeControlTests`): corrupted bank offset, wrong slot selection,
   missing stop behavior, wrong endpoint — each must be detected by the
@@ -145,17 +147,20 @@ committed.
 ```sh
 # build (from decomp-audio)
 cc -shared -fPIC -O2 -Wall -Wextra -o local/audio/libhg_audio.so src/audio/audio_engine.c
-# synthetic suites (set HG_JAPAN_ISO/HG_ELF or populate the default
-# local/ paths; defaults: ../Hungry Ghosts (Japan).iso and
-# local/extracted/japan/SCPS_150.46)
-PYTHONPATH=tools:tools/hg_audio python3 -m unittest \
-    tests.test_hg_audio_engine tests.test_hg_audio_adpcm \
-    tests.test_hg_audio_r5900 tests.test_hg_audio_original
-# original-bytes differential
+# synthetic suites (public CI form; no retail inputs). Without HG_JAPAN_ISO
+# the three retail-only tests in test_hg_audio_original.py are skipped.
+python3 -B -m unittest discover -s tests -p 'test_hg_audio_*.py' -v
+# retail-only M7 endpoint checks: the ISO path must be given explicitly (no
+# default path). A missing, unreadable or non-matching image fails; the full
+# SHA-256 is computed once per invocation and reused while the file is unchanged.
+HG_JAPAN_ISO=/path/to/authenticated.iso \
+    python3 -B -m unittest discover -s tests -p 'test_hg_audio_original.py' -v
+# original-bytes differential (HG_ELF, default local/extracted/japan/SCPS_150.46)
 PYTHONPATH=tools:tools/hg_audio python3 tools/hg_audio/verify_audio.py \
     --cases 20 --output local/audio/differential.json
-# connected runner (needs the authenticated ISO path)
+# connected runner (needs the authenticated ISO: --iso or HG_JAPAN_ISO)
 PYTHONPATH=tools:tools/hg_audio python3 tools/hg_audio/audio_runner.py \
+    --iso "$HG_JAPAN_ISO" \
     --member 6b51 --out local/audio/out.wav --receipt local/audio/runner-receipt.json
 ```
 
@@ -184,8 +189,9 @@ PYTHONPATH=tools:tools/hg_audio python3 tools/hg_audio/audio_runner.py \
   slot released). Differential: 407 passed / 0 failed / 0 skipped /
   13 excluded. Regression: 43/43.
 - Required private inputs: authenticated ISO (8ca1513c…) or the two
-  member binaries under `local/audio/`; set `HG_JAPAN_ISO`/`HG_ELF` or
-  populate the repo-relative default paths.
+  member binaries under `local/audio/`; set `HG_JAPAN_ISO` (required for
+  the retail tests and the runner; there is no default ISO path) and
+  `HG_ELF` or populate its repo-relative default path.
 - Next action: label the observed command-ring bytes (ff 41 f7 and
   play commands) against an authenticated IOP capture, or disassemble
   `LIBSD.IRX`/`SG2IOP.IRX` service dispatch to extend the host model

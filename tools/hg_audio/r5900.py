@@ -165,7 +165,9 @@ def disasm_one(addr, word):
         if f == 0x0d:
             return 'break 0x%x' % (word & 0xFFFFF)
         if f == 0x0f:
-            return f'sync 0x{sa:x}'
+            # stype (bits 10..6): 0 is the plain barrier, printed bare as in
+            # the Ghidra listings; nonzero (e.g. 0x10, sync.p) keeps it.
+            return f'sync 0x{sa:x}' if sa else 'sync'
         if f == 0x10:
             return f'mfhi {r(rd)}'
         if f == 0x11:

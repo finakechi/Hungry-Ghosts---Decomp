@@ -83,6 +83,27 @@ def _samples():
                 yield ins
 
 
+class SyncFormatting(unittest.TestCase):
+    """SPECIAL funct 0x0f: stype 0 prints bare, nonzero stype keeps it.
+
+    Reference spellings come from the Ghidra listings: 'sync' for word
+    0x0000000f (analysis/game_lifecycle, 0x0011df68) and 'sync 0x10' for
+    word 0x0000040f (analysis/player_constraint).
+    """
+
+    def test_zero_stype_is_bare(self):
+        self.assertEqual(disasm_one(0x0011df68, 0x0000000f), 'sync')
+
+    def test_nonzero_stype_keeps_operand(self):
+        self.assertEqual(disasm_one(0, 0x0000040f), 'sync 0x10')
+        self.assertEqual(disasm_one(0, 0x0000004f), 'sync 0x1')
+        self.assertEqual(disasm_one(0, 0x000007cf), 'sync 0x1f')
+
+    def test_zero_and_nonzero_stay_distinct(self):
+        self.assertNotEqual(_normalize(disasm_one(0, 0x0000000f)),
+                            _normalize(disasm_one(0, 0x0000040f)))
+
+
 class R5900Validation(unittest.TestCase):
     def test_matches_known_listings(self):
         total = mismatch = cop2 = 0

@@ -25,9 +25,6 @@ from hg_audio.audio_guest import (AudioHarness, SLOT_TABLE, ID_TABLE,  # noqa: E
                                   COMMAND_BASE, CHANNEL_QUEUE)
 from hg_audio.adpcm import decode_stream, write_wav  # noqa: E402
 
-ISO_PATH = Path(os.environ.get('HG_JAPAN_ISO',
-                        str(Path(__file__).resolve().parents[1].parent
-                            / 'Hungry Ghosts (Japan).iso')))
 ISO_SHA256 = '8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e'
 KNOWN = {
     '6b51': {'dir': 0x6b, 'flags': 0x51, 'load': 0x01009000,
@@ -68,11 +65,19 @@ def main():
                         default=Path('local/audio/runner-receipt.json'))
     parser.add_argument('--max-seconds', type=float, default=1.0,
                         help='seconds of decoded audio to render')
+    parser.add_argument('--iso', type=Path,
+                        default=Path(os.environ['HG_JAPAN_ISO'])
+                        if os.environ.get('HG_JAPAN_ISO') else None,
+                        help='authenticated Japan ISO (default: $HG_JAPAN_ISO)')
     args = parser.parse_args()
+    if args.iso is None:
+        parser.error('no original image: pass --iso or set HG_JAPAN_ISO')
+    if not args.iso.is_file():
+        parser.error(f'original image not found: {args.iso}')
     spec = KNOWN[args.member]
 
     receipt = {'member': args.member, 'stages': []}
-    with open(ISO_PATH, 'rb') as fp:
+    with open(args.iso, 'rb') as fp:
         authenticate(fp)
         iso = ISO(fp)
         blob = fetch_member(fp, iso, spec['dir'], spec['flags'])
