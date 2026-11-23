@@ -28,7 +28,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/game_lifecycle.c'
 CONTROLS = [
     ('null-control', None, None),
-    ('missing-gameplay-frame-tick', 'w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);', ''),
+    ('missing-gameplay-frame-tick', '    if(!le)w32(e,G(0x2f7c),0);\n    w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);',
+     '    if(!le)w32(e,G(0x2f7c),0);'),
     ('missing-main-loop-counter', 'w32(e,G(0x2f84),r32(e,G(0x2f84))+1u);', ''),
     ('accumulator-step-two', 'hg_ee_fp(0,r32(e,G(0x2f7c)),0x3f800000u,&fault)',
      'hg_ee_fp(0,r32(e,G(0x2f7c)),0x40000000u,&fault)'),

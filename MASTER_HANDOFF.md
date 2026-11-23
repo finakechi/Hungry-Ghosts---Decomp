@@ -1,5 +1,43 @@
 # Hungry Ghosts — master handoff
 
+## M17 game lifecycle and connected mode reconstruction — 2026-11-23
+
+**Resume here.** Start with [START_HERE.md](START_HERE.md) for the short form. M17 is a **bounded partial result**, committed locally only
+in worktree `decomp-m17`, branch `research/m17-game-lifecycle`, based on
+`main` `46cdb21` (the M16 merge). Nothing is pushed; no PR or merge. Full
+record: [docs/M17.md](docs/M17.md), [checks.json](evidence/m17/checks.json),
+[results.json](evidence/m17/results.json), [coverage.json](evidence/m17/coverage.json).
+
+- **Delivered:**
+  - C for the lifecycle layer (`src/game_lifecycle.c`, 24 entries for 23
+    original functions): main loop 0011d830, vblank handlers 0011df10 and
+    0011df80, mode dispatcher and setters 00143240/001432c0/00143300, boot
+    mode 00121810 with logo step 001219e0, lifecycle/title mode 00121be0,
+    gameplay mode 0012d1c0 with its major-5 dispatch, area load 0012dd60,
+    PACK selection 0012dbd0, active play 0012e700, event flags 0012fa00,
+    reload, exit and teardown 0012f800;
+  - original-instruction differential: 0 mismatches, 100% of reachable
+    words, on the ELF plus eight retail full-RAM states;
+  - the 22-frame obs3 corridor runs through the connected lifecycle layer
+    (real 0012d1c0 tick, main-loop tail, C vblank handlers);
+  - three native lifecycle observations beyond the corridor: M8 Start/pause
+    entry, M8 pause-retained frame, M7 area-1 PACK `0xc6`;
+  - a synthetic boot → title → new game → area load → play → pause → quit →
+    teardown → continue → reload → play sequence from the ELF image alone.
+- **Not claimed:** native equivalence of boot, quit/continue or area-to-area
+  transitions (no capture exists); loader, fades, menus and audio are host
+  models in the synthetic sequence.
+- **Coverage:** about 2.0% of ELF candidate instruction bytes have C source
+  (49,020 of 2,469,083; 1.5% before). AREA overlays, IOP modules and VU code
+  are outside the inventory.
+- **M16 docs:** the post-merge corrections from `decomp-m16-docs` are
+  incorporated (commit `a30627e`); M16's recorded PCSX2 hash has a 65-digit
+  transcription error (erratum in docs/M17.md).
+
+**Next action.** Owner review. Then capture one native lifecycle
+transition: pause → quit → title → continue → area load → first active
+frame, breaking at 00143240, 0012f800, 0012dd60 and 0012f850.
+
 ## M16 connected late-frame render and RNG reconstruction — 2026-11-22
 
 **Resume here (post-merge).** M16 was developed in worktree `decomp-m16`,

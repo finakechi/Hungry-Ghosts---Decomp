@@ -52,6 +52,14 @@ sequence, with 320 verified checkpoints and bounded original-game evidence.
 Its original stacked PR #17 was integrated into `main` through
 [PR #18](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/18).
 See [docs/M14.md](docs/M14.md) and [evidence/m14/](evidence/m14/).
+M15 and M16 add the camera projection, render-node state and late-frame render
+service to the same 22 frames ([docs/M15.md](docs/M15.md), [docs/M16.md](docs/M16.md)).
+
+M17 (local branch, not yet merged) reconstructs the game lifecycle layer in C:
+main loop, vblank handlers, mode dispatcher, boot, title/lifecycle and gameplay
+modes, area loading and active play with pause and teardown. The 22 corridor
+frames now run through that layer. A synthetic boot-to-gameplay sequence and
+three partial native observations check it. See [docs/M17.md](docs/M17.md).
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 

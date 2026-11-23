@@ -111,13 +111,13 @@ def main():
                                      f"interrupts/frame {sorted({f['interrupts'] for f in corridor['frames']})}, "
                                      f"{len(corridor.get('interpreted_pcs', []))} interpreted original words"),
         o / 'lifecycle-corridor-002.json')
-    cc = load(o / 'corridor-controls-001.json')
+    cc = load(o / 'corridor-controls-002.json')
     add('lifecycle-corridor-controls', 'runtime',
         'python3 -B tools/verify_lifecycle_corridor_controls.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO '
-        '--capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --output local/m17/out/corridor-controls-001.json',
+        '--capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --output local/m17/out/corridor-controls-002.json',
         verdict(None if cc is None else cc['passed']),
         '' if cc is None else '; '.join(f"{r['control']} {r['outcome']}" for r in cc['controls']),
-        o / 'corridor-controls-001.json')
+        o / 'corridor-controls-002.json')
     m16 = load(o / 'm16-corridor-001.json')
     add('m16-corridor-22-frames-with-controls', 'runtime',
         CONT + ' --negative-controls --output local/m17/out/m16-corridor-001.json',
