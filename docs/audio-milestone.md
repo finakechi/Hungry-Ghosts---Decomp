@@ -177,10 +177,16 @@ PYTHONPATH=tools:tools/hg_audio python3 tools/hg_audio/audio_runner.py \
 
 ## Resume-here (for future sessions)
 
-- Worktree `decomp-audio`, branch `research/audio-engine`.
-- Last passing operation: connected runner end-to-end (registration →
-  output → stop) for member 6b51.
+- Worktree `decomp-audio`, branch `research/audio-engine`, HEAD `8ece614`
+  (all audio work committed locally; nothing pushed).
+- Last passing connected operation: full runner end-to-end for member
+  6b51 (registration → 96,000-sample 48 kHz WAV → stop/release, state
+  slot released). Differential: 407 passed / 0 failed / 0 skipped /
+  13 excluded. Regression: 43/43.
 - Required private inputs: authenticated ISO (8ca1513c…) or the two
-  member binaries under `local/audio/`.
-- Next action: run the final differential and commit the audio work
-  (see `git status` in the worktree).
+  member binaries under `local/audio/`; set `HG_JAPAN_ISO`/`HG_ELF` or
+  populate the repo-relative default paths.
+- Next action: label the observed command-ring bytes (ff 41 f7 and
+  play commands) against an authenticated IOP capture, or disassemble
+  `LIBSD.IRX`/`SG2IOP.IRX` service dispatch to extend the host model
+  with original-backed IOP behavior.
