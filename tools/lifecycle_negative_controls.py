@@ -24,11 +24,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'src/game_lifecycle.c'
 CONTROLS = [
     ('null-control', None, None, 0x12dd60, False),
-    ('area-load-wrong-pack-kind', 'call(e,0x130150,2,call(e,0x12dbd0,1,0,0,0),0,0);',
-     'call(e,0x130150,3,call(e,0x12dbd0,1,0,0,0),0,0);', 0x12dd60, True),
+    ('area-load-wrong-pack-kind', '        if(r8(e,blk(e)+1)) {\n            call(e,0x130150,2,call(e,0x12dbd0,1,0,0,0),0,0);',
+     '        if(r8(e,blk(e)+1)) {\n            call(e,0x130150,3,call(e,0x12dbd0,1,0,0,0),0,0);', 0x12dd60, True),
     ('area-load-missing-player-clear', 'call(e,0x119ac8,PLAYER,0,0x520,0);', '', 0x12dd60, True),
     ('area-pack-id-off-by-one', 'v+0x93u', 'v+0x94u', 0x12dbd0, True),
-    ('gameplay-missing-frame-tick', 'w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);', '', 0x12d1c0, True),
+    ('gameplay-missing-frame-tick', '    if(!le)w32(e,G(0x2f7c),0);\n    w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);',
+     '    if(!le)w32(e,G(0x2f7c),0);', 0x12d1c0, True),
     ('gameplay-accumulator-threshold', '0x47c35000u', '0x47c34f80u', 0x12d1c0, True),
     ('pause-quit-wrong-minor', 'w8(e,b+9,4);', 'w8(e,b+9,5);', 0x12e700, True),
     ('pause-store-after-call', '''        w32(e,0x95e57c,0);
@@ -39,7 +40,8 @@ CONTROLS = [
     ('event-flags-start-mask', 'pad&0x800u', 'pad&0x400u', 0x12fa00, True),
     ('sound-missing-t0', '''    call(e,HG_CALL_T_REGS,1,0,0,0);              /* t0 = 1 at every call site */''',
      '''    call(e,HG_CALL_T_REGS,0,0,0,0);''', 0x12dd60, True),
-    ('teardown-wrong-handler', 'call(e,0x143300,0x121be0,0,0,0);', 'call(e,0x143300,0x121810,0,0,0);', 0x12f800, True),
+    ('teardown-wrong-handler', 'w32(e,0x700000f8,1);\n    call(e,0x143300,0x121be0,0,0,0);',
+     'w32(e,0x700000f8,1);\n    call(e,0x143300,0x121810,0,0,0);', 0x12f800, True),
     ('mode-set-short-clear', '''    uint32_t b=blk(e);
     for(uint32_t off=8;off<0x28;off+=4)w32(e,b+off,0);''', '''    uint32_t b=blk(e);
     for(uint32_t off=8;off<0x24;off+=4)w32(e,b+off,0);''', 0x143300, True),
@@ -51,6 +53,13 @@ CONTROLS = [
     ('volume-round-up', 'return (bits&0x80000000u)?0u-v:v;', 'return (bits&0x80000000u)?0u-v:v+1u;', 0x12dd60, True),
     ('main-frame-wrong-counter', 'w32(e,G(0x2f84),r32(e,G(0x2f84))+1u);', 'w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);',
      0x11d938, True),
+    ('logo-timer-299', 'w16(e,blk(e)+0x1a,300);', 'w16(e,blk(e)+0x1a,299);', 0x1219e0, True),
+    ('new-game-area-triple', 'w8(e,0x3fa1b1,9);', 'w8(e,0x3fa1b1,8);', 0x121be0, True),
+    ('lifecycle-missing-frame-tick', '    w32(e,0x700000c4,1);\n    w32(e,G(0x2f80),r32(e,G(0x2f80))+1u);',
+     '    w32(e,0x700000c4,1);', 0x121be0, True),
+    ('boot-wrong-next-mode', 'w32(e,0x700000f8,0);\n        call(e,0x143300,0x121be0,0,0,0);',
+     'w32(e,0x700000f8,0);\n        call(e,0x143300,0x12d1c0,0,0,0);', 0x121810, True),
+    ('vblank-counter-skipped', 'w32(e,0x95e300,r32(e,0x95e300)+1u);', '', 0x11df10, True),
 ]
 
 

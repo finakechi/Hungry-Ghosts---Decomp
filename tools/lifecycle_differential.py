@@ -20,6 +20,7 @@ import ctypes as C
 import hashlib
 import itertools
 import random
+import os
 import struct
 import subprocess
 from pathlib import Path
@@ -227,7 +228,9 @@ class Env(C.Structure):
 
 
 def build(output=None, source=None, sanitize=False):
-    output = Path(output or ROOT / 'local/build/m17-lifecycle.so')
+    sanitize = sanitize or os.environ.get('HG_SANITIZE') == '1'
+    output = Path(output or ROOT / ('local/build/m17-lifecycle-ubsan.so' if sanitize
+                                    else 'local/build/m17-lifecycle.so'))
     output.parent.mkdir(parents=True, exist_ok=True)
     args = ['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fPIC', '-shared',
             '-I' + str(ROOT / 'src'), str(source or ROOT / 'src/game_lifecycle.c'),
