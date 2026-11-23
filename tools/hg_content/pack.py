@@ -167,4 +167,3 @@ class Pack:
                     nonzero_member_count=sum(
                         1 for m in self.all_members() if m.size_bytes),
                     table_size_bytes=len(self.directories) * DIRECTORY_STRIDE)
-
