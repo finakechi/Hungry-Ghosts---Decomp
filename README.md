@@ -61,6 +61,13 @@ modes, area loading and active play with pause and teardown. The 22 corridor
 frames now run through that layer. A synthetic boot-to-gameplay sequence and
 three partial native observations check it. See [docs/M17.md](docs/M17.md).
 
+M18 (local branch on top of M17, not yet merged) reconstructs the front end
+in C: fades and transitions, the controller service, the title menu and
+memory-card check, the new-game state and the pause menu. The connected C
+then runs 16,273 consecutive frames against one recorded session of the
+original game: title → new game → gameplay → pause → resume → pause →
+quit → title → new game → gameplay. See [docs/M18.md](docs/M18.md).
+
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 
 Private recovery tooling and verified GitHub integration are documented in

@@ -1,8 +1,53 @@
 # Hungry Ghosts — start here
 
+## M18 original-driven front end and game-state lifecycle — 2026-11-23
+
+**Resume here.** M18 is a **bounded partial result**, committed locally only
+in worktree `decomp-m18`, branch `research/m18-front-end-lifecycle`, based on
+the M17 branch tip `f759bf5` (M17 is not merged). Nothing is pushed; there
+is no PR or merge. Full record: [docs/M18.md](docs/M18.md),
+[checks.json](evidence/m18/checks.json), [results.json](evidence/m18/results.json),
+[coverage.json](evidence/m18/coverage.json).
+
+- **Delivered:**
+  - C for the front end (`src/front_end.c`, 27 entries: 25 ELF functions
+    and 2 functions of the title overlay `/AREA0/A0_B09.BIN`):
+    - the fade/transition family and its per-frame service 00139240;
+    - the controller service 0013d970 with the libpad port state machine
+      and read;
+    - the title menu 00a87880 and card poll 00a87de0;
+    - the memory-card scan 002cf020;
+    - the new-game state 00141980;
+    - the pause menu 00162750 and its cursor;
+  - a connected native run: from one full capture, the C (M17 lifecycle
+    plus M18 front end) runs 16,273 consecutive native frames (seq 2439 →
+    18712) of one PCSX2 session, with 0 failing frames:
+    - title → new game → area load → gameplay;
+    - pause → resume;
+    - pause → quit → teardown → title → new game → gameplay;
+  - the C state is carried forward and compared every frame (434 bytes),
+    plus every load request (kind and resource id);
+  - 10/10 compiled defects rejected by the native run, null control clean;
+  - original-instruction differential: 202,500 cases, 0 mismatches, on the
+    ELF and four native full captures.
+- **Not claimed:**
+  - Authentic Continue: no save exists, and creating one needs owner
+    authorization.
+  - The loader thread (E3) as C.
+  - Scene, actor and dialog code: its fade requests and the new-game
+    dialog decision are recovered from native and declared.
+  - The world simulation in gameplay frames: the coordinator is external.
+- **Coverage:** C source covers 58,153 of 2,469,083 ELF candidate
+  instruction bytes (about 2.36%), up from 49,020 (1.99%). The overlay's
+  1,612 bytes are outside the inventory.
+
+**Next action.** Owner review. Then, with authorization, make one
+memory-card save in a profile copy and capture Title → Continue → gameplay
+for the same runner. Or reconstruct the loader thread 00130220.
+
 ## M17 game lifecycle and connected mode reconstruction — 2026-11-23
 
-**Resume here.** M17 is a **bounded partial result**, committed locally only
+**Superseded as the resume point by M18 above.** M17 is a **bounded partial result**, committed locally only
 in worktree `decomp-m17`, branch `research/m17-game-lifecycle`, based on
 `main` `46cdb21` (the M16 merge). Nothing is pushed; no PR or merge. Full
 record: [docs/M17.md](docs/M17.md), [checks.json](evidence/m17/checks.json),
