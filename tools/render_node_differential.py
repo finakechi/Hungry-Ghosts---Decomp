@@ -29,6 +29,7 @@ import predispatch_differential as PD
 TAIL = 0x143150            # coordinator call site 0012f900
 CAMERA = 0x12c790          # coordinator call site 0012f8cc
 MODEL = 0x12bc70           # coordinator call site 0012f8f0 (player model draw)
+LATE = 0x13ce80            # coordinator call site 0012f924 (M16 late-frame render)
 PARTICLE_TAG = 0x20064405dd413200  # 002f7830 -> 0014d4f0 a3
 SHADOW_TAG = 0x20072a2599423880    # 00129e40 -> 0014d4f0 a3
 RNG = 0x11ad58             # random_next: state at [*(0037b208)+0xa8], 64-bit LCG
@@ -66,13 +67,15 @@ def copy_memory(memory):
 
 
 def run_original(memory, entry=TAIL, elfdata=None, segments=(), *, a0=0, sp=PD.NATIVE_SP,
-                 limit=4000000):
+                 limit=4000000, area=None):
     """Original instructions from entry (or each entry of a tuple, in order)
     to its return on a copy of memory.
 
     memcpy 00119910 and memset 00119ac8 are applied as byte copies/fills (as
     the M8+ instruction driver does): their MMI quadword loops are outside the
-    interpreter subset and their effect is exactly the copied/filled bytes."""
+    interpreter subset and their effect is exactly the copied/filled bytes.
+    area=(bytes, base) adds the authenticated AREA1 file identity check for
+    executed addresses outside the ELF PT_LOAD (M16 0013ce80's area body)."""
     mem = copy_memory(memory)
     machine = Machine()
     machine.mem = mem
@@ -105,9 +108,16 @@ def run_original(memory, entry=TAIL, elfdata=None, segments=(), *, a0=0, sp=PD.N
         steps += machine.steps
     mismatches = []
     if elfdata is not None:
+        area_bytes, area_base = area if area is not None else (b'', 0)
         for pc in machine.executed:
             offsets = [off + pc - start for start, end, off in segments if start <= pc and pc + 4 <= end]
-            if len(offsets) != 1 or memory.raw[pc:pc + 4] != elfdata[offsets[0]:offsets[0] + 4]:
+            if len(offsets) == 1:
+                if memory.raw[pc:pc + 4] != elfdata[offsets[0]:offsets[0] + 4]:
+                    mismatches.append(pc)
+            elif area_base <= pc < area_base + len(area_bytes):
+                if memory.raw[pc:pc + 4] != area_bytes[pc - area_base:pc - area_base + 4]:
+                    mismatches.append(pc)
+            else:
                 mismatches.append(pc)
     return dict(memory=mem, writes=set(mem.writes), steps=steps, rng_calls=calls[0],
                 executed=len(machine.executed), identity_mismatches=sorted(mismatches))

@@ -85,7 +85,8 @@ FP_SEAMS={0x155350:(1,False),0x13a050:(1,False),0x15e190:(1,False),0x188550:(1,F
     0x120580:(2,True),0x15ebc0:(1,False),0x160420:(3,False),
     0x145630:(1,False),  # M12: C 0015e420 floor probe, f12 = segment rise
     0x143530:(1,True),0x1503f0:(1,False),  # M15: 002f7830 distance, 0019c8a0 sprite
-    0x128de0:(1,False)}  # M15: 00124010 passes f12 = 1.0, a0 = model type word
+    0x128de0:(1,False),  # M15: 00124010 passes f12 = 1.0, a0 = model type word
+    0xa8b800:(4,False),0xa8bab0:(2,False)}  # M16: 0013ce80 AREA1 render body (f16 via CALL_EXTRA_FP)
 # Host-only fail-closed signal from C paths outside the reconstructed domain.
 DOMAIN_FAULT=0xfffffff0
 # Host-only M11 seam: (bytes, 1) enters and (bytes, 0) leaves a reconstructed
@@ -106,9 +107,19 @@ T_REGISTER_CALLEES={0x14f060}
 # callee 0014d070 stores it with sd t2 (t2 = a3). No guest effect.
 CALL_WIDE_A3=0xfffffff4
 WIDE_A3_CALLEES={0x14d4f0}
+# Host-only M16 seam: (raw bits) of f16 for the next modeled call. 0013ce80's
+# observed path passes five FP operands to the AREA1 render body 0xa8b800;
+# f12..f15 travel in a0..a3 (FP_SEAMS order) and f16 through this seam. The
+# C faults before 0xa8bab0, so only 0xa8b800 is a declared consumer.
+CALL_EXTRA_FP=0xfffffff9
+EXTRA_FP_CALLEES={0xa8b800}
 
 class ConnectedRuntimeDriver(Driver):
     """Original-address engine leaves execute actual input instructions on one bus."""
+    # M16 defect-control seam: when set, the div1 semantics applied to the
+    # machines of modeled calls (the C path's interpreter). The oracle
+    # machines keep the verified module default.
+    div1_semantics = None
     def __init__(self,mem,elfdata,segments):
         super().__init__(mem);self.elfdata=elfdata;self.segments=segments
         self.modeled_calls=[];self.executed=set();self.model_depth=0
@@ -120,13 +131,24 @@ class ConnectedRuntimeDriver(Driver):
         self.pending_registers=None
         self.declared_registers=[]
         self.pending_wide=None;self.declared_wide=[]
+        # M16: authenticated AREA1 bytes for executed addresses outside the
+        # ELF PT_LOAD (0013ce80's 0xa8b800 body); (bytes, base) or None.
+        self.area=None
+        self.pending_extra_fp=None;self.declared_extra_fp=[]
+        self.rng_draws=0
     def verify_executed(self,addresses):
+        area_bytes,area_base=self.area if self.area is not None else (b'',0)
         for address in addresses:
             offsets=[off+address-start for start,end,off in self.segments if start<=address and address+4<=end]
-            if len(offsets)!=1:raise ValueError(f'Modeled code outside authenticated resident ELF {address:#x}')
-            offset=offsets[0]
-            if self.mem.initial[address:address+4]!=self.elfdata[offset:offset+4]:
-                raise ValueError(f'Runtime instruction differs from original ELF {address:#x}')
+            if len(offsets)==1:
+                offset=offsets[0]
+                if self.mem.initial[address:address+4]!=self.elfdata[offset:offset+4]:
+                    raise ValueError(f'Runtime instruction differs from original ELF {address:#x}')
+            elif area_base<=address<area_base+len(area_bytes):
+                if self.mem.initial[address:address+4]!=area_bytes[address-area_base:address-area_base+4]:
+                    raise ValueError(f'Runtime instruction differs from authenticated AREA1 file {address:#x}')
+            else:
+                raise ValueError(f'Modeled code outside authenticated resident ELF {address:#x}')
     def external(self,pc,a=0,b=0,c=0,d=0):
         if pc==CALL_T_REGS:
             if self.pending_registers is not None:raise ValueError('Unconsumed non-ABI register seam')
@@ -134,6 +156,9 @@ class ConnectedRuntimeDriver(Driver):
         if pc==CALL_WIDE_A3:
             if self.pending_wide is not None:raise ValueError('Unconsumed wide-register seam')
             self.pending_wide=(b<<32)|a;return 0
+        if pc==CALL_EXTRA_FP:
+            if self.pending_extra_fp is not None:raise ValueError('Unconsumed extra-FP seam')
+            self.pending_extra_fp=a;return 0
         self.calls.append((hex(pc),*[hex(v) for v in (a,b,c,d)]))
         if pc==0x119ac8:
             if c>0x2000000:raise ValueError('Unbounded memset')
@@ -148,6 +173,10 @@ class ConnectedRuntimeDriver(Driver):
             return (0x1ff0800-self.guest_frame)&0xffffffff if b else 0
         if pc==CALL_RETURN:self.call_returns.append((a,b));return 0
         machine=Machine();machine.mem=self.mem;machine.reg[28]=0x3e7f70
+        if self.div1_semantics is not None:
+            # Instance access binds class-level patch functions; unwrap the
+            # bound method so the machine calls semantics(left, right).
+            machine.div1_semantics = getattr(self.div1_semantics, '__func__', self.div1_semantics)
         machine.cop0_status=self.cop0_status
         # Each nested modeled call receives separate scratch stack storage.
         machine.reg[29]=0x1ff0800-self.guest_frame-self.model_depth*0x1000
@@ -167,6 +196,15 @@ class ConnectedRuntimeDriver(Driver):
         if wide is not None:
             if wide&0xffffffff!=d:raise ValueError('Wide a3 low word differs from the a3 operand')
             machine.reg[7]=wide;self.declared_wide.append((pc,wide))
+        extra_fp,self.pending_extra_fp=self.pending_extra_fp,None
+        if (extra_fp is not None)!=(pc in EXTRA_FP_CALLEES and self.model_depth==0):
+            raise ValueError(f'Extra-FP contract mismatch at {pc:#x}')
+        if extra_fp is not None:
+            machine.fpr[16]=extra_fp;self.declared_extra_fp.append((pc,extra_fp))
+        rng=[0]
+        def observe(cpu):
+            if cpu.pc==0x11ad58:rng[0]+=1
+        machine.trace=observe
         def memcall(cpu,target):
             return self.external(target,*(cpu.reg[i]&0xffffffff for i in (4,5,6,7)))
         machine.hooks={target:(lambda cpu,target=target:memcall(cpu,target)) for target in (0x119910,0x119ac8)}
@@ -175,8 +213,10 @@ class ConnectedRuntimeDriver(Driver):
             value=machine.run(pc,limit=2000000)
         finally:self.model_depth-=1
         self.verify_executed(machine.executed);self.executed.update(machine.executed)
+        self.rng_draws+=rng[0]
         self.modeled_calls.append(dict(entry=hex(pc),arguments=[hex(v) for v in (a,b,c,d)],
-            instructions=machine.steps,instruction_addresses=len(machine.executed)))
+            instructions=machine.steps,instruction_addresses=len(machine.executed),
+            rng_calls=rng[0]))
         return machine.fpr[0] if fp_result else value&0xffffffff
 
 # Guest call frames differ between host C and instruction execution. These

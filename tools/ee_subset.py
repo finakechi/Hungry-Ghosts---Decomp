@@ -43,6 +43,29 @@ def sx(value, bits):
     return value - (1 << bits) if value & (1 << (bits - 1)) else value
 
 
+def div1_quotient(left, right):
+    """MMI div1 (M16 0013ce80 tree, 00153844): signed 32-bit truncated
+    division semantics for the R5900's second multiply/divide pipeline.
+    Returns (quotient, remainder) with the remainder carrying the dividend
+    sign.
+
+    Edge cases never observed in the corridor fail closed here. Independent
+    reference: PCSX2 v2.8.2 (the capture emulator, pinned hash 0c46bb6a…1abea),
+    x86/ix86-32/iR5900MultDiv.cpp recDIVsuper/recDIVconst, documents the
+    hardware behavior as INT_MIN / -1 -> quotient 0x80000000, remainder 0
+    (no exception), and divisor 0 -> remainder = dividend, quotient = +1 if
+    the dividend is negative else -1.
+
+    The verified semantics are the default of every Machine instance
+    (machine.div1_semantics); corridor defect controls patch only the
+    connected driver's instances, leaving the oracle unpatched."""
+    if right == 0: raise ValueError('DIV1 by zero outside investigated subset')
+    if left == -(1 << 31) and right == -1:
+        raise ValueError('DIV1 overflow outside investigated subset')
+    quotient = abs(left) // abs(right) * (1 if (left < 0) == (right < 0) else -1)
+    return quotient, left - quotient * right
+
+
 def fp_signed_chop(value):
     """Finite signed arithmetic with zero flushed as in the bounded oracle."""
     bits = fp_chop(abs(value))
@@ -99,6 +122,7 @@ class Machine:
         self.executed = set()
         self.fpr = [0] * 32
         self.acc = 0
+        self.div1_semantics = div1_quotient  # injectable for corridor defect controls
         self.fp_condition = False
         self.vf = [0] * 32
         self.vf[0] = 0x3f800000 << 96
@@ -238,6 +262,25 @@ class Machine:
                 product = sx(a,32) * sx(b,32)
                 self.lo1, self.hi1 = sx(product,32) & MASK64, sx(product >> 32,32) & MASK64
                 wordreg(rd, product)
+            elif op == 0x1c and fn == 0x1a and sa == 0:
+                # div1 (M16 0013ce80 tree, 00153844): the R5900's second
+                # multiply/divide pipeline computes the same signed 32-bit
+                # division as div, but into LO1/HI1; the three-operand form
+                # also writes the quotient to rd. Quotient truncated toward
+                # zero, remainder sign-extended from 32 bits; LO/HI and all
+                # other state are untouched. The semantics are a per-instance
+                # attribute (default div1_quotient) so corridor defect
+                # controls can patch only the connected driver's machines
+                # while the oracle keeps the verified semantics.
+                left, right = sx(a,32), sx(b,32)
+                quotient, remainder = self.div1_semantics(left, right)
+                self.lo1, self.hi1 = sx(quotient,32) & MASK64, sx(remainder,32) & MASK64
+                if rd: wordreg(rd, quotient)
+            elif op == 0x1c and fn == 0x12 and rs == 0 and rt == 0 and sa == 0:
+                # mflo1 (M16 0013ce80 tree, 00153850): copy LO1 to rd. The
+                # full 64-bit lane is moved like SPECIAL mflo; the following
+                # code uses only the low 32 bits.
+                if rd: self.setreg(rd, self.lo1)
             elif op == 0x1c and fn == 9 and sa == 14:  # pcpyld
                 if rd:self.reg[rd] = (a << 64) | b
             elif op == 0x1c and (fn,sa) in ((8,0x12),(0x28,0x12),(0x29,0x0e)):

@@ -44,65 +44,26 @@ NODE_RANGE = (0x528430, 0x528870)
 COORDINATOR_STAGES = ('coordinator-entry', 'coordinator-counter')
 
 
-def tail_oracle(caps, fr):
-    """Original 0012bc70 then 00143150 from fr's native camera-return capture (cached).
-
-    The coordinator calls 0012bc70 at 0012f8f0 and 00143150 at 0012f900, after
-    0013b6e0, 001430a0 and 00143100 and around 0018c520. Running exactly these
-    two reconstructed services from the camera-return capture is an oracle for
-    the bytes they produce: comparing its result with the next native
-    coordinator-entry separates those bytes from the inter-frame writes of
-    every other, unreconstructed service."""
-    if not hasattr(caps, 'tail_oracles'):
-        caps.tail_oracles = {}
-    key = fr['counter']
-    if key not in caps.tail_oracles:
-        native = caps.load(fr['captures']['camera-return']['name'])
-        row = RN.run_original(native, (RN.MODEL, RN.TAIL), caps.elfdata, caps.segments)
-        if row['identity_mismatches']:
-            raise ValueError('Model-draw/render-node oracle executed non-ELF instructions')
-        caps.tail_oracles[key] = dict(scratch=bytes(row['memory'].scratch),
-                                      writes=row['writes'], steps=row['steps'],
-                                      rng_calls=row['rng_calls'],
-                                      rng_after=RN.rng_state(row['memory']),
-                                      rng_before=RN.rng_state(native),
-                                      node=bytes(row['memory'].raw[NODE_RANGE[0]:NODE_RANGE[1]]))
-    return caps.tail_oracles[key]
+class ServiceOrderFault(AssertionError):
+    """A frame's recorded C service-mark order differs from the coordinator
+    contract. Carries the recorded order so a compiled defect that swaps two
+    services is detected by its specific signature, not as a generic fault."""
+    def __init__(self, recorded, message):
+        super().__init__(message)
+        self.recorded = recorded
 
 
-def inter_frame_ownership(caps, obs):
-    """Data-driven inter-frame ownership from the captures and the oracle.
+class ExtraFpContractFault(AssertionError):
+    """The 0013ce80 extra-FP dispatch contract failed. Carries the pending
+    seam and the declared consumptions so a compiled defect that omits the
+    AREA1 dispatch is detected by its specific signature (no declared 0xa8b800
+    consumption), not as a generic harness crash."""
+    def __init__(self, pending, declared, message):
+        super().__init__(message)
+        self.pending = pending
+        self.declared = declared
 
-    external_scratch: scratch offsets whose next coordinator-entry value is
-    not the value original 00143150 leaves (other tail services 0013b6e0,
-    0012bc70, 0013ce80 ... and the main loop wrote them). These, and only
-    these, are excluded at the coordinator stages, and afterwards until
-    reconstructed code (the M14 window or later frame code) rewrites them.
 
-    rng_external: per frame, 0011ad58 draws made after 00143150 by
-    unreconstructed code (the LCG distance from camera-return to the next
-    coordinator-entry minus the oracle's own draws). The native draws of
-    0019c8a0 at 10172 come from the camera-return state with zero prior
-    steps, so the external consumer runs after 00143150. The host replays
-    these draws through the original 0011ad58 at the 0013ce80 seam.
-
-    node_unexplained must be zero: every inter-frame change of the four node
-    records is produced by 00143150, so the records are guarded at every stage."""
-    frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
-    external, rng_external, unexplained = set(), {}, 0
-    for fr, nxt in zip(frames, frames[1:]):
-        oracle = tail_oracle(caps, fr)
-        entry = caps.load(nxt['captures']['coordinator-entry']['name'])
-        external.update(o for o in range(0x4000) if entry.scratch[o] != oracle['scratch'][o])
-        node = entry.raw[NODE_RANGE[0]:NODE_RANGE[1]]
-        unexplained += sum(x != y for x, y in zip(node, oracle['node']))
-        steps = RN.lcg_distance(oracle['rng_before'], RN.rng_state(entry)) - oracle['rng_calls']
-        if steps < 0 or RN.lcg_distance(oracle['rng_after'], RN.rng_state(entry)) != steps:
-            raise ValueError(f'RNG draws at {fr["counter"]} precede 00143150')
-        rng_external[fr['counter']] = steps
-    caps.cache.clear()
-    return dict(external_scratch=sorted(external), rng_external=rng_external,
-                node_unexplained=unexplained)
 
 
 OBSERVATION = ROOT / 'evidence/m13/continuous-observation.json'
@@ -159,6 +120,11 @@ VERIFICATION_SOURCES = ('src/resource_loader.c', 'src/resource_loader.h',
                         'tools/verify_player_connected_runtime.py', 'tools/ee_subset.py')
 M15_COMPILED_CONTROLS = RN.MUTANTS
 
+# M16 dispatch-contract expectations for compiled controls: omitting the
+# AREA1 dispatch must be detected by the extra-FP contract with exactly the
+# signature (no pending seam, no declared consumption).
+EXTRA_FP_EXPECTATIONS = {'late-frame-omitted-area-call': (None, [])}
+
 
 def in_guarded(address, ranges=GUARDED_RANGES):
     for start, end in ranges:
@@ -190,8 +156,10 @@ class ContinuousDriver(G.GroundedDriver):
 
     M15: the 00143150 service marks bracket the C render-node list (snapshot
     and write set for the same-input oracle); the camera chain is bracketed
-    from its first call 0015e1d0 to the 0013b6e0 seam. rng_external original
-    0011ad58 draws are replayed at the 0013ce80 seam (after 00143150)."""
+    from its first call 0015e1d0 to the 0013b6e0 seam.
+    M16: the 0013ce80 marks bracket the C late-frame render service. Its RNG
+    draws arise from the interpreted AREA1 body execution (no replay);
+    ConnectedRuntimeDriver counts them as rng_draws."""
     def __init__(self, mem, elfdata, segments, status):
         super().__init__(mem, elfdata, segments, status)
         self.external_calls = []
@@ -202,10 +170,9 @@ class ContinuousDriver(G.GroundedDriver):
         self.frame_scratch_writes = None
         self.tail_before = self.tail_after = self.tail_writes = None
         self.model_before = self.model_after = self.model_writes = None
+        self.late_before = self.late_after = self.late_writes = None
         self._tail_outer = self._chain_outer = None
         self.chain_writes = None
-        self.rng_external = 0
-        self.rng_replayed = 0
         self.in_tail = False
 
     def snap(self):
@@ -220,18 +187,20 @@ class ContinuousDriver(G.GroundedDriver):
             return 1 - a
         if pc == 0xfffffff6:
             self.service_c.append((a,b))
-            if a in (RN.TAIL, RN.MODEL) and b == 1:
-                if self.in_tail: raise ValueError('Nested M15 service marks')
+            if a in (RN.TAIL, RN.MODEL, RN.LATE) and b == 1:
+                if self.in_tail: raise ValueError('Nested M15/M16 service marks')
                 self.in_tail = True
                 before = self.snap()
                 self._tail_outer, self.mem.writes = self.mem.writes, set()
                 if a == RN.TAIL: self.tail_before = before
-                else: self.model_before = before
-            elif a in (RN.TAIL, RN.MODEL) and b == 0:
+                elif a == RN.MODEL: self.model_before = before
+                else: self.late_before = before
+            elif a in (RN.TAIL, RN.MODEL, RN.LATE) and b == 0:
                 writes = self.mem.writes
                 self.mem.writes = self._tail_outer | writes
                 if a == RN.TAIL: self.tail_writes, self.tail_after = writes, self.snap()
-                else: self.model_writes, self.model_after = writes, self.snap()
+                elif a == RN.MODEL: self.model_writes, self.model_after = writes, self.snap()
+                else: self.late_writes, self.late_after = writes, self.snap()
                 self.in_tail = False
             return 0
         if pc == V.GUEST_FRAME and self.in_tail:
@@ -261,12 +230,70 @@ class ContinuousDriver(G.GroundedDriver):
                 self.chain_writes = self.mem.writes
                 self.mem.writes = self._chain_outer | self.chain_writes
                 self.stage['camera-return'] = self.snap()
-            if a == 0x13ce80:
-                for _ in range(self.rng_external):
-                    V.ConnectedRuntimeDriver.external(self, RN.RNG)
-                    self.rng_replayed += 1
             return 0
         return super().external(pc, a, b, c, d)
+
+
+def tail_oracle(caps, fr):
+    """Original 0012bc70, 00143150 and 0013ce80 from fr's native camera-return
+    capture (cached), in the original coordinator order (0012f8f0, 0012f900,
+    0012f924). Their combined result is an oracle for the bytes they produce:
+    comparing it with the next native coordinator-entry separates those bytes
+    from the inter-frame writes of every other, unreconstructed service.
+    Executed instructions are identity-checked against the authenticated ELF
+    and the authenticated AREA1 file (the 0013ce80 body at 0xa8b800)."""
+    if not hasattr(caps, 'tail_oracles'):
+        caps.tail_oracles = {}
+    key = fr['counter']
+    if key not in caps.tail_oracles:
+        native = caps.load(fr['captures']['camera-return']['name'])
+        row = RN.run_original(native, (RN.MODEL, RN.TAIL, RN.LATE),
+                              caps.elfdata, caps.segments, area=caps.area)
+        if row['identity_mismatches']:
+            raise ValueError('Model-draw/render-node/late-frame oracle executed non-authentic instructions')
+        caps.tail_oracles[key] = dict(scratch=bytes(row['memory'].scratch),
+                                      writes=row['writes'], steps=row['steps'],
+                                      rng_calls=row['rng_calls'],
+                                      rng_after=RN.rng_state(row['memory']),
+                                      rng_before=RN.rng_state(native),
+                                      node=bytes(row['memory'].raw[NODE_RANGE[0]:NODE_RANGE[1]]))
+    return caps.tail_oracles[key]
+
+
+def inter_frame_ownership(caps, obs):
+    """Data-driven inter-frame ownership from the captures and the oracle.
+
+    external_scratch: scratch offsets whose next coordinator-entry value is
+    not the value original 0012bc70 + 00143150 + 0013ce80 leaves (other tail
+    services 0013b6e0, the light-matrix rewriter after 00182480, and the main
+    loop wrote them). These, and only these, are excluded at the coordinator
+    stages, and afterwards until reconstructed code (the M14 window or later
+    frame code) rewrites them.
+
+    rng_total: per frame, the native 0011ad58 draw count between camera
+    return and the next coordinator entry. The oracle's own draws must equal
+    it exactly: every native draw is produced by the three reconstructed
+    services, so no external RNG consumer remains. The connected C path must
+    draw the same count from real execution.
+
+    node_unexplained must be zero: every inter-frame change of the four node
+    records is produced by 00143150, so the records are guarded at every stage."""
+    frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
+    external, rng_total, unexplained = set(), {}, 0
+    for fr, nxt in zip(frames, frames[1:]):
+        oracle = tail_oracle(caps, fr)
+        entry = caps.load(nxt['captures']['coordinator-entry']['name'])
+        external.update(o for o in range(0x4000) if entry.scratch[o] != oracle['scratch'][o])
+        node = entry.raw[NODE_RANGE[0]:NODE_RANGE[1]]
+        unexplained += sum(x != y for x, y in zip(node, oracle['node']))
+        steps = RN.lcg_distance(oracle['rng_before'], RN.rng_state(entry))
+        if steps != oracle['rng_calls'] or RN.lcg_distance(oracle['rng_after'], RN.rng_state(entry)) != 0:
+            raise ValueError(f'Native RNG draws at {fr["counter"]} are not produced by the reconstructed services')
+        rng_total[fr['counter']] = steps
+    caps.cache.clear()
+    return dict(external_scratch=sorted(external), rng_total=rng_total,
+                node_unexplained=unexplained)
+
 
 
 def observation():
@@ -274,7 +301,7 @@ def observation():
 
 
 class ContinuousRun:
-    def __init__(self, lib, caps, obs, pad_delta=None, ownership=None, replay_rng=True):
+    def __init__(self, lib, caps, obs, pad_delta=None, ownership=None):
         self.lib = lib; self.caps = caps; self.obs = obs
         self.frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
         start_stage = 'coordinator-entry' if 'coordinator-entry' in self.frames[0]['captures'] else 'dispatch-entry'
@@ -283,15 +310,18 @@ class ContinuousRun:
         self.mem.initial = bytes(self.mem.raw)
         self.external = V.pad_dma_buffers(self.mem)
         self.mem.watch = [(e['start'], e['end']) for e in self.external]
-        # M15 RAM guards: the four render-node records (every inter-frame change
-        # explained by 00143150, see inter_frame_ownership) and the RNG state.
+        # M15/M16 RAM guards: the four render-node records (every inter-frame
+        # change explained by 00143150, see inter_frame_ownership), the RNG
+        # state (every draw now produced by the reconstructed services) and
+        # the main-loop frame tick [gp+2f80] (reconstructed by the frame
+        # pipeline; the AREA1 render body's three-draw condition reads it).
         rng = RN.rng_state_address(self.mem)
-        self.guarded_ranges = GUARDED_RANGES + (NODE_RANGE, (rng, rng + 8))
+        self.guarded_ranges = GUARDED_RANGES + (NODE_RANGE, (rng, rng + 8), (0x3eaef0, 0x3eaef4))
         self.ownership = ownership if ownership is not None else inter_frame_ownership(caps, obs)
         if self.ownership['node_unexplained']:
             raise ValueError('Render-node records changed outside 00143150')
         self.inter_external = set(self.ownership['external_scratch'])
-        self.rng_external = self.ownership['rng_external'] if replay_rng else {}
+        self.rng_total = self.ownership['rng_total']
         self.pad_delta = self._pad_deltas() if pad_delta is None else pad_delta
         if not hasattr(caps, 'window_oracles'):
             caps.window_oracles = {}
@@ -354,10 +384,13 @@ class ContinuousRun:
         return dict(kind=kind, same_input_result=same_input['result'], sampled_differences=samples)
 
     def same_input(self, before, after, writes, entry, label):
-        """M15 same-input differential: original instructions for entry on
-        the reconstruction's own input snapshot, compared byte for byte."""
+        """M15/M16 same-input differential: original instructions for entry
+        on the reconstruction's own input snapshot, compared byte for byte.
+        The 0013ce80 oracle executes the AREA1 body, whose addresses are
+        identity-checked against the authenticated AREA file (caps.area)."""
         try:
-            oracle = RN.run_original(before, entry, self.caps.elfdata, self.caps.segments)
+            oracle = RN.run_original(before, entry, self.caps.elfdata, self.caps.segments,
+                                     area=self.caps.area)
         except ValueError as exc:
             return dict(result='failed', service=label, error=str(exc)[:400])
         result = RN.compare_same_input(after, writes, oracle, label)
@@ -413,8 +446,26 @@ class ContinuousRun:
         if only_failures and stages['model-draw']['result'] != 'passed':
             return stages
         stages['render-node-tail'] = self.same_input(d.tail_before, d.tail_after, d.tail_writes,
-                                                     RN.TAIL, '00143150')
-        stages['render-node-tail']['rng_replayed'] = d.rng_replayed
+                                                      RN.TAIL, '00143150')
+        if only_failures and stages['render-node-tail']['result'] != 'passed':
+            return stages
+        stages['late-frame'] = self.same_input(d.late_before, d.late_after, d.late_writes,
+                                               RN.LATE, '0013ce80')
+        if only_failures and stages['late-frame']['result'] != 'passed':
+            return stages
+        # Every native 0011ad58 draw between camera return and the next
+        # coordinator entry must be produced by the connected execution: the
+        # C path's interpreted draws equal the native total exactly. The
+        # final frame has no next-entry capture; its draw count is verified
+        # by the guarded RNG state alone and reported as skipped here.
+        if fr['counter'] in self.rng_total:
+            stages['rng-continuity'] = dict(
+                result='passed' if d.rng_draws == self.rng_total[fr['counter']] else 'failed',
+                interpreted_draws=d.rng_draws, native_draws=self.rng_total[fr['counter']])
+        else:
+            stages['rng-continuity'] = dict(
+                result='skipped', interpreted_draws=d.rng_draws, native_draws=None,
+                note='final frame: no next coordinator-entry capture')
         return stages
 
     def _pad_deltas(self):
@@ -443,7 +494,7 @@ class ContinuousRun:
         for address, (value, width) in (mutate or {}).items():
             self.mem.store(address, value, width)
         driver = ContinuousDriver(self.mem, self.caps.elfdata, self.caps.segments, STATUS_VALUES[0])
-        driver.rng_external = self.rng_external.get(fr['counter'], 0)
+        driver.area = self.caps.area
         fn = getattr(self.lib, 'hg_player_frame_continuous')
         fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = None
         fn(C.byref(driver.env), 0x1ff8000)
@@ -453,9 +504,11 @@ class ContinuousRun:
         driver.stage['camera-entry'] = driver.camera_entry
         if 'camera-return' not in driver.stage:
             raise AssertionError('Missing camera-return seam coverage')
-        if 'pre-dispatch' not in driver.stage or driver.service_c != [
-                (0x198f60,1),(0x198f60,0),(RN.MODEL,1),(RN.MODEL,0),(RN.TAIL,1),(RN.TAIL,0)]:
-            raise AssertionError('Missing or incomplete C pre-dispatch or render-node service')
+        expected_services = [(0x198f60,1),(0x198f60,0),(RN.MODEL,1),(RN.MODEL,0),
+                             (RN.TAIL,1),(RN.TAIL,0),(RN.LATE,1),(RN.LATE,0)]
+        if 'pre-dispatch' not in driver.stage or driver.service_c != expected_services:
+            raise ServiceOrderFault(driver.service_c,
+                'Missing or incomplete C pre-dispatch or render-node service')
         if driver.declared_registers != [(0x14f060, regs) for _, regs in driver.declared_registers] or \
                 len(driver.declared_registers) != 12 or driver.pending_registers is not None:
             raise AssertionError('Incomplete 0014f060 non-ABI register contract')
@@ -463,8 +516,9 @@ class ContinuousRun:
                 any(row not in ((0x14d4f0, RN.PARTICLE_TAG), (0x14d4f0, RN.SHADOW_TAG))
                     for row in driver.declared_wide):
             raise AssertionError('Incomplete 0014d4f0 wide a3 contract')
-        if driver.rng_replayed != driver.rng_external:
-            raise AssertionError('External RNG draws not replayed')
+        if driver.pending_extra_fp is not None or driver.declared_extra_fp != [(0xa8b800, 0x40400000)]:
+            raise ExtraFpContractFault(driver.pending_extra_fp, driver.declared_extra_fp,
+                                      'Incomplete 0013ce80 extra-FP contract')
         for target in (0x17f6d0,0x17f2d0):
             if not any(row['entry']==hex(target) for row in driver.modeled_calls):
                 raise AssertionError(f'Missing interpreted pre-dispatch service {target:#x}')
@@ -534,7 +588,7 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None):
         d = run.run_frame(fr)
         stages = run.stage_results(d, fr)
         failures.extend((fr['counter'], label) for label, result in stages.items()
-                        if result['result'] != 'passed')
+                        if result['result'] not in ('passed', 'skipped'))
         for index, (snapshot, row) in enumerate(zip(d.pushes, fr['pushes'])):
             expected = caps.load(row['name'])
             result = run.compare_stage(snapshot, expected, run.scratch_excluded(fr, 'push', row['name']))
@@ -542,13 +596,13 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None):
             if result['result'] != 'passed': failures.append((fr['counter'], f'push-{index}'))
             stages[f'push-{index}-{row["tier"]}'] = result
         rows.append(dict(counter=fr['counter'], phase=fr['phase'], stages=stages,
-                         external_calls=d.external_calls, rng_replayed=d.rng_replayed))
+                         external_calls=d.external_calls, rng_draws=d.rng_draws))
         print(fr['counter'], 'passed' if not any(c == fr['counter'] for c, _ in failures) else 'FAILED',
               flush=True)
         del d; caps.cache.clear(); gc.collect()
     return dict(frames=rows, failures=[dict(counter=c, stage=s) for c, s in failures],
                 inter_frame_external_scratch=[hex(0x70000000 + o) for o in sorted(run.inter_external)],
-                rng_external={str(k): v for k, v in sorted(run.ownership['rng_external'].items())},
+                rng_total={str(k): v for k, v in sorted(run.ownership['rng_total'].items())},
                 node_unexplained=run.ownership['node_unexplained'],
                 result='passed' if not failures else 'failed')
 
@@ -563,8 +617,8 @@ def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
     if ownership is None:
         ownership = inter_frame_ownership(caps, obs)
 
-    def measure(name, kind, mutate=None, restore=False, post_mutate=None, replay_rng=True, at=None):
-        run = ContinuousRun(lib, caps, obs, pad_delta, ownership, replay_rng)
+    def measure(name, kind, mutate=None, restore=False, post_mutate=None, at=None):
+        run = ContinuousRun(lib, caps, obs, pad_delta, ownership)
         goal = target if at is None else next(fr for fr in frames if fr['counter'] == at)
         for fr in run.frames:
             caps.cache.clear()
@@ -607,8 +661,6 @@ def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
         # M15: the anchor node's carried accumulator (node+60) after frame 10164.
         ('corrupt-render-node-carry', 'continuity-corruption', None,
          dict(post_mutate={0x528490: (0x3f800000, 4)})),
-        # M15: without the external RNG draws the carried LCG state diverges.
-        ('omitted-external-rng-draws', 'input-counterfactual', None, dict(replay_rng=False)),
         ('null-capture-restoration-substate-1', 'null-control', None, dict(restore=True, at=10173)),
     ]
     for name, kind, mutate, kw in cases:
@@ -634,6 +686,43 @@ def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
                      'w32(e,ctx+0x598,bank);', None))
     for name, _, old, new, at in M15_COMPILED_CONTROLS:
         compiled.append((name, old, new, at))
+    # M16 compiled defects: an unconditional service-owned scratch store,
+    # omitted area dispatch (and its RNG draws), an extra LCG draw, the
+    # service-mark bracket position, and the coordinator ordering of the
+    # service. The five FP operands f12..f16 are proven unobservable on the
+    # observed corridor (mutating any of them leaves the AREA body's writes
+    # unchanged, experiment_fp.py), so the wrong-FP defect is replaced by a
+    # store the oracle's executed tree provably never makes (0x70000d00 is in
+    # the light-matrix region 0xc88..0xd1b).
+    compiled.extend((
+        ('late-frame-unconditional-scratch-store',
+         '    call(e,HG_SERVICE_MARK,0x13ce80,1,0,0);\n    if(s0==1 && s1==0 && s2==0) {',
+         '    call(e,HG_SERVICE_MARK,0x13ce80,1,0,0);\n'
+         '    w8(e,0x70000d00,0x41);  /* spurious service-owned scratch store */\n'
+         '    if(s0==1 && s1==0 && s2==0) {', None),
+        ('late-frame-omitted-area-call',
+         '    call(e,HG_CALL_EXTRA_FP,0x40400000,0,0,0);  /* f16 = 3.0 */\n'
+         '        call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);',
+         '    (void)0;', None),
+        ('late-frame-extra-rng',
+         'call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);',
+         'call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);\n'
+         '        call(e,0x11ad58,0,0,0,0);  /* extra LCG draw */', None),
+        ('late-frame-mark-after-area',
+         '    call(e,HG_SERVICE_MARK,0x13ce80,1,0,0);\n    if(s0==1 && s1==0 && s2==0) {\n'
+         '        call(e,HG_CALL_EXTRA_FP,0x40400000,0,0,0);  /* f16 = 3.0 */\n'
+         '        call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);',
+         '    if(s0==1 && s1==0 && s2==0) {\n'
+         '        call(e,HG_CALL_EXTRA_FP,0x40400000,0,0,0);  /* f16 = 3.0 */\n'
+         '        call(e,0xa8b800,0x415f78d5,0x461c4000,0xc61c4000,0x461c4000);\n'
+         '        call(e,HG_SERVICE_MARK,0x13ce80,1,0,0);', None),
+        ('late-frame-missing-frame-tick',
+         '    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+1);\n',
+         '    (void)0;  /* frame tick defect */\n', None),
+        ('late-frame-double-frame-tick',
+         '    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+1);\n',
+         '    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+2);\n', None),
+    ))
     for name, before, after, at in compiled:
         try:
             if source.count(before) != 1: raise AssertionError(f'{name} target not unique')
@@ -641,7 +730,8 @@ def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
             path.open('x').write(source.replace(before, after))
             mlib = library(source=path, output=folder / f'{name}.so')
             goal = target if at is None else next(fr for fr in frames if fr['counter'] == at)
-            row = measure_compiled(mlib, name, caps, obs, goal, ownership, pad_delta)
+            row = measure_compiled(mlib, name, caps, obs, goal, ownership, pad_delta,
+                                   expect_extra_fp=EXTRA_FP_EXPECTATIONS.get(name))
         except Exception as exc:
             row = dict(control=name, kind='compiled-defect', frame=target['counter'],
                        result='error', detail=str(exc)[:400])
@@ -649,15 +739,87 @@ def controls(lib, caps, obs, folder, ownership=None, pad_delta=None):
         with (folder / (row['control'] + '.result.json')).open('x') as out:
             json.dump(row, out, indent=2); out.write('\n')
         gc.collect()
+    # M16 coordinator-ordering defect: the 0013ce80 call moved before 00143150.
+    # The recorded service-mark order must show exactly the swapped signature.
+    ordered = ('call(bus,0x143150,0,0,0,0);                /* 0012f900: M15 C render-node list */\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x1431a0,0,0,0);\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x25c170,0,0,0);\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);\n'
+               '    call(bus,0x13ce80,0,0,0,0);            /* 0012f924: M16 C late-frame render service */')
+    swapped = ('call(bus,0x13ce80,0,0,0,0);            /* 0012f924: M16 C late-frame render service */\n'
+               '    call(bus,0x143150,0,0,0,0);                /* 0012f900: M15 C render-node list */\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x1431a0,0,0,0);\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x25c170,0,0,0);\n'
+               '    call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);')
+    expected_swap = [(0x198f60,1),(0x198f60,0),(RN.MODEL,1),(RN.MODEL,0),
+                     (RN.LATE,1),(RN.LATE,0),(RN.TAIL,1),(RN.TAIL,0)]
+    try:
+        if source.count(ordered) != 1: raise AssertionError('late-frame-wrong-order target not unique')
+        path = folder / 'late-frame-wrong-order.c'
+        path.open('x').write(source.replace(ordered, swapped))
+        mlib = library(source=path, output=folder / 'late-frame-wrong-order.so')
+        row = measure_compiled(mlib, 'late-frame-wrong-order', caps, obs, target,
+                               ownership, pad_delta, expect_order=expected_swap)
+    except Exception as exc:
+        row = dict(control='late-frame-wrong-order', kind='compiled-defect',
+                   frame=target['counter'], result='error', detail=str(exc)[:400])
+    rows.append(row); print(row['control'], row['result'], row.get('first_divergent_stage'), flush=True)
+    with (folder / (row['control'] + '.result.json')).open('x') as out:
+        json.dump(row, out, indent=2); out.write('\n')
+    gc.collect()
+    # M16 interpreter-level defect: the connected driver's div1 computed
+    # with a wrong quotient (stride + 1). The ceiling interpretation is
+    # unobservable on the corridor: every observed frame divides 0x280 by 10
+    # exactly (0x280 % 10 == 0), so ceiling equals truncation there. Only
+    # the C path's machines are patched (the driver seam); the same-input
+    # oracle keeps the verified semantics, so the late-frame differential
+    # diverges in the grid output region.
+    try:
+        saved = V.ConnectedRuntimeDriver.div1_semantics
+        def plus_one_div1(left, right):
+            if right == 0: raise ValueError('DIV1 by zero outside investigated subset')
+            if left == -(1 << 31) and right == -1:
+                raise ValueError('DIV1 overflow outside investigated subset')
+            quotient = abs(left) // abs(right) * (1 if (left < 0) == (right < 0) else -1) + 1
+            return quotient, left - quotient * right
+        V.ConnectedRuntimeDriver.div1_semantics = plus_one_div1
+        try:
+            row = measure_compiled(lib, 'div1-quotient-plus-one', caps, obs, target, ownership, pad_delta)
+            row.update(kind='interpreter-defect')
+        finally:
+            V.ConnectedRuntimeDriver.div1_semantics = saved
+    except Exception as exc:
+        row = dict(control='div1-ceil-division', kind='interpreter-defect',
+                   frame=target['counter'], result='error', detail=str(exc)[:400])
+    rows.append(row); print(row['control'], row['result'], row.get('first_divergent_stage'), flush=True)
+    with (folder / (row['control'] + '.result.json')).open('x') as out:
+        json.dump(row, out, indent=2); out.write('\n')
+    gc.collect()
     return rows
 
 
-def measure_compiled(mlib, name, caps, obs, target, ownership, pad_delta=None):
+def measure_compiled(mlib, name, caps, obs, target, ownership, pad_delta=None, expect_order=None, expect_extra_fp=None):
     run = ContinuousRun(mlib, caps, obs, pad_delta, ownership)
     for fr in run.frames:
         caps.cache.clear()
         try:
             d = run.run_frame(fr)
+        except ServiceOrderFault as fault:
+            if expect_order is not None and fault.recorded == expect_order:
+                return dict(control=name, kind='compiled-defect', frame=fr['counter'],
+                            result='rejected', first_divergent_stage='coordinator-service-order',
+                            detail=dict(recorded=[[hex(a), b] for a, b in fault.recorded]))
+            return dict(control=name, kind='compiled-defect', frame=fr['counter'], result='error',
+                        first_divergent_stage='execution-fault', detail=str(fault)[:400])
+        except ExtraFpContractFault as fault:
+            if expect_extra_fp is not None and fault.pending == expect_extra_fp[0] and \
+                    fault.declared == expect_extra_fp[1]:
+                return dict(control=name, kind='compiled-defect', frame=fr['counter'],
+                            result='rejected', first_divergent_stage='extra-fp-contract',
+                            detail=dict(pending=fault.pending,
+                                        declared=[[hex(a), hex(v)] for a, v in fault.declared]))
+            return dict(control=name, kind='compiled-defect', frame=fr['counter'], result='error',
+                        first_divergent_stage='execution-fault', detail=str(fault)[:400])
         except (ValueError, AssertionError) as exc:
             return dict(control=name, kind='compiled-defect', frame=fr['counter'], result='error',
                         first_divergent_stage='execution-fault', detail=str(exc)[:400])
@@ -687,6 +849,8 @@ def main():
     p.add_argument('--ps2dinfo', type=Path, required=True)
     p.add_argument('--capture-dir', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--area-image', type=Path, required=True,
+                   help='Authenticated original Japan image for the AREA1/A1_B00.BIN identity check')
     p.add_argument('--negative-controls', action='store_true')
     p.add_argument('--max-frames', type=int, default=None,
                    help='smoke run: first N frames only (never a milestone receipt)')
@@ -705,6 +869,9 @@ def main():
             for shot in row['screenshots']:
                 if digest(a.capture_dir.parent / 'stops' / shot['name']) != shot['sha256']: raise ValueError('Screenshot digest mismatch')
     caps.segments, _ = shared_module(a.ps2dinfo).segments_from_elf(caps.elfdata)
+    # M16: authenticated AREA1 bytes for the 0013ce80 area-body identity check.
+    from verify_area_lifecycle import load_area1, AREA_BASE
+    caps.area = (load_area1(a.area_image), AREA_BASE)
     for fr in obs['frames']:
         if caps.load(fr['captures']['dispatch-entry']['name']).load(0x46e118) != fr['counter']:
             raise ValueError('Wrong capture frame')
@@ -721,9 +888,11 @@ def main():
     if a.negative_controls:
         ok &= all(c['result'] == ('clean' if c['kind'] == 'null-control' else 'rejected')
                   for c in result['negative_controls'])
-    result.update(schema='hg-player-continuous/v5', result='passed' if ok else 'failed', elf_sha256=EXPECTED,
+    result.update(schema='hg-player-continuous/v6', result='passed' if ok else 'failed', elf_sha256=EXPECTED,
                   observation_sha256=digest(OBSERVATION), frame_count=len(obs['frames']),
                   smoke_max_frames=a.max_frames, native_sp=hex(PD.NATIVE_SP),
+                  area_sha256=__import__('hashlib').sha256(caps.area[0]).hexdigest(),
+                  area_base=hex(caps.area[1]),
                   verification_sources={n: digest(ROOT / n) for n in VERIFICATION_SOURCES},
                   library_sha256=digest(a.output.with_suffix('.so')))
     with a.output.open('x') as out:
