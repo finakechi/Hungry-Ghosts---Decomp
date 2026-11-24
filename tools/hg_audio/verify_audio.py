@@ -29,7 +29,7 @@ from hg_audio.audio_guest import (AudioHarness, BusMemory, HostModel,  # noqa: E
                                   SEQUENCE)
 
 ELF = Path(os.environ.get('HG_ELF',
-                      str(Path(__file__).resolve().parents[1]
+                      str(Path(__file__).resolve().parents[2]  # repository root
                           / 'local/extracted/japan/SCPS_150.46')))
 ELF_SHA256 = 'a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61'
 GP = 0x003e7f70

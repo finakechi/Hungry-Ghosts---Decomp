@@ -13,6 +13,7 @@ Nothing is written to the ISO; raw member bytes stay private.
 import hashlib
 import os
 import struct
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -161,6 +162,22 @@ class OriginalDataTests(unittest.TestCase):
                     harness2.mem.r32(bank + 0x30),
                     harness.mem.r32(bank + 0x30),
                     'corrupted offset not reflected in calculated pointer')
+
+
+class RetailInputDefaultsTests(unittest.TestCase):
+    """Synthetic: input-path defaults, no retail data read."""
+
+    def test_differential_elf_default_is_under_repository_local(self):
+        root = Path(__file__).resolve().parent.parent
+        env = {k: v for k, v in os.environ.items() if k != 'HG_ELF'}
+        env['PYTHONDONTWRITEBYTECODE'] = '1'
+        out = subprocess.run(
+            [sys.executable, '-B', '-c',
+             'import sys; sys.path[:0] = ["tools", "tools/hg_audio"]; '
+             'import verify_audio; print(verify_audio.ELF)'],
+            cwd=root, env=env, capture_output=True, text=True, check=True)
+        self.assertEqual(Path(out.stdout.strip()),
+                         root / 'local/extracted/japan/SCPS_150.46')
 
 
 if __name__ == '__main__':
