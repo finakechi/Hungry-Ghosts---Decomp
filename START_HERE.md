@@ -1,8 +1,138 @@
 # Hungry Ghosts — start here
 
+## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
+
+**Resume here.** The four milestones are integrated on branch
+`integration/m17-m18-content-audio` (worktree `decomp-integration`), based on
+`origin/main` = `46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b` (the M16 merge,
+PR #20, re-fetched and unchanged on 2026-11-23). The branch is proposed to
+`main` by pull request for owner review. **It is not merged.** The dated
+milestone sections below are kept as written; their "local only / not merged"
+statements describe the state when each was recorded.
+
+| Milestone | Branch | Tip | Integrated by |
+|---|---|---|---|
+| M17 game lifecycle | `research/m17-game-lifecycle` | `f759bf5` | contained in M18 (ancestor) |
+| M18 front end | `research/m18-front-end-lifecycle` | `08cfa09` | fast-forward of `46cdb21` |
+| Content/HGScript | `research/content-corpus-hgscript` | `1b89fbb` | merge `10e7941` |
+| Audio | `research/audio-engine` | `335c45d` | merge `49e1c88` |
+
+Corrections made on the milestone branches before integration:
+
+- `b83fb18` (Content, B1): the tests import the shared helper as a top-level
+  module, so CI's `discover -s tests` loads all 71 Content tests (before: 3
+  modules failed to import, 48 tests never ran).
+- `1b89fbb` (Content): whitespace only; `git diff --check 46cdb21` is clean.
+- `335c45d` (Audio, B2): the disassembler prints stype-0 `sync` bare, as the
+  Ghidra listings do; with the M17/M18 listings the comparison had failed on
+  2 words (M17 `0011df68`). (B3): the three retail-only tests run only with
+  `HG_JAPAN_ISO` set (skipped otherwise, failing on a missing, unreadable or
+  non-matching image), and the runner takes `--iso` instead of a sibling
+  default path.
+
+**What the combined repository provides.** Each item keeps its own evidence
+level; see the milestone records for detail.
+
+- **M17** ([docs/M17.md](docs/M17.md)): C for the lifecycle layer (24 entries,
+  23 original functions). Original-instruction differential, 0 mismatches;
+  the 22-frame corridor runs through it; three partial native observations.
+  Boot, quit/continue and area-to-area transitions are synthetic only.
+- **M18** ([docs/M18.md](docs/M18.md)): C for the front end (27 entries).
+  16,273 consecutive native frames compared, 0 failing. The C carries its own
+  state, but the pad buffer, vblank timing, loader cells and scene-requested
+  fades (E1–E13) come from the native record, and the world simulation is
+  external. It is a native-driven comparison of front-end and lifecycle
+  state, not independent whole-game execution. Authentic Continue is not
+  exercised.
+- **Content/HGScript** ([docs/content-pipeline.md](docs/content-pipeline.md)):
+  content reconstruction, not EE C. 2,541 PACK members accounted for, 74
+  HGScript collections rebuilt byte-exactly. 48 keep an unresolved string
+  binding, and event semantics are not claimed.
+- **Audio** ([docs/audio-milestone.md](docs/audio-milestone.md)): 30 original
+  EE audio functions in C behind their own guest bus. Original-instruction
+  differential 407 passed / 13 excluded; M7 endpoints reproduced from the
+  authenticated members. The IOP service is a host model; decoded WAV output
+  does not establish SPU2 equivalence.
+- **Coexistence, not runtime integration.** The four share one tree and one
+  synthetic suite. The M18 main loop still treats the sound service
+  `00156740` as external and does not call the Audio C; the Content tools are
+  offline and not used by the runtime C.
+
+**Coverage** (`tools/hg_coverage_inventory.py` on the integrated source,
+interpreted records of M17 and M18): 138 C functions / 58,153 of 2,469,083 ELF candidate
+instruction bytes (2.36%). This is identical to M18's recorded
+[coverage.json](evidence/m18/coverage.json): Content and Audio add no
+entries that the tool counts. The tool reads a fixed list of the M17/M18
+sources and does not scan `src/audio/`, whose prototypes also carry no
+`/* address */` annotations. Measured separately against the same
+inventory, the 30 Audio C functions cover 28 inventory candidates (5,388
+bytes; `002b4f68` and `002b53a0` are not inventory entries). Of the 30, 26
+are checked by the original-instruction differential, 2 by synthetic
+tests plus the M7 original-data endpoints, and 2 by synthetic tests only.
+Counted together the total would be 63,541 bytes (2.57%); that figure is
+not a classification produced by the tool.
+
+**Verification on the integrated source:**
+
+- **First integration regression** `m12-20261123T233426Z-nt7ugt5y` (on
+  `49e1c88`, before the corrections below): **78/79 accepted** (73 passed,
+  5 expected rejections), 0 reused. Gate 00 `synthetic-suite` was stopped
+  at the runner's 180 s default (414 tests ok/skipped, none failed). The
+  suite is slow, not stuck: its duration grew M16 125.9 s → M17 149.3 s →
+  M18 169.6 s → integrated about 183 s.
+- **Corrections during integration:**
+  - `1273390`: gate 00 gets an explicit 1800 s timeout, as the other long
+    gates have. Acceptance is unchanged, and an overrun still yields
+    `harness-error` (negative control).
+  - `daae4fd`: `verify_audio.py` looked for its default ELF under
+    `tools/local/…`. It now uses the repository root, and a new synthetic
+    test checks the default (it fails on the old path).
+- **Synthetic suite** (`python3 -B -m unittest discover -s tests -v`, on
+  `daae4fd`): 452 tests, OK, 3 skipped (the retail-only Audio tests without
+  `HG_JAPAN_ISO`), 183.1 s.
+- **Disassembler vs all 21 listing files:** 18,817 compared, 18,817 match.
+- **Strict C:** the M18 strict build plus `src/audio/audio_engine.c` in one
+  library (`-Wall -Wextra -Werror -pedantic`, `--no-undefined`) with GCC 16
+  and Clang 23.1.4, 0 duplicate globals; Audio standalone with both
+  compilers; lifecycle and front-end ASan+UBSan harnesses (20,000
+  iterations each); CI sanitizer PASS.
+- **Content, authenticated original data:** the ISO was authenticated, and
+  the coverage and classification counts equal the committed summary. The
+  rebuilt index equals `evidence/content/index.json` except for the private
+  source path, which the committed copy omits.
+- **Audio, authenticated original data:**
+  - 3/3 retail tests pass with `HG_JAPAN_ISO`.
+  - Original-instruction differential: 407 passed / 0 failed / 0 skipped /
+    13 excluded, identical to the recorded run.
+  - Runner: 96,000 samples, and the receipt is identical to the recorded
+    run.
+- **Final owner regression** (`tools/hg_verify.py run --profile full`): run
+  on the final commit of this branch. Its run ID and result are recorded in
+  the pull request description, so this file does not change after
+  verification.
+
+**Documentation corrections in this integration.** Audio: the recorded runner
+output is 96,000 samples (2.0 s), not 48,000 (the 1.0 s default). M18: E10
+lists 9 recoveries (11 setter calls); with E13 the receipt has 10. Content:
+the committed index does publish per-member offsets, sizes, SHA-256 digests
+and classifications (metadata only). README status lines and test command
+updated.
+
+**Not claimed.** No byte matching, whole-game equivalence, recompilation or
+port. The project's final objective is still unselected.
+
+**Next action.** Owner review of the pull request. After a merge, the
+milestone next actions remain:
+
+- M18: with authorization, make one memory-card save in a profile copy and
+  capture an authentic Continue, or reconstruct the loader thread `00130220`.
+- Content: correlate HGScript event opcodes across the 74 collections.
+- Audio: label the command-ring bytes against an IOP capture, or disassemble
+  the `LIBSD`/`SG2IOP` service dispatch.
+
 ## M18 original-driven front end and game-state lifecycle — 2026-11-23
 
-**Resume here.** M18 is a **bounded partial result**, committed locally only
+**Superseded as the resume point by the integration section above.** M18 is a **bounded partial result**, committed locally only
 in worktree `decomp-m18`, branch `research/m18-front-end-lifecycle`, based on
 the M17 branch tip `f759bf5` (M17 is not merged). Nothing is pushed; there
 is no PR or merge. Full record: [docs/M18.md](docs/M18.md),

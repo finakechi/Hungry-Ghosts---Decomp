@@ -4,6 +4,13 @@
 · **Baseline:** `origin/main` = `46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b`
 (the verified upstream M16 merge). Nothing is pushed or merged.
 
+> **Integration status (2026-11-23).** M17, M18, Content/HGScript and Audio
+> are integrated together on branch
+> `integration/m17-m18-content-audio`, proposed to `main` by pull request for
+> owner review. The text below is the dated milestone record; its
+> "local only / not merged" statements describe the state when it was written.
+> Current status and integrated verification: [START_HERE.md](../START_HERE.md).
+
 This milestone delivers an offline, deterministic toolchain for the original
 Japanese game's PACK archive corpus: complete member enumeration, structural
 FLK5 inspection, HGScript (event-table) decoding with byte-exact rebuilding,
@@ -106,10 +113,13 @@ python3 -B tools/hg_content/cli.py index query local/corpus/index.json --kind ch
 ## Corpus results (public-safe aggregate)
 
 Measured with the commands above against the authenticated original
-Japanese ISO (`8ca1513c…994e`). Per-member hashes, offsets and
-classifications are in the private corpus receipt
-(`local/corpus/corpus.json`); the public-safe aggregate is committed as
-`evidence/content/corpus-summary.json`. Dialogue text exists only in
+Japanese ISO (`8ca1513c…994e`). The committed evidence is metadata only:
+`evidence/content/corpus-summary.json` (aggregate counts and per-script
+structure) and `evidence/content/index.json`, which publishes the per-member
+directory/member numbers, offsets, sizes, SHA-256 digests and
+classifications for all 2,541 members. No member bytes, decoded strings or
+dialogue are committed. The full pass output stays in the private corpus
+receipt (`local/corpus/corpus.json`), and dialogue text exists only in
 ignored `local/corpus-scripts/`.
 
 | Measure | Count |

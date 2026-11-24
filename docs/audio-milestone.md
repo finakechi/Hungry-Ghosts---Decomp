@@ -2,6 +2,13 @@
 
 ## Status
 
+> **Integration status (2026-11-23).** M17, M18, Content/HGScript and Audio
+> are integrated together on branch
+> `integration/m17-m18-content-audio`, proposed to `main` by pull request for
+> owner review. The text below is the dated milestone record; its
+> "local only / not merged" statements describe the state when it was written.
+> Current status and integrated verification: [START_HERE.md](../START_HERE.md).
+
 Connected audio subsystem reconstructed and verified against original
 instruction bytes and authenticated resources. The full supported lifecycle
 executes offline:
@@ -111,7 +118,8 @@ Independent PS2 SPU ADPCM (VAG-family) decoder (tools/hg_audio/adpcm.py):
 4-bit samples, predictor/history per block, loop flags recorded (0x01
 loop-start region end, 0x02 loop start, 0x04 sample start). The runner
 renders a supported sample (member 6b51) to `local/audio/out.wav`
-(48 kHz, 16-bit mono, 48,000 samples in the recorded run) with
+(48 kHz, 16-bit mono; the recorded run rendered 96,000 samples, i.e.
+2.0 s with `--max-seconds 2`; the default 1.0 s renders 48,000) with
 deterministic output and a stage-by-stage receipt
 (`local/audio/runner-receipt.json`). No original sample data is
 committed.
@@ -132,11 +140,12 @@ committed.
   repository's M1–M7 listings (tests/test_hg_audio_r5900.py).
 - **M7 endpoints**: both observed resources reproduce the M7-reported
   successful endpoint and slot effects (tests/test_hg_audio_original.py).
-- **Synthetic suites**: 43 test methods across bank registration,
+- **Synthetic suites**: 44 test methods across bank registration,
   malformed inputs, repeated registration, channel/command ring, play/
   cancel, determinism, ADPCM fixtures, disassembler checks (including
-  `sync` stype formatting), plus the 3 retail-only M7 endpoint tests,
-  which skip without `HG_JAPAN_ISO` (46 methods in all).
+  `sync` stype formatting) and the differential's default input path,
+  plus the 3 retail-only M7 endpoint tests, which skip without
+  `HG_JAPAN_ISO` (47 methods in all).
 - **Negative controls** (tests/test_hg_audio_engine.py
   `NegativeControlTests`): corrupted bank offset, wrong slot selection,
   missing stop behavior, wrong endpoint — each must be detected by the
