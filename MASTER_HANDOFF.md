@@ -1,5 +1,26 @@
 # Hungry Ghosts — master handoff
 
+## M21 scene coordination — 2026-11-24
+
+Resume on `research/m21-scene-coordination` in `decomp-m21`, baseline
+`b855eb93fa797eded31c1849f2bb69d68470609a`.
+[M21 verification and boundaries](docs/M21.md) records the original address
+map, fresh capture evidence, commands and owners. Historical handoffs follow.
+
+The title actor allocator and list passes now drive the overlay root
+`00a88a20`. It starts the original timeline, which schedules `00a88b40`
+and the M20 timed interpreter through the M19 publication. The C scene
+returns the borrow on fade-gated reset. The neutral title run covers 3,991
+frames, and a separate 198-frame run reaches the menu using Circle inputs.
+The selected title frame preserves
+the order of camera, actor/render-list and dialogue calls. The independent
+AREA1 worker comparison from a fresh original request carries through
+`0012f850` with all seven checkpoint domains equal.
+
+The next integration action is to carry the remaining title presentation and
+New Game contract into that AREA1 request on the same guest bus. M22 owns
+audio. The original media and captured emulator state are private inputs.
+
 ## M19–M20 local integration review — 2026-11-24
 
 **Resume here.** Branch `integration/m19-m20-review` in

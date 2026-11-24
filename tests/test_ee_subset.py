@@ -66,6 +66,14 @@ class SubsetTests(unittest.TestCase):
         self.assertEqual(m.run(0x1000),-32768)
         self.assertEqual(m.reg[3],32768);self.assertEqual(m.get(0x8002,2),b'\0\x80')
 
+    def test_lwu_zero_extends_low_lane_and_preserves_upper_lane(self):
+        m = self.run_words([(0x27 << 26) | (4 << 21) | (2 << 16) | 4, 0x03e00008, 0])
+        m.reg[4] = 0x8000
+        m.reg[2] = (0x123456789abcdef0 << 64) | 0xffffffffffffffff
+        m.put(0x8004, struct.pack('<I', 0x80001234))
+        m.run(0x1000)
+        self.assertEqual(m.reg[2], (0x123456789abcdef0 << 64) | 0x80001234)
+
     def test_andi_zero_extends_immediate_and_tail_jump_preserves_link(self):
         m=self.run_words([0x3082ffff,0x08000800,0x24420001])
         m.reg[4]=0xffff00008000

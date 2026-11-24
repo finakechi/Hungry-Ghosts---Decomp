@@ -70,13 +70,7 @@ int hg_title_script_start(HGResourceEnv *e, HGScriptCallFP call_fp,
     return 1;
 }
 
-int32_t hg_title_script_frame(HGResourceEnv *e, HGScriptCallFP call_fp,
-                              HGTitleScript *title, uint32_t scratch_top) {
-    if (!title->parent) return HG_TITLE_SCRIPT_UNAVAILABLE;
-    if (completed_parent(e) != title->parent) {
-        hg_title_script_release(e, title);
-        return HG_TITLE_SCRIPT_UNAVAILABLE;
-    }
+static int32_t service(HGResourceEnv *e, HGScriptCallFP call_fp, uint32_t scratch_top) {
     if (!call_fp || (scratch_top & 15) || scratch_top < 0x30 || scratch_top > EE_RAM_END)
         return HG_TITLE_SCRIPT_UNAVAILABLE;
 
@@ -86,6 +80,23 @@ int32_t hg_title_script_frame(HGResourceEnv *e, HGScriptCallFP call_fp,
     hg_script_timed_draw(&script, HG_TITLE_SCRIPT_STATE, scratch_top);
     set_dialogue_color(e);
     return phase;
+}
+
+int32_t hg_title_script_frame(HGResourceEnv *e, HGScriptCallFP call_fp,
+                              HGTitleScript *title, uint32_t scratch_top) {
+    if (!title->parent) return HG_TITLE_SCRIPT_UNAVAILABLE;
+    if (completed_parent(e) != title->parent) {
+        hg_title_script_release(e, title);
+        return HG_TITLE_SCRIPT_UNAVAILABLE;
+    }
+    return service(e, call_fp, scratch_top);
+}
+
+int32_t hg_title_script_scene_service(HGResourceEnv *e, HGScriptCallFP call_fp,
+                                      HGTitleScript *title, uint32_t scratch_top) {
+    if (title->parent) return hg_title_script_frame(e, call_fp, title, scratch_top);
+    if (!completed_parent(e)) return HG_TITLE_SCRIPT_UNAVAILABLE;
+    return service(e, call_fp, scratch_top);
 }
 
 void hg_title_script_release(HGResourceEnv *e, HGTitleScript *title) {
