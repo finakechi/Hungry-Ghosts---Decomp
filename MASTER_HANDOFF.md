@@ -25,6 +25,33 @@ record from its original caller. The EE differential uses explicit external
 input and service fixtures. Fresh M20 PCSX2 playback, downstream audio and
 drawing, and the alternate timed consumer remain open.
 
+## M19 autonomous resource loading — 2026-11-23
+
+**Resume here.** M19 is on local branch `research/m19-autonomous-loading` in
+worktree `decomp-m19`. The implementation commit is
+`b70c7a7b2f1a12e985b6d9d0be1d4c83e394d8ce`; the handoff follows in a separate
+commit. Verified remote `main` and merged PR #21 both point to the M19 baseline
+`86a5670852d47c4ead140e5c8e40a5289f773053`. The integration record below is
+preserved as historical pre-merge context.
+
+The normal worker now runs resumable PACK and AREA jobs on a shared guest bus
+with authenticated ISO DMA. The M18 comparison path now has a connected
+variant that carries E3 state, completes all 11 native requests, and agrees
+on 57 logical reads and three completed overlay/arena/handle/task checkpoints.
+The cold bootstrap-to-title run and M4/M7 resource checkpoints are verified
+separately. M18 keeps its external pad, timing, scene and other subsystem
+inputs. The measured overlay sequence is title → AREA1 → title → AREA1.
+A real transition between distinct gameplay areas remains unverified.
+
+See [M19](docs/M19.md), [the loader contract](analysis/resource_loading/README.md),
+and [evidence](evidence/m19/results.json). The final full owner regression runs
+on the frozen handoff commit; use its private `local/verification/` receipt
+for the verdict and exact source fingerprint. No push, PR or merge was done.
+
+Next, independently review the M19 implementation and receipts alongside the
+parallel M20 work. M20 should use the existing request and guest publication
+interfaces; `HGResourceJob` lives on the host side.
+
 ## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
 
 **Resume here.** Start with [START_HERE.md](START_HERE.md) for the short form. The four milestones are integrated on branch
