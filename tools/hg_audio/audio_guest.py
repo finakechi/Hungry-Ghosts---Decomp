@@ -224,6 +224,10 @@ class HostModel:
         return -1  # completed (original polls until < 0)
 
     def _dma_to_iop(self, dest, blob):
+        offset = dest - IOP_WINDOW_BASE
+        if offset < 0 or offset + len(blob) > len(self.sif_heap):
+            raise ValueError(f'unmapped IOP DMA destination {dest:#x}')
+        self.sif_heap[offset:offset + len(blob)] = blob
         self.iop_audio.receive_dma(dest, blob)
 
     def _sif_mscom(self, payload_ptr):
