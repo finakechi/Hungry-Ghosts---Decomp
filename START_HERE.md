@@ -1,5 +1,33 @@
 # Hungry Ghosts — start here
 
+## M19–M20 local integration review — 2026-11-24
+
+**Resume here.** Branch `integration/m19-m20-review` in
+`decomp-m19-m20-integration`.
+Verified source `970e7acb1b87c1b8f7397b763d655730780199fa`.
+The base is `86a5670852d47c4ead140e5c8e40a5289f773053`, the locally recorded
+PR #21 merge. The historical M19 and M20 sections below remain as recorded.
+
+- **M19** is ready for the selected title publication and partial overall.
+  The cold ISO-backed worker published PACK 193/007 into slot `0x22f`.
+  The fixed parent header, arena and all 1,376 type-12 bytes matched the
+  saved original. The following AREA1 request invalidated the handle.
+- **M20** is ready after bounded repairs. The title adapter resolved the
+  published child through the shared guest bus and ran record 0 from its
+  original AREA0 caller slice. The comparison covered 3,861 carried frames, 10,801 glyph
+  requests, voice start and reset. The standalone timed, paged-text and
+  saved-title comparisons passed, and 74/74 collections rebuilt byte-exactly.
+- **Verification** passed 460/460 discovered tests. The full profile accepted
+  79/79 gates in `m12-20261124T181748Z-fmurluh1`.
+  See the [review and reproduction commands](docs/M19-M20-review.md) and
+  [connected title receipt](evidence/m19-m20-integration/title.json).
+- **Private inputs** require the authenticated Japanese ISO and ELF, saved
+  M18 scene data for the original checkpoint, and the pinned PS2DInfo,
+  PCSX2 AppImage and historical captures for the full profile.
+- Fresh native title playback, full scene scheduling and renderer/IOP/SPU2
+  services remain open. **Next action.** Capture original title activation,
+  the first glyph/voice requests and reset in one fresh PCSX2 session.
+
 ## M20 HGScript runtime — 2026-11-24
 
 M20 resumed in `decomp-m20` on `research/m20-hgscript-runtime`. The actual

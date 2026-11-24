@@ -6,6 +6,9 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
+The [M19–M20 local review](docs/M19-M20-review.md) covers the integrated title
+resource worker and HGScript runtime, with independently reproduced evidence.
+
 M1–M6 connect disc reads, PACK/AREA loading, real resource processing and a
 selected AREA1 actor callback. M6 independently verifies all 13 marked startup
 PACKc6 members (1,184,000 transformed member bytes and a complete 1,228,800-byte

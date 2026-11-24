@@ -1,5 +1,9 @@
 # Hungry Ghosts — development and reproduction
 
+The [M19–M20 review](docs/M19-M20-review.md) gives the current local integration
+baseline, verified inputs and reproduction commands. The dated guides below
+describe earlier milestones.
+
 **Current local baseline:** M7 on `research/m7-engine-preparation`, based on
 verified GitHub main `280a1a296a877cc14709a6adca0505569f1a57c7` (2026-11-15).
 [The M7 report](docs/M7.md) owns the selected engine-preparation boundary,
