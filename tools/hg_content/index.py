@@ -103,6 +103,8 @@ def query(index, kind, **filters):
                              control_events=script['event_count']
                              - script['odd_word_events'],
                              total_events=script['event_count']))
+            if 'runtime' in script:
+                rows[-1]['opcodes'] = script['runtime']['opcodes']
         return rows
     if kind == 'strings':
         # String metadata only (counts/lengths/hash, never dialogue text).
@@ -113,6 +115,8 @@ def query(index, kind, **filters):
                              pool_text_entries=script['pool_text_entries'],
                              binding_status=script['binding_status'],
                              sha256=script['sha256']))
+            if 'runtime' in script:
+                rows[-1]['runtime_references'] = script['runtime']['references']
         return rows
     if kind == 'sound':
         return index['sound_members']

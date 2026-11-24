@@ -1,5 +1,30 @@
 # Hungry Ghosts — start here
 
+## M20 HGScript runtime — 2026-11-24
+
+M20 resumed in `decomp-m20` on `research/m20-hgscript-runtime`. The actual
+starting HEAD was the M17/M18/Content/Audio integration merge
+`86a5670852d47c4ead140e5c8e40a5289f773053`. The uncommitted DeepSeek work
+was recovered from its C draft, probe, disassembly and logs. M20 source and
+verification artifacts are committed at `4a98056ec458d3f251516384c943b7350b2bda61`. The handoffs
+are in the following documentation commit for later reconciliation with M19.
+
+The original EE timed interpreter and renderer are `001ccfa0` and
+`001cd9c0`, with initialization at `001ccd80`. Original instructions and
+the C port independently carried state from initialization to termination
+for three authenticated retail records. The comparisons matched draw and
+audio requests. Two static records exercised the handle, page and text
+reference paths. All 74 collections rebuilt byte-exactly. The content tools
+now resolve offsets directly for the verified text, cue and metadata
+reference forms. See [M20](docs/M20.md) for commands, original-build
+identity, precise boundaries and the integration API.
+
+The next integration action is to pass an authenticated collection address
+from M19's loader to the timed interpreter and verify one naturally selected
+record from its original caller. The EE differential uses explicit external
+input and service fixtures. Fresh M20 PCSX2 playback, downstream audio and
+drawing, and the alternate timed consumer remain open.
+
 ## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
 
 **Resume here.** The four milestones are integrated on branch
