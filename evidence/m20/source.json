@@ -1,0 +1,34 @@
+{
+  "schema": "hg-m20-source/v1",
+  "input_baseline": "86a5670852d47c4ead140e5c8e40a5289f773053",
+  "sha256": {
+    "src/hgscript/hgscript.c": "5ad2f859c5be204e452c375a71e70157e21d160bdd763666b781d35b244aae3f",
+    "src/hgscript/timed.c": "7ced3a3562539d7bdb087e8cadc81a58762842d645c11e40670744ad9731f9fc",
+    "src/hgscript/hgscript.h": "f3cd579d86667debb6d5150a81adcece73baa76f14dfd70350a1e3bb0c6fd684",
+    "src/hgscript/script_fp.h": "8b59ee3846025154b0174e0eb7a0fbee2fe668e29ba7ea3d4944036cd4308f68",
+    "tools/hgscript_differential.py": "41da6faafb5c0fbbf1c66ef6934a49a3ec1608983390f96081be50ae6e1af795",
+    "tools/hg_content/hgscript.py": "d18b4e8c9151af60d411ce3e5e94a6d06da86e4f9478bab80be421d9d383d4b1",
+    "tools/hg_content/corpus.py": "ad8ae4ecfe476bf43a1a3a6cdbe892014324ce3daaf7455dc7b3df394f1fabab",
+    "tools/hg_content/index.py": "8fe955d8e12047663800ff59d19d279164105e1e6f36769014409c307213b3f0",
+    "tests/hgscript_runtime.c": "54c61a90d4aa9d486f6ec7f9583b9b7282a11274e0aa64c339c0fb41d4895a39",
+    "tests/test_hgscript_runtime.py": "571b776127724c73e9bb67a25a2946bb46e9328fa3e9f5345de8bcab34414add",
+    "tests/test_hg_content_hgscript.py": "5a58cbb5d14dab7dd6c1e057831e6f821e1a626d47437924c5066f70b29befda"
+  },
+  "checks": {
+    "content_regression": {
+      "passed": 72,
+      "failed": 0,
+      "skipped": 0
+    },
+    "runtime_regression": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "gcc_strict": "passed",
+    "clang_strict": "passed",
+    "m20_address_and_undefined_behavior_sanitizers": "passed",
+    "independent_original_differential": "passed",
+    "native_m20": "unrun"
+  }
+}

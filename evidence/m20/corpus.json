@@ -1,0 +1,44 @@
+{
+  "schema": "hg-m20-corpus/v1",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "coverage": {
+    "failed_members": 0,
+    "hgscript_binding_count_matched": 26,
+    "hgscript_binding_unresolved": 48,
+    "hgscript_candidates": 74,
+    "hgscript_decoded": 74,
+    "hgscript_roundtrip_decoded": 74,
+    "hgscript_roundtrip_raw_preserved": 0,
+    "malformed_members": 0,
+    "members_enumerated": 2541,
+    "members_structurally_classified": 2402,
+    "unknown_members": 139
+  },
+  "reference_counts": {
+    "draw-text": {
+      "resolved": 10633,
+      "unresolved": 0
+    },
+    "leading-metadata": {
+      "resolved": 2664,
+      "unresolved": 0
+    },
+    "timed-cue": {
+      "resolved": 1326,
+      "unresolved": 0
+    }
+  },
+  "opcode_word_counts": {
+    "1": 10633,
+    "2": 5969,
+    "3": 1082,
+    "4": 62,
+    "5": 2789,
+    "6": 5459,
+    "7": 1326,
+    "11": 4,
+    "12": 2664,
+    "14": 5
+  },
+  "collections_resolving_all_recognized_references": 74
+}

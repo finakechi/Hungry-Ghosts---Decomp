@@ -203,6 +203,7 @@ def run_corpus(image_path=None, pack_path=None, iso_module=None,
                                             if e.encoding_status == 'text-valid'
                                             and e.text_bytes),
                                         binding_status=collection.binding_status,
+                                        runtime=collection.runtime,
                                         roundtrip=('decoded' if roundtrip
                                                     else 'failed'),
                                         roundtrip_raw_preserved=roundtrip and opaque > 0,
