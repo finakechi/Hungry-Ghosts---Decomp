@@ -1,0 +1,830 @@
+{
+  "schema": "hg-m18-results/v1",
+  "result": "PASSED",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "title_overlay_sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+  "native_observation": {
+    "emulator": "PCSX2 v2.8.2 (debugger, isolated profile copy, memory-card slots disabled, fresh boot, no save state)",
+    "breakpoint": "00143240 (mode dispatch call from the main loop)",
+    "stop_records": {
+      "first_seq": 884,
+      "last_seq": 18712,
+      "records": 17829,
+      "bound_continuous_from": 884,
+      "note": "one record per 00143240 stop, PC-bound; regions gp, pad, game, play, misc, misc2, task, arena, scratch (sha256 of the private file in checks.json)"
+    },
+    "start_capture": "title-menu-input-ready",
+    "full_captures": [
+      "boot-memcard-prompt",
+      "s1-active-settled",
+      "s1-first-active",
+      "s2-before-pause",
+      "s2-pause-menu",
+      "s2-resumed",
+      "s3-active-settled",
+      "s3-before-pause",
+      "s3-first-active-again",
+      "s3-name-gate-a",
+      "s3-name-gate-b",
+      "s3-quit-selected",
+      "s3-title-menu-ready",
+      "title-menu-idle",
+      "title-menu-input-ready",
+      "title-menu-ready"
+    ]
+  },
+  "scenarios": [
+    {
+      "seq": 2439,
+      "state": "00121be0 (1,2,0) +c 0",
+      "what": "run start: title menu accepting input (capture title-menu-input-ready)",
+      "verified": true
+    },
+    {
+      "seq": 2485,
+      "state": "00121be0 (1,3,0) +c 0",
+      "what": "S1 New game confirmed (title minor 3, choice 0)",
+      "verified": true
+    },
+    {
+      "seq": 3141,
+      "state": "00121be0 (2,0,0) +c 0",
+      "what": "S1 lifecycle major 2: install gameplay mode",
+      "verified": true
+    },
+    {
+      "seq": 3142,
+      "state": "0012d1c0 (0,0,0) +c 0",
+      "what": "S1 gameplay mode entered",
+      "verified": true
+    },
+    {
+      "seq": 13060,
+      "state": "0012d1c0 (5,1,0) +c 0",
+      "what": "S1 area loaded (major 5 minor 1 sub 0)",
+      "verified": true
+    },
+    {
+      "seq": 13061,
+      "state": "0012d1c0 (5,1,1) +c 0",
+      "what": "S1 first active gameplay frame",
+      "verified": true
+    },
+    {
+      "seq": 13153,
+      "state": "0012d1c0 (5,1,2) +c 0",
+      "what": "S2 Start: pause",
+      "verified": true
+    },
+    {
+      "seq": 13276,
+      "state": "0012d1c0 (5,1,2) +c 2",
+      "what": "S2 Resume chosen (fade out, next 0x11)",
+      "verified": true
+    },
+    {
+      "seq": 13310,
+      "state": "0012d1c0 (5,1,1) +c 0",
+      "what": "S2 back in active gameplay",
+      "verified": true
+    },
+    {
+      "seq": 13459,
+      "state": "0012d1c0 (5,1,2) +c 0",
+      "what": "S3 Start: pause",
+      "verified": true
+    },
+    {
+      "seq": 13576,
+      "state": "0012d1c0 (5,1,2) +c 2",
+      "what": "S3 Quit chosen (cursor 3, next 4)",
+      "verified": true
+    },
+    {
+      "seq": 13685,
+      "state": "0012d1c0 (5,4,0) +c 7",
+      "what": "S3 teardown 0012f800 (major 5 minor 4; pause state 7 after the confirmation)",
+      "verified": true
+    },
+    {
+      "seq": 13686,
+      "state": "00121be0 (0,0,0) +c 0",
+      "what": "S3 lifecycle mode reinstalled (title load)",
+      "verified": true
+    },
+    {
+      "seq": 14125,
+      "state": "00121be0 (1,2,0) +c 0",
+      "what": "S3 title menu accepting input again",
+      "verified": true
+    },
+    {
+      "seq": 14127,
+      "state": "00121be0 (1,3,0) +c 0",
+      "what": "S3 New game confirmed again",
+      "verified": true
+    },
+    {
+      "seq": 18622,
+      "state": "0012d1c0 (5,1,1) +c 0",
+      "what": "S3 first active gameplay frame after re-entry",
+      "verified": true
+    },
+    {
+      "seq": 18712,
+      "state": "0012d1c0 (5,1,1) +c 0",
+      "what": "run end: active gameplay (capture s3-active-settled)",
+      "verified": true
+    }
+  ],
+  "connected_run": {
+    "units": 16273,
+    "start_seq": 2439,
+    "end_seq": 18712,
+    "failing_units": 0,
+    "faults": [],
+    "transitions": [
+      {
+        "seq": 2485,
+        "mode": "00121be0 (1,3,0,2)"
+      },
+      {
+        "seq": 3141,
+        "mode": "00121be0 (2,0,0,0)"
+      },
+      {
+        "seq": 3142,
+        "mode": "0012d1c0 (0,0,0,0)"
+      },
+      {
+        "seq": 3143,
+        "mode": "0012d1c0 (0,1,0,0)"
+      },
+      {
+        "seq": 3200,
+        "mode": "0012d1c0 (1,0,0,0)"
+      },
+      {
+        "seq": 3254,
+        "mode": "0012d1c0 (1,1,0,0)"
+      },
+      {
+        "seq": 12730,
+        "mode": "0012d1c0 (5,0,0,0)"
+      },
+      {
+        "seq": 12733,
+        "mode": "0012d1c0 (5,5,0,0)"
+      },
+      {
+        "seq": 13060,
+        "mode": "0012d1c0 (5,1,0,0)"
+      },
+      {
+        "seq": 13685,
+        "mode": "0012d1c0 (5,4,0,4)"
+      },
+      {
+        "seq": 13686,
+        "mode": "00121be0 (0,0,0,0)"
+      },
+      {
+        "seq": 13769,
+        "mode": "00121be0 (0,1,0,0)"
+      },
+      {
+        "seq": 13874,
+        "mode": "00121be0 (0,2,0,0)"
+      },
+      {
+        "seq": 13875,
+        "mode": "00121be0 (0,3,0,0)"
+      },
+      {
+        "seq": 13878,
+        "mode": "00121be0 (1,0,0,0)"
+      },
+      {
+        "seq": 13879,
+        "mode": "00121be0 (1,1,0,0)"
+      },
+      {
+        "seq": 13880,
+        "mode": "00121be0 (1,2,0,0)"
+      },
+      {
+        "seq": 14127,
+        "mode": "00121be0 (1,3,0,2)"
+      },
+      {
+        "seq": 14783,
+        "mode": "00121be0 (2,0,0,0)"
+      },
+      {
+        "seq": 14784,
+        "mode": "0012d1c0 (0,0,0,0)"
+      },
+      {
+        "seq": 14785,
+        "mode": "0012d1c0 (0,1,0,0)"
+      },
+      {
+        "seq": 14842,
+        "mode": "0012d1c0 (1,0,0,0)"
+      },
+      {
+        "seq": 14897,
+        "mode": "0012d1c0 (1,1,0,0)"
+      },
+      {
+        "seq": 18291,
+        "mode": "0012d1c0 (5,0,0,0)"
+      },
+      {
+        "seq": 18294,
+        "mode": "0012d1c0 (5,5,0,0)"
+      },
+      {
+        "seq": 18621,
+        "mode": "0012d1c0 (5,1,0,0)"
+      }
+    ],
+    "loader_requests": [
+      {
+        "seq": 3143,
+        "entry": "00130170",
+        "kind": 1,
+        "id": "0x9"
+      },
+      {
+        "seq": 3200,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x6c"
+      },
+      {
+        "seq": 12734,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x51"
+      },
+      {
+        "seq": 12760,
+        "entry": "00130150",
+        "kind": 2,
+        "id": "0xc6"
+      },
+      {
+        "seq": 13686,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x50"
+      },
+      {
+        "seq": 13712,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x7"
+      },
+      {
+        "seq": 13768,
+        "entry": "00130150",
+        "kind": 2,
+        "id": "0xc0"
+      },
+      {
+        "seq": 14785,
+        "entry": "00130170",
+        "kind": 1,
+        "id": "0x9"
+      },
+      {
+        "seq": 14842,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x6c"
+      },
+      {
+        "seq": 18295,
+        "entry": "00130150",
+        "kind": 1,
+        "id": "0x51"
+      },
+      {
+        "seq": 18321,
+        "entry": "00130150",
+        "kind": 2,
+        "id": "0xc6"
+      }
+    ],
+    "external_fade_recoveries": [
+      {
+        "seq": 3077,
+        "calls": [
+          [
+            "00139040",
+            [
+              4,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 3279,
+        "calls": [
+          [
+            "001390b0",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 9122,
+        "calls": [
+          [
+            "00139010",
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "001390b0",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 12698,
+        "calls": [
+          [
+            "00139040",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 13879,
+        "model": "E13",
+        "calls": [
+          [
+            "001390b0",
+            [
+              4,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 13880,
+        "calls": [
+          [
+            "001390b0",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 14719,
+        "calls": [
+          [
+            "00139040",
+            [
+              4,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 14922,
+        "calls": [
+          [
+            "001390b0",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 16318,
+        "calls": [
+          [
+            "00139010",
+            [
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            "001390b0",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      },
+      {
+        "seq": 18259,
+        "calls": [
+          [
+            "00139040",
+            [
+              8,
+              0,
+              0,
+              0
+            ]
+          ]
+        ]
+      }
+    ],
+    "external_call_counts": {
+      "00100b80": 16282,
+      "00103d60": 11,
+      "00103d80": 11,
+      "00104e10": 17274,
+      "0010cca0": 32564,
+      "0010dcf8": 16282,
+      "00119ac8": 25,
+      "0011af00": 2,
+      "0011f0c0": 8,
+      "0012bc00": 1,
+      "0012bf70": 4,
+      "0012c3d0": 600,
+      "0012f850": 333,
+      "001385b0": 4,
+      "0013a4c0": 2,
+      "0013da80": 16282,
+      "0013e5b0": 32564,
+      "0013fef0": 2,
+      "001404f0": 4,
+      "00141210": 2,
+      "001413a0": 1,
+      "00141470": 1609,
+      "00141910": 2,
+      "00141b10": 3,
+      "001467b0": 16282,
+      "00148970": 16282,
+      "00149580": 2,
+      "001496e0": 16282,
+      "00149890": 16282,
+      "0014a0a0": 2680,
+      "0014f370": 1340,
+      "001564a0": 4,
+      "00156550": 7,
+      "00156740": 16282,
+      "00156ad0": 15,
+      "00156ce0": 4,
+      "00156cf0": 3,
+      "00156d50": 3,
+      "00156e60": 3,
+      "00163350": 240,
+      "001635b0": 76,
+      "00166770": 2,
+      "001782a0": 18,
+      "001783c0": 36,
+      "00182430": 4,
+      "00189aa0": 2,
+      "00196ad0": 2,
+      "0025c0f0": 2,
+      "0025c140": 2,
+      "0026ff90": 3,
+      "00270c30": 761,
+      "00282160": 2,
+      "002821f0": 600,
+      "002cf330": 12876,
+      "00a87ed0": 1607,
+      "00a88660": 1
+    },
+    "interpreted_entries": {
+      "0010db90": 16282
+    },
+    "interpreted_original_words": 114
+  },
+  "negative_controls": [
+    {
+      "control": "null-control",
+      "source": "front_end.c",
+      "start": "s3-quit-selected",
+      "defect": false,
+      "rejected": false,
+      "returncode": 0,
+      "source_sha256": "26c4997b54d5d0ad5d4a3cc4019a8583bad32aa3efcd2aae4433e51cbb3f9bb0",
+      "first_failure": null
+    },
+    {
+      "control": "title-new-game-routes-to-area-select",
+      "source": "game_lifecycle.c",
+      "start": "title-menu-input-ready",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "c4fbbc8bc98af8a26e8b5fbcb5332689561e31849948fc9ee1a2e4815f494255",
+      "first_failure": "FAIL 3141 00121be0 (2,0,0,0) [{\"domain\": \"mode block\", \"address\": \"0x3ead30\", \"native\": \"02000000e01b12000200000000000000000000010000000000000100b0040f000000000000000000\", \"c\": \"02000000e01b12000400000000000000000000010000000000000100b0040f000000000000000000\"}]"
+    },
+    {
+      "control": "title-cursor-no-continue-skip",
+      "source": "front_end.c",
+      "start": "title-menu-input-ready",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "963ada228860da6d8de8ff8dc5849f12054dff2faadac583e586fecd1cf1e4f7",
+      "first_failure": "FAIL 2441 00121be0 (1,2,0,2) [{\"domain\": \"mode block\", \"address\": \"0x3ead30\", \"native\": \"02000000e01b12000102000200000000000200010000000000000000b00405000000000000000000\", \"c\": \"02000000e01b12000102000200000000000000010000000000000000b00405000000000000000000\"}]"
+    },
+    {
+      "control": "fade-in-rate-off-by-one",
+      "source": "front_end.c",
+      "start": "title-menu-input-ready",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "146162c6a3c8f5c76e54d68a5e54a6d1d84afa202bf70e108b33b10b646d5dd0",
+      "first_failure": "FAIL 3279 0012d1c0 (1,1,1,0) [{\"domain\": \"fade block\", \"address\": \"0x3eaeb0\", \"native\": \"01000002f7000800\", \"c\": \"01000002f6000800\"}]"
+    },
+    {
+      "control": "pause-quit-fade-step-6",
+      "source": "front_end.c",
+      "start": "s3-before-pause",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "41d41689eba15bb59cb0c57911abd05e36459bda106f413263d44f7a449bd9bd",
+      "first_failure": "FAIL 13576 0012d1c0 (5,1,2,1) [{\"domain\": \"fade block\", \"address\": \"0x3eaeb0\", \"native\": \"0300000308000800\", \"c\": \"0300000306000600\"}]"
+    },
+    {
+      "control": "pause-quit-wrong-next-state",
+      "source": "front_end.c",
+      "start": "s3-before-pause",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "e528233a720f0dcf1392bd8eed1748889fd5e39f3df8598ceb05da171fb5f7ea",
+      "first_failure": "FAIL 13576 0012d1c0 (5,1,2,1) [{\"domain\": \"mode block\", \"address\": \"0x3ead30\", \"native\": \"02010000c0d112000501020102000000000001000400000000000000000000000300010000000000\", \"c\": \"02010000c0d112000501020102000000000001000500000000000000000000000300010000000000\"}]"
+    },
+    {
+      "control": "pause-resume-wrong-next-state",
+      "source": "front_end.c",
+      "start": "s2-before-pause",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "41aeb720876dc4b8b294f7aabfecba9c8ca456ac21c72b0dba0aa2ae70c8f8e8",
+      "first_failure": "FAIL 13276 0012d1c0 (5,1,2,1) [{\"domain\": \"mode block\", \"address\": \"0x3ead30\", \"native\": \"02010000c0d112000501020102000000000001001100000000000000000000000000000000000000\", \"c\": \"02010000c0d112000501020102000000000001001200000000000000000000000000000000000000\"}]"
+    },
+    {
+      "control": "teardown-session-flag-dropped",
+      "source": "game_lifecycle.c",
+      "start": "s3-before-pause",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "c193a3d17ee1c3c4d173a824dcad4838784a73a03a9e05e17ab7c3df9e4660b3",
+      "first_failure": "FAIL 13686 00121be0 (0,0,0,0) [{\"domain\": \"scratch f8\", \"address\": \"0x700000f8\", \"native\": \"0100000001000000\", \"c\": \"0000000001000000\"}]"
+    },
+    {
+      "control": "title-return-fade-in-step-7",
+      "source": "game_lifecycle.c",
+      "start": "s3-quit-selected",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "b1c2429aeb5c1323242eaf4e5965a7ae71e066d513415b073a551af2e3b16a39",
+      "first_failure": "FAIL 13713 00121be0 (0,0,2,0) [{\"domain\": \"fade block\", \"address\": \"0x3eaeb0\", \"native\": \"01000002f9000600\", \"c\": \"01000002f8000700\"}]"
+    },
+    {
+      "control": "title-return-resource-kind",
+      "source": "game_lifecycle.c",
+      "start": "s3-quit-selected",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "8ffcb9b54961621c170cb7fa9fed946e6c64f3a348834f46f057b92d66dae7fc",
+      "first_failure": "FAIL 13687 00121be0 (0,0,1,0) [{\"domain\": \"loader request resource id\", \"native\": 80, \"c\": 81}]"
+    },
+    {
+      "control": "new-game-carried-area-corrupt",
+      "source": "game_lifecycle.c",
+      "start": "s3-quit-selected",
+      "defect": true,
+      "rejected": true,
+      "returncode": 1,
+      "source_sha256": "2070c74efa5608a4e6b873602555ed3645c26459119c4f4eb5cc65cbd830b219",
+      "first_failure": "FAIL 13769 00121be0 (0,1,0,0) [{\"domain\": \"area triple\", \"address\": \"0x3fa1b0\", \"native\": \"00090000\", \"c\": \"00080000\"}, {\"domain\": \"loader request resource id\", \"native\": 192, \"c\": 187}]"
+    }
+  ],
+  "differential": {
+    "00138fa0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 9,
+      "words": 9
+    },
+    "00138fd0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 14,
+      "words": 14
+    },
+    "00139010": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 9,
+      "words": 9
+    },
+    "00139040": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 24,
+      "words": 26
+    },
+    "001390b0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 16,
+      "words": 16
+    },
+    "001390f0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 20,
+      "words": 20
+    },
+    "00139140": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 18,
+      "words": 18
+    },
+    "00139190": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 22,
+      "words": 22
+    },
+    "001391f0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 18,
+      "words": 18
+    },
+    "00139240": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 268,
+      "words": 275
+    },
+    "0013d970": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 66,
+      "words": 67
+    },
+    "0013dc30": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 265,
+      "words": 278
+    },
+    "0013e090": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 253,
+      "words": 282
+    },
+    "0013e500": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 20,
+      "words": 20
+    },
+    "0013e550": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 22,
+      "words": 23
+    },
+    "0013e8f0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 29,
+      "words": 36
+    },
+    "0013d910": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 24,
+      "words": 24
+    },
+    "0013dad0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 5,
+      "words": 5
+    },
+    "00147f10": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 18,
+      "words": 18
+    },
+    "00141980": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 98,
+      "words": 98
+    },
+    "00141810": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 38,
+      "words": 38
+    },
+    "001418b0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 9,
+      "words": 9
+    },
+    "002cf020": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 188,
+      "words": 193
+    },
+    "00a87880": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 342,
+      "words": 344
+    },
+    "00a87de0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 58,
+      "words": 59
+    },
+    "00162750": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 405,
+      "words": 767
+    },
+    "00161cf0": {
+      "cases": 7500,
+      "mismatches": 0,
+      "executed_words": 52,
+      "words": 52
+    }
+  },
+  "continue_investigation": {
+    "result": "not exercised (limitation)",
+    "observed": "With no memory card the title card scan 002cf020 returns 2, 70000410 = 0 and the title menu cursor skips the Continue row (Down 0 -> 2, Up 2 -> 0); the C reproduces this (control title-cursor-no-continue-skip).",
+    "reason": "An authentic save-backed Continue needs a memory card holding a save; creating one is a new persistent write outside the milestone authorization. No save was fabricated or modified."
+  },
+  "evidence_classes": {
+    "model_differential": "original instructions versus C, same inputs, on the ELF image and four native full captures; not runtime observation",
+    "runtime": "C connected frames carried forward versus the native per-stop records of one PCSX2 session",
+    "synthetic": "packet-image differential, sanitizers and unit suites; not retail equivalence"
+  }
+}

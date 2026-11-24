@@ -237,5 +237,10 @@ void hg_late_frame_service(HGResourceEnv *);                    /* 0013ce80 */
  * body's three-draw condition reads it. */
 #define HG_RENDER_FIELD 0xfffffff8u
 void hg_player_frame_continuous(HGResourceEnv *, uint32_t frame);
+/* M17 split of the same frame: the coordinator 0012f850 body alone, and
+ * 001496e0's modeled GS field/render-bank effects, for the connected
+ * lifecycle frame (game_lifecycle.h). */
+void hg_coordinator_frame(HGResourceEnv *, uint32_t frame);
+void hg_render_field_bank(HGResourceEnv *);
 void hg_player_frame_continuous_fixed(HGResourceEnv *, uint32_t frame);
 #endif

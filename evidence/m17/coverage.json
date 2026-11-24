@@ -1,0 +1,1173 @@
+{
+ "schema": "hg-coverage-inventory/v1",
+ "baseline": "46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b",
+ "note": "Inventory candidates are automatic Ghidra discoveries, not verified function totals. C classes require C source; instruction-backed is interpreter execution of original words in verified runs and is never counted as C. Byte counts are inventory body bytes of whole candidates; c-bounded bodies are only partly reconstructed.",
+ "before": {
+  "c-reconstructed": {
+   "functions": 74,
+   "body_bytes": 19844
+  },
+  "c-fail-closed": {
+   "functions": 15,
+   "body_bytes": 17908
+  },
+  "instruction-backed": {
+   "functions": 148,
+   "body_bytes": 78218
+  },
+  "external": {
+   "functions": 56,
+   "body_bytes": 60864
+  },
+  "analyzed": {
+   "functions": 14,
+   "body_bytes": 3748
+  },
+  "unknown": {
+   "functions": 4251,
+   "body_bytes": 2288501
+  }
+ },
+ "after": {
+  "c-reconstructed": {
+   "functions": 94,
+   "body_bytes": 26400
+  },
+  "c-fail-closed": {
+   "functions": 18,
+   "body_bytes": 22620
+  },
+  "instruction-backed": {
+   "functions": 148,
+   "body_bytes": 78218
+  },
+  "external": {
+   "functions": 141,
+   "body_bytes": 98961
+  },
+  "analyzed": {
+   "functions": 5,
+   "body_bytes": 1756
+  },
+  "unknown": {
+   "functions": 4152,
+   "body_bytes": 2241128
+  }
+ },
+ "new_c_entries": {
+  "0011d830": {
+   "names": [
+    "hg_main_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0011df10": {
+   "names": [
+    "hg_vblank_start_handler"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0011df80": {
+   "names": [
+    "hg_vblank_end_handler"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00121810": {
+   "names": [
+    "hg_boot_mode"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001219e0": {
+   "names": [
+    "hg_logo_sequence_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00121be0": {
+   "names": [
+    "hg_lifecycle_mode"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d1c0": {
+   "names": [
+    "hg_gameplay_mode"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012d680": {
+   "names": [
+    "hg_gameplay_title_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d7d0": {
+   "names": [
+    "hg_gameplay_enter_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d850": {
+   "names": [
+    "hg_gameplay_reset_services"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d9a0": {
+   "names": [
+    "hg_gameplay_major5"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dbd0": {
+   "names": [
+    "hg_area_pack_id"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dc90": {
+   "names": [
+    "hg_gameplay_entry_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dd60": {
+   "names": [
+    "hg_area_load_step"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012e020": {
+   "names": [
+    "hg_gameplay_reload_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012e6d0": {
+   "names": [
+    "hg_gameplay_event_frame"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012e700": {
+   "names": [
+    "hg_gameplay_frame"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012f7d0": {
+   "names": [
+    "hg_gameplay_request_exit"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012f800": {
+   "names": [
+    "hg_gameplay_teardown"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fa00": {
+   "names": [
+    "hg_gameplay_event_flags"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143240": {
+   "names": [
+    "hg_mode_dispatch"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001432c0": {
+   "names": [
+    "hg_mode_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143300": {
+   "names": [
+    "hg_mode_set"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  }
+ },
+ "c_entries": {
+  "0011d830": {
+   "names": [
+    "hg_main_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0011df10": {
+   "names": [
+    "hg_vblank_start_handler"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0011df80": {
+   "names": [
+    "hg_vblank_end_handler"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001204e0": {
+   "names": [
+    "hg_angle_wrap"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00121810": {
+   "names": [
+    "hg_boot_mode"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001219e0": {
+   "names": [
+    "hg_logo_sequence_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00121be0": {
+   "names": [
+    "hg_lifecycle_mode"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001235c0": {
+   "names": [
+    "hg_actor_set_palette"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012bc70": {
+   "names": [
+    "hg_player_model_draw"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012bd00": {
+   "names": [
+    "hg_camera_head_matrix"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012c790": {
+   "names": [
+    "hg_camera_update"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012d130": {
+   "names": [
+    "hg_camera_follow"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d1c0": {
+   "names": [
+    "hg_gameplay_mode"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012d680": {
+   "names": [
+    "hg_gameplay_title_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d7d0": {
+   "names": [
+    "hg_gameplay_enter_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d850": {
+   "names": [
+    "hg_gameplay_reset_services"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012d9a0": {
+   "names": [
+    "hg_gameplay_major5"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dbd0": {
+   "names": [
+    "hg_area_pack_id"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dc90": {
+   "names": [
+    "hg_gameplay_entry_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012dd60": {
+   "names": [
+    "hg_area_load_step"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012e020": {
+   "names": [
+    "hg_gameplay_reload_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012e6d0": {
+   "names": [
+    "hg_gameplay_event_frame"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012e700": {
+   "names": [
+    "hg_gameplay_frame"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0012f7d0": {
+   "names": [
+    "hg_gameplay_request_exit"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012f800": {
+   "names": [
+    "hg_gameplay_teardown"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012f850": {
+   "names": [
+    "hg_frame_advance"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fa00": {
+   "names": [
+    "hg_gameplay_event_flags"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fb30": {
+   "names": [
+    "hg_resource_clear_dynamic_handles"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fb90": {
+   "names": [
+    "hg_resource_clear_selected_handles"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fbc0": {
+   "names": [
+    "hg_area_index"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fcf0": {
+   "names": [
+    "hg_resource_load_indexed"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fde0": {
+   "names": [
+    "hg_resource_load_context"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0012fe90": {
+   "names": [
+    "hg_resource_prepare_context"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00130020": {
+   "names": [
+    "hg_resource_prepare_retained"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00130150": {
+   "names": [
+    "hg_resource_request_raw"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00130170": {
+   "names": [
+    "hg_resource_request"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00130220": {
+   "names": [
+    "hg_resource_worker"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001303e0": {
+   "names": [
+    "hg_pack_special_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001306a0": {
+   "names": [
+    "hg_pack_bootstrap"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00130900": {
+   "names": [
+    "hg_pack_general"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00131420": {
+   "names": [
+    "hg_pack_alternative"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00131810": {
+   "names": [
+    "hg_area_read_step"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001319c0": {
+   "names": [
+    "hg_read_setup"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00131dd0": {
+   "names": [
+    "hg_area_finalize"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00137ed0": {
+   "names": [
+    "hg_resource_fixup"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138370": {
+   "names": [
+    "hg_actor_resource_lookup"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138560": {
+   "names": [
+    "hg_flk5_disable"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001385a0": {
+   "names": [
+    "hg_resource_base_delta"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138690": {
+   "names": [
+    "hg_resource_material_next"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001386e0": {
+   "names": [
+    "hg_resource_geometry"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001389d0": {
+   "names": [
+    "hg_resource_map_address"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138a80": {
+   "names": [
+    "hg_resource_descriptor_address"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138af0": {
+   "names": [
+    "hg_flk5_entry"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138b30": {
+   "names": [
+    "hg_flk5_type"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138b70": {
+   "names": [
+    "hg_flk5_count"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00138b90": {
+   "names": [
+    "hg_flk5_size"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00139d20": {
+   "names": [
+    "hg_actor_bind_resources"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00139fc0": {
+   "names": [
+    "hg_actor_set_mode"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00139fe0": {
+   "names": [
+    "hg_actor_set_animation_flag"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0013a0a0": {
+   "names": [
+    "hg_actor_default_pose"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0013a2a0": {
+   "names": [
+    "hg_actor_copy_node_matrix"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0013ce80": {
+   "names": [
+    "hg_late_frame_service"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00141de0": {
+   "names": [
+    "hg_actor_take_node"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00141e40": {
+   "names": [
+    "hg_actor_allocate_nodes"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00142810": {
+   "names": [
+    "hg_actor_register_list"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001428f0": {
+   "names": [
+    "hg_actor_construct"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00142970": {
+   "names": [
+    "hg_actor_construct_short"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001429b0": {
+   "names": [
+    "hg_actor_allocate"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001430a0": {
+   "names": [
+    "hg_actor_update_main"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143100": {
+   "names": [
+    "hg_actor_update_priority"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143150": {
+   "names": [
+    "hg_actor_update_type2",
+    "hg_render_node_list"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001431a0": {
+   "names": [
+    "hg_actor_update_type2_priority"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001431f0": {
+   "names": [
+    "hg_resource_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143240": {
+   "names": [
+    "hg_mode_dispatch"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001432c0": {
+   "names": [
+    "hg_mode_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143300": {
+   "names": [
+    "hg_mode_set"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143360": {
+   "names": [
+    "hg_resource_schedule"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001434f0": {
+   "names": [
+    "hg_resource_finish"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00143530": {
+   "names": [
+    "hg_resource_sqrt"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00158a10": {
+   "names": [
+    "hg_player_initialize"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00158ce0": {
+   "names": [
+    "hg_player_unlink_effects"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00158d30": {
+   "names": [
+    "hg_player_reset_transition"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00158d90": {
+   "names": [
+    "hg_player_ordinary_transition"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00158e20": {
+   "names": [
+    "hg_player_equipment_transition"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00159380": {
+   "names": [
+    "hg_player_apply_transition"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "001594f0": {
+   "names": [
+    "hg_player_condition_timer"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00159570": {
+   "names": [
+    "hg_player_active_update"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00159ad0": {
+   "names": [
+    "hg_player_ordinary_update"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015b260": {
+   "names": [
+    "hg_player_flag_status"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015c160": {
+   "names": [
+    "hg_player_spawn_equipment"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015de80": {
+   "names": [
+    "hg_player_input_transitions"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015e190": {
+   "names": [
+    "hg_player_select_animation"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015e420": {
+   "names": [
+    "hg_player_floor"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0015ebc0": {
+   "names": [
+    "hg_player_static_constraint"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0015fc10": {
+   "names": [
+    "hg_player_grounded"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0015fcd0": {
+   "names": [
+    "hg_player_speed_class"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015fe00": {
+   "names": [
+    "hg_player_movement_gate"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0015fe70": {
+   "names": [
+    "hg_player_movement"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00160420": {
+   "names": [
+    "hg_player_rate_approach"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00160510": {
+   "names": [
+    "hg_player_turn"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "001608b0": {
+   "names": [
+    "hg_player_walk"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00160c20": {
+   "names": [
+    "hg_player_move_limit"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0018a330": {
+   "names": [
+    "hg_actor_setup"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0018a4c0": {
+   "names": [
+    "hg_actor_setup_resources"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0018a5b0": {
+   "names": [
+    "hg_actor_setup_animation"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0018c220": {
+   "names": [
+    "hg_actor_data_init"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "0018c280": {
+   "names": [
+    "hg_actor_active"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00198f60": {
+   "names": [
+    "hg_pre_dispatch_service"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0019c8a0": {
+   "names": [
+    "hg_camera_anchor_node"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "00267300": {
+   "names": [
+    "hg_actor_bind_attachment"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "002f7830": {
+   "names": [
+    "hg_camera_particle_field"
+   ],
+   "bounded": true,
+   "in_inventory": true
+  },
+  "0031bb80": {
+   "names": [
+    "hg_frame_edge_sync"
+   ],
+   "bounded": false,
+   "in_inventory": true
+  },
+  "00a8a070": {
+   "names": [
+    "hg_area1_actor"
+   ],
+   "bounded": false,
+   "in_inventory": false
+  }
+ },
+ "c_entries_outside_inventory": [
+  "00a8a070"
+ ],
+ "instruction_backed_entries": [
+  "00100e98",
+  "00102b98",
+  "00102be0",
+  "00102c68",
+  "00102da0",
+  "00102e48",
+  "00103158",
+  "0010cca0",
+  "0010cce8",
+  "00111fe8",
+  "00113fc8",
+  "00114010",
+  "00115be0",
+  "00115cb8",
+  "00116320",
+  "001165d0",
+  "0011ad58",
+  "00120580",
+  "00120830",
+  "00125d60",
+  "00126180",
+  "00128de0",
+  "00128e80",
+  "0012c3d0",
+  "0012c640",
+  "0012caf0",
+  "0012cce0",
+  "00132850",
+  "00132b10",
+  "00132e50",
+  "00132fc0",
+  "00133100",
+  "00133370",
+  "00133540",
+  "00133760",
+  "00133960",
+  "00133ca0",
+  "00133d00",
+  "00133e30",
+  "001341d0",
+  "00134380",
+  "00134400",
+  "0013a050",
+  "0013a060",
+  "0013a240",
+  "00143560",
+  "00143620",
+  "00143880",
+  "00143b10",
+  "00143b90",
+  "00143c60",
+  "00143d30",
+  "001440c0",
+  "00144250",
+  "00144340",
+  "001446a0",
+  "00144820",
+  "001449a0",
+  "00145630",
+  "00145740",
+  "00145b60",
+  "00145e80",
+  "00146370",
+  "00148970",
+  "00149b40",
+  "00149ce0",
+  "00149e10",
+  "00149e50",
+  "0014a0a0",
+  "0014a880",
+  "0014aa60",
+  "0014b870",
+  "0014cf80",
+  "0014d070",
+  "0014d4f0",
+  "0014f060",
+  "0014f370",
+  "001502d0",
+  "001503f0",
+  "00150b30",
+  "001518e0",
+  "00151c40",
+  "00152a20",
+  "00152aa0",
+  "00152c50",
+  "00152c60",
+  "00152e90",
+  "00153020",
+  "00153050",
+  "00153180",
+  "00153270",
+  "001537f0",
+  "00154100",
+  "00154df0",
+  "00154e30",
+  "00154fc0",
+  "00155330",
+  "00155350",
+  "001556c0",
+  "00155710",
+  "001557d0",
+  "00156ad0",
+  "00157ed0",
+  "0015aea0",
+  "0015b2a0",
+  "0015bc30",
+  "0015bf30",
+  "0015d770",
+  "0015e1d0",
+  "00160c60",
+  "00160ff0",
+  "00161110",
+  "00168720",
+  "0017eef0",
+  "0017f010",
+  "0017f2d0",
+  "0017f6d0",
+  "0017fd60",
+  "00180b70",
+  "001810e0",
+  "00181510",
+  "001884d0",
+  "00188650",
+  "00188960",
+  "0018c270",
+  "001a6dc0",
+  "001b7f00",
+  "00267450",
+  "00267ed0",
+  "00268310",
+  "00268ad0",
+  "002a20b0",
+  "002a74d0",
+  "002a9180",
+  "002a9b68",
+  "002a9d70",
+  "002ad358",
+  "002ad478",
+  "002adab0",
+  "002ae998",
+  "002b0f08",
+  "002b4f88",
+  "002b4fc8",
+  "002b5008",
+  "002b5240",
+  "002b5278",
+  "00a8b800",
+  "00a8bab0"
+ ],
+ "interpreted_instruction_bytes": {
+  "elf": 45948,
+  "area_overlay": 1596
+ },
+ "inventory_functions": 4558,
+ "inventory_body_bytes": 2469083
+}

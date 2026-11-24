@@ -2823,23 +2823,53 @@ static uint32_t frame_process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,
     }
     return grounded_process_call(user,pc,a,b,c,d);
 }
-static void frame_prepare_packets(HGResourceEnv *e) {
+/* 001496e0's CPU-side GS field and render-bank effects (M14 model). */
+static void render_field_bank(HGResourceEnv *e) {
     uint32_t ctx=r32(e,0x3e7f70+0x3098);
     uint32_t bank=r32(e,ctx+0x598);
     uint32_t field=call(e,HG_RENDER_FIELD,r32(e,ctx+0x59c),0,0,0);
     if(bank>1 || field>1) {domain_fault(e,0x63);return;}
     w32(e,ctx+0x59c,field);  /* 00149940: store GS CSR bit 13 */
     w32(e,ctx+0x598,1u-bank); /* 00149870..80: select next render bank */
+}
+void hg_render_field_bank(HGResourceEnv *e) {
+    HGProcessing p={e,{0},0};p.env=*e;p.env.user=&p;
+    p.env.load=process_load;p.env.store=process_store;
+    render_field_bank(&p.env);
+}
+static void frame_prepare_packets(HGResourceEnv *e) {
+    render_field_bank(e);
     /* 0011d93c calls this at the start of the next render iteration.
      * Original instructions rebuild packet prefixes/cursors from the bank's
      * table and reset the sort queue through 0014906c -> 00155330. */
     call(e,0x148970,0,0,0,0);
 }
 
+static void coordinator_frame(HGResourceEnv *bus);
+void hg_coordinator_frame(HGResourceEnv *e,uint32_t frame) {
+    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
+    HGResourceEnv *bus=&p.env;
+    bus->load=process_load;bus->store=process_store;bus->call=frame_process_call;
+    coordinator_frame(bus);
+}
 void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
     HGResourceEnv *bus=&p.env;
     bus->load=process_load;bus->store=process_store;bus->call=frame_process_call;
+    coordinator_frame(bus);
+    frame_prepare_packets(bus);
+    /* M16 narrow dependency: the main-loop frame tick [gp+2f80] += 1 runs
+     * between dispatch and the next coordinator-entry (authenticated
+     * lw/addiu/sw sequences at 00121bf4..00121c04 and 0012d208..0012d218;
+     * every observed corridor frame increments exactly once). The AREA1
+     * render body's three-draw condition reads the cell, so without the
+     * tick the carried value is stale and the frame-10178 draws diverge
+     * (counterfactual: 0x3fc4 -> 3 draws, stale 0x3fb6 -> 1 draw).
+     * M17: hg_game_frame_connected instead runs the reconstructed 0012d1c0,
+     * which performs this tick at its original position (0012d208). */
+    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+1);
+}
+static void coordinator_frame(HGResourceEnv *bus) {
     hg_frame_advance(bus);     /* 0012f850 prefix: 3fa190, edge sync, 3f9ff8, 46e118 */
     call(bus,0x198f60,0,0,0,0);
     call(bus,0x17f6d0,0x3f9e30,0,0,0); /* 0012f8b8 delay-slot a0 */
@@ -2861,13 +2891,4 @@ void hg_player_frame_continuous(HGResourceEnv *e,uint32_t frame) {
     call(bus,HG_EXTERNAL_CALL,0x182480,0,0,0);
     call(bus,0x13ce80,0,0,0,0);            /* 0012f924: M16 C late-frame render service */
     hg_counter_advance(bus);   /* 00137890's 001379f0 body: 46d930/46e110 */
-    frame_prepare_packets(bus);
-    /* M16 narrow dependency: the main-loop frame tick [gp+2f80] += 1 runs
-     * between dispatch and the next coordinator-entry (authenticated
-     * lw/addiu/sw sequences at 00121bf4..00121c04 and 0012d208..0012d218;
-     * every observed corridor frame increments exactly once). The AREA1
-     * render body's three-draw condition reads the cell, so without the
-     * tick the carried value is stale and the frame-10178 draws diverge
-     * (counterfactual: 0x3fc4 -> 3 draws, stale 0x3fb6 -> 1 draw). */
-    w32(bus,0x3eaef0,r32(bus,0x3eaef0)+1);
 }

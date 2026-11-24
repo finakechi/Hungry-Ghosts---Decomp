@@ -1,0 +1,250 @@
+{
+  "schema": "hg-m18-checks/v1",
+  "recorded_utc": "2026-11-23T14:04:32.241686+00:00",
+  "result": "PASSED",
+  "base": "f759bf5",
+  "base_note": "M17 branch tip (research/m17-game-lifecycle), not merged.",
+  "source_commit": "ebe64e873bdccc49f6be9947de891a4cc8961806",
+  "source_tree_dirty": true,
+  "environment": "$HG_ELF=local/extracted/japan/SCPS_150.46, $HG_PS2DINFO=local/references/PS2DInfo, $HG_CAPTURE_DIR=local/m13/captures, $HG_AREA_IMAGE=original Japan ISO, title overlay local/m18/ovl/A0_B09.BIN (extracted from the ISO), native stop records and full captures under local/m18/native, M7/M8 captures under local/m7, local/m8 (owner-local); historical regression also $HG_JAPAN_ISO and $HG_PCSX2",
+  "identities": {
+    "japanese_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "title_overlay_sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+    "japan_iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+    "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+    "pcsx2_appimage_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+    "native_stop_records_sha256": "4e52bc00e0db1fde466569bab6b1ef6fb2987ae7b1e4df3d6c26be317a2299be"
+  },
+  "sources": {
+    "src/front_end.c": "26c4997b54d5d0ad5d4a3cc4019a8583bad32aa3efcd2aae4433e51cbb3f9bb0",
+    "src/front_end.h": "8001fb5221580c52c255c05675022b2bf6a1e7238bffa07ee78920257a3e8902",
+    "src/game_lifecycle.c": "1aff760fe215e7c030c82bfbcd61ca18dc6da5e719d013c6b48836c293fd91ee",
+    "src/game_lifecycle.h": "d3e1575bde5c81ee16974ea0095db1dfddbc0d485ac2ecdd41a6496db9d1a833",
+    "src/resource_loader.c": "86501350d3c545590384869dd0e5e7f3747956c30b3c24147690d9c2b9da90f8",
+    "tools/front_end_differential.py": "333659d23dbc88fb5c5c7e535b4e135408f06f7c7b139c243ca61dfe9ce61b53",
+    "tools/verify_front_end_differential.py": "ce1f46da14c8425695463ea0bb15d94176a3d46d271ec398f9b910a8370aae98",
+    "tools/run_front_end_native.py": "fb63904f4d13973a975ba41d6efca611006ecbae685f91ce2298b3efa4030232",
+    "tools/hg_m18_evidence.py": "49597565a5009098da8dc482dbadb32cdcf691f0a52e7a09fde5f7ef7efb395e",
+    "tools/hg_m18_checks.py": "1299bc293e532713712cf416eb05dfc7384e002c70dbee8e4df90cd97b75ba6f",
+    "tools/hg_coverage_inventory.py": "883b5ec0e48e63a35147f027e0d08b8b6e1c041d234bec784c0abef3daead373",
+    "tools/ee_subset.py": "6a38ddcd890ea388ed009d365663f66079d43ee822c0f5ad515ec946bfcf899b",
+    "tests/test_front_end_differential.py": "05ac3756fba4bcc8411cab3189a631829ba6b1642aa572ec2536268b6710af2e",
+    "tests/front_end_sanitizer.c": "62837681a58e960f8e1a262d2e200355554b6cf88f713f3d0c89752db528f5e6",
+    "analysis/front_end/functions.json": "f1b0474cea9bf187b9180ebed203cb90f830f7bca1d4b5f0d0b11f744680daaf",
+    "analysis/front_end/overlay_functions.json": "59d224b4c7240c91415ae18bfe71aa8c43caa5cc76c8ad692fdecd0745c68f71",
+    "analysis/front_end/tables.json": "c7eaf5184f8cecb94fcba5646a96b7a3a77aac9f64ab487c7ba49f94c753db92"
+  },
+  "receipts": {
+    "front-end-differential": "db292a173414b7dd838187fbdb74581e7088380a7fd4e79b1c958f23df47aa40",
+    "connected-native-lifecycle": "dfa5ab65fc237b00997e314bb7d0cb0db0dbd588435fb17a2d0c7ecef26b500f",
+    "connected-native-controls": "f7405094010c6350e6de4b774a379d32241cd8b494f7aa78e4bb7d1084e1cd5b",
+    "lifecycle-differential": "1f597054c17cd70cede352057bff46f239cc579ee0279e86295fdfffc791809c",
+    "lifecycle-negative-controls": "c14c97e0a6215a94e63403ab381944e2663d37f2a0b60a27d14279d03351ffba",
+    "lifecycle-corridor": "f80d5b5b6c215d2ba1781ea1fa5335b96e8afff71e1fb26ea3cd97f14ec491c7",
+    "lifecycle-corridor-controls": "7968e85e7d51a64702cf35376260dbe74c18c9ef14f38d0695980abf48b9b55a",
+    "m16-corridor": "1333d7845d134b6504f759ea30a667142ab690a737d8e6a91b7af6d5c71f6b56",
+    "native-pause-entry": "467685648a5589d07dfc5b40d01cbb285bee0c641cfd64eecdff5cfb2cd42d83",
+    "native-pause-retained": "5f0fdd29589105196e24c28abf537484e1b6da456d9b633fad911f650529d109",
+    "native-area-pack": "7f4a0fd062c1ac4742e6fe85810a8dbc520f6c5ce61931da45a741c71f709106",
+    "lifecycle-sequence-synthetic": "f0216c24d7bf5857fa6f89a83eac35014395449b390e08cccac239ea9b439d74",
+    "m14-native-window": "d3d9849ebab18d8938722ba0f56539db16c705f85a0ed86630aa2c0ef3fd442d",
+    "m14-register-contracts": "2bf11d37b7923ea775c22c96cab271a7c3c9f83b7bb3de14cb0e21bbd3d5feea",
+    "m14-counter-guard": "48a628b19a7ef8f2193fe7675692afad5259f063027961fef03363f64e0c6a98",
+    "synthetic-suite": "7a6eff5cfe54ed8ed0f19ef4c85d9f19462672762979583a2d009bf78114c0c5",
+    "ubsan-suites": "eaa1f3b6b209a93afb24e4344c465ca9cb05a821a04ce1c3fbc29160b2c181de",
+    "sanitizer-lifecycle-harness": "68003e9d7ee3baf218ef09c854fbb4f5b446bb0284f5e17898a7d52e4fae3735",
+    "sanitizer-front-end-harness": "c5797ef73f3fe037747f7afbebaba17391c188d25d0a439900566a92166c05d0",
+    "historical-regression": "caa7fe423a76866dfaf29aaa0b731548f754f785ad96a85f4c67aadfb4b7bf78"
+  },
+  "checks": [
+    {
+      "id": "elf-identity",
+      "evidence": "original-byte",
+      "command": "sha256sum $HG_ELF",
+      "result": "passed",
+      "detail": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+    },
+    {
+      "id": "title-overlay-identity",
+      "evidence": "original-byte",
+      "command": "sha256sum local/m18/ovl/A0_B09.BIN",
+      "result": "passed",
+      "detail": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935 (/AREA0/A0_B09.BIN, MWo3 id 0x0a, linked 00a87800)"
+    },
+    {
+      "id": "front-end-packet-bytes",
+      "evidence": "original-byte",
+      "command": "python3 -B tools/hg_m18_evidence.py --verify --elf $HG_ELF --overlay local/m18/ovl/A0_B09.BIN",
+      "result": "passed",
+      "detail": "PASS: 2740 front-end instruction words and 4 tables match the original ELF/overlay"
+    },
+    {
+      "id": "front-end-packet-record",
+      "evidence": "original-byte",
+      "command": "python3 -B tools/verify_elf_evidence.py --elf $HG_ELF --record analysis/front_end/functions.json",
+      "result": "passed",
+      "detail": "PASS: 25 function listings match original ELF bytes and JAL targets"
+    },
+    {
+      "id": "front-end-packet-ps2dinfo",
+      "evidence": "original-byte",
+      "command": "python3 -B tools/hg_m18_evidence.py --elf $HG_ELF --overlay local/m18/ovl/A0_B09.BIN --ps2dinfo $HG_PS2DINFO (generation; PS2DInfo verify with --require-all-bytes)",
+      "result": "passed",
+      "detail": "25 ELF rows, 2337 instructions verified, 0 unknown"
+    },
+    {
+      "id": "strict-build",
+      "evidence": "synthetic",
+      "command": "cc -std=c11 -O2 -Wall -Wextra -Werror -pedantic -fPIC -shared -Isrc src/front_end.c src/game_lifecycle.c src/resource_loader.c src/disc_read.c -o local/build/m18-strict.so",
+      "result": "passed",
+      "detail": ""
+    },
+    {
+      "id": "front-end-differential",
+      "evidence": "model-differential",
+      "command": "python3 -B tools/verify_front_end_differential.py --elf $HG_ELF --overlay local/m18/ovl/A0_B09.BIN --cases 1500 --capture local/m18/native/full/title-menu-input-ready --capture local/m18/native/full/s1-active-settled --capture local/m18/native/full/s2-pause-menu --capture local/m18/native/full/s3-title-menu-ready --output local/m18/out/front-end-diff.json",
+      "result": "passed",
+      "detail": "27 entries, 202500 cases on 5 bases (elf-image, title-menu-input-ready, s1-active-settled, s2-pause-menu, s3-title-menu-ready), 0 mismatches"
+    },
+    {
+      "id": "connected-native-lifecycle",
+      "evidence": "runtime",
+      "command": "python3 -B tools/run_front_end_native.py --start title-menu-input-ready --output local/m18/out/connected-run.json",
+      "result": "passed",
+      "detail": "16273 consecutive native frames (seq 2439..18712), 0 failing units, 0 faults, 11 loader requests checked, 10 declared external fade recoveries, 114 interpreted original words; 17/17 scenario boundaries verified"
+    },
+    {
+      "id": "connected-native-controls",
+      "evidence": "runtime",
+      "command": "python3 -B tools/run_front_end_native.py --negative-controls --output local/m18/out/controls.json",
+      "result": "passed",
+      "detail": "null-control clean; title-new-game-routes-to-area-select rejected; title-cursor-no-continue-skip rejected; fade-in-rate-off-by-one rejected; pause-quit-fade-step-6 rejected; pause-quit-wrong-next-state rejected; pause-resume-wrong-next-state rejected; teardown-session-flag-dropped rejected; title-return-fade-in-step-7 rejected; title-return-resource-kind rejected; new-game-carried-area-corrupt rejected"
+    },
+    {
+      "id": "lifecycle-differential",
+      "evidence": "model-differential",
+      "command": "python3 -B tools/verify_lifecycle_differential.py --elf $HG_ELF --capture local/m13/captures/obs3-000.json --capture local/m8/captures/native-player-init-entry-001.json --capture local/m8/captures/resume-square-edge-entry-001.json --capture local/m8/captures/resume-equipment-transition-entry-001.json --capture local/m9/captures/s3-release1-camera-entry.json --capture local/m10/captures/s1-held1-dispatch-entry.json --capture local/m11/captures/obs1-000.json --capture local/m12/captures/obs2-000.json --cases 2400 --seed 17 --output local/m18/out/lifecycle-diff.json",
+      "result": "passed",
+      "detail": "PASSED"
+    },
+    {
+      "id": "lifecycle-negative-controls",
+      "evidence": "model-differential",
+      "command": "python3 -B tools/lifecycle_negative_controls.py --elf $HG_ELF --output local/m18/out/lifecycle-negative-controls.json",
+      "result": "passed",
+      "detail": "PASSED"
+    },
+    {
+      "id": "lifecycle-corridor",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --lifecycle --output local/m18/out/lifecycle-corridor.json",
+      "result": "passed",
+      "detail": "passed frames 22 failures []"
+    },
+    {
+      "id": "lifecycle-corridor-controls",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_lifecycle_corridor_controls.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --output local/m18/out/corridor-controls.json",
+      "result": "passed",
+      "detail": "PASSED"
+    },
+    {
+      "id": "m16-corridor",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_player_continuous.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --area-image $HG_AREA_IMAGE --negative-controls --output local/m18/out/m16-corridor.json",
+      "result": "passed",
+      "detail": "passed frames 22 failures []"
+    },
+    {
+      "id": "native-pause-entry",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_lifecycle_native.py --elf $HG_ELF --entry frame --before local/m8/captures/pad-read-entry.json --after local/m8/captures/pause-transition.json --negative-controls --output local/m18/out/native-pause-entry.json",
+      "result": "passed",
+      "detail": "56 bytes compared, 0 mismatches, 0 uncaptured reads, controls 4/4 rejected"
+    },
+    {
+      "id": "native-pause-retained",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_lifecycle_native.py --elf $HG_ELF --entry mode --before local/m8/captures/pause-transition.json --after local/m8/captures/pause-retained.json --negative-controls --output local/m18/out/native-pause-retained.json",
+      "result": "passed",
+      "detail": "52 bytes compared, 0 mismatches, 0 uncaptured reads, controls 2/2 rejected"
+    },
+    {
+      "id": "native-area-pack",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_lifecycle_native.py --elf $HG_ELF --entry pack --before local/m7/captures/c6-entry.json --after local/m7/captures/c6-entry.json --negative-controls --output local/m18/out/native-area-pack.json",
+      "result": "passed",
+      "detail": "40 bytes compared, 0 mismatches, 0 uncaptured reads, controls 2/2 rejected"
+    },
+    {
+      "id": "lifecycle-sequence-synthetic",
+      "evidence": "synthetic",
+      "command": "python3 -B tools/run_lifecycle_sequence.py --frames 1500 --output local/m18/out/lifecycle-sequence.json",
+      "result": "passed",
+      "detail": "faults [] counters {'frame_tick': 889, 'main_loop': 1500, 'vblank': 1500}"
+    },
+    {
+      "id": "m14-native-window",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_predispatch_window.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --negative-controls --output local/m18/out/m14-native.json",
+      "result": "passed",
+      "detail": "passed 22 frames"
+    },
+    {
+      "id": "m14-register-contracts",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_predispatch_contracts.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture-dir $HG_CAPTURE_DIR --output local/m18/out/m14-contracts.json",
+      "result": "passed",
+      "detail": "passed {\"0x155350\": {\"calls\": 22, \"sufficient\": 22, \"probes\": {}}, \"0x153020\": {\"calls\": 22, \"sufficient\": 22, \"probes\": {}}, \"0x152c50\": {\"calls\": 22, \"sufficient\": 22, \"probes\": {}}, \"0x14a0a0\": {\"calls\": 286, \"sufficient\": 286, \"probes\": {}}, \"0x14f060\": {\"calls\": 264, \"sufficient\": 264, \"probes\": {\"drop-t0\": {\"observable\": 264, \"calls\": 264}, \"drop-t1\": {\"observable\": 264, \"calls\": 264}, \"drop"
+    },
+    {
+      "id": "m14-counter-guard",
+      "evidence": "runtime",
+      "command": "python3 -B tools/verify_counter_guard.py --elf $HG_ELF --ps2dinfo $HG_PS2DINFO --capture $HG_CAPTURE_DIR/obs3-010.json --output local/m18/out/m14-counter.json",
+      "result": "passed",
+      "detail": "1 108000 passed"
+    },
+    {
+      "id": "synthetic-suite",
+      "evidence": "synthetic",
+      "command": "python3 -B -m unittest discover -s tests",
+      "result": "passed",
+      "detail": "Ran 334 tests in 189.627s"
+    },
+    {
+      "id": "ubsan-suites",
+      "evidence": "synthetic",
+      "command": "HG_SANITIZE=1 python3 -B -m unittest tests.test_lifecycle_sequence tests.test_lifecycle_differential tests.test_front_end_differential",
+      "result": "passed",
+      "detail": "Ran 10 tests in 37.381s"
+    },
+    {
+      "id": "sanitizer-lifecycle-harness",
+      "evidence": "synthetic",
+      "command": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/lifecycle_sanitizer.c src/game_lifecycle.c src/resource_loader.c src/disc_read.c -o local/build/lifecycle-sanitizer && local/build/lifecycle-sanitizer",
+      "result": "passed",
+      "detail": "lifecycle sanitizer: 20000 iterations, 129426 calls, 6667 interrupts, 0 domain faults, 26676 unmapped"
+    },
+    {
+      "id": "sanitizer-front-end-harness",
+      "evidence": "synthetic",
+      "command": "cc -std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc tests/front_end_sanitizer.c src/front_end.c src/game_lifecycle.c src/resource_loader.c src/disc_read.c -o local/build/front-end-sanitizer && local/build/front-end-sanitizer",
+      "result": "passed",
+      "detail": "front-end sanitizer: 20000 iterations, 136371 calls, 2500 interrupts, 1395 domain faults, 10008 unmapped"
+    },
+    {
+      "id": "historical-regression",
+      "evidence": "regression",
+      "command": "python3 -B tools/hg_verify.py run --profile full  (HG_JAPAN_ISO, HG_PCSX2)",
+      "result": "passed",
+      "detail": "79/79 gates accepted, 0 reused. local/verification/m12-20261123T131308Z-q9_et4ux/summary.md"
+    },
+    {
+      "id": "git-diff-check",
+      "evidence": "synthetic",
+      "command": "git diff --check f759bf5",
+      "result": "passed",
+      "detail": ""
+    }
+  ]
+}

@@ -19,6 +19,11 @@ and a final rebuild/port target remain unclaimed.
 python -m unittest discover -s tests -v
 ```
 
+On the integrated M17/M18/Content/Audio source this runs 452 tests. The three
+retail-only Audio tests (`tests/test_hg_audio_original.py`) are skipped unless
+`HG_JAPAN_ISO` names the authenticated Japan ISO; with it set they run and a
+missing or non-matching image fails.
+
 The full synthetic suite requires **Python 3.10+, a C11 compiler, and JDK 21
 with `javac`** for the Java export transaction test. Build products go in ignored
 `local/build/`. No retail data, Ghidra or emulator is needed in CI. See the
@@ -52,6 +57,38 @@ sequence, with 320 verified checkpoints and bounded original-game evidence.
 Its original stacked PR #17 was integrated into `main` through
 [PR #18](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/18).
 See [docs/M14.md](docs/M14.md) and [evidence/m14/](evidence/m14/).
+M15 and M16 add the camera projection, render-node state and late-frame render
+service to the same 22 frames ([docs/M15.md](docs/M15.md), [docs/M16.md](docs/M16.md)).
+
+M17 (integrated on `integration/m17-m18-content-audio`, pending owner review) reconstructs the game lifecycle layer in C:
+main loop, vblank handlers, mode dispatcher, boot, title/lifecycle and gameplay
+modes, area loading and active play with pause and teardown. The 22 corridor
+frames now run through that layer. A synthetic boot-to-gameplay sequence and
+three partial native observations check it. See [docs/M17.md](docs/M17.md).
+
+M18 (built on M17; integrated on the same branch) reconstructs the front end
+in C: fades and transitions, the controller service, the title menu and
+memory-card check, the new-game state and the pause menu. The connected C
+then runs 16,273 consecutive frames against one recorded session of the
+original game: title → new game → gameplay → pause → resume → pause →
+quit → title → new game → gameplay. The comparison covers the C-owned
+front-end and lifecycle state under declared native inputs (pad buffer,
+vblank timing, loader cells, scene-requested fades); the world simulation
+stays external. See [docs/M18.md](docs/M18.md).
+
+Content/HGScript (integrated on the same branch) adds an offline toolchain for
+the PACK archive corpus: all 2,541 members enumerated and classified, FLK5
+inspection, and 74 HGScript collections decoded with byte-exact rebuilds
+(48 keep an unresolved string binding; event semantics are not claimed).
+This is content reconstruction, not EE decompilation. See
+[docs/content-pipeline.md](docs/content-pipeline.md).
+
+Audio (integrated on the same branch) reconstructs 30 original EE audio
+functions in C (`src/audio/`): bank registration, slot tables, channel
+allocation and the play/cancel command path, compared with the original
+instructions. The IOP side is a documented host model, and decoded output
+does not establish SPU2 equivalence. See
+[docs/audio-milestone.md](docs/audio-milestone.md).
 
 M3 adds evidence-safety gates and connected resource rebasing; see [M3](docs/M3.md).
 

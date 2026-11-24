@@ -1,0 +1,189 @@
+{
+  "schema": "hg-m17-results/v1",
+  "result": "PASSED",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "native_observations": {
+    "native-pause-entry": {
+      "entry": "frame",
+      "before_sha256": "3683509fb9ffb2e77bf8d62353ac788729026b5c7c3939ce9abdcdd11bddda0a",
+      "after_sha256": "2a6f298ccf108a4c439c6ba123f1cd09e36622fee4976c5b18ae01b5fe2bd6b0",
+      "before_state": [
+        5,
+        1,
+        1,
+        0
+      ],
+      "after_state": [
+        5,
+        1,
+        2,
+        0
+      ],
+      "input_pad": "0008",
+      "pack": null,
+      "compared_bytes": 56,
+      "c_changed_bytes": [
+        "003ead3a",
+        "003eaeb0",
+        "003eaeb3",
+        "003eaeb6",
+        "700000d4"
+      ],
+      "mismatches": [],
+      "uncaptured_reads": 0,
+      "calls": [
+        "0012f850 external (recorded)",
+        "0012fa00 C",
+        "001404f0 external (recorded)",
+        "00156d50 external (recorded)",
+        "00156ce0 external (recorded)",
+        "00156ad0 external (recorded)",
+        "00139040 original instructions"
+      ],
+      "negative_controls": [
+        {
+          "control": "pause-wrong-sub",
+          "rejected": true
+        },
+        {
+          "control": "pause-fade-mode-0",
+          "rejected": true
+        },
+        {
+          "control": "pause-fade-time-6",
+          "rejected": true
+        },
+        {
+          "control": "start-bit-ignored",
+          "rejected": true
+        }
+      ],
+      "passed": true
+    },
+    "native-pause-retained": {
+      "entry": "mode",
+      "before_sha256": "2a6f298ccf108a4c439c6ba123f1cd09e36622fee4976c5b18ae01b5fe2bd6b0",
+      "after_sha256": "6d6a1eb7058e4b548eb4a72a419e548acc0ef9b8e42a4ce3617f2c539810ee2c",
+      "before_state": [
+        5,
+        1,
+        2,
+        0
+      ],
+      "after_state": [
+        5,
+        1,
+        2,
+        0
+      ],
+      "input_pad": "0000",
+      "pack": null,
+      "compared_bytes": 52,
+      "c_changed_bytes": [
+        "003eaeed",
+        "003eaef0"
+      ],
+      "mismatches": [],
+      "uncaptured_reads": 0,
+      "calls": [
+        "0012d9a0 C",
+        "0012e700 C"
+      ],
+      "negative_controls": [
+        {
+          "control": "tick-skipped-in-pause",
+          "rejected": true
+        },
+        {
+          "control": "accumulator-step-two",
+          "rejected": true
+        }
+      ],
+      "passed": true
+    },
+    "native-area-pack": {
+      "entry": "pack",
+      "before_sha256": "f1a8755a603d187ed1a0274ca7e7b76098ed548f2dfbc53986eb50de3b3b11bb",
+      "after_sha256": "f1a8755a603d187ed1a0274ca7e7b76098ed548f2dfbc53986eb50de3b3b11bb",
+      "before_state": [
+        5,
+        5,
+        2,
+        0
+      ],
+      "after_state": [
+        5,
+        5,
+        2,
+        0
+      ],
+      "input_pad": null,
+      "pack": {
+        "c": 198,
+        "native": 198,
+        "address": "003f8e44"
+      },
+      "compared_bytes": 40,
+      "c_changed_bytes": [],
+      "mismatches": [],
+      "uncaptured_reads": 0,
+      "calls": [],
+      "negative_controls": [
+        {
+          "control": "pack-retained-offset",
+          "rejected": true
+        },
+        {
+          "control": "pack-base-from-stride-table",
+          "rejected": true
+        }
+      ],
+      "passed": true
+    }
+  },
+  "corridor": {
+    "frames": [
+      10164,
+      10165,
+      10166,
+      10167,
+      10168,
+      10169,
+      10170,
+      10171,
+      10172,
+      10173,
+      10174,
+      10175,
+      10176,
+      10177,
+      10178,
+      10179,
+      10180,
+      10181,
+      10182,
+      10183,
+      10184,
+      10185
+    ],
+    "failures": [],
+    "lifecycle_external": [
+      "0x100b80",
+      "0x104e10",
+      "0x10cca0",
+      "0x139240",
+      "0x13d970",
+      "0x13da80",
+      "0x1467b0",
+      "0x149890",
+      "0x156740"
+    ],
+    "interpreted_original_words": 11886
+  },
+  "evidence_classes": {
+    "model_differential": "original-instruction versus C, same inputs, on the ELF and eight retail full-RAM states; not runtime observation",
+    "runtime": "C connected frame versus native coordinator-entry captures (obs3 corridor)",
+    "runtime_observation": "C paths versus partial native M7/M8 captures",
+    "synthetic": "host-modelled sequence and unit suites; not retail equivalence"
+  }
+}

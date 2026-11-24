@@ -117,7 +117,8 @@ RENDER_HANDOFF_CONTROL = 'omitted-packet-bank-switch'
 VERIFICATION_SOURCES = ('src/resource_loader.c', 'src/resource_loader.h',
                         'tools/verify_player_continuous.py', 'tools/predispatch_differential.py',
                         'tools/render_node_differential.py',
-                        'tools/verify_player_connected_runtime.py', 'tools/ee_subset.py')
+                        'tools/verify_player_connected_runtime.py', 'tools/ee_subset.py',
+                        'src/game_lifecycle.c', 'src/game_lifecycle.h')
 M15_COMPILED_CONTROLS = RN.MUTANTS
 
 # M16 dispatch-contract expectations for compiled controls: omitting the
@@ -234,6 +235,47 @@ class ContinuousDriver(G.GroundedDriver):
         return super().external(pc, a, b, c, d)
 
 
+# M17 lifecycle mode: the frame unit runs through the reconstructed lifecycle
+# layer (src/game_lifecycle.c). These callees of the main loop and of the C
+# vblank handlers are declared external boundaries (no compared memory
+# effects): render/engine/sound services, the GS/DMA idle wait 00100b80 (no
+# timeout modeled: returns 0, so its debug-dump branch is not taken), the DI
+# helper 0010cca0 and the iWakeupThread wrapper 00104e10.
+LIFECYCLE_EXTERNAL = {0x13d970, 0x156740, 0x139240, 0x1467b0, 0x13da80, 0x100b80, 0x149890,
+                      0x10cca0, 0x104e10}
+WAIT_INTERRUPT = 0xfffffffa
+# Cells the lifecycle layer now writes and the comparison guards: the
+# gameplay-mode float accumulator [gp+2f7c] and main-loop counter [gp+2f84],
+# the vblank counters 0095e300/0095e308, and the mode block gp+2dc0..+27.
+LIFECYCLE_GUARDED = ((0x3eaeec, 0x3eaef0), (0x3eaef4, 0x3eaef8), (0x95e300, 0x95e304),
+                     (0x95e308, 0x95e30c), (0x3ead30, 0x3ead58))
+
+
+class LifecycleDriver(ContinuousDriver):
+    def __init__(self, mem, elfdata, segments, status):
+        super().__init__(mem, elfdata, segments, status)
+        self.lifecycle_external = []
+        self.interrupts = 0
+        self.hardware = []
+
+    def _store(self, _, address, width, value):
+        if 0x10000000 <= address < 0x10010000:      # EE timer registers (main loop)
+            self.hardware.append((address, width, value))
+            return
+        return super()._store(_, address, width, value)
+
+    def external(self, pc, a=0, b=0, c=0, d=0):
+        if pc == WAIT_INTERRUPT:
+            self.interrupts += 1
+            if self.interrupts > 1:
+                raise ValueError('More than one vblank wait per frame unit')
+            return 0
+        if pc in LIFECYCLE_EXTERNAL:
+            self.lifecycle_external.append(hex(pc))
+            return 0
+        return super().external(pc, a, b, c, d)
+
+
 def tail_oracle(caps, fr):
     """Original 0012bc70, 00143150 and 0013ce80 from fr's native camera-return
     capture (cached), in the original coordinator order (0012f8f0, 0012f900,
@@ -301,8 +343,8 @@ def observation():
 
 
 class ContinuousRun:
-    def __init__(self, lib, caps, obs, pad_delta=None, ownership=None):
-        self.lib = lib; self.caps = caps; self.obs = obs
+    def __init__(self, lib, caps, obs, pad_delta=None, ownership=None, lifecycle=False):
+        self.lib = lib; self.caps = caps; self.obs = obs; self.lifecycle = lifecycle
         self.frames = sorted(obs['frames'], key=lambda fr: fr['counter'])
         start_stage = 'coordinator-entry' if 'coordinator-entry' in self.frames[0]['captures'] else 'dispatch-entry'
         self.start_stage = start_stage
@@ -317,6 +359,8 @@ class ContinuousRun:
         # pipeline; the AREA1 render body's three-draw condition reads it).
         rng = RN.rng_state_address(self.mem)
         self.guarded_ranges = GUARDED_RANGES + (NODE_RANGE, (rng, rng + 8), (0x3eaef0, 0x3eaef4))
+        if lifecycle:
+            self.guarded_ranges += LIFECYCLE_GUARDED
         self.ownership = ownership if ownership is not None else inter_frame_ownership(caps, obs)
         if self.ownership['node_unexplained']:
             raise ValueError('Render-node records changed outside 00143150')
@@ -493,11 +537,20 @@ class ContinuousRun:
         self.inject_input(fr['counter'])
         for address, (value, width) in (mutate or {}).items():
             self.mem.store(address, value, width)
-        driver = ContinuousDriver(self.mem, self.caps.elfdata, self.caps.segments, STATUS_VALUES[0])
+        driver = (LifecycleDriver if self.lifecycle else ContinuousDriver)(
+            self.mem, self.caps.elfdata, self.caps.segments, STATUS_VALUES[0])
         driver.area = self.caps.area
-        fn = getattr(self.lib, 'hg_player_frame_continuous')
-        fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = None
-        fn(C.byref(driver.env), 0x1ff8000)
+        if self.lifecycle:
+            fn = getattr(self.lib, 'hg_game_frame_connected')
+            fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = C.c_uint32
+            driver.suspended = fn(C.byref(driver.env), 0x1ff8000)
+            if not driver.errors and (driver.suspended != 1 or driver.interrupts != 1):
+                raise AssertionError(f'Lifecycle frame did not reach the next coordinator entry '
+                                     f'(suspended={driver.suspended}, interrupts={driver.interrupts})')
+        else:
+            fn = getattr(self.lib, 'hg_player_frame_continuous')
+            fn.argtypes = [C.POINTER(ResourceEnv), C.c_uint32]; fn.restype = None
+            fn(C.byref(driver.env), 0x1ff8000)
         if driver.errors: raise AssertionError(driver.errors)
         if driver.guest_frame != 0: raise AssertionError('Unbalanced guest frame')
         driver.stage['history-copy'] = driver.history
@@ -580,12 +633,14 @@ class ContinuousRun:
                     result='passed' if not guarded_ram and not guarded_scratch else 'failed')
 
 
-def sequence(lib, caps, obs, ownership=None, pad_delta=None):
-    run = ContinuousRun(lib, caps, obs, pad_delta, ownership)
+def sequence(lib, caps, obs, ownership=None, pad_delta=None, lifecycle=False):
+    run = ContinuousRun(lib, caps, obs, pad_delta, ownership, lifecycle)
     rows = []
     failures = []
+    executed = set()          # original words interpreted on the connected path (not oracles)
     for fr in run.frames:
         d = run.run_frame(fr)
+        executed.update(d.executed)
         stages = run.stage_results(d, fr)
         failures.extend((fr['counter'], label) for label, result in stages.items()
                         if result['result'] not in ('passed', 'skipped'))
@@ -595,8 +650,12 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None):
             result['capture'] = row['name']
             if result['result'] != 'passed': failures.append((fr['counter'], f'push-{index}'))
             stages[f'push-{index}-{row["tier"]}'] = result
-        rows.append(dict(counter=fr['counter'], phase=fr['phase'], stages=stages,
-                         external_calls=d.external_calls, rng_draws=d.rng_draws))
+        row = dict(counter=fr['counter'], phase=fr['phase'], stages=stages,
+                   external_calls=d.external_calls, rng_draws=d.rng_draws)
+        if lifecycle:
+            row.update(lifecycle_external=d.lifecycle_external, interrupts=d.interrupts,
+                       hardware_stores=[[hex(x) for x in h] for h in d.hardware])
+        rows.append(row)
         print(fr['counter'], 'passed' if not any(c == fr['counter'] for c, _ in failures) else 'FAILED',
               flush=True)
         del d; caps.cache.clear(); gc.collect()
@@ -604,6 +663,7 @@ def sequence(lib, caps, obs, ownership=None, pad_delta=None):
                 inter_frame_external_scratch=[hex(0x70000000 + o) for o in sorted(run.inter_external)],
                 rng_total={str(k): v for k, v in sorted(run.ownership['rng_total'].items())},
                 node_unexplained=run.ownership['node_unexplained'],
+                interpreted_pcs=[f'{pc:08x}' for pc in sorted(executed)],
                 result='passed' if not failures else 'failed')
 
 
@@ -852,6 +912,8 @@ def main():
     p.add_argument('--area-image', type=Path, required=True,
                    help='Authenticated original Japan image for the AREA1/A1_B00.BIN identity check')
     p.add_argument('--negative-controls', action='store_true')
+    p.add_argument('--lifecycle', action='store_true',
+                   help='M17: run each frame unit through the reconstructed lifecycle layer')
     p.add_argument('--max-frames', type=int, default=None,
                    help='smoke run: first N frames only (never a milestone receipt)')
     a = p.parse_args()
@@ -876,10 +938,11 @@ def main():
         if caps.load(fr['captures']['dispatch-entry']['name']).load(0x46e118) != fr['counter']:
             raise ValueError('Wrong capture frame')
     caps.cache.clear()
-    lib = library(output=a.output.with_suffix('.so'))
+    lib = library(output=a.output.with_suffix('.so'),
+                  extra=(ROOT / 'src/game_lifecycle.c',) if a.lifecycle else ())
     ownership = inter_frame_ownership(caps, obs)
     probe = ContinuousRun(lib, caps, obs, None, ownership)
-    result = sequence(lib, caps, obs, ownership, probe.pad_delta)
+    result = sequence(lib, caps, obs, ownership, probe.pad_delta, a.lifecycle)
     if a.negative_controls:
         result['negative_controls'] = controls(lib, caps, obs,
                                                a.output.parent / (a.output.stem + '-controls'),
@@ -889,6 +952,7 @@ def main():
         ok &= all(c['result'] == ('clean' if c['kind'] == 'null-control' else 'rejected')
                   for c in result['negative_controls'])
     result.update(schema='hg-player-continuous/v6', result='passed' if ok else 'failed', elf_sha256=EXPECTED,
+                  lifecycle=a.lifecycle,
                   observation_sha256=digest(OBSERVATION), frame_count=len(obs['frames']),
                   smoke_max_frames=a.max_frames, native_sp=hex(PD.NATIVE_SP),
                   area_sha256=__import__('hashlib').sha256(caps.area[0]).hexdigest(),
