@@ -191,7 +191,7 @@ class Runner:
     def note(self, pc):
         self.calls[pc] = self.calls.get(pc, 0) + 1
 
-    def interp(self, pc, args):
+    def interp(self, pc, args, hooks=None):
         m = Machine()
         m.mem = self.mem
         m.reg[28] = GP
@@ -199,6 +199,8 @@ class Runner:
         for i, v in enumerate(args):
             m.reg[4 + i] = v - (1 << 32) if v & 0x80000000 else v
         m.hooks = {h: (lambda v: (lambda cpu: v))(v) for h, v in KERNEL_HOOKS.items()}
+        if hooks:
+            m.hooks.update(hooks)
         m.run(pc, limit=5_000_000)
         self.interp_counts[pc] = self.interp_counts.get(pc, 0) + 1
         self.interp_pcs |= set(m.executed)
