@@ -11,6 +11,19 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class TestHGScriptRuntime(unittest.TestCase):
+    def test_title_publication_borrow_and_display_bounds(self):
+        build = Path(os.environ.get('HG_VERIFY_BUILD_DIR', ROOT / 'local/build'))
+        build.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='hgscript-title-', dir=build) as directory:
+            binary = Path(directory) / 'title'
+            subprocess.run([
+                'cc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic',
+                '-ffp-contract=off', '-I', 'src', 'tests/hgscript_title.c',
+                'src/hgscript/hgscript.c', 'src/hgscript/timed.c', 'src/hgscript/title.c',
+                'src/resource_loader.c', 'src/disc_read.c', '-o', str(binary),
+            ], cwd=ROOT, check=True, timeout=30)
+            subprocess.run([binary], check=True, timeout=10)
+
     def test_compiled_guest_playback(self):
         build = Path(os.environ.get('HG_VERIFY_BUILD_DIR', ROOT / 'local/build'))
         build.mkdir(parents=True, exist_ok=True)

@@ -26,6 +26,10 @@ PAD_EDGE = 0x0095e568
 VOICE_STATE = 0x003f2fa0
 MASK32 = 0xffffffff
 
+
+class RuntimeMismatch(ValueError):
+    """A measured EE/C difference, distinct from a verifier or callback fault."""
+
 U32 = C.c_uint32
 LOAD = C.CFUNCTYPE(U32, C.c_void_p, U32, U32)
 STORE = C.CFUNCTYPE(None, C.c_void_p, U32, U32, U32)
@@ -43,8 +47,11 @@ def elf_image(path):
     manifest = BUILD['elf']
     if hashlib.sha256(data).hexdigest() != manifest['sha256']:
         raise ValueError('ELF identity differs from the Japanese SCPS-15046 manifest')
-    segment = manifest['pt_load'][0]
-    start = segment['offset']
+    elf = hg_identify.elf32(data)
+    if elf['entry'] != manifest['entry'] or elf['pt_load'] != manifest['pt_load']:
+        raise ValueError('ELF load mapping differs from the Japanese manifest')
+    segment, = (p for p in elf['pt_load'] if p['vaddr'] == 0x100000 and p['filesz'])
+    start = hg_identify.va_to_offset(elf, 0x100000, segment['filesz'])
     return data[start:start + segment['filesz']]
 
 
@@ -130,15 +137,20 @@ class Bus:
             raise ValueError(f'unhandled external call at {entry:#x}')
         return 0
 
-    def original(self, entry, args, *, fp=(0, 0), t0=0):
+    def original(self, entry, args, *, fp=(0, 0), t0=0, registers=None,
+                 stop=0x00fff000, unhook=None):
         m = Machine()
         m.reg[28], m.reg[29] = GP, SP
         m.reg[4:4 + len(args)] = [sx(value, 32) & ((1 << 64) - 1) for value in args]
         m.reg[8] = t0
+        for register, value in (registers or {}).items():
+            m.reg[register] = value
         m.fpr[12], m.fpr[13] = fp
         m.load = self.load
         m.store = self.store
         for target in (0x1564a0, 0x156550, 0x182850, 0x11f880):
+            if target == unhook:
+                continue
             m.hooks[target] = lambda machine, target=target: self.external(
                 target, *(value & MASK32 for value in machine.reg[4:8]),
                 *machine.fpr[12:14])
@@ -152,7 +164,7 @@ class Bus:
         m.hooks[0x11b378] = copy
         m.hooks[0x11b100] = lambda machine: copy(machine, append=True)
         m.hooks[0x11b490] = lambda machine: len(self.string(machine.reg[4] & MASK32))
-        m.run(entry)
+        m.run(entry, stop=stop)
         return m.reg[2] & MASK32, m.executed
 
     def env(self):
@@ -184,7 +196,7 @@ class Bus:
 def library(directory, source=None):
     output = directory / 'hgscript.so'
     subprocess.run(['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror',
-                    '-pedantic', '-ffp-contract=off', '-fPIC', '-shared',
+                    '-pedantic', '-ffp-contract=off', '-fPIC', '-shared', '-Wl,--no-undefined',
                     '-I', str(ROOT / 'src/hgscript'),
                     str(ROOT / 'src/hgscript/hgscript.c'),
                     str(source or ROOT / 'src/hgscript/timed.c'), '-o', str(output)],
@@ -217,10 +229,14 @@ def compare(a, b, label):
     for address in sorted(a.dirty | b.dirty):
         expected, actual = a.load(address, 1), b.load(address, 1)
         if expected != actual:
-            raise ValueError(f'{label}: byte at {address:#x}: EE {expected:02x}, C {actual:02x}')
+            raise RuntimeMismatch(f'{label}: byte at {address:#x}: EE {expected:02x}, C {actual:02x}')
     if a.calls != b.calls:
-        raise ValueError(f'{label}: different external requests '
-                         f'(EE {a.calls[:2]!r}, C {b.calls[:2]!r})')
+        for index, (expected, actual) in enumerate(zip(a.calls, b.calls)):
+            if expected != actual:
+                raise RuntimeMismatch(f'{label}: external request {index} differs '
+                                      f'(EE {expected!r}, C {actual!r})')
+        raise RuntimeMismatch(f'{label}: request count differs '
+                              f'(EE {len(a.calls)}, C {len(b.calls)})')
     a.dirty.clear()
     b.dirty.clear()
     calls = a.calls[:]
@@ -275,7 +291,7 @@ def timed_case(lib, image, data, record, *, voice, press=()):
             draw_request_count += len(rendered)
             draw_digest.update(json.dumps([frame, rendered], separators=(',', ':')).encode())
         if phase != actual:
-            raise ValueError(f'tick {frame}: phase return differs')
+            raise RuntimeMismatch(f'tick {frame}: phase return differs')
         phases[sx(phase, 32)] += 1
         signed_phase = sx(phase, 32)
         if calls or not steps or signed_phase != steps[-1][1]:
@@ -412,10 +428,8 @@ def check_defects(image, data, scratch):
             lib = library(folder, mutant)
             try:
                 timed_case(lib, image, data, 5, voice=True)
-            except ValueError as exc:
-                if not str(exc).startswith('tick '):
-                    raise
-                results[name] = str(exc).split(':', 1)[0]
+            except RuntimeMismatch as exc:
+                results[name] = str(exc)
             else:
                 raise ValueError(f'failed to reject {name}')
     return results

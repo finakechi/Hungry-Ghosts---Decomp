@@ -46,6 +46,20 @@ static void cue_slots(HGScriptEnv *e, uint32_t state, uint32_t active) {
     }
 }
 
+void hg_script_timed_reset(HGScriptEnv *e, uint32_t s, uint32_t keep_voice) {
+    set_word(e, s + PHASE, UINT32_MAX);
+    set_word(e, s + DISPLAY_TAIL, s + DISPLAY);
+    end_display(e, s + DISPLAY);
+    set_word(e, s + PAGE_CHANGED, 0);
+    set_word(e, s + SHOW_TEXT, 0);
+    set_word(e, s + CENTER, 0xffff);
+    cue_slots(e, UINT32_MAX, UINT32_MAX);
+    set_word(e, s + 0x240, 0x10000);
+    store(e, s + VOICE_PENDING, 1, 0);
+    store(e, s + CUE_MODE, 1, 0);
+    if (!keep_voice) e->call(e->user, 0x00156550, 1, 0, 0, 0);
+}
+
 void hg_script_timed_init(HGScriptEnv *e, uint32_t s, uint32_t collection,
                           uint32_t record_index, uint32_t x, uint32_t y) {
     set_word(e, s + PHASE, UINT32_MAX);
@@ -124,25 +138,30 @@ static void center_page(HGScriptEnv *e, uint32_t s) {
     set_word(e, s + X, hg_script_bits((float)x));
 }
 
-static void append_text(HGScriptEnv *e, uint32_t s, uint32_t text) {
+static int append_text(HGScriptEnv *e, uint32_t s, uint32_t text) {
     uint32_t tail = word(e, s + DISPLAY_TAIL);
+    if (tail < s + DISPLAY || tail > s + DISPLAY_TAIL - 9) return 0;
+    /* Five token bytes, the terminated string and three tail bytes. */
+    uint32_t capacity = s + DISPLAY_TAIL - tail - 8;
+    uint32_t length = 0;
+    while (length < capacity && load(e, text + length, 1)) ++length;
+    if (length == capacity) return 0;
+
     store(e, tail, 1, 0);
     store(e, tail + 1, 1, 3);
     store(e, tail + 2, 1, 0);
     store(e, tail + 3, 1, load(e, s + STYLE, 1));
     store(e, tail + 4, 1, 0);
     tail += 5;
-    uint32_t byte;
-    do {
-        byte = load(e, text++, 1);
-        store(e, tail++, 1, byte);
-    } while (byte);
+    for (uint32_t i = 0; i <= length; ++i) store(e, tail++, 1, load(e, text + i, 1));
     set_word(e, s + DISPLAY_TAIL, tail);
     end_display(e, tail);
+    return 1;
 }
 
-static void append_break(HGScriptEnv *e, uint32_t s) {
+static int append_break(HGScriptEnv *e, uint32_t s) {
     uint32_t tail = word(e, s + DISPLAY_TAIL);
+    if (tail < s + DISPLAY || tail > s + DISPLAY_TAIL - 8) return 0;
     store(e, tail, 1, 1);
     store(e, tail + 1, 1, 2);
     store(e, tail + 2, 1, word(e, s + CENTER));
@@ -150,6 +169,12 @@ static void append_break(HGScriptEnv *e, uint32_t s) {
     store(e, tail + 4, 1, 0);
     set_word(e, s + DISPLAY_TAIL, tail + 5);
     end_display(e, tail + 5);
+    return 1;
+}
+
+static int32_t display_overflow(HGScriptEnv *e, uint32_t s) {
+    set_word(e, s + PHASE, (uint32_t)HG_SCRIPT_DISPLAY_OVERFLOW);
+    return HG_SCRIPT_DISPLAY_OVERFLOW;
 }
 
 static void stop_voice(HGScriptEnv *e) {
@@ -301,14 +326,14 @@ int32_t hg_script_timed_tick(HGScriptEnv *e, uint32_t s) {
                 set_word(e, s + OPACITY, 0x3f800000);
                 set_word(e, s + SHOW_TEXT, 1);
                 center_page(e, s);
-                append_text(e, s, text);
+                if (!append_text(e, s, text)) return display_overflow(e, s);
             }
             break;
         }
         case 2:
             set_word(e, s + CURSOR, cursor + 4);
             center_page(e, s);
-            append_break(e, s);
+            if (!append_break(e, s)) return display_overflow(e, s);
             continue;
         case 3:
             store(e, s + LAST_COMMAND, 1, 3);
@@ -391,6 +416,7 @@ int32_t hg_script_timed_tick(HGScriptEnv *e, uint32_t s) {
 /* 001cd9c0 walks the compiled display buffer and owns the fade/reset between
  * pages. The synchronous text draw receives the style bytes in guest scratch. */
 void hg_script_timed_draw(HGScriptEnv *e, uint32_t s, uint32_t scratch_top) {
+    if (word(e, s + PHASE) == (uint32_t)HG_SCRIPT_DISPLAY_OVERFLOW) return;
     uint32_t style = scratch_top - 0x30;
     uint32_t x = word(e, s + X), y = word(e, s + Y);
     uint32_t fade = word(e, s + FADE);

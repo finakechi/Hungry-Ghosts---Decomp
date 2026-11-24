@@ -6,14 +6,16 @@
 /* Guest bus for authenticated collections and their initialized game state.
  * Load/store widths are in bytes. The renderer/audio callbacks execute
  * synchronously and may inspect guest pointers before the call returns. */
+typedef uint32_t (*HGScriptCallFP)(void *, uint32_t entry, uint32_t a0,
+                                  uint32_t a1, uint32_t a2, uint32_t a3,
+                                  uint32_t f12, uint32_t f13);
 typedef struct {
     void *user;
     uint32_t (*load)(void *, uint32_t address, uint32_t width);
     void (*store)(void *, uint32_t address, uint32_t width, uint32_t value);
     uint32_t (*call)(void *, uint32_t entry, uint32_t a0, uint32_t a1,
                      uint32_t a2, uint32_t a3);
-    uint32_t (*call_fp)(void *, uint32_t entry, uint32_t a0, uint32_t a1,
-                        uint32_t a2, uint32_t a3, uint32_t f12, uint32_t f13);
+    HGScriptCallFP call_fp;
 } HGScriptEnv;
 
 #define HG_SCRIPT_HANDLES     0x003f4300u
@@ -52,10 +54,14 @@ void hg_script_format_number(HGScriptEnv *, uint32_t buffer,
  * a valid record index. Reserve HG_SCRIPT_TIMED_SIZE bytes for state. As in
  * the original, initialize idle (-1), then set state word +0 to 0 to play.
  * Call tick once per frame and preserve guest memory between calls. Return
- * values are -1 idle/done, 0 dispatching or waiting for input/audio, 1 timer.
+ * values are -1 idle/done, 0 dispatching or waiting for input/audio, 1 timer,
+ * or HG_SCRIPT_DISPLAY_OVERFLOW for a host-detected display buffer overrun.
  * Slot globals and voice status are shared, as on the EE. The caller owns
  * audio servicing and display consumption. Callbacks are required. */
 #define HG_SCRIPT_TIMED_SIZE 0x264u
+#define HG_SCRIPT_DISPLAY_OVERFLOW (-2)
+/* 001cccd0: reset visual and cue state and optionally request a voice stop. */
+void hg_script_timed_reset(HGScriptEnv *, uint32_t state, uint32_t keep_voice);
 void hg_script_timed_init(HGScriptEnv *, uint32_t state, uint32_t collection,
                           uint32_t record_index, uint32_t x_bits, uint32_t y_bits);
 /* Optional caller prelude (0025cf60). Run once on entry paths that use it. */

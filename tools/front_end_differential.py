@@ -130,7 +130,10 @@ def build(output=None, sanitize=False, front_end=None, lifecycle=None):
     args = ['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fPIC', '-shared',
             '-I' + str(ROOT / 'src'), str(front_end or ROOT / 'src/front_end.c'),
             str(lifecycle or ROOT / 'src/game_lifecycle.c'),
-            str(ROOT / 'src/resource_loader.c'), str(ROOT / 'src/disc_read.c'), '-o', str(output)]
+            str(ROOT / 'src/resource_loader.c'), str(ROOT / 'src/disc_read.c'),
+            str(ROOT / 'src/hgscript/hgscript.c'), str(ROOT / 'src/hgscript/timed.c'),
+            str(ROOT / 'src/hgscript/title.c'), '-ffp-contract=off',
+            '-Wl,--no-undefined', '-o', str(output)]
     if sanitize:
         args[1:1] = ['-fsanitize=undefined', '-fno-sanitize-recover=all']
     subprocess.run(args, check=True)
