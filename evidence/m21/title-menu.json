@@ -1,0 +1,260 @@
+{
+  "schema": "hg-m21-title-scene/v1",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "ranges": [
+    {
+      "start": "00141470",
+      "end": "001414ec",
+      "file": "/SCPS_150.46",
+      "offset": 269424,
+      "size": 124,
+      "sha256": "0dea71916598ad0ca1490ea0e057f4fc6d9c5d6d3305736bf3ce6770ea343015"
+    },
+    {
+      "start": "0025c170",
+      "end": "0025c20c",
+      "file": "/SCPS_150.46",
+      "offset": 1427824,
+      "size": 156,
+      "sha256": "8adf1c3499855e64940733064db0e364904cbf460e5f69d9c8e02aaefa96626b"
+    },
+    {
+      "start": "00a88660",
+      "end": "00a886a0",
+      "file": "/AREA0/A0_B09.BIN",
+      "offset": 3680,
+      "size": 64,
+      "sha256": "f4fd729c108ffc6fcbef7ac06adf398b5d254e2a346401341b4f6fd19bc39141"
+    },
+    {
+      "start": "00a886e0",
+      "end": "00a886f4",
+      "file": "/AREA0/A0_B09.BIN",
+      "offset": 3808,
+      "size": 20,
+      "sha256": "1833edfb3c7a848ef750c7b86bd6d1c469dd35f85a80f9b2eac2a855e6e63b8e"
+    },
+    {
+      "start": "00a88a20",
+      "end": "00a88b40",
+      "file": "/AREA0/A0_B09.BIN",
+      "offset": 4640,
+      "size": 288,
+      "sha256": "a060bc23a7f9c1d149399f7b2252d5e455d9c77cf80949522e2de0e38ccdb3d2"
+    },
+    {
+      "start": "00a88b40",
+      "end": "00a88d48",
+      "file": "/AREA0/A0_B09.BIN",
+      "offset": 4928,
+      "size": 520,
+      "sha256": "da1ed416fac312613be05ed280ce5d07e65f8650681d0085d42a7383eb059361"
+    },
+    {
+      "start": "0025ddd0",
+      "end": "0025e6c0",
+      "file": "/SCPS_150.46",
+      "offset": 1435088,
+      "size": 2288,
+      "sha256": "32ac04efea72ba0c6094df1561d04939e0d66d6c62ff763b1aecbe4e0864f52d"
+    },
+    {
+      "start": "00a8a580",
+      "end": "00a8a9d0",
+      "file": "/AREA0/A0_B09.BIN",
+      "offset": 11648,
+      "size": 1104,
+      "sha256": "d475f849b9996a6f747dff1f006b132ae0161f92b86e8d033f62879684d1c240"
+    }
+  ],
+  "publication": {
+    "requests": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        106
+      ],
+      [
+        0,
+        109
+      ],
+      [
+        1,
+        84
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        80
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        192
+      ]
+    ],
+    "frames": 837,
+    "completed": 9,
+    "overlay_bytes": 16384,
+    "overlay_sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+    "title_slot": 23467264,
+    "domains": [
+      {
+        "address": "003f4d3c",
+        "bytes": 36,
+        "sha256": "58e8b87e076251ffdf9f3b5e7b8f9ad1e46986c652e2561fb0fee5fdf5639c1d"
+      },
+      {
+        "address": "01661500",
+        "bytes": 120,
+        "sha256": "af57d864dc3044122d86773f4880857c07e6b1a33fafc46cad5d96f55f23fea6"
+      },
+      {
+        "address": "0172af00",
+        "bytes": 1376,
+        "sha256": "a4e59e414c7b0a3a690c19553bf5985828ecbbad290e75bf98f658ebc25fd0ac"
+      }
+    ]
+  },
+  "frames": 198,
+  "events": {
+    "activation": 64,
+    "voice_start": 64,
+    "first_glyph": 65,
+    "dialogue_reset": 164,
+    "menu": 197
+  },
+  "skip_frame": 100,
+  "area": null,
+  "requests": {
+    "0x156550": 6,
+    "0x1564a0": 2,
+    "0x182850": 105
+  },
+  "audio_requests": [
+    [
+      0,
+      1402192,
+      1
+    ],
+    [
+      64,
+      1402016,
+      1,
+      576,
+      1,
+      0,
+      1065353216,
+      1017370378
+    ],
+    [
+      100,
+      1402192,
+      1
+    ],
+    [
+      164,
+      1402192,
+      1
+    ],
+    [
+      197,
+      1402192,
+      1
+    ],
+    [
+      197,
+      1402192,
+      1
+    ],
+    [
+      197,
+      1402192,
+      1
+    ],
+    [
+      197,
+      1402016,
+      1,
+      1046,
+      0,
+      0,
+      1065353216,
+      1017370378
+    ]
+  ],
+  "first_glyph": {
+    "flags": 65536,
+    "text_sha256": "a5e1333f8d17f9e2705489dc67811fc671e34f621885f974af83174cb08a5c88"
+  },
+  "request_sha256": "e7a14cdfae4790ccc5bdb1f2e36adffa3e1ccf6db208c0d7c8e9bc40daf9a7b0",
+  "original_pcs": 7874,
+  "shared_instruction_pcs": 6921,
+  "compared_bytes": 5740,
+  "advance_interval": 32,
+  "live": {
+    "stops": {
+      "live-create": {
+        "pc": "00a88660",
+        "vblank": 1904,
+        "sample_sha256": "2dcb9f2b1c1c763a360a20e7b0ae964fe20e6d4e2b266e934e2fd3bb376b8249",
+        "debugger_sha256": "d9fcf14953043f402e6a016722014a9b3240147733edafd594102ace29da5f17"
+      },
+      "live-dialogue-init": {
+        "pc": "00a88c64",
+        "vblank": 1968,
+        "sample_sha256": "d289c815fad32b03c9856b4c045e3a80d292fa66276a60e8a8e7d0dcdc0d0179",
+        "debugger_sha256": "194728d4cc50f59c58923f4b1e6e317aec8e53dac456d2f8986804c23dd30e1c"
+      },
+      "live-voice": {
+        "pc": "001564a0",
+        "vblank": 1968,
+        "sample_sha256": "ed57a1216932b99adab1fe3698e12427334bff3fca0fbbecfcaaebb3e4a51f7d",
+        "debugger_sha256": "98f65cbb8f177f9258304bc1a5d28297cb5d70773db5b5d7d691983e6e7147a3"
+      },
+      "live-glyph": {
+        "pc": "001cdb70",
+        "vblank": 1991,
+        "sample_sha256": "60b0c1ff58a9a00c82f8bc1daaee5f58c54f9a86b55322dae5f9cadf9d0c46b6",
+        "debugger_sha256": "9ea6780b46ee9fcc42e7864183593764098ee0491b60b26177ecb2f8b5fe6b77"
+      },
+      "live-reset": {
+        "pc": "00a88ce8",
+        "vblank": 5916,
+        "sample_sha256": "5987db3e3489386782b9dcd2fcaaad7ee28e6932d81860bf11c522574b956e00",
+        "debugger_sha256": "d78d69a4fe741b0886c78211cbc41b8a7357cca79698c33af129d69e6aba7df3"
+      },
+      "live-presentation-done": {
+        "pc": "00a886e0",
+        "vblank": 11549,
+        "sample_sha256": "60a51db75433cfafe5d5df383da0a5f06e5ebdd3578638fae11d2f843a2745ce",
+        "debugger_sha256": "431f08ed5047b915e567f30184ffd8f8e6f3b89cbc0a8b71c6e0c0ee8481ec89"
+      }
+    },
+    "resident_prefix_bytes": 2068480,
+    "activation_vblanks": 64,
+    "glyph_vblanks_after_activation": 23,
+    "glyph_text_sha256": "a5e1333f8d17f9e2705489dc67811fc671e34f621885f974af83174cb08a5c88",
+    "reset_vblanks_after_glyph": 3925,
+    "publication_matches": true
+  },
+  "controls": {
+    "swap-dialogue-and-actors": "frame 1: scheduled services differ: [(1675104,), (1292000, 4167664), (1623328,), (1283728,), (1472320,), (2511968,), (1468272,), (2476688,), (1582208,), (1298048,), (1276608,), (1351840,), (1351840,)] / [(1675104,), (1292000, 4167664), (1283728,), (1472320,), (2511968,), (2476688,), (1623328,), (1582208,), (1298048,), (1276608,), (1351840,), (1351840,)]",
+    "skip-required-fade": "frame 100: 003eaeb0 got 02, expected 03",
+    "omit-release": "frame 164: request count differs (EE 1, C 0)"
+  }
+}

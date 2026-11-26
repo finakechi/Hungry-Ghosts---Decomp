@@ -1,5 +1,36 @@
 # Hungry Ghosts — master handoff
 
+## M21 scene coordination — 2026-11-24
+
+Resume on `research/m21-scene-coordination` in `decomp-m21`, baseline
+`b855eb93fa797eded31c1849f2bb69d68470609a`. The full verification
+checkpoint is `8e04bd9e6cbf4f3ce75932b029bfbaea3bd478e9`.
+The owner profile accepted 79/79 gates and the standalone suite passed
+462/462 tests. [M21 verification and boundaries](docs/M21.md) records the
+original address map, fresh captures, commands and ownership. Historical
+handoffs follow.
+
+The C title scene allocates the overlay root actor `00a88a20`. It starts the
+original timeline, which schedules `00a88b40` and the M20 timed interpreter
+through the M19 publication. The C scene returns its borrow on fade-gated
+reset. The neutral comparison covers 3,991 frames. A separate skip scenario
+reaches the menu in 198 frames and rejects three scheduling/lifetime defects.
+
+The cold New Game comparison carries the same guest state through four
+follow-up resource requests and reaches the first AREA1 coordinator
+`0012f850` in 1,174 units after bootstrap. All eight selected domains match
+the fresh original, including the arena, handle table and entire overlay.
+The independent request-to-coordinator comparison matches all seven domains
+it selects. Fresh original sessions also demonstrate controlled movement,
+pause/resume and return to the republished title. The ferry reload
+independently carries PACK `0x69` from a fresh native request into the
+active AREA1 variant, matching seven domains.
+
+Carry AREA1 world initialization into the first controller-driven frame on
+that same guest bus. The existing M17 corridor starts from a separate
+authenticated gameplay state. M22 owns audio. Original media and captured
+emulator state are private inputs.
+
 ## M19–M20 local integration review — 2026-11-24
 
 **Resume here.** Branch `integration/m19-m20-review` in

@@ -451,9 +451,9 @@ class Machine:
                                 if accum:self.vacc[lane]=value
                                 elif dest:self.vf[dest]=(self.vf[dest]&~(0xffffffff<<(32*lane)))|(value<<(32*lane))
                 else:raise ValueError(f'unsupported COP2 {word:08x} at {pc:08x}')
-            elif op in (0x20,0x24,0x21,0x25,0x23,0x37,0x1e):
+            elif op in (0x20,0x24,0x21,0x25,0x23,0x27,0x37,0x1e):
                 address = (a+imm) & 0xffffffff
-                size = {0x20:1,0x24:1,0x21:2,0x25:2,0x23:4,0x37:8,0x1e:16}[op]
+                size = {0x20:1,0x24:1,0x21:2,0x25:2,0x23:4,0x27:4,0x37:8,0x1e:16}[op]
                 v = self.load(address,size)
                 if op == 0x1e: self.reg[rt] = v if rt else 0
                 else: self.setreg(rt,sx(v,size*8) if op in (0x20,0x21,0x23) else v)

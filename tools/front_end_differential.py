@@ -121,7 +121,7 @@ def packet_image(root=ROOT):
     return bytes(image)
 
 
-def build(output=None, sanitize=False, front_end=None, lifecycle=None):
+def build(output=None, sanitize=False, front_end=None, lifecycle=None, extra_sources=()):
     """Compile the C under test; front_end/lifecycle name alternate sources (negative controls)."""
     sanitize = sanitize or os.environ.get('HG_SANITIZE') == '1'
     output = Path(output or ROOT / ('local/build/m18-front-end-ubsan.so' if sanitize
@@ -132,7 +132,7 @@ def build(output=None, sanitize=False, front_end=None, lifecycle=None):
             str(lifecycle or ROOT / 'src/game_lifecycle.c'),
             str(ROOT / 'src/resource_loader.c'), str(ROOT / 'src/disc_read.c'),
             str(ROOT / 'src/hgscript/hgscript.c'), str(ROOT / 'src/hgscript/timed.c'),
-            str(ROOT / 'src/hgscript/title.c'), '-ffp-contract=off',
+            str(ROOT / 'src/hgscript/title.c'), *map(str, extra_sources), '-ffp-contract=off',
             '-Wl,--no-undefined', '-o', str(output)]
     if sanitize:
         args[1:1] = ['-fsanitize=undefined', '-fno-sanitize-recover=all']

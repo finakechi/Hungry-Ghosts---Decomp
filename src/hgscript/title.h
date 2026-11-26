@@ -26,6 +26,12 @@ int hg_title_script_start(HGResourceEnv *, HGScriptCallFP, HGTitleScript *,
 int32_t hg_title_script_frame(HGResourceEnv *, HGScriptCallFP, HGTitleScript *,
                               uint32_t scratch_top);
 
+/* Title scene service after guest scene setup has initialized the singleton.
+ * The resident timeline can also start records in the same title publication.
+ * Keep using the same binding, including between those records. */
+int32_t hg_title_script_scene_service(HGResourceEnv *, HGScriptCallFP,
+                                      HGTitleScript *, uint32_t scratch_top);
+
 /* Reset the timed renderer and stop its voice while the scene still owns it.
  * A revoked handle is detached without invoking the next scene's services. */
 void hg_title_script_release(HGResourceEnv *, HGTitleScript *);
