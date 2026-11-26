@@ -1,5 +1,59 @@
 # Hungry Ghosts — master handoff
 
+## M21–M22 local integration review — 2026-11-26
+
+**Resume here.** Branch `integration/m21-m22-review` in
+`decomp-m21-m22-integration`, based on `integration/m19-m20-review`
+(`b855eb93fa797eded31c1849f2bb69d68470609a`). Verified integrated source commit:
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`. Merges M21
+(`research/m21-scene-coordination` = `167a7281a980538d19cceddc4cb2228362e1ef18`,
+merge `33353a0f`) and M22 (`research/m22-audio-service` =
+`54f1f130c17bb000d8f3c8bbca91d139460637f8`, merge `e26b7bad`) locally while
+leaving original worktrees, local `main`, and `origin/main` unchanged. See
+[M21–M22 integration review](docs/M21-M22-review.md) for full commands,
+identities, weighted approach comparison, and receipts.
+
+- **Compatibility & fix:** All 10 C sources compile strictly into one shared
+  library under GCC 16.2.1 and Clang 23.1.5 with zero symbol or guest-address
+  collisions. Hardened `src/audio/audio_iop.c` EE bridge functions to fail
+  closed (`false` / `UINT32_MAX`) on unbound or post-teardown
+  `HGAudioEeService` instances.
+- **Scene-to-audio interface experiment (`tests/scene_audio_interface.c`,
+  `tests/test_scene_audio_interface.py`):** Verified on one shared guest bus:
+  - `hg_pack_special_step` (`00156a50`) connects end-to-end to
+    `hg_audio_register_entry` + `hg_audio_ee_bank_call` + `hg_audio_ee_flush` +
+    `hg_audio_iop_step_dma`, uploading a synthetic SShd bank into SPU2 RAM.
+  - `hg_title_menu` (`00156ad0`, sound ID `4`) reaches `hg_audio_play` via the
+    authenticated `00157ed0` descriptor `(group=0, idx=0, p1=1, p2=3, t0=0)`,
+    proves `hg_audio_play` alone stages 0 SG2IOP packets (exact missing
+    dependency: EE sequencer `002ade94..002ae2c0` / `002a96b8` / `002ab508` and
+    physical voice allocator), then exercises M22's documented resolved-note
+    adapter (`hg_audio_ee_stage_play_voice`, `hg_audio_ee_stage_key`,
+    `hg_audio_ee_flush`, `hg_audio_iop_render`, `hg_audio_cancel`, key-off, and
+    `hg_audio_iop_destroy`).
+  - `hg_title_scene_call` / `hg_script_timed_*` (`001564a0`/`00156550`) stops
+    at the separate streaming-voice boundary (`gp+0x2ab0` -> `00156570`,
+    outside M22's SShd sample-bank scope).
+  - Targeted negative controls verify disconnected bank-call routing, missing
+    DMA step, cleared bank slot, unbound/torn-down service, pre-flush silence,
+    unready HGScript voice blocking, and revoked title handle stop suppression.
+- **Verification on `5e7f1077`:** Combined strict GCC/Clang builds, GCC/Clang
+  ASan+UBSan+LSan harnesses (10/10) + M22 Clang ASan+UBSan (6/6), **470/470**
+  discovered tests with `HG_JAPAN_ISO` (0 skipped; 3 retail-only Audio tests
+  skip when `HG_JAPAN_ISO` is unset), all 6 M21/M22 retail receipts regenerated
+  and matching committed evidence, M17–M20 connected owner regressions passing,
+  and full owner profile `m12-20261126T170926Z-prt6dzmf` accepting **79/79**
+  gates (74 passed, 5 expected rejections, 0 failures/skips/unrun;
+  `summary.json` SHA-256
+  `3c8c55c000c7ab09e29fa471f509060e64778f34854cb33b4eb8fbc4015f59c4`,
+  `source_sha256`
+  `4be3bce2bb1382ec3766bbc4330fea53747e70ef11bc0c30cedb748216ee0f0a`).
+- **Next two independent milestones:** (1) M23 cold AREA1 world/actor/camera
+  initialization into the first controller-driven frame; (2) M24 EE sound
+  dispatcher (`00156ad0`/`00157ed0`), note sequencer (`002ade94..002ae2c0`,
+  `002a96b8`, `002ab508`), and physical voice allocator against M22's fresh
+  cursor checkpoints.
+
 ## M22 SG2IOP audio service and playback — 2026-11-24
 
 **Resume here for audio.** Local branch `research/m22-audio-service` in

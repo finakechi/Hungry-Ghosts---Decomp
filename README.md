@@ -6,8 +6,10 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
-The [M19–M20 local review](docs/M19-M20-review.md) covers the integrated title
-resource worker and HGScript runtime, with independently reproduced evidence.
+The [M21–M22 local review](docs/M21-M22-review.md) covers the integrated scene
+coordination ([M21](docs/M21.md)), SG2IOP audio service ([M22](docs/M22.md)),
+and verified scene-to-audio interface boundary, building on the
+[M19–M20 local review](docs/M19-M20-review.md).
 
 M1–M6 connect disc reads, PACK/AREA loading, real resource processing and a
 selected AREA1 actor callback. M6 independently verifies all 13 marked startup
@@ -22,7 +24,7 @@ and a final rebuild/port target remain unclaimed.
 python -m unittest discover -s tests -v
 ```
 
-On the integrated M17/M18/Content/Audio source this runs 452 tests. The three
+On the integrated M21/M22 baseline this runs 470 tests. The three
 retail-only Audio tests (`tests/test_hg_audio_original.py`) are skipped unless
 `HG_JAPAN_ISO` names the authenticated Japan ISO; with it set they run and a
 missing or non-matching image fails.
