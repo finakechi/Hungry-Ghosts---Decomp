@@ -402,12 +402,17 @@ void hg_audio_iop_render(HGAudioIop *iop, int16_t *stereo, size_t frames)
 void hg_audio_ee_service_init(HGAudioEeService *service, HGAudioBus *bus,
                               HGAudioIop *iop)
 {
+    if (!service)
+        return;
     *service = (HGAudioEeService){.bus = bus, .iop = iop};
-    bus->w32(bus->ctx, HG_SG2_EE_CURSOR, 0);
+    if (bus && bus->w32)
+        bus->w32(bus->ctx, HG_SG2_EE_CURSOR, 0);
 }
 
 bool hg_audio_ee_post(HGAudioEeService *service, HGSg2Packet packet)
 {
+    if (!service || !service->bus)
+        return false;
     HGAudioBus *bus = service->bus;
     uint32_t count = bus->r32(bus->ctx, HG_SG2_EE_CURSOR);
     if (count >= HG_SG2_QUEUE_SIZE - 1)
@@ -423,6 +428,8 @@ bool hg_audio_ee_post(HGAudioEeService *service, HGSg2Packet packet)
 
 bool hg_audio_ee_flush(HGAudioEeService *service, HGSg2Reply *reply)
 {
+    if (!service || !service->bus || !service->iop || !reply)
+        return false;
     HGAudioBus *bus = service->bus;
     uint32_t count = bus->r32(bus->ctx, HG_SG2_EE_CURSOR);
     bool pending = service->upload_state == EE_UPLOAD_STAGED &&
@@ -452,6 +459,8 @@ bool hg_audio_ee_flush(HGAudioEeService *service, HGSg2Reply *reply)
 uint32_t hg_audio_ee_bank_call(HGAudioEeService *service, uint32_t target,
                                 uint32_t arg1, uint32_t arg2, uint32_t arg3)
 {
+    if (!service || !service->bus || !service->iop)
+        return UINT32_MAX;
     if (target == HG_SG2_BANK_BIND) {
         HGAudioBus *bus = service->bus;
         if (!hg_audio_slot_active(bus, arg1))
@@ -475,9 +484,10 @@ uint32_t hg_audio_ee_bank_call(HGAudioEeService *service, uint32_t target,
 bool hg_audio_ee_sample_address(const HGAudioEeService *service, uint32_t slot,
                                 uint32_t offset, uint32_t *address)
 {
-    HGAudioBus *bus = service->bus;
-    if (!address || offset % ADPCM_BLOCK || !hg_audio_slot_active(bus, slot))
+    if (!service || !service->bus || !service->iop || !address ||
+        offset % ADPCM_BLOCK || !hg_audio_slot_active(service->bus, slot))
         return false;
+    HGAudioBus *bus = service->bus;
     uint32_t entry = HG_AUDIO_SLOT_TABLE + slot * HG_SLOT_STRIDE;
     uint32_t bank = bus->r32(bus->ctx, entry + HG_SLOT_BANK);
     uint32_t size = bus->r32(bus->ctx, bank + 4);
@@ -493,6 +503,8 @@ bool hg_audio_ee_sample_address(const HGAudioEeService *service, uint32_t slot,
 bool hg_audio_ee_stage_voice(HGAudioEeService *service, uint32_t voice, uint32_t slot,
                              uint32_t sample_offset, HGSg2VoiceParams params)
 {
+    if (!service || !service->bus || !service->iop)
+        return false;
     HGAudioBus *bus = service->bus;
     uint32_t address;
     if (voice >= HG_SG2_VOICES || params.root > 255 || params.note > 255 ||
@@ -518,9 +530,9 @@ bool hg_audio_ee_stage_play_voice(HGAudioEeService *service, uint32_t play_index
                                   uint32_t voice, uint32_t sample_offset,
                                   HGSg2VoiceParams params)
 {
-    HGAudioBus *bus = service->bus;
-    if (play_index >= 32)
+    if (!service || !service->bus || !service->iop || play_index >= 32)
         return false;
+    HGAudioBus *bus = service->bus;
     uint32_t command = HG_AUDIO_COMMAND_BASE + play_index * HG_CMD_STRIDE;
     if (bus->r32(bus->ctx, command + HG_CMD_STATE) != 1)
         return false;
@@ -530,7 +542,7 @@ bool hg_audio_ee_stage_play_voice(HGAudioEeService *service, uint32_t play_index
 
 bool hg_audio_ee_stage_key(HGAudioEeService *service, uint32_t voice, bool on)
 {
-    if (voice >= HG_SG2_VOICES)
+    if (!service || !service->bus || voice >= HG_SG2_VOICES)
         return false;
     uint32_t mask = 1u << (voice % VOICES_PER_CORE);
     return hg_audio_ee_post(service, (HGSg2Packet){on ? HG_SG2_KEY_ON : HG_SG2_KEY_OFF, 0,
