@@ -209,6 +209,82 @@ class ResultTests(unittest.TestCase):
         self.assertEqual(results.classify({'result': 'sanitizer-build'}, self.directory, 1)[0], results.ERROR)
         self.assertEqual(results.classify({'result': 'sanitizer-build'}, self.directory, 0)[0], results.ERROR)
 
+    def test_gate_19_and_56_hardened_contracts_accept_tracked_and_reject_faults(self):
+        gates = {c['historical']: c for c in runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'historical')}
+        (self.directory / 'output.log').write_text('')
+        # Gate 19: includes nested connected-gameplay-sequence case without top-level compared_bytes.
+        ev19 = json.loads((runner.ROOT / 'evidence/m8/connected-gameplay-runtime-comparison.json').read_text())
+        check19 = gates['19'] | {'outputs': ['output.log', 'result.json']}
+        self.result.write_text(json.dumps(ev19))
+        self.assertEqual(results.classify(check19, self.directory, 0)[0], results.PASSED)
+        bad19 = json.loads(json.dumps(ev19))
+        bad19['cases'][-1]['gameplay_checks']['mode_entered'] = False
+        self.result.write_text(json.dumps(bad19))
+        self.assertEqual(results.classify(check19, self.directory, 0)[0], results.ERROR)
+        bad19_stage = json.loads(json.dumps(ev19))
+        bad19_stage['cases'][-1]['stages'][1]['different_bytes'] = 4
+        self.result.write_text(json.dumps(bad19_stage))
+        self.assertEqual(results.classify(check19, self.directory, 0)[0], results.ERROR)
+
+        # Gate 56: includes probe-only release5-update stage without entry_sha256/compared_bytes.
+        ev56 = json.loads((runner.ROOT / 'evidence/m9/player-turn-runtime-comparison.json').read_text())
+        check56 = gates['56'] | {'outputs': ['output.log', 'result.json']}
+        self.result.write_text(json.dumps(ev56))
+        self.assertEqual(results.classify(check56, self.directory, 0)[0], results.PASSED)
+        bad56 = json.loads(json.dumps(ev56))
+        bad56['stages'][-1]['turn_entry_probe']['different_bytes'] = 1
+        self.result.write_text(json.dumps(bad56))
+        self.assertEqual(results.classify(check56, self.directory, 0)[0], results.ERROR)
+
+    def test_corridor_pre_dispatch_window_stage_contract(self):
+        import hg_verify_current as cur
+        from verify_player_continuous import observation
+        obs = sorted(observation()['frames'], key=lambda item: item['counter'])
+        (self.directory / 'result.so').write_bytes(b'elf-fixture')
+        so_sha = runner.digest(self.directory / 'result.so')
+        def make_frame(index, expected):
+            stages = {
+                name: {'result': 'passed'}
+                for name in ('camera-chain', 'model-draw', 'render-node-tail', 'late-frame',
+                             'render-handoff', 'camera-entry', 'camera-return', 'history-copy',
+                             'coordinator-counter', 'pre-dispatch')
+            }
+            stages['pre-dispatch']['capture'] = 'c'
+            stages['pre-dispatch'].update(guarded_ram_count=0, guarded_scratch_count=0, scratch_compared=0x4000)
+            stages['pre-dispatch-window'] = {
+                'capture': 'w', 'result': 'passed', 'absolute_missing_count': 0,
+                'absolute_unexpected_count': 0, 'absolute_value_differences': 0,
+                'scratch_missing_count': 0, 'scratch_unexpected_count': 0,
+                'scratch_value_differences': 0, 'oracle_capture_differences': {'ram': 0, 'scratch': 0},
+                'ctx_matches': True, 'oracle_steps': 42,
+                'streams': [{'result': 'passed', 'delta_matches': True, 'missing_offsets': 0,
+                             'unexpected_offsets': 0, 'value_differences': 0}],
+            }
+            stages['rng-continuity'] = {
+                'result': 'skipped' if index == len(obs) - 1 else 'passed',
+                'interpreted_draws': 2, 'native_draws': None if index == len(obs) - 1 else 2,
+            }
+            for i, push in enumerate(expected['pushes']):
+                stages[f'push-{i}-{push["tier"]}'] = {
+                    'capture': push['name'], 'result': 'passed',
+                    'guarded_ram_count': 0, 'guarded_scratch_count': 0, 'scratch_compared': 0x4000,
+                }
+            return {'counter': expected['counter'], 'stages': stages, 'rng_draws': 2, 'interrupts': 1}
+        report = {
+            'schema': 'hg-player-continuous/v6', 'elf_sha256': results.EXPECTED, 'result': 'passed',
+            'lifecycle': True, 'smoke_max_frames': None, 'library_sha256': so_sha,
+            'failures': [], 'interpreted_pcs': ['0x100000'], 'frame_count': len(obs),
+            'frames': [make_frame(i, item) for i, item in enumerate(obs)],
+        }
+        check = {'id': 'lifecycle-corridor', 'result': 'continuous', 'argv': ['--lifecycle'],
+                 'outputs': ['output.log', 'result.json']}
+        (self.directory / 'output.log').write_text('')
+        self.result.write_text(json.dumps(report))
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.PASSED)
+        report['frames'][0]['stages']['pre-dispatch-window']['oracle_capture_differences']['ram'] = 1
+        self.result.write_text(json.dumps(report))
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+
 
 class PlanningTests(unittest.TestCase):
     def test_profiles_cover_history_and_expose_dependency(self):
@@ -315,9 +391,9 @@ class ReceiptTests(unittest.TestCase):
 
 class SchedulerTests(unittest.TestCase):
     @staticmethod
-    def check(name, *, requires=(), after=(), kind='structure'):
+    def check(name, *, requires=(), after=(), kind='structure', exclusive=False):
         return dict(id=name, name=name, result=kind, evidence='synthetic', expected=results.PASSED,
-                    requires=list(requires), after=list(after), argv=[])
+                    requires=list(requires), after=list(after), argv=[], exclusive=exclusive)
 
     def test_overlap_requires_after_and_independent_failure(self):
         barrier = Barrier(2, timeout=5)
@@ -325,7 +401,7 @@ class SchedulerTests(unittest.TestCase):
         independent_finished = Event()
         checks = [self.check('root'), self.check('independent'),
                   self.check('hard', requires=('root',)), self.check('ordered', after=('root',)),
-                  self.check('exclusive', kind='report')]
+                  self.check('exclusive', kind='report', exclusive=True)]
         launched = []
 
         def run(check, parents):

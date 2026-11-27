@@ -87,7 +87,16 @@ def corridor(kind, row, directory, read):
             need(wanted <= stages.keys(), 'Missing continuous stage measurements')
             allowed = ('rng-continuity',) if index == len(obs) - 1 else ()
             for name, stage in stages.items():
-                if 'capture' in stage:
+                if name == 'pre-dispatch-window':
+                    compare_counts(stage, {'absolute_missing_count': 0, 'absolute_unexpected_count': 0,
+                                           'absolute_value_differences': 0, 'scratch_missing_count': 0,
+                                           'scratch_unexpected_count': 0, 'scratch_value_differences': 0,
+                                           'oracle_capture_differences': {'ram': 0, 'scratch': 0}, 'ctx_matches': True})
+                    need(positive(stage['oracle_steps']) and bool(stage['streams']) and all(
+                        s['result'] == 'passed' and s['delta_matches'] is True and exact(s['missing_offsets'], 0)
+                        and exact(s['unexpected_offsets'], 0) and exact(s['value_differences'], 0)
+                        for s in stage['streams']), 'Missing pre-dispatch window oracle steps or stream equality')
+                elif 'capture' in stage:
                     compare_counts(stage, {'guarded_ram_count': 0, 'guarded_scratch_count': 0})
                     need(positive(stage['scratch_compared']), 'Missing guarded scratchpad comparison')
                 need(stage['result'] == ('skipped' if name in allowed else 'passed'),

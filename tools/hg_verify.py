@@ -40,10 +40,32 @@ STATE_SCHEMA = 'hg-m12-verification/v2'
 SOURCE_DIRS = ('src', 'tools', 'tests', 'ghidra_scripts', 'analysis', 'evidence', 'config')
 ACCEPTED = {PASSED, REJECTED}
 JOBS = (1, 2, 4, 8)
-# Only audited readers and commands whose generated files stay in the attempt.
-# Legacy compilers, native runs and the unittest suite retain exclusive access.
-PARALLEL_RESULTS = {'structure', 'hg-bytes', 'ps2dinfo-bytes', 'git-diff',
-                    'compileall', 'audit', 'sanitizer-build', 'sanitizer-run'}
+# Audited readers and attempt-isolated verifiers whose build/temp/output paths
+# stay strictly within the active attempt directory and HG_VERIFY_BUILD_DIR.
+PARALLEL_RESULTS = {
+    'structure', 'hg-bytes', 'ps2dinfo-bytes', 'overlay-bytes', 'git-diff',
+    'compileall', 'audit', 'local-inputs', 'sanitizer-build', 'sanitizer-run',
+    'unittest', 'discovery', 'disc-read', 'report', 'legacy-controls',
+    'ordinary-control', 'runtime', 'grounded-differential',
+    'continuous', 'predispatch', 'predispatch-contracts', 'counter-guard',
+    'lifecycle-differential', 'lifecycle-native', 'lifecycle-controls',
+    'lifecycle-corridor-controls', 'lifecycle-sequence',
+    'front-end-differential', 'front-end-native', 'front-end-controls',
+    'content-corpus', 'audio-instructions', 'audio-connected',
+}
+# Dispatch priority when jobs > 1: launch measured long-running gates early
+# alongside fast diagnostics so no single straggler stretches the tail.
+# Serial runs (jobs == 1) always dispatch in exact inventory order.
+PARALLEL_HEAVY_ORDER = (
+    'constraint-differential', 'turn-camera-saved-runtime', 'grounded-saved-runtime',
+    'constraint-saved-runtime', 'synthetic-suite', 'walk-camera-saved-runtime',
+    'grounded-differential', 'turn-camera-instructions', 'm16-corridor',
+    'lifecycle-corridor', 'm14-register-contracts', 'm14-native-window',
+    'lifecycle-differential', 'front-end-differential', 'connected-native-lifecycle',
+    'connected-native-controls', 'lifecycle-corridor-controls', 'lifecycle-negative-controls',
+    'connected-player-saved-runtime', 'player-transition-instructions',
+    'connected-player-instructions', 'area-lifecycle-instructions', 'grounded-m11-frames',
+)
 
 
 class Interrupted(Exception):
@@ -122,20 +144,21 @@ class Inputs:
 
     def file(self, path, expected=None, *, probe=False):
         self.stop.check()
+        key = path.resolve()
         stamp = self.stamp(path)
         if probe and stamp[2] > 8 * 1024 * 1024:
             return None
         with self.cache_lock:
-            lock = self.file_locks.setdefault(path, Lock())
+            lock = self.file_locks.setdefault(key, Lock())
         with lock:
             self.stop.check()
             stamp = self.stamp(path)
-            cached = self.files.get(path)
+            cached = self.files.get(key)
             if not cached or cached[0] != stamp:
                 cached = stamp, digest(path)
                 if self.stamp(path) != stamp:
                     raise ValueError(f'Input changed while reading {path}')
-                self.files[path] = cached
+                self.files[key] = cached
         if expected and cached[1] != expected:
             raise ValueError(f'Input identity mismatch for {path}')
         return cached[1]
@@ -153,24 +176,27 @@ class Inputs:
         return tuple(files), files, git_value(ROOT, 'rev-parse', 'HEAD')
 
     def tool(self, name):
-        if name not in self.tools:
-            executable = shutil.which(name, path=self.environment['PATH'])
-            if not executable:
-                raise FileNotFoundError(f'Missing tool {name} on PATH')
-            path = Path(executable)
-            files = [path]
-            if name == 'cc':
-                for argument in ('-print-prog-name=cc1', '-print-prog-name=as', '-print-prog-name=ld',
-                                 '-print-file-name=libasan.so', '-print-file-name=libubsan.so'):
-                    found = subprocess.run([executable, argument], env=self.environment, stdout=subprocess.PIPE,
-                                           text=True, check=True, timeout=10).stdout.strip()
-                    resolved = shutil.which(found, path=self.environment['PATH'])
-                    if Path(found).is_absolute() and Path(found).is_file():
-                        files.append(Path(found))
-                    elif resolved:
-                        files.append(Path(resolved))
-            self.tools[name] = files
-        return self.tools[name]
+        with self.cache_lock:
+            cached = self.tools.get(name)
+        if cached is not None:
+            return cached
+        executable = shutil.which(name, path=self.environment['PATH'])
+        if not executable:
+            raise FileNotFoundError(f'Missing tool {name} on PATH')
+        path = Path(executable)
+        files = [path]
+        if name == 'cc':
+            for argument in ('-print-prog-name=cc1', '-print-prog-name=as', '-print-prog-name=ld',
+                             '-print-file-name=libasan.so', '-print-file-name=libubsan.so'):
+                found = subprocess.run([executable, argument], env=self.environment, stdout=subprocess.PIPE,
+                                       text=True, check=True, timeout=10).stdout.strip()
+                resolved = shutil.which(found, path=self.environment['PATH'])
+                if Path(found).is_absolute() and Path(found).is_file():
+                    files.append(Path(found))
+                elif resolved:
+                    files.append(Path(resolved))
+        with self.cache_lock:
+            return self.tools.setdefault(name, files)
 
     def resolve(self, argument, directory, dependencies):
         if argument.startswith('{artifact:'):
@@ -582,6 +608,14 @@ def plan(profile, options):
                       'historical_checks': sum('historical' in row for row in rows), 'checks': rows}, indent=2))
 
 
+def dispatch_order(pending, jobs):
+    items = list(pending.items())
+    if jobs <= 1:
+        return items
+    rank = {name: i for i, name in enumerate(PARALLEL_HEAVY_ORDER)}
+    return sorted(items, key=lambda pair: (0 if pair[0] in rank else 1, rank.get(pair[0], 0)))
+
+
 def schedule(checks, jobs, stop, run, complete):
     """Dispatch ready checks. Only the coordinator mutates the run summary."""
     pending = {check['id']: check for check in checks}
@@ -594,7 +628,7 @@ def schedule(checks, jobs, stop, run, complete):
 
     with ThreadPoolExecutor(max_workers=jobs) as pool:
         while active or pending and not stop.signum:
-            for name, check in list(pending.items()):
+            for name, check in dispatch_order(pending, jobs):
                 if stop.signum or len(active) >= jobs:
                     break
                 required = check.get('requires', [])
@@ -606,13 +640,16 @@ def schedule(checks, jobs, stop, run, complete):
                     del pending[name]
                     finish(check, brief(check, SKIPPED, 'Blocked by ' + ', '.join(blocked)))
                     continue
-                exclusive = check['result'] not in PARALLEL_RESULTS
+                exclusive = bool(check.get('exclusive')) or check['result'] not in PARALLEL_RESULTS
                 if active and (exclusive or any(
-                        row['result'] not in PARALLEL_RESULTS for row in active.values())):
+                        bool(row.get('exclusive')) or row['result'] not in PARALLEL_RESULTS
+                        for row in active.values())):
                     # Drain before starting an exclusive gate.
-                    break
+                    continue
                 del pending[name]
                 active[pool.submit(run, check, parents)] = check
+                if exclusive:
+                    break
             if active:
                 ready, _ = wait(active, timeout=0.2, return_when=FIRST_COMPLETED)
                 for future in sorted(ready, key=lambda item: active[item]['id']):

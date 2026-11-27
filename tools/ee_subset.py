@@ -4,6 +4,9 @@ Supports only observed operations; unknown opcodes and unmapped reads fail.
 Models word sign extension, low 64-bit arithmetic, 128-bit lq/sq, and delay slots.
 External CDVD calls must be supplied by the caller; no PS2 hardware is emulated.
 """
+from fractions import Fraction
+import math
+
 MASK64 = (1 << 64) - 1
 
 
@@ -13,29 +16,47 @@ def fp_value(bits):
     M6 uses normal inputs, positive square/add results and chop rounding.
     No exceptional flags, non-finite arithmetic or VU timing is modeled.
     """
-    from fractions import Fraction
     exponent = (bits >> 23) & 255
     if exponent == 255:
         raise ValueError('non-finite FP operand outside investigated subset')
     if exponent == 0:
         return Fraction(0)  # default captured profile: denormals are zero
-    value = Fraction((bits & 0x7fffff) | 0x800000) * Fraction(2) ** (exponent - 150)
-    return -value if bits & 0x80000000 else value
+    mantissa = (bits & 0x7fffff) | 0x800000
+    if bits & 0x80000000:
+        mantissa = -mantissa
+    shift = exponent - 150
+    return Fraction(mantissa << shift, 1) if shift >= 0 else Fraction(mantissa, 1 << (-shift))
 
 
 def fp_chop(value, root=False):
-    """Search representable values using exact rational comparisons."""
+    """Exact rational chop-to-float32 (or floor square root) with zero float approximation."""
     if value < 0:
         raise ValueError('negative arithmetic outside investigated FP subset')
-    low, high = 0, 0x7f7fffff
-    while low < high:
-        middle = (low + high + 1) // 2
-        candidate = fp_value(middle)
-        if (candidate * candidate if root else candidate) <= value:
-            low = middle
-        else:
-            high = middle - 1
-    return low if low >= 0x800000 else 0
+    if not value:
+        return 0
+    p, q = value.numerator, value.denominator
+    e = p.bit_length() - q.bit_length()
+    if e >= 0:
+        if p < (q << e):
+            e -= 1
+    elif (p << (-e)) < q:
+        e -= 1
+    if root:
+        e >>= 1
+        if e < -126:
+            return 0
+        if e > 127:
+            return 0x7f7fffff
+        shift = 46 - (e << 1)
+        m = math.isqrt((p << shift) // q if shift >= 0 else p // (q << (-shift)))
+    else:
+        if e < -126:
+            return 0
+        if e > 127:
+            return 0x7f7fffff
+        shift = 23 - e
+        m = (p << shift) // q if shift >= 0 else p // (q << (-shift))
+    return ((e + 127) << 23) | (m & 0x7fffff)
 
 
 def sx(value, bits):
@@ -79,15 +100,38 @@ def fp_signed_nearest(value):
     division rounding mode (Nearest) differs from its other FPU operations
     (Chop). M8 retail captures of quaternion normalization 001440c0 confirm it.
     """
-    magnitude = abs(value)
-    low = fp_chop(magnitude)
-    if low < 0x7f7fffff and magnitude != fp_value(low):
-        below, above = magnitude - fp_value(low), fp_value(low + 1) - magnitude
-        if above < below or (above == below and low & 1):
-            low += 1
-    if low < 0x800000:
-        low = 0  # denormal results flush to zero in the captured profile
-    return low | (0x80000000 if value < 0 and low else 0)
+    if not value:
+        return 0
+    neg = value < 0
+    p = -value.numerator if neg else value.numerator
+    q = value.denominator
+    e = p.bit_length() - q.bit_length()
+    if e >= 0:
+        if p < (q << e):
+            e -= 1
+    elif (p << (-e)) < q:
+        e -= 1
+    if e < -126:
+        return 0  # denormal results flush to zero in the captured profile
+    if e > 127:
+        return 0x7f7fffff | (0x80000000 if neg else 0)
+    shift = 23 - e
+    if shift >= 0:
+        m, rem = divmod(p << shift, q)
+        den = q
+    else:
+        den = q << (-shift)
+        m, rem = divmod(p, den)
+    twice = rem << 1
+    if twice > den or (twice == den and (m & 1)):
+        m += 1
+        if m == 0x1000000:
+            m = 0x800000
+            e += 1
+            if e > 127:
+                return 0x7f7fffff | (0x80000000 if neg else 0)
+    bits = ((e + 127) << 23) | (m & 0x7fffff)
+    return bits | (0x80000000 if neg else 0)
 
 
 def fp_ee_add(left, right, subtract=False):

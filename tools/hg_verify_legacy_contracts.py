@@ -30,13 +30,11 @@ ANCHORS = {
                                      'functions': ('entry', 'name', 'cases', 'instruction_addresses', 'result')}),
     '18': ('m8/ordinary-input-runtime-comparison.json', {'cases': ('case', 'edge_mask', 'compared_bytes',
                                                   'before_sha256', 'after_sha256', 'transition_calls')}),
-    '19': ('m8/connected-gameplay-runtime-comparison.json', {'cases': ('case', 'compared_bytes',
-                                                                     'before_sha256', 'after_sha256')}),
+    '19': ('m8/connected-gameplay-runtime-comparison.json', {}),
     '55': ('m9/player-turn-instruction-differential.json', {'functions': ('entry', 'name', 'compared', 'failed_closed',
                             'complete_function'), 'cases': (), 'failed_closed': (),
                             'partial_exclusions': (), 'static_exclusions': (), 'executed_addresses': ()}),
-    '56': ('m9/player-turn-runtime-comparison.json', {'stages': ('stage', 'entry_sha256', 'expected_sha256'),
-                                                       'handoffs': ('frame',)}),
+    '56': ('m9/player-turn-runtime-comparison.json', {'handoffs': ('frame',)}),
     '62': ('m10/dispatcher-instruction-differential.json', {'cases': (), 'executed_addresses': ()}),
     '63': ('m10/player-walk-runtime-comparison.json', {'stages': ('frame', 'stage', 'expected'), 'handoffs': ('frame',)}),
     '64': ('m10/dependency-survey.json', {'representative_frames': ('frame',)}),
@@ -88,8 +86,56 @@ def legacy_coverage(check, row, read_json, elf_sha256):
                     or not exact(byte['instructions_unknown'], 0)
                     or type(byte['instructions_verified']) is not int or byte['instructions_verified'] <= 0):
                 raise ValueError('Invalid nested original-byte verification')
+    if number == '19':
+        expected = read_json(ROOT / 'evidence/m8/connected-gameplay-runtime-comparison.json')
+        actual_cases, expected_cases = row['cases'], expected['cases']
+        if len(actual_cases) != len(expected_cases) or [c['case'] for c in actual_cases] != [c['case'] for c in expected_cases]:
+            raise ValueError('Historical connected-player-saved-runtime case inventory differs')
+        for actual_case, expected_case in zip(actual_cases, expected_cases):
+            if actual_case['case'] == 'connected-gameplay-sequence':
+                if not exact(actual_case['gameplay_checks'], expected_case['gameplay_checks']):
+                    raise ValueError('Historical connected-player-saved-runtime gameplay_checks differ')
+                actual_stages, expected_stages = actual_case['stages'], expected_case['stages']
+                if len(actual_stages) != len(expected_stages):
+                    raise ValueError('Historical connected-player-saved-runtime sequence stages differ')
+                for st_a, st_e in zip(actual_stages, expected_stages):
+                    if st_a['stage'] != st_e['stage'] or st_a['result'] != 'passed':
+                        raise ValueError(f'Historical connected-player-saved-runtime sequence stage invalid: {st_a.get("stage")}')
+                    for field in ('compared_bytes', 'before_sha256', 'after_sha256', 'capture_sha256'):
+                        if field in st_e and not exact(st_a[field], st_e[field]):
+                            raise ValueError(f'Historical connected-player-saved-runtime sequence {field} differs')
+                    if 'different_bytes' in st_e and not exact(st_a['different_bytes'], 0):
+                        raise ValueError('Historical connected-player-saved-runtime sequence stage has nonzero differences')
+                    if 'external_dma' in st_e and st_a['external_dma']['modeled_accesses']:
+                        raise ValueError('Historical connected-player-saved-runtime sequence stage accessed external DMA')
+            else:
+                for field in ('compared_bytes', 'before_sha256', 'after_sha256'):
+                    if not exact(actual_case[field], expected_case[field]):
+                        raise ValueError(f'Historical connected-player-saved-runtime {field} differs for {actual_case["case"]}')
+    if number == '56':
+        expected = read_json(ROOT / 'evidence/m9/player-turn-runtime-comparison.json')
+        actual_stages, expected_stages = row['stages'], expected['stages']
+        if len(actual_stages) != len(expected_stages) or [s['stage'] for s in actual_stages] != [s['stage'] for s in expected_stages]:
+            raise ValueError('Historical turn-camera-saved-runtime stage inventory differs')
+        for st_a, st_e in zip(actual_stages, expected_stages):
+            if st_a['stage'] == 'release5-update':
+                if (st_a['expected'] != st_e['expected'] or not exact(st_a['turn_entry_hits'], 1)
+                        or not exact(st_a['turn_entry_probe'], {'result': 'passed', 'different_bytes': 0, 'scratch_different_bytes': 0})
+                        or st_a['stick'] != '0x0' or st_a['player_reconstructed']['rate_440'] != '0x0'):
+                    raise ValueError('Historical turn-camera-saved-runtime release5-update probe invalid')
+            else:
+                for field in ('entry_sha256', 'expected_sha256'):
+                    if not exact(st_a[field], st_e[field]):
+                        raise ValueError(f'Historical turn-camera-saved-runtime {field} differs for {st_a["stage"]}')
     for stage in row.get('stages', []):
-        if stage['stage'].startswith('foot-query-register-') and number == '69':
+        if stage['stage'] == 'release5-update' and number == '56':
+            if stage['result'] == 'passed' and (
+                    not exact(stage['turn_entry_hits'], 1)
+                    or stage['turn_entry_probe']['result'] != 'passed'
+                    or not exact(stage['turn_entry_probe']['different_bytes'], 0)
+                    or not exact(stage['turn_entry_probe']['scratch_different_bytes'], 0)):
+                raise ValueError('Turn-camera release5-update pass contradicts probe measurements')
+        elif stage['stage'].startswith('foot-query-register-') and number == '69':
             if stage['result'] == 'passed' and stage['calculated'] != stage['original_v0_low']:
                 # The original field is fixed-width while hex() omits padding.
                 if int(stage['calculated'], 16) != int(stage['original_v0_low'], 16):
