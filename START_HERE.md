@@ -1,5 +1,15 @@
 # Hungry Ghosts — start here
 
+## Verification infrastructure, Phase 1 — 2026-11-27
+
+The local Phase 1 handoff contains the Gate 01 report-contract correction,
+bounded gate concurrency, and a 120-gate current-project profile preserving
+all 79 historical checks. On the cloud checkpoint, 37 applicable gates were
+accepted and 83 original-input gates were blocked. This is a bounded partial
+milestone. MainPC original-data checks, exact contract review and benchmarks
+remain outstanding. See [the handoff](docs/verification-infrastructure.md)
+for source identity, cloud results and the owner reproduction checklist.
+
 ## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
 
 **Resume here.** The four milestones are integrated on branch
