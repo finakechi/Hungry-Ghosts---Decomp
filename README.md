@@ -11,6 +11,12 @@ coordination ([M21](docs/M21.md)), SG2IOP audio service ([M22](docs/M22.md)),
 and verified scene-to-audio interface boundary, building on the
 [M19–M20 local review](docs/M19-M20-review.md).
 
+[M24](docs/M24.md) (local branch `research/m24-audio-sequencing`) adds a
+read-only map of the retail EE sound service and an original synthetic
+sequence processor and physical voice manager. Connected to the M22 service,
+the model plays play requests automatically. It does not reconstruct the
+retail sequencer.
+
 M1–M6 connect disc reads, PACK/AREA loading, real resource processing and a
 selected AREA1 actor callback. M6 independently verifies all 13 marked startup
 PACKc6 members (1,184,000 transformed member bytes and a complete 1,228,800-byte
