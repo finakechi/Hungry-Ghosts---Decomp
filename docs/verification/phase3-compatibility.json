@@ -1,0 +1,183 @@
+{
+  "schema": "hg-verification-infrastructure-phase3/v1",
+  "date": "2026-11-27",
+  "scope": "verification-infrastructure-only",
+  "remote_main_at_preflight": "86a5670852d47c4ead140e5c8e40a5289f773053",
+  "phase2_provenance": {
+    "base_commit": "86a5670852d47c4ead140e5c8e40a5289f773053",
+    "phase1_tested_commit": "750446db1a95c6957c7ee5cc64ebddf2abd70984",
+    "phase1_handoff_commit": "1bd0930c2753e03e0da0895908466732b29050c5",
+    "phase2_verified_code_commit": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+    "phase2_verified_source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+    "phase2_docs_commit": "593a44afecb279d6f877ec45d5d9ecf38a5e84dc",
+    "phase2_results_sha256": "e88dc4014dc3e0a23e4136f4ae16ed8c7c4eadb85ccb387ba89b05bf54cff97e",
+    "receipt_seal_audit": {
+      "m12-20261127T190644Z-2j7t7my9": {"profile": "full", "checks": 79, "accepted": 79, "bad_seals": 0, "bad_artifacts": 0},
+      "m12-20261127T195941Z-ixt34s27": {"profile": "historical", "checks": 79, "accepted": 79, "bad_seals": 0, "bad_artifacts": 0},
+      "m12-20261127T203250Z-mx0eah77": {"profile": "historical", "checks": 79, "accepted": 79, "bad_seals": 0, "bad_artifacts": 0},
+      "m12-20261127T204736Z-49j6appf": {"profile": "current", "checks": 120, "accepted": 120, "bad_seals": 0, "bad_artifacts": 0},
+      "m12-20261127T211502Z-cm9phbqt": {"profile": "historical", "checks": 79, "accepted": 79, "bad_seals": 0, "bad_artifacts": 0}
+    },
+    "python_3_10_ast_and_stdlib_issues": 0
+  },
+  "milestone_compatibility_matrix": [
+    {
+      "branch": "research/m19-autonomous-loading",
+      "tip": "e512f2f280ab14786416fa30d3b1c83877ff43c3",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": "integration/m19-m20-review",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "START_HERE.md"],
+      "trial_status": "inherited-via-m19-m20-trial",
+      "adoption_notes": [
+        "No code conflicts; tools/run_front_end_native.py auto-merges cleanly.",
+        "tools/resource_execution.py compiles to local/build/m19-resource.so without build_path(); wrap with build_path() before enabling parallel runner adoption."
+      ]
+    },
+    {
+      "branch": "research/m20-hgscript-runtime",
+      "tip": "0464850716038d0ae989411482ef2eab574330c6",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "dirty-untracked (11 untracked research/probe files; committed tip only evaluated; uncommitted compatibility unknown)",
+      "contained_in": "integration/m19-m20-review",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "START_HERE.md"],
+      "trial_status": "inherited-via-m19-m20-trial (committed tip only)",
+      "adoption_notes": [
+        "No code conflicts on committed tip; clean or archive untracked local probes before migrating."
+      ]
+    },
+    {
+      "branch": "integration/m19-m20-review",
+      "tip": "b855eb93fa797eded31c1849f2bb69d68470609a",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": "integration/m21-m22-review",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "START_HERE.md"],
+      "trial_status": "passed-disposable-trial",
+      "trial_checks": {
+        "compileall": "passed",
+        "discovered_tests": 473,
+        "targeted_tests": "47 passed in 3.59s (test_hg_verify, test_ee_subset, test_hgscript_runtime, test_resource_execution)",
+        "plan_historical": 79,
+        "plan_current": 120,
+        "leaked_local_build_files": ["local/build/m19-resource.so"]
+      },
+      "new_unregistered_verifiers": [
+        "tools/hgscript_differential.py",
+        "tools/resource_execution.py",
+        "tools/run_resource_lifecycle.py",
+        "tools/verify_resource_job.py",
+        "tools/verify_resource_retail.py",
+        "tools/verify_title_hgscript.py"
+      ],
+      "adoption_notes": [
+        "Finish active work on pinned runner, then merge main in an isolated worktree.",
+        "Wrap local/build/m19-resource.so in build_path() and map M19/M20 verifiers explicitly when M19/M20 integrate."
+      ]
+    },
+    {
+      "branch": "research/m21-scene-coordination",
+      "tip": "167a7281a980538d19cceddc4cb2228362e1ef18",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": "integration/m21-m22-review",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "START_HERE.md"],
+      "trial_status": "inherited-via-m21-m22-trial",
+      "adoption_notes": [
+        "tools/ee_subset.py (lwu opcode 0x27) and tests/test_ee_subset.py auto-merge cleanly with Phase 2 FP optimizations."
+      ]
+    },
+    {
+      "branch": "research/m22-audio-service",
+      "tip": "54f1f130c17bb000d8f3c8bbca91d139460637f8",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": "integration/m21-m22-review",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "START_HERE.md"],
+      "trial_status": "inherited-via-m21-m22-trial",
+      "adoption_notes": [
+        "tools/hg_audio/audio_guest.py auto-merges cleanly with Phase 1 build_path()."
+      ]
+    },
+    {
+      "branch": "integration/m21-m22-review",
+      "tip": "705cd20fcc28d17b3fac374dfad34c990f76ddc6",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": "research/m23-gameplay-initialization, research/m24-audio-sequencing",
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "README.md", "START_HERE.md"],
+      "trial_status": "passed-disposable-trial",
+      "trial_checks": {
+        "compileall": "passed",
+        "discovered_tests": 483,
+        "targeted_tests": "49 passed in 5.48s (test_hg_verify, test_ee_subset, test_title_scene, test_scene_audio_interface, test_hg_audio_connected)",
+        "plan_historical": 79,
+        "plan_current": 120,
+        "leaked_local_build_files": []
+      },
+      "new_unregistered_verifiers": [
+        "tools/hg_audio/verify_m22.py",
+        "tools/verify_scene_area_entry.py",
+        "tools/verify_title_scene.py"
+      ],
+      "adoption_notes": [
+        "Zero code conflicts; resolve doc handoffs, wrap inherited m19-resource.so in build_path(), and register M21/M22 gates explicitly during M21/M22 integration."
+      ]
+    },
+    {
+      "branch": "research/m23-gameplay-initialization",
+      "tip": "6cc3ce8d71fc98b070349ce9dc822886fce1186f",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": null,
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "README.md", "START_HERE.md"],
+      "trial_status": "passed-disposable-trial",
+      "trial_checks": {
+        "compileall": "passed",
+        "discovered_tests": 488,
+        "targeted_tests": "46 passed in 8.14s (test_hg_verify, test_ee_subset, test_world_init)",
+        "plan_historical": 79,
+        "plan_current": 120,
+        "leaked_local_build_files": []
+      },
+      "new_unregistered_verifiers": [
+        "tools/verify_world_init.py"
+      ],
+      "adoption_notes": [
+        "Zero code conflicts; finish active work first, then merge main in an isolated worktree and map M23 checks explicitly when integrating."
+      ]
+    },
+    {
+      "branch": "research/m24-audio-sequencing",
+      "tip": "1830f5ecbf94230da42049e5b300171f47154785",
+      "merge_base_with_main": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "worktree_state": "clean",
+      "contained_in": null,
+      "code_conflicts": [],
+      "doc_conflicts": ["MASTER_HANDOFF.md", "README.md", "START_HERE.md"],
+      "trial_status": "passed-disposable-trial",
+      "trial_checks": {
+        "compileall": "passed",
+        "discovered_tests": 491,
+        "targeted_tests": "50 run, 49 passed, 1 skipped (retail-only HG_ELF skip in test_m24_reference_map.py) in 6.16s",
+        "plan_historical": 79,
+        "plan_current": 120,
+        "leaked_local_build_files": []
+      },
+      "new_unregistered_verifiers": [
+        "tools/hg_audio/m24_reference_map.py"
+      ],
+      "adoption_notes": [
+        "Zero code conflicts.",
+        "IMPORTANT: tests/test_m24_reference_map.py:36 skips 1 test when HG_ELF is unset. Gate 00 discovery_result() fails closed on unlisted skips, so M24 integration must explicitly declare or isolate that retail test contract when integrating."
+      ]
+    }
+  ]
+}

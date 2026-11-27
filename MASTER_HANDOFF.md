@@ -1,5 +1,36 @@
 # Hungry Ghosts — master handoff
 
+## Verification infrastructure, Phase 3 (reviewed integration) — 2026-11-27
+
+**Resume here.** Synchronized with [START_HERE.md](START_HERE.md),
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md),
+[docs/verification/phase2-results.json](docs/verification/phase2-results.json),
+and [docs/verification/phase3-compatibility.json](docs/verification/phase3-compatibility.json).
+
+- **Verified Git & evidence provenance:**
+  - Base (`origin/main` at preflight, PR #21 merge): `86a5670852d47c4ead140e5c8e40a5289f773053`
+  - Phase 1 tested / handoff: `750446db1a95c6957c7ee5cc64ebddf2abd70984` / `1bd0930c2753e03e0da0895908466732b29050c5`
+  - Phase 2 verified code: `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0` (`source_sha256` `c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8`)
+  - Phase 2 docs tip: `593a44afecb279d6f877ec45d5d9ecf38a5e84dc` (preserved untouched on `verification/phase-2-mainpc`)
+  - Phase 3 integration branch: `integration/verification-infrastructure-phase3` (adds docs and sanitized compatibility evidence only; `source_sha256` unchanged `c66bc38ffb97...`; prior private receipts unresealed).
+- **Private receipt IDs (retained locally in ignored `local/verification/`, all seals and artifact hashes independently re-verified `0` bad):**
+  - Base serial (`86a56708`, `full`, 1w): `m12-20261127T190644Z-2j7t7my9` (79/79, 3,143.14 s)
+  - Candidate serial (`734e328`, `historical`, 1w): `m12-20261127T195941Z-ixt34s27` (79/79, 1,950.38 s, 1.61×)
+  - Candidate parallel-4 (`734e328`, `historical`, 4w): `m12-20261127T203250Z-mx0eah77` (79/79, 818.49 s, 3.84×)
+  - Candidate parallel-8 (`734e328`, `historical`, 8w): `m12-20261127T211502Z-cm9phbqt` (79/79, 645.33 s, 4.87×)
+  - Candidate expanded `current` (`734e328`, `current`, 4w): `m12-20261127T204736Z-49j6appf` (120/120, 1,424.22 s)
+- **Private input pins (owner-local read-only; never committed):** `SCPS_150.46` (`a74248c5...`), Japan ISO (`8ca1513c...`), `DATA/PACK.DAT` (`f2e04a08...`), M18 overlay `A0_B09.BIN` (`ef257df9...`), M18 `frames.jsonl` (`4e52bc00...`), PCSX2 v2.8.2 (`0c46bb6a...`), PS2DInfo `2e4a226e00d33ab35391aacade71b55826e5f52f` (4/4 tool pins, 74/74 tests).
+- **M19–M24 compatibility:** All eight local branches (`e512f2f2` through `1830f5ec`) merge with 0 code conflicts (handoff docs only). Disposable isolated trials across all four dependency families passed `compileall`, targeted tests, and 79/120 plans. Future adoption notes: wrap `local/build/m19-resource.so` in `build_path()` (M19+), archive/clean 11 untracked probe files in `decomp-m20` before migration, and explicitly declare/isolate the `HG_ELF` retail skip in `tests/test_m24_reference_map.py:36` (M24) so Gate 00 remains fail-closed.
+- **Boundaries & limits:** Historical M1–M18/Content/Audio oracle boundaries remain unchanged (M18 native-driven execution, authentic Continue unverified, 48 unresolved HGScript bindings, host IOP/SPU2 audio model, bounded R5900 model, host C build ≠ PS2 byte matching). M19–M24 remain separate unpublished local branches.
+- **Safe commands:**
+  - `python3 -B tools/hg_verify.py plan --profile {focused,historical,current} --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py run --profile historical --jobs {1,4,8} --config "$CONFIG"` (`--jobs 8` quiet window only)
+  - `python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py resume --run "$RUN_ID" --jobs 4` / `summarize --run "$RUN_ID"`
+  - `python3 -B -m unittest discover -s tests -v` (public CI synthetic mode)
+- **Single next action:** After PR merge into `main` and post-merge CI confirmation, proceed with independent review/integration of M19–M24 on their own branches, adopting `main` in isolated worktrees at clean checkpoints.
+
 ## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
 
 **Resume here (isolated Phase 2 review; Phase 3 deferred).** Synchronized with

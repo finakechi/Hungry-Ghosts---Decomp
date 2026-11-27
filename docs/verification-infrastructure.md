@@ -1,4 +1,4 @@
-# Verification infrastructure, Phase 1 and Phase 2
+# Verification infrastructure (Phases 1–3)
 
 Phase 1 implemented the Gate 01 contract fix, bounded scheduler, and 120-gate
 current profile in the cloud from `86a5670852d47c4ead140e5c8e40a5289f773053`
@@ -6,8 +6,109 @@ current profile in the cloud from `86a5670852d47c4ead140e5c8e40a5289f773053`
 genuine contract/isolation defects exposed by original-data receipts, applied
 measured exact-behavior optimizations, verified all 79 historical gates and all
 120 current gates against authenticated original inputs, and proved exact
-serial/parallel semantic equivalence. Phase 3 (publication/integration) remains
-deferred on isolated branch `verification/phase-2-mainpc`.
+serial/parallel semantic equivalence. Phase 3 reviewed the Phase 2 diff and
+receipt seals, assessed M19–M24 compatibility in isolated disposable worktrees,
+and prepared this verification-only integration into `main` without importing
+unrelated milestone branches.
+
+## Phase 3 integration, compatibility, and rollout — 2026-11-27
+
+- **Scope:** Verification infrastructure only (`integration/verification-infrastructure-phase3`).
+  Preserves the exact Phase 2 verified code revision
+  `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0` (`source_sha256`
+  `c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8`) on top of
+  remote `main` (`86a5670852d47c4ead140e5c8e40a5289f773053`) with docs-only
+  Phase 2/Phase 3 records layered on top; prior private receipts are never
+  resealed.
+- **Receipt & code review:** Independently re-verified all 5 Phase 2 private
+  receipts (`bad_seals=0`, `bad_artifacts=0` across all 436 check receipts),
+  Python 3.10 AST/stdlib compatibility across all 27 changed Python files
+  (0 issues), and privacy/leak boundaries. Machine-readable compatibility
+  records are in [phase3-compatibility.json](verification/phase3-compatibility.json).
+
+### Safe defaults, configuration, and verified CLI usage
+
+- **Worker defaults & limits:** `--jobs 1` remains the serial default reference.
+  Use `--jobs 4` explicitly for ordinary owner-local runs on an idle 8-core
+  host (`historical` ~13.6 min, peak child RSS 3.38 GiB; `current` ~23.7 min,
+  peak child RSS 8.07 GiB). Use `--jobs 8` for `historical` only in an approved
+  quiet window (~10.8 min); do not default to 8 workers and do not infer
+  8-worker `current` RAM safety from single-child RSS alone.
+- **Isolation & invalidation:** Keep each checkout's `local/verification/` and
+  attempt build directories separate; never share writable `local/`, build,
+  cache, or receipt folders across worktrees. Any change to tracked/untracked
+  source under `SOURCE_DIRS`, pinned tools, or authenticated inputs invalidates
+  receipt reuse automatically. Never resume a baseline receipt into changed
+  source; start a fresh `run`.
+- **Example private config (`$CONFIG`, kept outside tracked files; placeholders only):**
+
+```json
+{
+  "elf": "/path/to/local/extracted/japan/SCPS_150.46",
+  "image": "/path/to/Hungry Ghosts (Japan).iso",
+  "emulator": "/path/to/pcsx2-v2.8.2.AppImage",
+  "ps2dinfo": "/path/to/PS2DInfo",
+  "captures": "/path/to/local/m12/captures",
+  "ordinary-source": "/path/to/local/m9/m8-a1-zero.c"
+}
+```
+
+Set `HG_CAPTURE_DIR` (or add `"m13-captures"` to `$CONFIG` on the updated runner)
+for `current` corridor checks. Verified CLI commands:
+
+```sh
+# Plan without executing (verify zero missing/invalid inputs first)
+python3 -B tools/hg_verify.py plan --profile focused --config "$CONFIG"
+python3 -B tools/hg_verify.py plan --profile historical --config "$CONFIG"
+python3 -B tools/hg_verify.py plan --profile current --config "$CONFIG"
+
+# Focused (8 gates), historical/full (79 gates), comprehensive current (120 gates)
+python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"
+python3 -B tools/hg_verify.py run --profile historical --jobs 1 --config "$CONFIG"
+python3 -B tools/hg_verify.py run --profile historical --jobs 4 --config "$CONFIG"
+python3 -B tools/hg_verify.py run --profile historical --jobs 8 --config "$CONFIG"   # quiet window only
+python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"
+
+# Resume an interrupted run in the same worktree, or print its summary
+python3 -B tools/hg_verify.py resume --run "$RUN_ID" --jobs 4
+python3 -B tools/hg_verify.py summarize --run "$RUN_ID"
+
+# Public CI synthetic suite (no retail inputs; 462 pass + 3 retail-only skips)
+python3 -B -m unittest discover -s tests -v
+```
+
+### M19–M24 compatibility and migration matrix
+
+All eight unpublished local M19–M24 branches branch from `86a56708`. Disposable
+isolated trial merges (committed tips only; no original worktree or branch
+touched) showed **0 code conflicts** across all eight branches; only handoff
+docs (`MASTER_HANDOFF.md`, `START_HERE.md`, and `README.md` on M21–M24)
+conflict. The 120-gate `current` profile covers M1–M18/Content/Audio only; it
+does **not** claim coverage of M19–M24, which must register their own explicit
+gates, controls, and receipts when they integrate.
+
+| Branch (Pinned Tip) | Worktree State | Code Conflicts | Doc Conflicts | Isolated Trial Result | Adoption / Migration Action |
+|---|---|---:|---|---|---|
+| `research/m19-autonomous-loading` (`e512f2f2`) | Clean | 0 | `MASTER_HANDOFF.md`, `START_HERE.md` | Inherited via `m19-m20` trial | Wrap `local/build/m19-resource.so` in `build_path()` before parallel runner use. |
+| `research/m20-hgscript-runtime` (`04648507`) | **Dirty** (11 untracked probe files; uncommitted unknown) | 0 | `MASTER_HANDOFF.md`, `START_HERE.md` | Inherited via `m19-m20` trial (committed tip only) | Archive/clean untracked probes before adopting; do not auto-rebase. |
+| `integration/m19-m20-review` (`b855eb93`) | Clean | 0 | `MASTER_HANDOFF.md`, `START_HERE.md` | **Pass:** `compileall` OK, 473 discovered, 47/47 targeted tests OK, 79/120 plans OK | Wrap `local/build/m19-resource.so` in `build_path()`; map 6 new M19/M20 verifiers explicitly on M19–M20 integration. |
+| `research/m21-scene-coordination` (`167a7281`) | Clean | 0 | `MASTER_HANDOFF.md`, `START_HERE.md` | Inherited via `m21-m22` trial | `tools/ee_subset.py` (`lwu` `0x27`) & `tests/test_ee_subset.py` auto-merge cleanly with Phase 2 FP code. |
+| `research/m22-audio-service` (`54f1f130`) | Clean | 0 | `MASTER_HANDOFF.md`, `START_HERE.md` | Inherited via `m21-m22` trial | `tools/hg_audio/audio_guest.py` auto-merges cleanly with `build_path()`. |
+| `integration/m21-m22-review` (`705cd20f`) | Clean | 0 | `MASTER_HANDOFF.md`, `README.md`, `START_HERE.md` | **Pass:** `compileall` OK, 483 discovered, 49/49 targeted tests OK, 79/120 plans OK | Resolve handoff docs; map 3 new M21/M22 verifiers explicitly on M21–M22 integration. |
+| `research/m23-gameplay-initialization` (`6cc3ce8d`) | Clean | 0 | `MASTER_HANDOFF.md`, `README.md`, `START_HERE.md` | **Pass:** `compileall` OK, 488 discovered, 46/46 targeted tests OK, 79/120 plans OK | Resolve handoff docs; map `tools/verify_world_init.py` explicitly when M23 integrates. |
+| `research/m24-audio-sequencing` (`1830f5ec`) | Clean | 0 | `MASTER_HANDOFF.md`, `README.md`, `START_HERE.md` | **Pass:** `compileall` OK, 491 discovered, 49 passed / 1 retail skip, 79/120 plans OK | **Note:** `tests/test_m24_reference_map.py:36` skips 1 test when `HG_ELF` is unset. Gate 00 fails closed on unlisted skips, so M24 integration must explicitly update the discovery skip contract or isolate that retail test. |
+
+### Safe rollout and rollback
+
+- **Rollout for active coding agents:** Existing agents on M19–M24 do **not**
+  need to migrate mid-task. Finish active work on the pinned runner, then adopt
+  `main` in a separate isolated worktree after a clean checkpoint, resolve
+  handoff-doc conflicts, re-run synthetic/targeted checks, and generate fresh
+  receipts (old receipts from `86a56708` will not reuse across changed source).
+- **Rollback:** If any post-merge regression is discovered, roll back via a
+  reviewed `git revert -m 1 <merge-commit>` PR against `main`, preserving
+  history and all private/sanitized receipts. Never use force-push, history
+  rewrites, or automatic rollback.
 
 ## Phase 2 MainPC validation — 2026-11-27
 

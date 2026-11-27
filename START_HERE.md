@@ -1,5 +1,43 @@
 # Hungry Ghosts — start here
 
+## Verification infrastructure, Phase 3 (reviewed integration) — 2026-11-27
+
+**Resume here.** Phase 3 reviews and integrates the verification-only
+infrastructure from Phase 1/Phase 2 into `main` (base `86a5670852d47c4ead140e5c8e40a5289f773053`,
+PR #21 merge) on branch `integration/verification-infrastructure-phase3`,
+preserving the exact verified Phase 2 code commit
+`734e328fe7c9cea90b2dd746c0ea1fff0647dbc0` (`source_sha256`
+`c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8`) without
+folding in unpublished M19–M24 branches.
+
+- **Verified evidence closure:** Zero files in `src/`, `tools/`, `tests/`,
+  `ghidra_scripts/`, `analysis/`, `evidence/`, or `config/` changed after
+  `734e328`. All five MainPC Phase 2 receipts (`m12-20261127T190644Z-2j7t7my9`
+  base 3,143.14 s; `m12-20261127T195941Z-ixt34s27` serial 1,950.38 s;
+  `m12-20261127T203250Z-mx0eah77` 4w 818.49 s; `m12-20261127T211502Z-cm9phbqt`
+  8w 645.33 s; `m12-20261127T204736Z-49j6appf` 120-gate `current` 4w
+  1,424.22 s) passed independent seal and artifact verification (`0` bad seals,
+  `0` bad artifacts), with `0` semantic differences across 79/79 gates and
+  83/83 JSON artifacts.
+- **M19–M24 compatibility:** All eight local M19–M24 branches (`e512f2f2`,
+  `04648507`, `b855eb93`, `167a7281`, `54f1f130`, `705cd20f`, `6cc3ce8d`,
+  `1830f5ec`) merge with **0 code conflicts** (handoff docs only). Disposable
+  trials across all four dependency families passed `compileall`, targeted
+  tests, and 79/120 plans. Two nonblocking future-adoption items are mapped in
+  [docs/verification-infrastructure.md](docs/verification-infrastructure.md) and
+  [docs/verification/phase3-compatibility.json](docs/verification/phase3-compatibility.json):
+  wrap `local/build/m19-resource.so` in `build_path()` (M19+), and declare or
+  isolate the `HG_ELF` retail skip in `tests/test_m24_reference_map.py:36`
+  (M24) when those milestones integrate.
+- **Safe defaults & rollout:** Default remains `--jobs 1`; use `--jobs 4` for
+  ordinary owner-local runs on an idle host and `--jobs 8` for `historical`
+  only in an approved quiet window. Active agents finish on their pinned runner
+  before adopting `main` in an isolated worktree. Rollback via a reviewed
+  revert PR only.
+- **Next action:** Continue local M19–M24 milestone review/integration in their
+  own worktrees; adopt `main` only at each milestone's clean checkpoint with
+  fresh receipts and explicit milestone gate mapping.
+
 ## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
 
 **Resume here (isolated Phase 2 review; Phase 3 deferred).** On isolated branch
