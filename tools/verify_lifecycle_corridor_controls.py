@@ -15,6 +15,7 @@ import hashlib
 import json
 import sys
 from pathlib import Path
+from hg_verify_build import build_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests'))
@@ -62,7 +63,7 @@ def main():
     caps.area = (load_area1(a.area_image), AREA_BASE)
     ownership = VC.inter_frame_ownership(caps, obs)
     source = SOURCE.read_text()
-    folder = ROOT / 'local/m17/corridor-controls'
+    folder = build_path(ROOT / 'local/m17/corridor-controls')
     folder.mkdir(parents=True, exist_ok=True)
     rows = []
     for name, old, new in CONTROLS:

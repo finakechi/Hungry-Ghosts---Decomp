@@ -6,7 +6,10 @@ import signal
 import subprocess
 import sys
 import tempfile
+from threading import Barrier, Event
+import time
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 import hg_verify as runner
@@ -36,6 +39,75 @@ class ResultTests(unittest.TestCase):
 
     def control(self, code):
         return results.classify({'result': 'ordinary-control'}, self.directory, code)[0]
+
+    def test_disc_read_false_acceptance_and_malformed_measurements(self):
+        check = next(c for c in runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'historical')
+                     if c['historical'] == '01')
+        (self.directory / 'output.log').touch()
+        self.result = results.output_path(check, self.directory)
+        identity = {'schema': check['report_schema'], 'elf_sha256': results.EXPECTED, 'result': 'passed'}
+        for measurements in ({}, {'cases': []}, {'cases': [{'result': 'failed'}]}):
+            with self.subTest(measurements=measurements):
+                self.result.write_text(json.dumps(identity | measurements))
+                self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+        self.result.unlink()
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+        self.result.write_text('{')
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+
+    def test_disc_read_complete_report_and_faults(self):
+        from verify_disc_read import CASES_PER_FUNCTION, CHUNKS, FUNCTIONS, LENGTHS, SEED
+        check = {'result': 'disc-read', 'report_schema': 'hg-disc-read-differential/v2'}
+        (self.directory / 'output.log').touch()
+        # Invented lifecycle lengths exercised only at the report boundary.
+        # No original instruction execution or native observation is implied.
+        sequences = [dict(chunk=chunk, length=length, steps=1 + i)
+                     for chunk in CHUNKS for i, length in enumerate(LENGTHS)]
+        steps = sum(item['steps'] for item in sequences)
+        randomized = len(FUNCTIONS) * CASES_PER_FUNCTION
+        row = dict(schema=check['report_schema'], elf_sha256=results.EXPECTED, result='passed',
+                   seed=hex(SEED), function_entries=FUNCTIONS,
+                   randomized_by_function=dict.fromkeys(FUNCTIONS, CASES_PER_FUNCTION),
+                   randomized_cases_per_function=CASES_PER_FUNCTION, randomized_cases=randomized,
+                   cases=randomized + steps, lifecycle=sequences,
+                   lifecycle_sequences=len(sequences), lifecycle_steps=steps)
+        self.result.write_text(json.dumps(row))
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.PASSED)
+        self.assertEqual(results.classify(check, self.directory, 1)[0], results.ERROR)
+        for bad in (dict(cases=True), dict(seed='0x0'), dict(elf_sha256='0'*64), dict(schema='unknown'),
+                    dict(function_entries={}), dict(randomized_by_function={'poll': 350}),
+                    dict(lifecycle=[sequences[0], *sequences[:-1]]), dict(lifecycle=sequences[:-1]),
+                    dict(lifecycle=[{**sequences[0], 'steps': 0}, *sequences[1:]])):
+            with self.subTest(bad=bad.keys()):
+                self.result.write_text(json.dumps(row | bad))
+                self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+        self.result.write_text(json.dumps(row)[:-1] + ', "cases": 1}')
+        self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+
+    def test_discovery_discloses_only_the_three_public_retail_skips(self):
+        check = dict(result='discovery', minimum_tests=4)
+        (self.directory / 'output.log').touch()
+        names = sorted(results.RETAIL_AUDIO_TESTS)
+        report = dict(schema='hg-unittest-discovery/v1', pattern='test*.py', run=4,
+                      discovered=['test.clean', *names], passed=['test.clean'], skipped=names,
+                      failures=[], errors=[], expected_failures=[], unexpected_successes=[])
+        self.result.write_text(json.dumps(report))
+        verdict, details = results.classify(check, self.directory, 0)
+        self.assertEqual((verdict, details['retail_tests_unrun']), (results.PASSED, names))
+        self.assertEqual(results.classify(check, self.directory, 0, authenticated_image=True)[0], results.ERROR)
+        for bad in (dict(run=3), dict(skipped=names + ['test.clean']),
+                    dict(expected_failures=['test.clean']), dict(discovered=['test.clean']*4)):
+            self.result.write_text(json.dumps(report | bad))
+            self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+
+    def test_legacy_reports_require_the_recorded_workload(self):
+        gates = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'historical')
+        check = next(row for row in gates if row['historical'] == '15') | {'outputs': ['output.log', 'result.json']}
+        (self.directory / 'output.log').touch()
+        row = {'result': 'passed', 'cases': 1536, 'instruction_addresses': 190}
+        for bad in (dict(cases=0), dict(cases=True), dict(instruction_addresses=0)):
+            self.result.write_text(json.dumps(row | bad))
+            self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
 
     def test_nonzero_exit_never_proves_a_mutation(self):
         (self.directory / 'output.log').write_text('cc: fatal error: file not found\n')
@@ -200,6 +272,33 @@ class ReceiptTests(unittest.TestCase):
             os.utime(orphan, ns=(stamp, stamp))
             self.assertIsNone(runner.reusable(root, basis))
 
+    def test_changed_source_and_input_invalidate_receipt_basis(self):
+        with tempfile.TemporaryDirectory() as location:
+            fixture = Path(location) / 'fixture'
+            fixture.write_bytes(b'one')
+            inputs = runner.Inputs(runner.configured_paths(runner.ROOT, None), runner.Stop())
+            check = {'id': 'fixture', 'inputs': [str(fixture)], 'argv': []}
+            basis = inputs.snapshot(check, {})
+            inputs.require_current(check, {}, basis)
+            fixture.write_bytes(b'two')
+            with self.assertRaisesRegex(ValueError, 'tools or inputs changed'):
+                inputs.require_current(check, {}, basis)
+            with patch.object(inputs, 'sources', return_value=((), {}, 'different')):
+                with self.assertRaisesRegex(ValueError, 'sources changed'):
+                    inputs.require_current(check, {}, basis)
+
+    def test_artifact_sealing_rejects_symlink_and_keeps_nested_json(self):
+        with tempfile.TemporaryDirectory() as location:
+            directory = Path(location)
+            nested = directory / 'nested'
+            nested.mkdir()
+            (nested / 'receipt.json').write_text('nested measurement')
+            (directory / 'receipt.json').write_text('top-level seal')
+            self.assertEqual(set(runner.artifacts(directory)), {'nested/receipt.json'})
+            (directory / 'escaped.log').symlink_to(nested / 'receipt.json')
+            with self.assertRaisesRegex(ValueError, 'Invalid attempt artifact'):
+                runner.artifacts(directory)
+
     def test_timeout_and_lock_cannot_produce_a_completion_receipt(self):
         with tempfile.TemporaryDirectory() as location:
             directory = Path(location)
@@ -212,6 +311,99 @@ class ReceiptTests(unittest.TestCase):
                                      {'PATH': os.defpath}, lock, runner.Stop(), timeout=0.05)
             self.assertTrue((directory / 'output.log').exists())
             self.assertFalse((directory / 'receipt.json').exists())
+
+
+class SchedulerTests(unittest.TestCase):
+    @staticmethod
+    def check(name, *, requires=(), after=(), kind='structure'):
+        return dict(id=name, name=name, result=kind, evidence='synthetic', expected=results.PASSED,
+                    requires=list(requires), after=list(after), argv=[])
+
+    def test_overlap_requires_after_and_independent_failure(self):
+        barrier = Barrier(2, timeout=5)
+        root_finished = Event()
+        independent_finished = Event()
+        checks = [self.check('root'), self.check('independent'),
+                  self.check('hard', requires=('root',)), self.check('ordered', after=('root',)),
+                  self.check('exclusive', kind='report')]
+        launched = []
+
+        def run(check, parents):
+            name = check['id']
+            launched.append(name)
+            if name == 'root':
+                barrier.wait()
+                root_finished.set()
+                raise RuntimeError('worker crash')
+            if name == 'independent':
+                barrier.wait()
+                independent_finished.set()
+                return runner.brief(check, results.FAILURE)
+            if name == 'ordered':
+                self.assertTrue(root_finished.is_set())
+                self.assertFalse(parents)
+            if name == 'exclusive':
+                self.assertTrue(independent_finished.is_set())
+            return runner.brief(check, results.PASSED)
+
+        rows = runner.schedule(checks, 2, runner.Stop(), run, lambda *_: None)
+        self.assertNotIn('hard', launched)
+        self.assertEqual({key: row['verdict'] for key, row in rows.items()},
+                         dict(root=results.ERROR, independent=results.FAILURE, hard=results.SKIPPED,
+                              ordered=results.PASSED, exclusive=results.PASSED))
+
+    def test_invalid_graph_is_rejected(self):
+        for checks in ([self.check('a', after=('missing',))],
+                       [self.check('a', after=('b',)), self.check('b', requires=('a',))]):
+            with self.assertRaisesRegex(ValueError, 'missing or cyclic'):
+                runner.schedule(checks, 2, runner.Stop(), lambda *_: None, lambda *_: None)
+
+    def test_interrupted_active_children_do_not_start_pending_work(self):
+        stop = runner.Stop()
+        checks = [self.check(name) for name in ('a', 'b', 'c')]
+        barrier = Barrier(2, timeout=5)
+        with tempfile.TemporaryDirectory() as location:
+            folder = Path(location)
+            def run(check, _):
+                directory = folder / check['id']
+                directory.mkdir()
+                barrier.wait()
+                try:
+                    with runner.run_lock(directory) as lock:
+                        runner.run_child([sys.executable, '-c', 'import time; print("ready", flush=True); time.sleep(30)'],
+                                         directory, {'PATH': os.defpath}, lock, stop, 5)
+                except runner.Interrupted:
+                    return runner.brief(check, results.INTERRUPTED)
+                self.fail('Child did not observe interrupt')
+
+            from threading import Thread
+            def interrupt():
+                deadline = time.monotonic() + 4
+                while time.monotonic() < deadline:
+                    logs = list(folder.glob('*/output.log'))
+                    if len(logs) == 2 and all(log.stat().st_size for log in logs):
+                        stop.signum = signal.SIGTERM
+                        return
+                    time.sleep(0.01)
+            worker = Thread(target=interrupt)
+            worker.start()
+            rows = runner.schedule(checks, 2, stop, run, lambda *_: None)
+            worker.join()
+            self.assertEqual({key: row['verdict'] for key, row in rows.items()},
+                             dict(a=results.INTERRUPTED, b=results.INTERRUPTED))
+
+    def test_current_and_historical_profiles_keep_private_prerequisites(self):
+        historical = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'historical')
+        current = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'current')
+        self.assertEqual([row for row in current if row.get('historical')], historical)
+        nodes = {row['id']: row for row in current}
+        self.assertIn('{elf}', nodes['audio-instructions']['inputs'])
+        self.assertIn('{image}', nodes['audio-owner-endpoints']['inputs'])
+        self.assertIn('{image}', nodes['content-corpus']['inputs'])
+        self.assertIn('.ee.z', ' '.join(nodes['front-end-differential']['inputs']))
+        synthetic = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'synthetic')
+        self.assertFalse(any(row['id'] in {'content-corpus', 'retail-input-identity'} for row in synthetic))
+
 
 
 if __name__ == '__main__':

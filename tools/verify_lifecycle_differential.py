@@ -19,6 +19,7 @@ import random
 import struct
 import sys
 from pathlib import Path
+from hg_verify_build import build_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lifecycle_differential import (FUNCTIONS, MAIN_FRAME, MODE_BLOCK, Script, build, case,
@@ -280,7 +281,7 @@ def main():
     bases = {'elf-image': (bytes(ram), bytes(scratch))}
     inputs = []
     for path in a.capture:
-        ram, scr, meta = load_capture(path, Path('local/m17/cache'))
+        ram, scr, meta = load_capture(path, build_path(Path('local/m17/cache')))
         bases[Path(path).stem] = (ram, scr)
         inputs.append(meta)
     only = {int(x, 16) for x in a.only}

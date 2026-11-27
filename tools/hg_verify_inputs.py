@@ -11,9 +11,11 @@ DEFAULTS = {
     'emulator': 'local/references/pcsx2.AppImage',
     'ps2dinfo': 'local/references/PS2DInfo',
     'captures': 'local/m12/captures',
+    'm13-captures': 'local/m13/captures',
     'ordinary-source': 'local/m9/m8-a1-zero.c',
 }
-ENV_PATHS = {'elf': 'HG_ELF', 'image': 'HG_JAPAN_ISO', 'emulator': 'HG_PCSX2', 'ps2dinfo': 'HG_PS2DINFO'}
+ENV_PATHS = {'elf': 'HG_ELF', 'image': 'HG_JAPAN_ISO', 'emulator': 'HG_PCSX2', 'ps2dinfo': 'HG_PS2DINFO',
+             'm13-captures': 'HG_CAPTURE_DIR'}
 
 
 def configured_paths(root, path):
@@ -115,4 +117,16 @@ def saved_inputs(root, group, paths):
         return frame_files(evidence / 'm11/constraint-observation.json', local / 'm11/captures', group)
     if group.startswith('m12'):
         return frame_files(evidence / 'm12/grounded-observation.json', paths['captures'], group)
+    if group == 'm13':
+        return frame_files(evidence / 'm13/continuous-observation.json', paths['m13-captures'], group)
+    if group == 'm17-native':
+        return {}
+    if group in ('m18-native', 'm18-differential'):
+        record = evidence / 'm18/checks.json'
+        pins = read_json(record)['identities']
+        result = {record: None, local / 'm18/ovl/A0_B09.BIN': pins['title_overlay_sha256']} if group == 'm18-differential' else {
+            record: None, local / 'm18/native/frames.jsonl': pins['native_stop_records_sha256']}
+        return result
+    if group == 'm17-differential':
+        return {evidence / 'm17/checks.json': None}
     raise ValueError(f'Unknown saved input group {group}')

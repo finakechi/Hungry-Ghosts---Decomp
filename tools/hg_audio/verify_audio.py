@@ -307,7 +307,9 @@ def main():
             else:
                 passed += 1
                 results.append({'function': name, 'case': case, 'status': 'match'})
-    summary = {'passed': passed, 'failed': failed,
+    summary = {'schema': 'hg-audio-instructions/v1', 'elf_sha256': ELF_SHA256,
+               'seed': args.seed, 'cases_per_function': args.cases,
+               'passed': passed, 'failed': failed,
                'skipped': sum(1 for r in results if r['status'] == 'skipped'),
                'excluded': sum(1 for r in results if r['status'] == 'excluded'),
                'results': results}
