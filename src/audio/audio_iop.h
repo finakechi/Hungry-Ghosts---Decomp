@@ -118,6 +118,13 @@ bool hg_audio_ee_stage_play_voice(HGAudioEeService *service, uint32_t play_index
                                   uint32_t voice, uint32_t sample_offset,
                                   HGSg2VoiceParams params);
 bool hg_audio_ee_stage_key(HGAudioEeService *service, uint32_t voice, bool on);
+/* M24 parameter updates for a voice that is already configured: stage one
+ * GAIN record, or one PITCH record packed and validated like
+ * hg_audio_ee_stage_voice. Neither touches ADSR, SSA or key state. */
+bool hg_audio_ee_stage_gain(HGAudioEeService *service, uint32_t voice,
+                            uint32_t left, uint32_t right);
+bool hg_audio_ee_stage_pitch(HGAudioEeService *service, uint32_t voice,
+                             HGSg2VoiceParams params);
 
 #ifdef __cplusplus
 }
