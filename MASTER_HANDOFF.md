@@ -1,5 +1,59 @@
 # Hungry Ghosts — master handoff
 
+## M23 cold gameplay initialization and world-state continuity — 2026-11-27
+
+**Resume here for M23.** Branch `research/m23-gameplay-initialization` in
+`decomp-m23`, branched from the shared baseline `integration/m21-m22-review`
+(`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, tested source
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`). Verified M23 implementation commit:
+`b0464cd5bc54c95e33146b8d28dd8c7e9d5c5222`. Leaves all audio files (`src/audio/`,
+`tools/hg_audio/` — M24 ownership), existing shared C sources,
+`decomp-m21-m22-integration`, local `main`, and `origin/main` unchanged. See
+[M23](docs/M23.md) for the full dependency table, provenance ledger, commands,
+and receipts.
+
+- **Authenticated cold-to-corridor dependency map (`evidence/m23/authentic-boundary.json`):**
+  Read-only inspection of Japanese `SCPS-15046` (`a74248c5…`) and owner captures
+  (`area1-request`, `area1-active`, `obs3-000`) establishes the exact ordered
+  chain from `0012dd60` through `0012e700` sub 0 (`00139140`, `0025c0f0`,
+  `00182430`, `00141b10`, `00141910` [actor pools `00141f60` + 2,048-node pool
+  `00141ce0`], `00141210` [`00141330`/`0030f3c0` -> `(48.5, 38.0, 265.0, 1.5708)`],
+  `0013fef0`, `0012bf70`, `0013a4c0`, `00189aa0`, `00156cf0` [M24 audio seam],
+  `001390b0`) into first `0012f850` (`00158560` state-0 `001585c0 -> 00158a10 +
+  001e3440 + phase 0->1`, followed by `0012c790` bone-2 eye copy and camera
+  follow). Calling C `00158560` directly on authentic `area1-active` confirms
+  `HG_DOMAIN_FAULT(0x30)` (`PLAYER+0x18 == 0`).
+- **Reusable provenance harness & original synthetic lifecycle (`src/scene/world_init.{h,c}`,
+  `tests/world_init_harness.c`, `tools/verify_world_init.py`, `tests/test_world_init.py`):**
+  Reuses `HGResourceEnv` (32 MiB EE RAM + 16 KiB scratchpad) and existing C
+  loader/lifecycle/actor/player/camera/pad/fade APIs. Separates `--synthetic`
+  from `--inspect-authentic` and classifies 43 tracked writes (`5` fixture, `18`
+  C-produced, `20` synthetic-model, `0` unknown). Connects an independently
+  authored synthetic courtyard (`spawn=(12,10,20)`, 20-bone FLK5 with eye offset
+  on bone 2) across Cycle 1 (cold boot -> publish & stale `0x22f` clear -> enter
+  -> 63 fade frames -> 14 walk + 12 turn + 20 wall [26 contacts, 65 floor
+  queries] + 14 release frames -> teardown to `2048/2048` free nodes & `0`
+  actors) and Cycle 2 with bit-exact trajectory parity, plus 10/10 fail-closed
+  negative controls (`evidence/m23/synthetic-lifecycle.json`). Synthetic results
+  do not claim retail equivalence.
+- **Verification on `b0464cd5`:** Combined strict GCC 16.2.1 & Clang 23.1.5
+  builds across all 11 `src/**/*.c`, 4/4 GCC/Clang ASan+UBSan+LSan checks
+  (`world_init_harness.c` & `scene_audio_interface.c`), **475/475** discovered
+  tests with `HG_JAPAN_ISO` (0 skipped), M21 `verify_scene_area_entry.py` (7/7
+  domains) and `verify_title_scene.py --new-game` (1,174 units, 8/8 domains),
+  M17 `verify_player_continuous.py --lifecycle` (22/22 corridor frames), and
+  full owner profile `m12-20261127T160149Z-aq4rtrbd` accepting **79/79** gates
+  fresh (74 passed, 5 expected rejections, 0 reused/failed/skipped/unrun;
+  `summary.json` SHA-256
+  `cae5cee518edee3b4564ead62f554d825c9e7e4423546d70cbfaab233eb7a465`,
+  `source_sha256`
+  `3870d093f3447ed20b9df5312dc31e31b5da6cb8b19c9a65baf3e4a35d2310cd`,
+  `working_files` empty).
+- **Next step after M23–M24 integration:** Reconstruct the authenticated C
+  implementations of `00141b10`, `00141910` (`00141f60`/`00141ce0`), `00141210`
+  (`00141330`/`0030f3c0`), `0012bf70`, and `00158560` state-0 (`001585c0`), and
+  verify them instruction-for-instruction against `SCPS_150.46` and `area1-active`.
+
 ## M21–M22 local integration review — 2026-11-26
 
 **Resume here.** Branch `integration/m21-m22-review` in

@@ -1,5 +1,41 @@
 # Hungry Ghosts — start here
 
+## M23 cold gameplay initialization and world-state continuity — 2026-11-27
+
+**Resume here for M23.** Branch `research/m23-gameplay-initialization` in
+`decomp-m23`, branched from the shared baseline `integration/m21-m22-review`
+(`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, tested source
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`). Verified M23 implementation commit:
+`b0464cd5bc54c95e33146b8d28dd8c7e9d5c5222`. Leaves audio (`src/audio/`,
+`tools/hg_audio/` — M24), shared baseline C sources, `decomp-m21-m22-integration`,
+local `main`, and `origin/main` untouched.
+
+- **Authenticated cold-to-corridor dependency map:** Traced Japanese `SCPS-15046`
+  (`a74248c5…`) and owner captures (`area1-request`, `area1-active`, `obs3-000`).
+  Last supported retail cold-entry boundary remains `0012f850` (`area1-active`);
+  earliest missing prerequisites are (1) `0012e700` sub-0 setup callees
+  (`00141b10 -> 00141910 -> 00141210 -> 0013fef0 -> 0012bf70 -> 0013a4c0 ->
+  00189aa0`) and (2) `00158560` state-0 init (`001585c0 -> 00158a10 + 001e3440 +
+  phase 0->1`), confirmed by live `HG_DOMAIN_FAULT(0x30)` on `area1-active`
+  (`evidence/m23/authentic-boundary.json`).
+- **Reusable provenance harness & original synthetic lifecycle:** Added
+  `src/scene/world_init.{h,c}`, `tests/world_init_harness.c`,
+  `tools/verify_world_init.py`, and `tests/test_world_init.py` on the existing
+  `HGResourceEnv` 32 MiB EE RAM + 16 KiB scratchpad bus. Proves two full cycles
+  of an independently authored synthetic courtyard (`spawn=(12,10,20)`) through
+  resource publish, stale title handle clear, world entry, 63-frame fade, 60
+  consecutive controller updates (walk, turn, 26 wall contacts, release), clean
+  teardown (`2048/2048` free nodes, `0` actors), and Cycle 2 bit-exact parity,
+  plus 10/10 targeted negative controls (`evidence/m23/synthetic-lifecycle.json`).
+  Synthetic execution is explicitly distinct from retail equivalence.
+- **Verification on `b0464cd5`:** Strict combined GCC 16.2.1 & Clang 23.1.5
+  builds (all 11 `src/**/*.c`), 4/4 GCC/Clang ASan+UBSan+LSan checks,
+  **475/475** discovered tests with `HG_JAPAN_ISO` (0 skipped), M21 cold-entry
+  and M17 22-frame corridor regressions, and **79/79** full-profile gates fresh
+  (0 reused) in `m12-20261127T160149Z-aq4rtrbd`.
+- [M23 initialization map, harness, and verification](docs/M23.md).
+  [Master handoff](MASTER_HANDOFF.md).
+
 ## M21–M22 local integration review — 2026-11-26
 
 **Resume here.** Branch `integration/m21-m22-review` in
