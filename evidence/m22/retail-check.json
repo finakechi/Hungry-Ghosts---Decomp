@@ -1,0 +1,511 @@
+{
+  "result": "pass",
+  "inputs": {
+    "SCPS_150.46": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "SG2IOP.IRX": "a8ac82dc1f12b7960187d344d2bd5167383172c77f3ed15482b1183d30a9c1c1",
+    "LIBSD.IRX": "57cbd80b7c2f966985e14ca18c03e849e3b3eb1216f06a6f4c1e6ca85084ea37",
+    "SDRDRV.IRX": "37b615869fed71ec90760543d83170dc7b7608142a4117d665a0cfbe78c3cc52",
+    "IOPRP271.IMG": "8d752d01d3dda7d418ae174ffe645787f4bf3fab4e035ca1c3300a0522ee22f1"
+  },
+  "module_mapping": {
+    "SG2IOP.IRX": {
+      "runtime_base": "0x56230",
+      "file_load_offset": "0xa0",
+      "file_load_size": "0x4b70",
+      "memory_size": "0xf060",
+      "nonrelocated_matching_words": 3874,
+      "relocation_sites": 918,
+      "remaining_words": 36
+    },
+    "LIBSD.IRX": {
+      "runtime_base": "0x50830",
+      "file_load_offset": "0xb0",
+      "file_load_size": "0x5320",
+      "memory_size": "0x5980",
+      "nonrelocated_matching_words": 4461,
+      "relocation_sites": 820,
+      "remaining_words": 39
+    },
+    "SDRDRV.IRX": {
+      "runtime_base": "0x90630",
+      "file_load_offset": "0xa0",
+      "file_load_size": "0x12b0",
+      "memory_size": "0x1a18",
+      "nonrelocated_matching_words": 811,
+      "relocation_sites": 323,
+      "remaining_words": 62
+    }
+  },
+  "instruction_anchors": {
+    "SCPS_150.46": [
+      {
+        "address": "0x10af78",
+        "file_offset": "0xb778",
+        "little_endian_bytes": "01000524"
+      },
+      {
+        "address": "0x10b074",
+        "file_offset": "0xb874",
+        "little_endian_bytes": "2d300000"
+      },
+      {
+        "address": "0x1572bc",
+        "file_offset": "0x57abc",
+        "little_endian_bytes": "589d0a0c"
+      },
+      {
+        "address": "0x157368",
+        "file_offset": "0x57b68",
+        "little_endian_bytes": "2a2c040c"
+      },
+      {
+        "address": "0x2acf90",
+        "file_offset": "0x1ad790",
+        "little_endian_bytes": "000004ad"
+      },
+      {
+        "address": "0x2ad204",
+        "file_offset": "0x1ada04",
+        "little_endian_bytes": "2e1c040c"
+      },
+      {
+        "address": "0x2ad2e0",
+        "file_offset": "0x1adae0",
+        "little_endian_bytes": "2211053c"
+      },
+      {
+        "address": "0x2ad2e8",
+        "file_offset": "0x1adae8",
+        "little_endian_bytes": "4433a534"
+      },
+      {
+        "address": "0x2b50b0",
+        "file_offset": "0x1b58b0",
+        "little_endian_bytes": "00006494"
+      },
+      {
+        "address": "0x2b50c0",
+        "file_offset": "0x1b58c0",
+        "little_endian_bytes": "0200a294"
+      },
+      {
+        "address": "0x2b2c90",
+        "file_offset": "0x1b3490",
+        "little_endian_bytes": "d8b30a0c"
+      },
+      {
+        "address": "0x2b2d78",
+        "file_offset": "0x1b3578",
+        "little_endian_bytes": "d8b30a0c"
+      }
+    ],
+    "SG2IOP.IRX": [
+      {
+        "address": "0x1690",
+        "file_offset": "0x1730",
+        "little_endian_bytes": "d8ffbd27"
+      },
+      {
+        "address": "0x16f0",
+        "file_offset": "0x1790",
+        "little_endian_bytes": "b06f22ac"
+      },
+      {
+        "address": "0x1704",
+        "file_offset": "0x17a4",
+        "little_endian_bytes": "e000000c"
+      },
+      {
+        "address": "0x3cd4",
+        "file_offset": "0x3d74",
+        "little_endian_bytes": "09f80002"
+      },
+      {
+        "address": "0x3d9c",
+        "file_offset": "0x3e3c",
+        "little_endian_bytes": "2211053c"
+      },
+      {
+        "address": "0x3da0",
+        "file_offset": "0x3e40",
+        "little_endian_bytes": "4433a534"
+      },
+      {
+        "address": "0x3eb0",
+        "file_offset": "0x3f50",
+        "little_endian_bytes": "b90f000c"
+      },
+      {
+        "address": "0x3f80",
+        "file_offset": "0x4020",
+        "little_endian_bytes": "b06f20ac"
+      },
+      {
+        "address": "0x4034",
+        "file_offset": "0x40d4",
+        "little_endian_bytes": "b86f22ac"
+      },
+      {
+        "address": "0x4180",
+        "file_offset": "0x4220",
+        "little_endian_bytes": "a46b22ac"
+      },
+      {
+        "address": "0x534",
+        "file_offset": "0x5d4",
+        "little_endian_bytes": "2711000c"
+      },
+      {
+        "address": "0x55c",
+        "file_offset": "0x5fc",
+        "little_endian_bytes": "b06f22ac"
+      },
+      {
+        "address": "0x4b1c",
+        "file_offset": "0x4bbc",
+        "little_endian_bytes": "90160000"
+      }
+    ],
+    "LIBSD.IRX": [
+      {
+        "address": "0x36b8",
+        "file_offset": "0x3768",
+        "little_endian_bytes": "000045a4"
+      },
+      {
+        "address": "0x373c",
+        "file_offset": "0x37ec",
+        "little_endian_bytes": "000045a4"
+      },
+      {
+        "address": "0x3750",
+        "file_offset": "0x3800",
+        "little_endian_bytes": "000045a4"
+      },
+      {
+        "address": "0x37cc",
+        "file_offset": "0x387c",
+        "little_endian_bytes": "0000a2a4"
+      },
+      {
+        "address": "0x37e4",
+        "file_offset": "0x3894",
+        "little_endian_bytes": "0000a2a4"
+      }
+    ],
+    "SDRDRV.IRX": [
+      {
+        "address": "0x3a8",
+        "file_offset": "0x448",
+        "little_endian_bytes": "0080053c"
+      },
+      {
+        "address": "0x3ac",
+        "file_offset": "0x44c",
+        "little_endian_bytes": "0107a534"
+      },
+      {
+        "address": "0x3b8",
+        "file_offset": "0x458",
+        "little_endian_bytes": "1004c624"
+      }
+    ]
+  },
+  "staging_allocations_released": 4,
+  "saved_state_sha256": "1d8798faaeaf042caddf5f933c083dc7654f420ea26223db8bec41214926808d",
+  "saved_iop_sha256": "29e1b58d8ac189c83193ede5c4d63f3ceacb4d905d037a0e98e7b5c7627651a6",
+  "saved_spu2_sha256": "2a9e57290de4403615513f220eb5aeca0292b749feaf5bead9c5b0b7b5242002",
+  "saved_command_ring_indices": [
+    234,
+    234
+  ],
+  "bank_comparisons": [
+    {
+      "member": "6b51",
+      "sha256": "3776b4159cacfe36e86648c459b99542e9a5ce29fc64dc8aa5111751ffc8284f",
+      "uploads": [
+        {
+          "bank_id": 2,
+          "member_payload_offset": 5904,
+          "spu_destination": 561152,
+          "size": 317184,
+          "payload_sha256": "f96573fced30b5af05d23c10f8f02d1ca71d789408514198dae4b157683b86d8"
+        }
+      ],
+      "endpoint": 16820032
+    },
+    {
+      "member": "8594",
+      "sha256": "142042dbd0ffe40be0d7f55272434759f247fdb5e099b4c67e8ccd6b447a789f",
+      "uploads": [
+        {
+          "bank_id": 3,
+          "member_payload_offset": 2112,
+          "spu_destination": 1966080,
+          "size": 44880,
+          "payload_sha256": "1781d905f70388ebd67b3c2f6d6be32dd48282d3c48bff93a8f2412c0f28c4d7"
+        }
+      ],
+      "endpoint": 16222336
+    },
+    {
+      "member": "6d90",
+      "sha256": "90404b75139b4aea353d950aed97292cdddf159cb03ec31c6e5d5549b588dd4c",
+      "uploads": [
+        {
+          "bank_id": 0,
+          "member_payload_offset": 23296,
+          "spu_destination": 20496,
+          "size": 342832,
+          "payload_sha256": "9ec59f01c1a34485c45ad944bf3b52a780e95a62432f44ef9ac98551376c4097"
+        },
+        {
+          "bank_id": 0,
+          "member_payload_offset": 366128,
+          "spu_destination": 363328,
+          "size": 99440,
+          "payload_sha256": "0067fe5e685fe04f1da48ff54b7c32166080be371e5517edcb442e62a0d962a3"
+        }
+      ],
+      "endpoint": 11905856
+    }
+  ],
+  "instruction_sequences": [
+    {
+      "case": "start-core-0",
+      "commands": [
+        2,
+        3,
+        1,
+        4,
+        9,
+        10,
+        7
+      ],
+      "register_writes": 23
+    },
+    {
+      "case": "overlap-core-1",
+      "commands": [
+        2,
+        3,
+        1,
+        4,
+        9,
+        7
+      ],
+      "register_writes": 19
+    },
+    {
+      "case": "stop-core-0",
+      "commands": [
+        8
+      ],
+      "register_writes": 4
+    },
+    {
+      "case": "stop-core-1",
+      "commands": [
+        8
+      ],
+      "register_writes": 4
+    },
+    {
+      "case": "pitch-and-retrigger",
+      "commands": [
+        4,
+        7
+      ],
+      "register_writes": 5
+    },
+    {
+      "case": "cursor-down",
+      "commands": [
+        2,
+        3,
+        1,
+        4,
+        9,
+        7,
+        2,
+        3,
+        1,
+        4,
+        9,
+        7
+      ],
+      "register_writes": 38
+    },
+    {
+      "case": "cursor-up",
+      "commands": [
+        2,
+        3,
+        1,
+        4,
+        9,
+        7,
+        2,
+        3,
+        1,
+        4,
+        9,
+        7,
+        2,
+        3,
+        1,
+        4,
+        9,
+        7
+      ],
+      "register_writes": 57
+    }
+  ],
+  "fresh_boot": {
+    "state_sha256": "4c32e376633fe1e9fa922bb1760d441af938df567414c7c7321b10f29a02a1bb",
+    "iop_sha256": "a979cc5afc992d29f631f635fb32098ed603a42b5476c827ed88d644d50909ea",
+    "spu2_sha256": "ec92a345413be9325d7ef7bfa786e5f8b25349bf85b1ef212670f50f1216d7e6",
+    "ee_sha256": "a3cd7cd1faf260e39be5fae9b48726e4ee27333bcf71278d0dad3696c3d62f76",
+    "command_head_tail": [
+      21,
+      21
+    ],
+    "nonzero_envx": []
+  },
+  "fresh_native_sequences": {
+    "cursor-down": {
+      "state_sha256": "815393198648ded45e6b704eba9d8087a44ce5d2d8b958e20e13324c9ed8dda2",
+      "iop_sha256": "193a01a5d3d304d83ad15d1ee3efe23096c015a710a48340dcfc608ee9f59df0",
+      "spu2_sha256": "366a8f840fc8e423bb0530b4c82ab1ad7fcaafa991fdfbb34937c29f321eab7a",
+      "ee_sha256": "d0c2ee509f8b4d178e3e57e69f25e141bfaaa5d101ce583b0b8b925acd54880b",
+      "command_head_tail": [
+        143,
+        143
+      ],
+      "nonzero_envx": [
+        [
+          6,
+          32767
+        ],
+        [
+          7,
+          32767
+        ]
+      ],
+      "ee_play_sequence": "0xb55763",
+      "selected_records": 12,
+      "excluded_records": 0,
+      "register_writes": 38,
+      "command_wire_sha256": "f50746920538a368fa97f26bf17331ace6f6c246707b6d096e706a91d8d96043"
+    },
+    "cursor-up": {
+      "state_sha256": "a05d36829abacd4c5f139e95a8b7c1362222a8377e6d120e40c9af9a801ddd14",
+      "iop_sha256": "97885117104390349beccbdf395288389db5092b82172d4d824ab966c0dbc52e",
+      "spu2_sha256": "e1a47574b07db5d575e9c261b997c3ebd895179bfd2b27a43492381a28701a15",
+      "ee_sha256": "b67634bff18481cb49be579ed151b16b079108b85e307ce28465d2b1fb1e6c47",
+      "command_head_tail": [
+        161,
+        161
+      ],
+      "nonzero_envx": [
+        [
+          6,
+          32762
+        ],
+        [
+          7,
+          32762
+        ],
+        [
+          8,
+          32767
+        ],
+        [
+          9,
+          32767
+        ],
+        [
+          10,
+          32767
+        ]
+      ],
+      "ee_play_sequence": "0xb55763",
+      "selected_records": 18,
+      "excluded_records": 0,
+      "register_writes": 57,
+      "command_wire_sha256": "7c7a1fa09ead5d431d16a96f0268e7bda54144bde050ac0f38a2c369ead7baf8"
+    },
+    "cursor-confirm": {
+      "state_sha256": "a549596bd96641dde84e6132293205ee8520abc3a21b6579638d7652729ba9e9",
+      "iop_sha256": "bc47db41e652a1671cc396b0c2a1bbf5c77c5a92d6c5dbede8942297f4c596da",
+      "spu2_sha256": "0b214c587a5a66fc0aecd28592a594606ee50fdfcf46abf282a9ca736a8c0242",
+      "ee_sha256": "d0a375ca6968880d02665f988a3b7f32b1dc9fc59ce548e71d2512334e1e2ad3",
+      "command_head_tail": [
+        244,
+        244
+      ],
+      "nonzero_envx": [
+        [
+          9,
+          32762
+        ],
+        [
+          10,
+          32762
+        ],
+        [
+          11,
+          32767
+        ],
+        [
+          12,
+          32767
+        ],
+        [
+          13,
+          32767
+        ],
+        [
+          14,
+          32767
+        ],
+        [
+          15,
+          32767
+        ],
+        [
+          16,
+          19400
+        ],
+        [
+          17,
+          19400
+        ],
+        [
+          18,
+          32767
+        ],
+        [
+          19,
+          32767
+        ]
+      ],
+      "selected_records": 62,
+      "excluded_records": 21,
+      "register_writes": 106,
+      "command_wire_sha256": "8787d289b4924d4d531a24b93943abc44c44dccc9fe0b0cfbba95f7125c38c29"
+    }
+  },
+  "selected_original_register_reads": 3936,
+  "instruction_negative_controls": {
+    "wrong-key-id": true,
+    "wrong-core": true,
+    "reversed-edges": true
+  },
+  "modeled_pcm": {
+    "frames": 16000,
+    "rate": 48000,
+    "sha256": "82464b16a1b875050a96fbdfcabf43aaa8736d95221a36a665f53d76e92b9b8b",
+    "nonzero_frames": 15769
+  }
+}

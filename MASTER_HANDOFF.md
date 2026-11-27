@@ -1,5 +1,256 @@
 # Hungry Ghosts — master handoff
 
+## M23 cold gameplay initialization and world-state continuity — 2026-11-27
+
+**Resume here for M23.** Branch `research/m23-gameplay-initialization` in
+`decomp-m23`, branched from the shared baseline `integration/m21-m22-review`
+(`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, tested source
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`). Verified M23 implementation commit:
+`b0464cd5bc54c95e33146b8d28dd8c7e9d5c5222`. Leaves all audio files (`src/audio/`,
+`tools/hg_audio/` — M24 ownership), existing shared C sources,
+`decomp-m21-m22-integration`, local `main`, and `origin/main` unchanged. See
+[M23](docs/M23.md) for the full dependency table, provenance ledger, commands,
+and receipts.
+
+- **Authenticated cold-to-corridor dependency map (`evidence/m23/authentic-boundary.json`):**
+  Read-only inspection of Japanese `SCPS-15046` (`a74248c5…`) and owner captures
+  (`area1-request`, `area1-active`, `obs3-000`) establishes the exact ordered
+  chain from `0012dd60` through `0012e700` sub 0 (`00139140`, `0025c0f0`,
+  `00182430`, `00141b10`, `00141910` [actor pools `00141f60` + 2,048-node pool
+  `00141ce0`], `00141210` [`00141330`/`0030f3c0` -> `(48.5, 38.0, 265.0, 1.5708)`],
+  `0013fef0`, `0012bf70`, `0013a4c0`, `00189aa0`, `00156cf0` [M24 audio seam],
+  `001390b0`) into first `0012f850` (`00158560` state-0 `001585c0 -> 00158a10 +
+  001e3440 + phase 0->1`, followed by `0012c790` bone-2 eye copy and camera
+  follow). Calling C `00158560` directly on authentic `area1-active` confirms
+  `HG_DOMAIN_FAULT(0x30)` (`PLAYER+0x18 == 0`).
+- **Reusable provenance harness & original synthetic lifecycle (`src/scene/world_init.{h,c}`,
+  `tests/world_init_harness.c`, `tools/verify_world_init.py`, `tests/test_world_init.py`):**
+  Reuses `HGResourceEnv` (32 MiB EE RAM + 16 KiB scratchpad) and existing C
+  loader/lifecycle/actor/player/camera/pad/fade APIs. Separates `--synthetic`
+  from `--inspect-authentic` and classifies 43 tracked writes (`5` fixture, `18`
+  C-produced, `20` synthetic-model, `0` unknown). Connects an independently
+  authored synthetic courtyard (`spawn=(12,10,20)`, 20-bone FLK5 with eye offset
+  on bone 2) across Cycle 1 (cold boot -> publish & stale `0x22f` clear -> enter
+  -> 63 fade frames -> 14 walk + 12 turn + 20 wall [26 contacts, 65 floor
+  queries] + 14 release frames -> teardown to `2048/2048` free nodes & `0`
+  actors) and Cycle 2 with bit-exact trajectory parity, plus 10/10 fail-closed
+  negative controls (`evidence/m23/synthetic-lifecycle.json`). Synthetic results
+  do not claim retail equivalence.
+- **Verification on `b0464cd5`:** Combined strict GCC 16.2.1 & Clang 23.1.5
+  builds across all 11 `src/**/*.c`, 4/4 GCC/Clang ASan+UBSan+LSan checks
+  (`world_init_harness.c` & `scene_audio_interface.c`), **475/475** discovered
+  tests with `HG_JAPAN_ISO` (0 skipped), M21 `verify_scene_area_entry.py` (7/7
+  domains) and `verify_title_scene.py --new-game` (1,174 units, 8/8 domains),
+  M17 `verify_player_continuous.py --lifecycle` (22/22 corridor frames), and
+  full owner profile `m12-20261127T160149Z-aq4rtrbd` accepting **79/79** gates
+  fresh (74 passed, 5 expected rejections, 0 reused/failed/skipped/unrun;
+  `summary.json` SHA-256
+  `cae5cee518edee3b4564ead62f554d825c9e7e4423546d70cbfaab233eb7a465`,
+  `source_sha256`
+  `3870d093f3447ed20b9df5312dc31e31b5da6cb8b19c9a65baf3e4a35d2310cd`,
+  `working_files` empty).
+- **Next step after M23–M24 integration:** Reconstruct the authenticated C
+  implementations of `00141b10`, `00141910` (`00141f60`/`00141ce0`), `00141210`
+  (`00141330`/`0030f3c0`), `0012bf70`, and `00158560` state-0 (`001585c0`), and
+  verify them instruction-for-instruction against `SCPS_150.46` and `area1-active`.
+
+## M21–M22 local integration review — 2026-11-26
+
+**Resume here.** Branch `integration/m21-m22-review` in
+`decomp-m21-m22-integration`, based on `integration/m19-m20-review`
+(`b855eb93fa797eded31c1849f2bb69d68470609a`). Verified integrated source commit:
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`. Merges M21
+(`research/m21-scene-coordination` = `167a7281a980538d19cceddc4cb2228362e1ef18`,
+merge `33353a0f`) and M22 (`research/m22-audio-service` =
+`54f1f130c17bb000d8f3c8bbca91d139460637f8`, merge `e26b7bad`) locally while
+leaving original worktrees, local `main`, and `origin/main` unchanged. See
+[M21–M22 integration review](docs/M21-M22-review.md) for full commands,
+identities, weighted approach comparison, and receipts.
+
+- **Compatibility & fix:** All 10 C sources compile strictly into one shared
+  library under GCC 16.2.1 and Clang 23.1.5 with zero symbol or guest-address
+  collisions. Hardened `src/audio/audio_iop.c` EE bridge functions to fail
+  closed (`false` / `UINT32_MAX`) on unbound or post-teardown
+  `HGAudioEeService` instances.
+- **Scene-to-audio interface experiment (`tests/scene_audio_interface.c`,
+  `tests/test_scene_audio_interface.py`):** Verified on one shared guest bus:
+  - `hg_pack_special_step` (`00156a50`) connects end-to-end to
+    `hg_audio_register_entry` + `hg_audio_ee_bank_call` + `hg_audio_ee_flush` +
+    `hg_audio_iop_step_dma`, uploading a synthetic SShd bank into SPU2 RAM.
+  - `hg_title_menu` (`00156ad0`, sound ID `4`) reaches `hg_audio_play` via the
+    authenticated `00157ed0` descriptor `(group=0, idx=0, p1=1, p2=3, t0=0)`,
+    proves `hg_audio_play` alone stages 0 SG2IOP packets (exact missing
+    dependency: EE sequencer `002ade94..002ae2c0` / `002a96b8` / `002ab508` and
+    physical voice allocator), then exercises M22's documented resolved-note
+    adapter (`hg_audio_ee_stage_play_voice`, `hg_audio_ee_stage_key`,
+    `hg_audio_ee_flush`, `hg_audio_iop_render`, `hg_audio_cancel`, key-off, and
+    `hg_audio_iop_destroy`).
+  - `hg_title_scene_call` / `hg_script_timed_*` (`001564a0`/`00156550`) stops
+    at the separate streaming-voice boundary (`gp+0x2ab0` -> `00156570`,
+    outside M22's SShd sample-bank scope).
+  - Targeted negative controls verify disconnected bank-call routing, missing
+    DMA step, cleared bank slot, unbound/torn-down service, pre-flush silence,
+    unready HGScript voice blocking, and revoked title handle stop suppression.
+- **Verification on `5e7f1077`:** Combined strict GCC/Clang builds, GCC/Clang
+  ASan+UBSan+LSan harnesses (10/10) + M22 Clang ASan+UBSan (6/6), **470/470**
+  discovered tests with `HG_JAPAN_ISO` (0 skipped; 3 retail-only Audio tests
+  skip when `HG_JAPAN_ISO` is unset), all 6 M21/M22 retail receipts regenerated
+  and matching committed evidence, M17–M20 connected owner regressions passing,
+  and full owner profile `m12-20261126T170926Z-prt6dzmf` accepting **79/79**
+  gates (74 passed, 5 expected rejections, 0 failures/skips/unrun;
+  `summary.json` SHA-256
+  `3c8c55c000c7ab09e29fa471f509060e64778f34854cb33b4eb8fbc4015f59c4`,
+  `source_sha256`
+  `4be3bce2bb1382ec3766bbc4330fea53747e70ef11bc0c30cedb748216ee0f0a`).
+- **Next two independent milestones:** (1) M23 cold AREA1 world/actor/camera
+  initialization into the first controller-driven frame; (2) M24 EE sound
+  dispatcher (`00156ad0`/`00157ed0`), note sequencer (`002ade94..002ae2c0`,
+  `002a96b8`, `002ab508`), and physical voice allocator against M22's fresh
+  cursor checkpoints.
+
+## M22 SG2IOP audio service and playback — 2026-11-24
+
+**Resume here for audio.** Local branch `research/m22-audio-service` in
+`decomp-m22`, implementation
+`a4ee75ab4317d6230d9a442fc7fd3f10ae47caf7`. M21 and M22 share
+`b855eb93fa797eded31c1849f2bb69d68470609a` on
+`integration/m19-m20-review`. Japanese retail identity is SCPS-15046,
+PCSX2 CRC `91AA4B28`, ELF SHA-256
+`a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61`.
+
+The EE registration and play-request paths now reach SG2IOP RPC
+`11223344`. Four uploads across three PACK members matched 804,336 bytes
+of saved SPU2 RAM. Fresh cursor down, cursor up and confirmation supplied
+92 supported voice records. The original SG2IOP and LIBSD instructions
+agreed with 201 ordered register writes and the model rendered 16,000
+stereo frames. See [M22](docs/M22.md) and the [retail receipt](evidence/m22/retail-check.json).
+
+Strict GCC/Clang, six ASan/UBSan connected checks, all 54 focused audio
+tests, the 467-test project suite and the 407-case legacy EE comparison
+passed. The owner profile `m12-20261124T235355Z-yg8tjftd` accepted
+79/79 gates on the implementation checkpoint, with zero reused results. The private inputs are the Japanese disc and
+ELF, extracted IRX files, the M18 saved PCSX2 state, and four fresh M22
+states in `local/m22/live/`. The full profile uses the historical inputs
+and pinned PS2DInfo listed in the integration handoff.
+
+The M21 contract accepts resolved notes and sample offsets through
+`src/audio/audio_iop.h`. The host approximates envelopes and PCM timing.
+Streaming and the automatic EE note-to-voice scheduler remain open.
+Reconstruct the EE cursor note dispatch at `002ade94` through handler
+`002ae2c0`, then compare the calculated RPC packets with both fresh
+cursor checkpoints.
+
+## M21 scene coordination — 2026-11-24
+
+Resume on `research/m21-scene-coordination` in `decomp-m21`, baseline
+`b855eb93fa797eded31c1849f2bb69d68470609a`. The full verification
+checkpoint is `8e04bd9e6cbf4f3ce75932b029bfbaea3bd478e9`.
+The owner profile accepted 79/79 gates and the standalone suite passed
+462/462 tests. [M21 verification and boundaries](docs/M21.md) records the
+original address map, fresh captures, commands and ownership. Historical
+handoffs follow.
+
+The C title scene allocates the overlay root actor `00a88a20`. It starts the
+original timeline, which schedules `00a88b40` and the M20 timed interpreter
+through the M19 publication. The C scene returns its borrow on fade-gated
+reset. The neutral comparison covers 3,991 frames. A separate skip scenario
+reaches the menu in 198 frames and rejects three scheduling/lifetime defects.
+
+The cold New Game comparison carries the same guest state through four
+follow-up resource requests and reaches the first AREA1 coordinator
+`0012f850` in 1,174 units after bootstrap. All eight selected domains match
+the fresh original, including the arena, handle table and entire overlay.
+The independent request-to-coordinator comparison matches all seven domains
+it selects. Fresh original sessions also demonstrate controlled movement,
+pause/resume and return to the republished title. The ferry reload
+independently carries PACK `0x69` from a fresh native request into the
+active AREA1 variant, matching seven domains.
+
+Carry AREA1 world initialization into the first controller-driven frame on
+that same guest bus. The existing M17 corridor starts from a separate
+authenticated gameplay state. M22 owns audio. Original media and captured
+emulator state are private inputs.
+
+## M19–M20 local integration review — 2026-11-24
+
+**Resume here.** Branch `integration/m19-m20-review` in
+`decomp-m19-m20-integration`.
+Verified source `970e7acb1b87c1b8f7397b763d655730780199fa`.
+The base is `86a5670852d47c4ead140e5c8e40a5289f773053`, the locally recorded
+PR #21 merge. The historical M19 and M20 sections below remain as recorded.
+
+- **M19** is ready for the selected title publication and partial overall.
+  The cold ISO-backed worker published PACK 193/007 into slot `0x22f`.
+  The fixed parent header, arena and all 1,376 type-12 bytes matched the
+  saved original. The following AREA1 request invalidated the handle.
+- **M20** is ready after bounded repairs. The title adapter resolved the
+  published child through the shared guest bus and ran record 0 from its
+  original AREA0 caller slice. The comparison covered 3,861 carried frames, 10,801 glyph
+  requests, voice start and reset. The standalone timed, paged-text and
+  saved-title comparisons passed, and 74/74 collections rebuilt byte-exactly.
+- **Verification** passed 460/460 discovered tests. The full profile accepted
+  79/79 gates in `m12-20261124T181748Z-fmurluh1`.
+  See the [review and reproduction commands](docs/M19-M20-review.md) and
+  [connected title receipt](evidence/m19-m20-integration/title.json).
+- **Private inputs** require the authenticated Japanese ISO and ELF, saved
+  M18 scene data for the original checkpoint, and the pinned PS2DInfo,
+  PCSX2 AppImage and historical captures for the full profile.
+- Fresh native title playback, full scene scheduling and renderer/IOP/SPU2
+  services remain open. **Next action.** Capture original title activation,
+  the first glyph/voice requests and reset in one fresh PCSX2 session.
+
+## M20 HGScript runtime — 2026-11-24
+
+M20 resumed in `decomp-m20` on `research/m20-hgscript-runtime`. The actual
+starting HEAD was the M17/M18/Content/Audio integration merge
+`86a5670852d47c4ead140e5c8e40a5289f773053`. The uncommitted DeepSeek work
+was recovered from its C draft, probe, disassembly and logs. M20 source and
+verification artifacts are committed at `4a98056ec458d3f251516384c943b7350b2bda61`. The handoffs
+are in the following documentation commit for later reconciliation with M19.
+
+The original EE timed interpreter and renderer are `001ccfa0` and
+`001cd9c0`, with initialization at `001ccd80`. Original instructions and
+the C port independently carried state from initialization to termination
+for three authenticated retail records. The comparisons matched draw and
+audio requests. Two static records exercised the handle, page and text
+reference paths. All 74 collections rebuilt byte-exactly. The content tools
+now resolve offsets directly for the verified text, cue and metadata
+reference forms. See [M20](docs/M20.md) for commands, original-build
+identity, precise boundaries and the integration API.
+
+The next integration action is to pass an authenticated collection address
+from M19's loader to the timed interpreter and verify one naturally selected
+record from its original caller. The EE differential uses explicit external
+input and service fixtures. Fresh M20 PCSX2 playback, downstream audio and
+drawing, and the alternate timed consumer remain open.
+
+## M19 autonomous resource loading — 2026-11-23
+
+**Resume here.** M19 is on local branch `research/m19-autonomous-loading` in
+worktree `decomp-m19`. The implementation commit is
+`b70c7a7b2f1a12e985b6d9d0be1d4c83e394d8ce`; the handoff follows in a separate
+commit. Verified remote `main` and merged PR #21 both point to the M19 baseline
+`86a5670852d47c4ead140e5c8e40a5289f773053`. The integration record below is
+preserved as historical pre-merge context.
+
+The normal worker now runs resumable PACK and AREA jobs on a shared guest bus
+with authenticated ISO DMA. The M18 comparison path now has a connected
+variant that carries E3 state, completes all 11 native requests, and agrees
+on 57 logical reads and three completed overlay/arena/handle/task checkpoints.
+The cold bootstrap-to-title run and M4/M7 resource checkpoints are verified
+separately. M18 keeps its external pad, timing, scene and other subsystem
+inputs. The measured overlay sequence is title → AREA1 → title → AREA1.
+A real transition between distinct gameplay areas remains unverified.
+
+See [M19](docs/M19.md), [the loader contract](analysis/resource_loading/README.md),
+and [evidence](evidence/m19/results.json). The final full owner regression runs
+on the frozen handoff commit; use its private `local/verification/` receipt
+for the verdict and exact source fingerprint. No push, PR or merge was done.
+
+Next, independently review the M19 implementation and receipts alongside the
+parallel M20 work. M20 should use the existing request and guest publication
+interfaces; `HGResourceJob` lives on the host side.
+
 ## Verification infrastructure, Phase 3 (reviewed integration) — 2026-11-27
 
 **Resume here.** Synchronized with [START_HERE.md](START_HERE.md),

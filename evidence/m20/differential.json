@@ -1,0 +1,251 @@
+{
+  "schema": "hg-m20-differential/v1",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "original_bytes": {
+    "functions": 34,
+    "ranges": 92,
+    "bytes": 12208
+  },
+  "unique_original_instruction_addresses": 1681,
+  "fixture_voice_latch": {
+    "ready_frame": 1,
+    "idle_frame": 4
+  },
+  "fixture_renderer_return": 24,
+  "leaves": {
+    "00182490": 256,
+    "0014b330": 256,
+    "0014b690": 256,
+    "00182540": 4,
+    "001824e0": 4,
+    "00182e90": 21,
+    "00182ae0": 4,
+    "0025cf60": 2
+  },
+  "static_sequences": [
+    {
+      "directory": 1,
+      "member": 50,
+      "sha256": "460567c239c8bac0b91442f062a9253989d0b1ec73502fb0c4e538b77651a0e4",
+      "record": 2,
+      "pages": 1,
+      "width_checks": 4,
+      "draw_requests": 48,
+      "draw_trace_sha256": "ad292736320136856cd1077378991d55f73eebecb2eb28da0aeebc7f24266fa7"
+    },
+    {
+      "directory": 1,
+      "member": 50,
+      "sha256": "460567c239c8bac0b91442f062a9253989d0b1ec73502fb0c4e538b77651a0e4",
+      "record": 157,
+      "pages": 2,
+      "width_checks": 4,
+      "draw_requests": 84,
+      "draw_trace_sha256": "287709eccd78c1dfa721e22343e0a0bed7a4896e02b89ce7ac17383b70a6502d"
+    }
+  ],
+  "sequences": [
+    {
+      "directory": 73,
+      "member": 6,
+      "record": 1,
+      "input_edge_frames": [],
+      "sha256": "159ce751d2cb6945ee7e135c5058e630cd4be74280dc9f06b63861b14a397144",
+      "frames": 226,
+      "phases": {
+        "1": 223,
+        "0": 2,
+        "-1": 1
+      },
+      "transitions": [
+        [
+          0,
+          1,
+          36
+        ],
+        [
+          179,
+          0,
+          36
+        ],
+        [
+          180,
+          1,
+          44
+        ],
+        [
+          224,
+          0,
+          44
+        ],
+        [
+          225,
+          -1,
+          48
+        ]
+      ],
+      "audio_requests": [],
+      "draw_requests": 197,
+      "draw_trace_sha256": "31e65f332a70224ba793a50fabab1775ae870ecd2311a8ab7335f5a5f5d33743"
+    },
+    {
+      "directory": 63,
+      "member": 18,
+      "record": 5,
+      "input_edge_frames": [],
+      "sha256": "9942fd2213c55342f0f503b1e36e43459b58f4e55850c1eadc90799a116bdd40",
+      "frames": 482,
+      "phases": {
+        "0": 5,
+        "1": 476,
+        "-1": 1
+      },
+      "transitions": [
+        [
+          0,
+          0,
+          516
+        ],
+        [
+          1,
+          1,
+          524
+        ],
+        [
+          150,
+          0,
+          524
+        ],
+        [
+          151,
+          1,
+          532
+        ],
+        [
+          195,
+          0,
+          532
+        ],
+        [
+          196,
+          1,
+          540
+        ],
+        [
+          450,
+          0,
+          540
+        ],
+        [
+          451,
+          1,
+          548
+        ],
+        [
+          480,
+          0,
+          548
+        ],
+        [
+          481,
+          -1,
+          552
+        ]
+      ],
+      "audio_requests": [
+        [
+          0,
+          1402016,
+          1,
+          824,
+          1,
+          0,
+          1065353216,
+          1017370378
+        ]
+      ],
+      "draw_requests": 439,
+      "draw_trace_sha256": "58ac540259bed982a81c3f102b83f5d58f027ae1c23939d00413c60ddb59a8f6"
+    },
+    {
+      "directory": 73,
+      "member": 6,
+      "record": 2,
+      "input_edge_frames": [
+        8,
+        9,
+        30
+      ],
+      "sha256": "159ce751d2cb6945ee7e135c5058e630cd4be74280dc9f06b63861b14a397144",
+      "frames": 32,
+      "phases": {
+        "0": 3,
+        "1": 28,
+        "-1": 1
+      },
+      "transitions": [
+        [
+          0,
+          0,
+          52
+        ],
+        [
+          1,
+          1,
+          68
+        ],
+        [
+          8,
+          1,
+          68
+        ],
+        [
+          9,
+          0,
+          68
+        ],
+        [
+          10,
+          1,
+          76
+        ],
+        [
+          30,
+          0,
+          76
+        ],
+        [
+          31,
+          -1,
+          80
+        ]
+      ],
+      "audio_requests": [
+        [
+          0,
+          1402016,
+          1,
+          195,
+          1,
+          0,
+          1065353216,
+          1017370378
+        ],
+        [
+          8,
+          1402192,
+          1
+        ]
+      ],
+      "draw_requests": 52,
+      "draw_trace_sha256": "67bffe39b5f70a4f6e4fd60751f4c5399555ac6fba57408259494fd1255b2a46"
+    }
+  ],
+  "negative_controls": {
+    "pool-offset-one-word-late": "tick 1",
+    "wait-does-not-yield": "tick 1",
+    "audio-ignores-ready-edge": "tick 0",
+    "wrong-audio-request-channel": "tick 0"
+  }
+}

@@ -1,0 +1,540 @@
+{
+  "schema": "hg-m23-authentic-boundary/v1",
+  "synthetic_only": false,
+  "reference_build": "SCPS-15046",
+  "pcsx2_crc": "91AA4B28",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "elf_spawn_lookup_1_0_0_0": {
+    "routine": "0030f3c0",
+    "chain": [
+      "003e5fd4",
+      "003e5f90",
+      "003e5eb0",
+      "003e5d40"
+    ],
+    "values": [
+      48.5,
+      38.0,
+      265.0,
+      1.570796
+    ],
+    "raw_words": [
+      "42420000",
+      "42180000",
+      "43848000",
+      "3fc90fdb"
+    ]
+  },
+  "elf_player_dispatch_jump_table_003db540": {
+    "state_0": "001585c0",
+    "state_1": "001586f8",
+    "state_2": "00158780",
+    "state_3": "00158968",
+    "state_4": "00158798",
+    "state_5": "00158840",
+    "state_6": "00158928",
+    "state_7": "00158950"
+  },
+  "last_supported_retail_boundary": {
+    "cold_entry_stop": "0012f850 (first AREA1 coordinator call, 8 matched domains in M21)",
+    "earliest_missing_sub0_init": "00141b10 -> 00141910 -> 00141210 -> 0013fef0 -> 0012bf70 -> 0013a4c0 -> 00189aa0 (called by C 0012e700 sub 0, externalized in M21)",
+    "earliest_missing_frame1_init": "00158560 state-0 branch (001585c0 -> 00158a10 + 001e3440 + phase 0->1)",
+    "guard_probe": {
+      "entry": "00158560",
+      "input_player_phase_18": 0,
+      "domain_faults": [
+        "0x30"
+      ],
+      "boundary_confirmed": true
+    }
+  },
+  "checkpoints": {
+    "area1_request": {
+      "ee_sha256": "d147ea88efc00061e95117c9583bc2c4a3cdcabbdd4bf3322c807f5f22415616",
+      "sp_sha256": "4e40e06e6586388c46eacacdfaa469ee314748fb5bcd4321b90fb66e13e54074",
+      "state": {
+        "mode": {
+          "handler": "0012d1c0",
+          "major": 5,
+          "minor": 5,
+          "sub": 2,
+          "step": 0,
+          "area": 1,
+          "triple": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "active_00": 0,
+          "flag_01": 0,
+          "phase_18": 0,
+          "subphase_19": 0,
+          "handle_idx_2a": "0x0",
+          "pos": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "rot": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "eye_380": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hist_390": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "obj_model_ptr": "00000000",
+          "obj_node_table": "00000000",
+          "grounded_2c3": 0,
+          "effect_4e4": "00000000"
+        },
+        "camera": {
+          "eye": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "target": [
+            0.0,
+            0.0,
+            20.0
+          ],
+          "pitch_yaw": [
+            -0.0,
+            0.0
+          ],
+          "flag_140": 0
+        },
+        "handles": {
+          "player_0x3f": "00da1ec0",
+          "area_0x96": "014b8480",
+          "title_0x22f": "01661500"
+        },
+        "pools": {
+          "node_stack_top": "004d8140",
+          "node_free_count": 2048,
+          "actor_free_counts": [
+            286,
+            40,
+            256
+          ]
+        },
+        "actors": {
+          "main": [],
+          "prio": [],
+          "type2": [],
+          "type2_prio": []
+        },
+        "fade": [
+          2,
+          0,
+          0,
+          1,
+          255,
+          0,
+          8,
+          0
+        ],
+        "guards": {
+          "3eaee8": 0,
+          "3eaed4": 0
+        },
+        "counters": {
+          "3fa190": 0,
+          "3eaef0": 24574,
+          "3eaef4": 26285,
+          "46e118": 0,
+          "46d930": 0
+        },
+        "scratch": {
+          "700000c0": "003ead30",
+          "700000c4": 2,
+          "700000cc": 0,
+          "70000040": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "700000e0": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "area1_active": {
+      "ee_sha256": "9a31bdf5ad29f802074daf79a3cb875d435e47d2baa63f45c6d02cd0c07efb76",
+      "sp_sha256": "b41a21ed3ffc38aa409f9306f43c441b55fbcdef8cc441d8587ff0cb017eee86",
+      "state": {
+        "mode": {
+          "handler": "0012d1c0",
+          "major": 5,
+          "minor": 1,
+          "sub": 1,
+          "step": 0,
+          "area": 1,
+          "triple": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "active_00": 0,
+          "flag_01": 0,
+          "phase_18": 0,
+          "subphase_19": 0,
+          "handle_idx_2a": "0x0",
+          "pos": [
+            48.5,
+            38.0,
+            265.0,
+            1.0
+          ],
+          "rot": [
+            0.0,
+            1.5708,
+            0.0,
+            1.0
+          ],
+          "eye_380": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hist_390": [
+            48.5,
+            38.0,
+            265.0
+          ],
+          "obj_model_ptr": "00000000",
+          "obj_node_table": "00000000",
+          "grounded_2c3": 0,
+          "effect_4e4": "00000000"
+        },
+        "camera": {
+          "eye": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "target": [
+            0.0,
+            0.0,
+            20.0
+          ],
+          "pitch_yaw": [
+            -0.0,
+            0.0
+          ],
+          "flag_140": 0
+        },
+        "handles": {
+          "player_0x3f": "00da1ec0",
+          "area_0x96": "01481ac0",
+          "title_0x22f": "00000000"
+        },
+        "pools": {
+          "node_stack_top": "004d8140",
+          "node_free_count": 2048,
+          "actor_free_counts": [
+            284,
+            40,
+            256
+          ]
+        },
+        "actors": {
+          "main": [
+            {
+              "addr": "004d8150",
+              "callback": "00a8a070",
+              "kind": 8,
+              "phase": [
+                0,
+                0
+              ]
+            },
+            {
+              "addr": "004d8520",
+              "callback": "00a88de0",
+              "kind": 22,
+              "phase": [
+                0,
+                0
+              ]
+            }
+          ],
+          "prio": [],
+          "type2": [],
+          "type2_prio": []
+        },
+        "fade": [
+          1,
+          0,
+          0,
+          2,
+          255,
+          0,
+          4,
+          0
+        ],
+        "guards": {
+          "3eaee8": 0,
+          "3eaed4": 0
+        },
+        "counters": {
+          "3fa190": 0,
+          "3eaef0": 24874,
+          "3eaef4": 26585,
+          "46e118": 0,
+          "46d930": 0
+        },
+        "scratch": {
+          "700000c0": "003ead30",
+          "700000c4": 2,
+          "700000cc": 2,
+          "70000040": [
+            48.5,
+            38.0,
+            265.0
+          ],
+          "700000e0": [
+            48.5,
+            38.0,
+            265.0
+          ]
+        }
+      }
+    },
+    "obs3_000": {
+      "ee_sha256": "05d767e4d37b8f986fb222e269fbec6683c0c4ed377e323738f0a1d029ad70f7",
+      "sp_sha256": "93c1a68788ba4b4d1be3ba46479683d00d17f552f4f79cfe5453f03431b37ee2",
+      "state": {
+        "mode": {
+          "handler": "0012d1c0",
+          "major": 5,
+          "minor": 1,
+          "sub": 1,
+          "step": 0,
+          "area": 1,
+          "triple": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "active_00": 1,
+          "flag_01": 1,
+          "phase_18": 1,
+          "subphase_19": 1,
+          "handle_idx_2a": "0x3f",
+          "pos": [
+            42.1377,
+            38.0252,
+            271.2134,
+            1.0
+          ],
+          "rot": [
+            0.0,
+            -0.7972,
+            0.0,
+            1.0
+          ],
+          "eye_380": [
+            42.3567,
+            54.5467,
+            270.9948,
+            1.0
+          ],
+          "hist_390": [
+            42.359,
+            38.0252,
+            270.9973
+          ],
+          "obj_model_ptr": "00f2c2f0",
+          "obj_node_table": "003f93c0",
+          "grounded_2c3": 1,
+          "effect_4e4": "00528650"
+        },
+        "camera": {
+          "eye": [
+            42.3567,
+            54.5467,
+            270.9948,
+            1.0
+          ],
+          "target": [
+            28.0685,
+            53.5,
+            284.9502
+          ],
+          "pitch_yaw": [
+            0.0524,
+            -0.7972
+          ],
+          "flag_140": 0
+        },
+        "handles": {
+          "player_0x3f": "00da1ec0",
+          "area_0x96": "01481ac0",
+          "title_0x22f": "00000000"
+        },
+        "pools": {
+          "node_stack_top": "004d7f9c",
+          "node_free_count": 1943,
+          "actor_free_counts": [
+            281,
+            40,
+            252
+          ]
+        },
+        "actors": {
+          "main": [
+            {
+              "addr": "004d8150",
+              "callback": "00a8a070",
+              "kind": 8,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "004d8520",
+              "callback": "00a88de0",
+              "kind": 63,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "004d88f0",
+              "callback": "00a87ef0",
+              "kind": 81,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "004d8cc0",
+              "callback": "00a89ab0",
+              "kind": 81,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "004d9090",
+              "callback": "00a88970",
+              "kind": 55,
+              "phase": [
+                1,
+                0
+              ]
+            }
+          ],
+          "prio": [],
+          "type2": [
+            {
+              "addr": "00528430",
+              "callback": "0019c8a0",
+              "kind": 49,
+              "phase": [
+                1,
+                2
+              ]
+            },
+            {
+              "addr": "00528540",
+              "callback": "001a6dc0",
+              "kind": 170,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "00528650",
+              "callback": "002a20b0",
+              "kind": 232,
+              "phase": [
+                1,
+                0
+              ]
+            },
+            {
+              "addr": "00528760",
+              "callback": "002f7830",
+              "kind": 291,
+              "phase": [
+                1,
+                0
+              ]
+            }
+          ],
+          "type2_prio": []
+        },
+        "fade": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          4,
+          0
+        ],
+        "guards": {
+          "3eaee8": 0,
+          "3eaed4": 0
+        },
+        "counters": {
+          "3fa190": 10163,
+          "3eaef0": 16309,
+          "3eaef4": 19431,
+          "46e118": 10163,
+          "46d930": 10162
+        },
+        "scratch": {
+          "700000c0": "003ead30",
+          "700000c4": 2,
+          "700000cc": 2,
+          "70000040": [
+            42.359,
+            54.5252,
+            270.9973
+          ],
+          "700000e0": [
+            42.359,
+            38.0252,
+            270.9973
+          ]
+        }
+      }
+    }
+  }
+}

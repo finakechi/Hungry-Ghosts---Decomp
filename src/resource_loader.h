@@ -33,6 +33,9 @@ void hg_resource_load_indexed(HGResourceEnv *, uint32_t);        /* 0012fcf0 */
 void hg_resource_load_context(HGResourceEnv *, uint32_t);        /* 0012fde0 */
 void hg_resource_prepare_context(HGResourceEnv *, uint32_t);     /* 0012fe90 */
 void hg_resource_prepare_retained(HGResourceEnv *, uint32_t);    /* 00130020 */
+void hg_resource_load_cached(HGResourceEnv *, uint32_t);        /* 0012ff20 */
+void hg_resource_load_retained(HGResourceEnv *, uint32_t);      /* 0012ffa0 */
+void hg_resource_rebase_upload(HGResourceEnv *, uint32_t);      /* 00131da0 */
 uint32_t hg_pack_special_step(HGResourceEnv *, uint32_t, uint32_t, uint32_t); /* 001303e0 */
 void hg_pack_bootstrap(HGResourceEnv *, uint32_t);                /* 001306a0 */
 void hg_pack_general(HGResourceEnv *, uint32_t);                  /* 00130900 */
@@ -54,6 +57,14 @@ uint32_t hg_pack_bootstrap_step(HGResourceEnv *, uint32_t);
 void hg_pack_general_prepare(HGResourceEnv *, uint32_t);
 uint32_t hg_pack_general_step(HGResourceEnv *, uint32_t);
 uint32_t hg_pack_alternative_step(HGResourceEnv *, uint32_t);
+/* Host state for one normal loader thread. Zero-initialize after StartThread.
+ * Call once on start and once per delivered wake until it returns 1. Pending
+ * (0) means sleep; the caller owns kernel/CDVD modeling and the guest fixup
+ * frame. Neither thread descriptors nor HGResourceEnv gain host fields. */
+typedef struct {
+    uint32_t stage, pack, after, retained_after;
+} HGResourceJob;
+uint32_t hg_resource_job_resume(HGResourceEnv *, HGResourceJob *, uint32_t frame);
 /* A1_B00 AREA entry. This callback uses original fixed addresses after its
  * bytes are loaded at a87800; dependencies remain explicit bus calls.
  * The extra host callback is REQUIRED for resident 0018a330's six defined EE

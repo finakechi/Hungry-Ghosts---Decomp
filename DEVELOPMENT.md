@@ -10,6 +10,12 @@ current runner commands, safe worker guidance, private config placeholders,
 M19–M24 compatibility notes, and rollout/rollback rules. The dated M1–M7
 baseline notes below are preserved for historical reproduction.
 
+The [M23–M24 integration review](docs/M23-M24-review.md) gives the current
+integration baseline (M19–M24 on the verification runner), verified inputs and
+reproduction commands; the [M19–M20](docs/M19-M20-review.md) and
+[M21–M22](docs/M21-M22-review.md) reviews remain as recorded. The dated guides below
+describe earlier milestones.
+
 ## Current quick start — synthetic checks only
 
 **Requirements:** Python 3.10+, a C11 compiler (`cc`), and **JDK 21 with `javac`**

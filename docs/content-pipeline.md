@@ -23,6 +23,10 @@ The pinned hgtools reference was inspected in earlier milestones (see
 this milestone, and no external implementation or dependency is
 incorporated.
 
+M20 adds original-EE command decoding and direct byte-offset reference
+metadata. The original Content counts below describe the legacy sequential
+inference. The latest runtime rules and corpus counts are in [M20](M20.md).
+
 ## Supported formats and tools
 
 | Tool (under `tools/hg_content/`) | Purpose |

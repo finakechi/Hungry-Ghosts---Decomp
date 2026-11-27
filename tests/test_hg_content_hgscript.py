@@ -65,6 +65,27 @@ class TestDecode(unittest.TestCase):
                          [0xAB12, 0xCD34, 0xEF56])
         self.assertEqual(encode(collection), data)
 
+    def test_runtime_references_read_their_encoded_offsets(self):
+        events = [0x0c, (2 << 6) | 1, (6 << 6) | 1, (4 << 6) | 7, (99 << 6) | 1]
+        records_end = 12 + 4 * (len(events) + 1)
+        pool = (struct.pack('<h6x', -17) + struct.pack('<I4s', 33, b'Two\0')
+                + struct.pack('<III', 71, 19, 0xffffffff))
+        data = (struct.pack('<III', 1, records_end, 12)
+                + struct.pack('<6I', *events, 0) + pool)
+        collection = decode(data)
+        marker, valid, nonsequential, cue, beyond = collection.records[0].events
+        self.assertEqual(marker.reference['leading_i16'], -17)
+        self.assertEqual(valid.reference['text_offset'], records_end + 12)
+        self.assertEqual(valid.reference['byte_length'], 3)
+        self.assertEqual(valid.reference['width'], 33)
+        self.assertEqual(nonsequential.reference['status'], 'unresolved')
+        self.assertEqual(cue.reference['schedule_count'], 0)
+        self.assertEqual(cue.reference['voice'], 71)
+        self.assertEqual(beyond.reference['status'], 'unresolved')
+        self.assertEqual(collection.runtime['references']['draw-text'],
+                         {'resolved': 1, 'unresolved': 2})
+        self.assertEqual(encode(collection), data)
+
     def test_truncated_member_rejected(self):
         data = make_fixture_member()
         with self.assertRaises(ScriptError):

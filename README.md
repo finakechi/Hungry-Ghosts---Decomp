@@ -6,6 +6,11 @@ This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
 
+The [M21–M22 local review](docs/M21-M22-review.md) covers the integrated scene
+coordination ([M21](docs/M21.md)), SG2IOP audio service ([M22](docs/M22.md)),
+and verified scene-to-audio interface boundary, building on the
+[M19–M20 local review](docs/M19-M20-review.md).
+
 M1–M6 connect disc reads, PACK/AREA loading, real resource processing and a
 selected AREA1 actor callback. M6 independently verifies all 13 marked startup
 PACKc6 members (1,184,000 transformed member bytes and a complete 1,228,800-byte
@@ -19,15 +24,16 @@ and a final rebuild/port target remain unclaimed.
 python -m unittest discover -s tests -v
 ```
 
-On the integrated M17/M18/Content/Audio `main` baseline with the Phase 1–3
-verification infrastructure, this runs 465 tests. The three retail-only Audio
-tests (`tests/test_hg_audio_original.py`) are skipped unless `HG_JAPAN_ISO`
-names the authenticated Japan ISO; with it set all 465 tests run and a missing
-or non-matching image fails. See
+On the integrated M19–M24 baseline with the Phase 1–3 verification
+infrastructure, this runs TESTCOUNT tests. The retail-only tests are skipped
+unless their authenticated inputs are named (`HG_JAPAN_ISO` for
+`tests/test_hg_audio_original.py`; `HG_ELF` for
+`tests/test_m24_reference_map.py`); with them set they run and a missing
+or non-matching input fails. See
 [docs/verification-infrastructure.md](docs/verification-infrastructure.md) for
-the verification runner (`focused` [8], `historical`/`full` [79], `current`
-[120], `synthetic` [37], bounded `--jobs 1|2|4|8` with serial default `1`),
-M19–M24 compatibility notes, and safe rollout/rollback guidance.
+the verification runner, profiles and bounded `--jobs 1|2|4|8` (serial default
+`1`), and [docs/M23-M24-review.md](docs/M23-M24-review.md) for the M19–M24
+gate coverage.
 
 The full synthetic suite requires **Python 3.10+, a C11 compiler, and JDK 21
 with `javac`** for the Java export transaction test. Build products go in ignored

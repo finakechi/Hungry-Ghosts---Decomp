@@ -37,9 +37,9 @@
  *   0x002a9180 hg_audio_channel_init_b        (channel struct init B)
  *   0x002ad478 hg_audio_play                  (post play command)
  *   0x002ad748 hg_audio_cancel                (stop/cancel command)
- *   0x002a94b8 hg_audio_channel_command       (queue IOP command byte)
+ *   0x002a94b8 hg_audio_channel_command       (queue EE channel command byte)
  *   0x002ae998 hg_audio_next_sequence         (global sequence counter)
- *   0x002adcf0 hg_audio_bank_bind            (bind bank to IOP service)
+ *   0x002adcf0 hg_audio_bank_bind            (set bank volume and propagate to EE channels)
  *
  * Explicit external seams (documented contracts, host-modeled):
  *   0x0010cca0 / 0x0010cce8  EE interrupt disable/enable (EI/DI + Status)
@@ -47,7 +47,7 @@
  *   0x00104320 sceSifSetDma                    Sony EE kernel syscall 0x77
  *   0x00104300 sceSifDmaStat                   Sony EE kernel syscall 0x76
  *   0x0010af40 hg_sif_alloc                   SIF-side memory allocation
- *   0x0010b0a8 hg_sif_mscom                   SIF0_MSCOM byte send
+ *   0x0010b0a8 hg_sif_free                    IOP heap release
  *   0x002a74d0 hg_audio_global_tick           audio tick source
  *   0x001165d0 / 0x00116320                   time math helpers
  *   0x002ad358 hg_audio_play_extra            play variant tail
@@ -156,7 +156,8 @@ typedef struct HGAudioBus {
 #define HG_X_SIF_SET_DMA 0x00104320u
 #define HG_X_SIF_DMA_STAT 0x00104300u
 #define HG_X_SIF_ALLOC   0x0010af40u
-#define HG_X_SIF_MSCOM   0x0010b0a8u
+#define HG_X_SIF_FREE    0x0010b0a8u
+#define HG_X_SIF_MSCOM   HG_X_SIF_FREE /* historical harness name */
 #define HG_X_GLOBAL_TICK 0x002a74d0u
 #define HG_X_TIME_A      0x001165d0u
 #define HG_X_TIME_B      0x00116320u
@@ -165,7 +166,7 @@ typedef struct HGAudioBus {
 
 uint32_t hg_audio_register_entry(HGAudioBus *bus, uint32_t resource);
 uint32_t hg_audio_register_worker(HGAudioBus *bus, uint32_t resource);
-uint32_t hg_audio_transfer_setup(HGAudioBus *bus, uint32_t dest, uint32_t src,
+uint32_t hg_audio_transfer_setup(HGAudioBus *bus, uint32_t src, uint32_t dest,
                                  uint32_t size, uint32_t wait);
 uint32_t hg_audio_align16(HGAudioBus *bus, uint32_t size);
 uint32_t hg_audio_slot_find(HGAudioBus *bus);
