@@ -1,5 +1,68 @@
 # Hungry Ghosts — master handoff
 
+## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
+
+**Resume here (isolated Phase 2 review; Phase 3 deferred).** Synchronized with
+[START_HERE.md](START_HERE.md),
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md), and
+[docs/verification/phase2-results.json](docs/verification/phase2-results.json).
+
+- **Verified Git / source identities:**
+  - Base: `86a5670852d47c4ead140e5c8e40a5289f773053` (PR #21 merge; tested unchanged
+    in isolated `decomp-phase2-base`).
+  - Phase 1 handoff: tested `750446db1a95c6957c7ee5cc64ebddf2abd70984`, tip
+    `1bd0930c2753e03e0da0895908466732b29050c5`, tree
+    `6aa22a459d0b1f07043fba2ccb6efc33c9e89852`, patch SHA-256
+    `7ffc4d87daaf34548482f05196650dc8173c28d9083dd5ed24c6a3798c9b8f57`.
+  - Phase 2 verified code commit: `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0`
+    (`source_sha256` `c66bc38ffb97...`) on isolated branch
+    `verification/phase-2-mainpc` (`decomp-phase2-candidate`). Documentation and
+    sanitized results are recorded in a separate docs-only follow-up commit; prior
+    receipts are never resealed.
+- **Authenticated owner-local inputs (read-only):** `SCPS_150.46`
+  (`a74248c5...`, PT_LOAD verified via PS2DInfo), `Hungry Ghosts (Japan).iso`
+  (`8ca1513c...`), `SYSTEM.CNF` (`b9bae7d4...`), `DATA/PACK.DAT` (`f2e04a08...`),
+  all 8 `IRX/` IOP files, M18 `A0_B09.BIN` (`ef257df9...`) and `frames.jsonl`
+  (`4e52bc00...`), M13 22-frame captures/stops, pinned PCSX2 v2.8.2
+  (`0c46bb6a...`), pinned PS2DInfo `2e4a226e00d33ab35391aacade71b55826e5f52f`
+  (4/4 tool pins, 74/74 synthetic tests).
+- **Last passing results (zero reuse, zero retries, quiet window):**
+  - Unmodified serial baseline (`86a56708`, `full`, 1w,
+    `m12-20261127T190644Z-2j7t7my9`): 79/79 accepted in **3,143.14 s** (52m 23s).
+  - Corrected serial (`734e328`, `historical`, 1w,
+    `m12-20261127T195941Z-ixt34s27`): 79/79 accepted in **1,950.38 s** (32m 30s,
+    1.61× / −38.0%).
+  - Optimized parallel-4 (`734e328`, `historical`, 4w,
+    `m12-20261127T203250Z-mx0eah77`): 79/79 accepted in **818.49 s** (13m 38s,
+    3.84× / −74.0% vs. base; 2.38× vs. corrected serial).
+  - Optimized parallel-8 (`734e328`, `historical`, 8w,
+    `m12-20261127T211502Z-cm9phbqt`): 79/79 accepted in **645.33 s** (10m 45s,
+    4.87× / −79.5% vs. base; 3.02× vs. corrected serial).
+  - Expanded current (`734e328`, `current`, 4w,
+    `m12-20261127T204736Z-49j6appf`): **120/120 accepted** (115 passed, 5
+    expected-rejection) in **1,424.22 s** (23m 44s).
+  - Deep semantic equivalence: 0 differences across 79/79 gates and 83/83 JSON
+    report/control artifacts across 1w, 4w, 8w, and `current`'s 79 historical
+    gates; 0 measurement differences vs. base across all 77 unchanged-schema gates.
+- **Confirmed defects fixed & regressions:** Fixed Gate 19, Gate 56, and corridor
+  `pre-dispatch-window` false rejections, routed mutant test directories through
+  `build_path()`, locked `Inputs.tool()` and canonicalized `Inputs.file()`. Strict
+  C11 (GCC 16.2.1 & Clang 23.1.5), all 3 ASan+UBSan C harnesses, `HG_SANITIZE=1`
+  differential tests (10/10), M16/M18 cross-checks, Gate 01 before/after controls,
+  competing-writer lock, and SIGTERM interrupt/`resume` reuse all passed.
+- **Blockers / limits:** None for Phase 2. Phase 3 (push/PR/merge) is deferred by
+  owner instruction. Independent hardware/emulator oracle limits from M1–M18,
+  Content, and Audio remain unchanged.
+- **Reproducible commands:**
+  - Focused: `python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"`
+  - Historical serial: `python3 -B tools/hg_verify.py run --profile historical --jobs 1 --config "$CONFIG"`
+  - Historical parallel: `python3 -B tools/hg_verify.py run --profile historical --jobs 4 --config "$CONFIG"` (or `--jobs 8`)
+  - Comprehensive current: `python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"`
+  - Public CI synthetic: `python3 -B -m unittest discover -s tests -v`
+- **Single next action:** Owner review of isolated branch
+  `verification/phase-2-mainpc` and authorization before any Phase 3
+  integration, rebase/merge, or publication.
+
 ## Verification infrastructure, Phase 1 — 2026-11-27
 
 The local Phase 1 handoff contains the Gate 01 report-contract correction,

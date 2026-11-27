@@ -1,5 +1,50 @@
 # Hungry Ghosts — start here
 
+## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
+
+**Resume here (isolated Phase 2 review; Phase 3 deferred).** On isolated branch
+`verification/phase-2-mainpc` from exact PR #21 base
+`86a5670852d47c4ead140e5c8e40a5289f773053`, Phase 1 handoff (`1bd0930c2753...`,
+patch SHA-256 `7ffc4d87...`) was authenticated, four genuine contract/isolation
+defects were repaired (Gates 19, 56, corridor `pre-dispatch-window`, and mutant
+test `build_path` isolation), and verified exact optimizations (`ee_subset.py`
+O(1) rational FP, zero-copy `compare_memory()`, and bounded parallel scheduling)
+were validated at code commit `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0`
+(`source_sha256` `c66bc38ffb97...`) against authenticated retail inputs
+(`SCPS_150.46` `a74248c5...`, Japan ISO `8ca1513c...`, `DATA/PACK.DAT`
+`f2e04a08...`, M18 overlay `ef257df9...`, PCSX2 v2.8.2 `0c46bb6a...`, PS2DInfo
+`2e4a226e...`).
+
+- **Fresh unmodified serial baseline** (`full`, 79 gates, `86a56708`, 1w,
+  `m12-20261127T190644Z-2j7t7my9`): **79/79 accepted** in **3,143.14 s** (52m 23s).
+- **Fresh corrected serial** (`historical`, 79 gates, `734e328`, 1w,
+  `m12-20261127T195941Z-ixt34s27`): **79/79 accepted** in **1,950.38 s** (32m 30s,
+  1.61× / −38.0%).
+- **Fresh optimized parallel** (`historical`, 79 gates, `734e328`):
+  - **4 workers** (`m12-20261127T203250Z-mx0eah77`): **79/79 accepted** in
+    **818.49 s** (13m 38s, **3.84× / −74.0%** vs. unmodified baseline).
+  - **8 workers** (`m12-20261127T211502Z-cm9phbqt`): **79/79 accepted** in
+    **645.33 s** (10m 45s, **4.87× / −79.5%** vs. unmodified baseline).
+  - **Deep semantic equivalence:** **0 differences** across all 79 gates and 83
+    JSON report/control artifacts between 1w, 4w, 8w, and the `current` historical
+    subset; **0 measurement differences** vs. unmodified base across all 77
+    unchanged-schema gates.
+- **Fresh expanded current profile** (`current`, 120 gates, `734e328`, 4w,
+  `m12-20261127T204736Z-49j6appf`): **120/120 accepted** (115 passed, 5 expected
+  rejections, 0 reused, 0 retries) in **1,424.22 s** (23m 44s).
+- **Cross-checks & regressions:** M16 `functions.json` / `area.json` and M18
+  `connected_run` / `differential` / `negative_controls` / 17 `scenarios` exact
+  match; strict C11 GCC 16.2.1 & Clang 23.1.5 pass; all 3 ASan+UBSan C harnesses
+  and `HG_SANITIZE=1` Python differential suite (10/10) pass; Gate 00 passes
+  465/465 with authenticated ISO (3 retail-only skips without ISO).
+- **Limits:** Historical hardware/oracle boundaries remain unchanged (M18
+  native-driven limits, unverified authentic Continue, 48 unresolved HGScript
+  bindings, host IOP/SPU2 audio model, host compile ≠ PS2 byte matching).
+- **Next action:** Owner review of isolated branch `verification/phase-2-mainpc`
+  and decision on Phase 3 integration/publication (not started). See
+  [docs/verification-infrastructure.md](docs/verification-infrastructure.md) and
+  [docs/verification/phase2-results.json](docs/verification/phase2-results.json).
+
 ## Verification infrastructure, Phase 1 — 2026-11-27
 
 The local Phase 1 handoff contains the Gate 01 report-contract correction,

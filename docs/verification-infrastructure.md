@@ -1,9 +1,126 @@
-# Verification infrastructure, Phase 1
+# Verification infrastructure, Phase 1 and Phase 2
+
+Phase 1 implemented the Gate 01 contract fix, bounded scheduler, and 120-gate
+current profile in the cloud from `86a5670852d47c4ead140e5c8e40a5289f773053`
+(PR #21 merge). Phase 2 authenticated the Phase 1 handoff on MainPC, fixed four
+genuine contract/isolation defects exposed by original-data receipts, applied
+measured exact-behavior optimizations, verified all 79 historical gates and all
+120 current gates against authenticated original inputs, and proved exact
+serial/parallel semantic equivalence. Phase 3 (publication/integration) remains
+deferred on isolated branch `verification/phase-2-mainpc`.
+
+## Phase 2 MainPC validation — 2026-11-27
+
+Verified code revision: `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0`
+(`source_sha256` `c66bc38ffb97...`, clean working tree on isolated branch
+`verification/phase-2-mainpc`). Subsequent documentation and sanitized-evidence
+commits record these results without resealing historical receipts. Machine-readable
+sanitized results are in [phase2-results.json](verification/phase2-results.json).
+
+### Benchmark results (MainPC, Ryzen 7 5800X 8C/16T, 31 GiB RAM, NVMe, quiet window)
+
+All runs executed with zero reused receipts and zero retries against identical
+authenticated retail inputs (`SCPS_150.46` `a74248c5...`, Japan ISO `8ca1513c...`,
+`DATA/PACK.DAT` `f2e04a08...`, M18 overlay `ef257df9...`, pinned PCSX2 v2.8.2
+`0c46bb6a...`, pinned PS2DInfo `2e4a226e...`).
+
+| Run | Profile / Revision | Workers (Peak) | Accepted / Total | Wall Time | Child Time | vs. Unmodified Base | vs. Corrected Serial | Peak Child RSS |
+|---|---|---|---|---|---|---|---|---|
+| Unmodified baseline (`m12-20261127T190644Z-2j7t7my9`) | `full` (79) on `86a56708` | 1 (1) | 79/79 (74 pass, 5 exp-rej) | 3,143.14 s (52m 23s) | 3,119.86 s | 1.00× (0.0%) | — | 3.50 GiB |
+| Corrected serial (`m12-20261127T195941Z-ixt34s27`) | `historical` (79) on `734e328` | 1 (1) | 79/79 (74 pass, 5 exp-rej) | 1,950.38 s (32m 30s) | 1,925.20 s | **1.61× (−38.0%)** | 1.00× | 3.76 GiB |
+| Optimized parallel-4 (`m12-20261127T203250Z-mx0eah77`) | `historical` (79) on `734e328` | 4 (4) | 79/79 (74 pass, 5 exp-rej) | **818.49 s (13m 38s)** | 2,105.12 s | **3.84× (−74.0%)** | **2.38× (−58.0%)** | 3.38 GiB |
+| Optimized parallel-8 (`m12-20261127T211502Z-cm9phbqt`) | `historical` (79) on `734e328` | 8 (8) | 79/79 (74 pass, 5 exp-rej) | **645.33 s (10m 45s)** | 2,431.96 s | **4.87× (−79.5%)** | **3.02× (−66.9%)** | 2.85 GiB |
+| Expanded current (`m12-20261127T204736Z-49j6appf`) | `current` (120) on `734e328` | 4 (4) | **120/120** (115 pass, 5 exp-rej) | **1,424.22 s (23m 44s)** | 4,706.20 s | — (expanded workload) | — | 8.07 GiB |
+
+Representative synthetic scheduler scaling (`python3 -B docs/verification/benchmark.py`,
+16 gates × 25,000 R5900 cases × 3 repeats): medians `8.721 s` (1w) / `4.704 s`
+(2w, 1.85×) / `2.465 s` (4w, 3.54×) / `1.510 s` (8w, 5.78×), identical semantic
+receipt SHA-256 `6b26c5c5...` across all 12 runs.
+
+### Phase 2 defects fixed and optimizations verified
+
+1. **Gate 19 (`connected-player-saved-runtime`) false rejection fixed:** Phase 1's
+   anchor in `tools/hg_verify_legacy_contracts.py` raised `KeyError: 'compared_bytes'`
+   on genuine case 6 (`connected-gameplay-sequence`). Hardened contract now validates
+   cases 0–5 plus all 6 nested stages and `gameplay_checks` of case 6.
+2. **Gate 56 (`turn-camera-saved-runtime`) false rejection fixed:** Phase 1's anchor
+   and stage loop raised `KeyError: 'entry_sha256'` / `'compared_bytes'` on genuine
+   probe-only stage 14 (`release5-update`). Now validates stages 0–13 and the
+   `release5-update` probe fields explicitly.
+3. **M16/M17 corridor contract false rejection fixed:** `tools/hg_verify_current.py`
+   raised `KeyError: 'guarded_ram_count'` on genuine `pre-dispatch-window` stages.
+   Now verifies `pre-dispatch-window` oracle, stream, and difference fields.
+4. **Attempt isolation and thread safety fixed:** Routed mutant build directories in
+   `tests/test_front_end_differential.py` and `tests/test_lifecycle_differential.py`
+   through `build_path()`; locked `Inputs.tool()` and canonicalized `Inputs.file()`
+   cache keys in `tools/hg_verify.py`.
+5. **Exact O(1) rational FP and zero-copy comparison:** Replaced the 31-step
+   `Fraction` binary search in `tools/ee_subset.py` (`fp_value`, `fp_chop`,
+   `fp_signed_nearest`) with exact integer bit-length and `math.isqrt` arithmetic
+   (90.7× faster in micro-benchmark, 100% bit-exact across 15,019 cases, all 3
+   `MODEL_DEFECTS` anchors preserved) and added a `memoryview` fast path in
+   `tools/verify_player_connected_runtime.py:compare_memory()`.
+6. **Bounded concurrency for isolated verifiers:** Enabled audited attempt-isolated
+   verifiers in `PARALLEL_RESULTS` with heavy-first dispatch when `--jobs > 1`
+   while retaining inventory order for `--jobs 1` and explicit `exclusive`
+   serialization. (Future tuning note: propagating heavy-first priority to
+   transitive `after` prerequisites like `constraint-shared-bytes` can eliminate
+   a ~331 s start delay observed on `constraint-differential` at 4 workers.)
+
+### Semantic equivalence, cross-checks, and regressions
+
+- **Serial vs. parallel equivalence:** Deep comparison of all 79 historical gates
+  and all 83 JSON report/control artifacts produced **0 differences** between
+  1-worker serial (`m12-20261127T195941Z-ixt34s27`), 4-worker parallel
+  (`m12-20261127T203250Z-mx0eah77`), 8-worker parallel
+  (`m12-20261127T211502Z-cm9phbqt`), and the 79-gate historical subset of the
+  120-gate current run (`m12-20261127T204736Z-49j6appf`).
+- **Base vs. candidate equivalence:** All 77 unchanged-schema historical gates
+  (81 JSON artifacts) produced **0 measurement differences** vs. unmodified base
+  `86a56708` (differences were strictly metadata digests such as `ee_subset.py`
+  SHA-256 and `mutated_model_sha256`).
+- **Gate 00 & Gate 01:** Gate 00 ran all **465/465** tests with authenticated
+  `HG_JAPAN_ISO` (0 skipped) and preserves the 3 retail-only skips when
+  `HG_JAPAN_ISO` is unset (public CI). Gate 01 false acceptance was reproduced on
+  base (`missing_measurements` and `empty_cases` returned `passed`) and rejected on
+  candidate (`harness-error`), while genuine ELF execution passed (4×350 + 12/48).
+- **M16/M18 cross-checks:** `tools/hg_m16_evidence.py` matched tracked
+  `analysis/late_frame/functions.json` and `analysis/late_frame/area.json`
+  exactly. `tools/hg_m18_checks.py` matched tracked `evidence/m18/results.json`
+  on `connected_run` (16,273 frames), `differential` (27 entries / 202,500 cases),
+  `negative_controls` (11), and all 17 `scenarios`.
+- **Sanitizers, strict C, and runner controls:** Strict C11 builds (`-Wall -Wextra
+  -Werror -pedantic -Wl,--no-undefined`) passed with both GCC 16.2.1 and Clang
+  23.1.5; all 3 ASan+UBSan C harnesses passed; `HG_SANITIZE=1` Python differential
+  tests passed (10/10 in 34.6 s); competing writer lock (`exit 2`), `SIGTERM`
+  interrupt (`exit 143`), `summarize`, and `resume` receipt reuse (5/5 reused) all
+  passed.
+
+### Phase 2 reproducible commands
+
+```sh
+# Focused diagnostic run (8 gates)
+python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"
+
+# Historical serial reference (79 gates) and optimized parallel (79 gates)
+python3 -B tools/hg_verify.py run --profile historical --jobs 1 --config "$CONFIG"
+python3 -B tools/hg_verify.py run --profile historical --jobs 4 --config "$CONFIG"
+python3 -B tools/hg_verify.py run --profile historical --jobs 8 --config "$CONFIG"
+
+# Comprehensive current profile (120 gates)
+python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"
+
+# Public CI synthetic suite (no retail inputs)
+python3 -B -m unittest discover -s tests -v
+```
+
+---
+
+## Phase 1 record (preserved)
 
 Cloud implementation and synthetic validation on a local branch from
 `86a5670852d47c4ead140e5c8e40a5289f773053` (PR #21 merge). Original
-verification and performance characterization remain owner-local. This
-handoff records bounded Phase 1 progress. The complete milestone remains open.
+verification and performance characterization remained owner-local during Phase 1.
 
 ## Contract and coverage matrix
 

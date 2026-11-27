@@ -1,0 +1,454 @@
+{
+  "schema": "hg-verification-infrastructure-phase2/v1",
+  "status": "complete-isolated-phase2",
+  "phase3_status": "deferred",
+  "git_identities": {
+    "base_commit": "86a5670852d47c4ead140e5c8e40a5289f773053",
+    "phase1_tested_commit": "750446db1a95c6957c7ee5cc64ebddf2abd70984",
+    "phase1_handoff_tip": "1bd0930c2753e03e0da0895908466732b29050c5",
+    "phase1_handoff_tree": "6aa22a459d0b1f07043fba2ccb6efc33c9e89852",
+    "phase1_patch_sha256": "7ffc4d87daaf34548482f05196650dc8173c28d9083dd5ed24c6a3798c9b8f57",
+    "phase2_verified_code_commit": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+    "phase2_verified_source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+    "branch": "verification/phase-2-mainpc"
+  },
+  "host": {
+    "cpu": "AMD Ryzen 7 5800X 8-Core Processor (8 cores / 16 threads)",
+    "ram_gib": 31,
+    "os": "Linux 7.3.5-2-cachyos x86_64",
+    "python": "3.14.10",
+    "gcc": "16.2.1 20260810",
+    "clang": "23.1.5",
+    "jdk": "OpenJDK 21.0.13.1",
+    "git": "2.56.1"
+  },
+  "authenticated_inputs": {
+    "HG_JAPAN_ISO_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+    "HG_ELF_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "SYSTEM_CNF_sha256": "b9bae7d4345fa8dadb5b34e2f17418ffa1b48ae44bd8c500e0ca4fbea4cdadd6",
+    "DATA_PACK_DAT_sha256": "f2e04a08493fb5681ab468323f6b21195c55a9428234a977aea2247f53540a1a",
+    "M18_title_overlay_sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+    "M18_native_frames_sha256": "4e52bc00e0db1fde466569bab6b1ef6fb2987ae7b1e4df3d6c26be317a2299be",
+    "PCSX2_v2_8_2_sha256": "0c46bb6a88aa2782b10853a7b07cf3387ba99cbef2b966372cd2315b8571abea",
+    "PS2DInfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+    "PS2DInfo_synthetic_tests": {
+      "passed": 74,
+      "failed": 0
+    },
+    "IOP_modules_sha256": {
+      "IRX/IOPRP271.IMG": "8d752d01d3dda7d418ae174ffe645787f4bf3fab4e035ca1c3300a0522ee22f1",
+      "IRX/LIBSD.IRX": "57cbd80b7c2f966985e14ca18c03e849e3b3eb1216f06a6f4c1e6ca85084ea37",
+      "IRX/MCMAN.IRX": "cdb1dfd12cb71f60d4834eb888dbbffeb6f6382e3bdffc1a50122034f7969b6b",
+      "IRX/MCSERV.IRX": "42790c4999c9deb17bb0fe2ceb155d3b141adf059c3055e11039070be2a8a7a6",
+      "IRX/PADMAN.IRX": "c11d3fffbca7f99f571299eddbbea3a77fa2d0614dbb22ee8f5a4f9a1c22d67f",
+      "IRX/SDRDRV.IRX": "37b615869fed71ec90760543d83170dc7b7608142a4117d665a0cfbe78c3cc52",
+      "IRX/SG2IOP.IRX": "a8ac82dc1f12b7960187d344d2bd5167383172c77f3ed15482b1183d30a9c1c1",
+      "IRX/SIO2MAN.IRX": "0facd5a832d3114c3477ded714f8766d443705a1440deeb84c59927cf0b6968e"
+    }
+  },
+  "benchmarks": {
+    "unmodified_serial_baseline": {
+      "run_id": "m12-20261127T190644Z-2j7t7my9",
+      "profile": "full",
+      "revision": "86a5670852d47c4ead140e5c8e40a5289f773053",
+      "source_sha256": "19e4e759df1e30ed80095bf401514d8470f92c7da8143bec8df356ac8bfb9c28",
+      "working_files": "",
+      "jobs": 1,
+      "peak_concurrency": 1,
+      "state": "complete",
+      "full_verdict": "passed",
+      "total_gates": 79,
+      "historical_gates": 79,
+      "accepted": 79,
+      "executed": 79,
+      "reused": 0,
+      "retries": 0,
+      "counts": {
+        "passed": 74,
+        "expected-rejection": 5
+      },
+      "session_seconds": 3143.141,
+      "child_seconds": 3119.855,
+      "wall_seconds": 3143.26,
+      "cpu_user_seconds": 2990.454,
+      "cpu_sys_seconds": 133.891,
+      "cpu_utilization_pct": 99.4,
+      "peak_child_rss_kib": 3674528,
+      "nvme_read_mib": 51004.14,
+      "nvme_write_mib": 2740.01,
+      "loadavg_before": "0.37 0.20 0.22 1/2284 267396",
+      "loadavg_after": "1.64 1.60 1.51 1/1664 281572",
+      "first_actionable_seconds": null,
+      "first_actionable_check": null
+    },
+    "corrected_serial_historical": {
+      "run_id": "m12-20261127T195941Z-ixt34s27",
+      "profile": "historical",
+      "revision": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+      "source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+      "working_files": "",
+      "jobs": 1,
+      "peak_concurrency": 1,
+      "state": "complete",
+      "full_verdict": "passed",
+      "total_gates": 79,
+      "historical_gates": 79,
+      "accepted": 79,
+      "executed": 79,
+      "reused": 0,
+      "retries": 0,
+      "counts": {
+        "passed": 74,
+        "expected-rejection": 5
+      },
+      "session_seconds": 1950.376,
+      "child_seconds": 1925.204,
+      "wall_seconds": 1950.495,
+      "cpu_user_seconds": 1821.964,
+      "cpu_sys_seconds": 116.128,
+      "cpu_utilization_pct": 99.4,
+      "peak_child_rss_kib": 3945680,
+      "nvme_read_mib": 33906.25,
+      "nvme_write_mib": 587.56,
+      "loadavg_before": "1.18 1.49 1.47 1/1659 281667",
+      "loadavg_after": "1.05 1.08 1.16 1/1657 289621",
+      "first_actionable_seconds": null,
+      "first_actionable_check": null,
+      "vs_unmodified_baseline": {
+        "speedup_x": 1.61,
+        "reduction_pct": 37.9
+      }
+    },
+    "optimized_parallel_4_historical": {
+      "run_id": "m12-20261127T203250Z-mx0eah77",
+      "profile": "historical",
+      "revision": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+      "source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+      "working_files": "",
+      "jobs": 4,
+      "peak_concurrency": 4,
+      "state": "complete",
+      "full_verdict": "passed",
+      "total_gates": 79,
+      "historical_gates": 79,
+      "accepted": 79,
+      "executed": 79,
+      "reused": 0,
+      "retries": 0,
+      "counts": {
+        "passed": 74,
+        "expected-rejection": 5
+      },
+      "session_seconds": 818.491,
+      "child_seconds": 2105.115,
+      "wall_seconds": 818.618,
+      "cpu_user_seconds": 1950.048,
+      "cpu_sys_seconds": 171.68,
+      "cpu_utilization_pct": 259.2,
+      "peak_child_rss_kib": 3546236,
+      "nvme_read_mib": 46624.0,
+      "nvme_write_mib": 1013.35,
+      "loadavg_before": "0.54 0.94 1.11 1/1666 289726",
+      "loadavg_after": "1.25 2.50 2.54 3/1657 295041",
+      "first_actionable_seconds": null,
+      "first_actionable_check": null,
+      "vs_unmodified_baseline": {
+        "speedup_x": 3.84,
+        "reduction_pct": 74.0
+      },
+      "vs_corrected_serial": {
+        "speedup_x": 2.38,
+        "reduction_pct": 58.0
+      }
+    },
+    "optimized_parallel_8_historical": {
+      "run_id": "m12-20261127T211502Z-cm9phbqt",
+      "profile": "historical",
+      "revision": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+      "source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+      "working_files": "",
+      "jobs": 8,
+      "peak_concurrency": 8,
+      "state": "complete",
+      "full_verdict": "passed",
+      "total_gates": 79,
+      "historical_gates": 79,
+      "accepted": 79,
+      "executed": 79,
+      "reused": 0,
+      "retries": 0,
+      "counts": {
+        "passed": 74,
+        "expected-rejection": 5
+      },
+      "session_seconds": 645.325,
+      "child_seconds": 2431.957,
+      "wall_seconds": 645.439,
+      "cpu_user_seconds": 2188.414,
+      "cpu_sys_seconds": 258.822,
+      "cpu_utilization_pct": 379.2,
+      "peak_child_rss_kib": 2985672,
+      "nvme_read_mib": 36073.55,
+      "nvme_write_mib": 617.29,
+      "loadavg_before": "1.40 2.04 3.33 1/1675 307810",
+      "loadavg_after": "1.14 2.93 3.87 2/1672 312432",
+      "first_actionable_seconds": null,
+      "first_actionable_check": null,
+      "vs_unmodified_baseline": {
+        "speedup_x": 4.87,
+        "reduction_pct": 79.5
+      },
+      "vs_corrected_serial": {
+        "speedup_x": 3.02,
+        "reduction_pct": 66.9
+      }
+    },
+    "expanded_current_4_workers": {
+      "run_id": "m12-20261127T204736Z-49j6appf",
+      "profile": "current",
+      "revision": "734e328fe7c9cea90b2dd746c0ea1fff0647dbc0",
+      "source_sha256": "c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8",
+      "working_files": "",
+      "jobs": 4,
+      "peak_concurrency": 4,
+      "state": "complete",
+      "full_verdict": "passed",
+      "total_gates": 120,
+      "historical_gates": 79,
+      "accepted": 120,
+      "executed": 120,
+      "reused": 0,
+      "retries": 0,
+      "counts": {
+        "passed": 115,
+        "expected-rejection": 5
+      },
+      "session_seconds": 1424.217,
+      "child_seconds": 4706.198,
+      "wall_seconds": 1424.349,
+      "cpu_user_seconds": 4059.672,
+      "cpu_sys_seconds": 664.782,
+      "cpu_utilization_pct": 331.7,
+      "peak_child_rss_kib": 8457712,
+      "nvme_read_mib": 118494.32,
+      "nvme_write_mib": 1509.74,
+      "loadavg_before": "0.42 2.00 2.36 1/1665 295247",
+      "loadavg_after": "1.12 2.90 3.90 2/1665 305440",
+      "first_actionable_seconds": null,
+      "first_actionable_check": null
+    },
+    "top_10_historical_bottlenecks_serial": [
+      {
+        "historical": "70",
+        "id": "constraint-differential",
+        "base_serial_seconds": 766.522,
+        "candidate_serial_seconds": 458.985,
+        "serial_speedup_x": 1.67
+      },
+      {
+        "historical": "56",
+        "id": "turn-camera-saved-runtime",
+        "base_serial_seconds": 589.898,
+        "candidate_serial_seconds": 161.174,
+        "serial_speedup_x": 3.66
+      },
+      {
+        "historical": "75",
+        "id": "grounded-saved-runtime",
+        "base_serial_seconds": 257.891,
+        "candidate_serial_seconds": 143.284,
+        "serial_speedup_x": 1.8
+      },
+      {
+        "historical": "69",
+        "id": "constraint-saved-runtime",
+        "base_serial_seconds": 218.033,
+        "candidate_serial_seconds": 108.385,
+        "serial_speedup_x": 2.01
+      },
+      {
+        "historical": "63",
+        "id": "walk-camera-saved-runtime",
+        "base_serial_seconds": 192.536,
+        "candidate_serial_seconds": 82.138,
+        "serial_speedup_x": 2.34
+      },
+      {
+        "historical": "00",
+        "id": "synthetic-suite",
+        "base_serial_seconds": 182.541,
+        "candidate_serial_seconds": 172.024,
+        "serial_speedup_x": 1.06
+      },
+      {
+        "historical": "76",
+        "id": "grounded-differential",
+        "base_serial_seconds": 168.945,
+        "candidate_serial_seconds": 147.632,
+        "serial_speedup_x": 1.14
+      },
+      {
+        "historical": "55",
+        "id": "turn-camera-instructions",
+        "base_serial_seconds": 159.043,
+        "candidate_serial_seconds": 154.215,
+        "serial_speedup_x": 1.03
+      },
+      {
+        "historical": "19",
+        "id": "connected-player-saved-runtime",
+        "base_serial_seconds": 76.272,
+        "candidate_serial_seconds": 42.938,
+        "serial_speedup_x": 1.78
+      },
+      {
+        "historical": "17",
+        "id": "player-transition-instructions",
+        "base_serial_seconds": 63.803,
+        "candidate_serial_seconds": 64.172,
+        "serial_speedup_x": 0.99
+      }
+    ],
+    "synthetic_scheduler_scaling_1_2_4_8": {
+      "command": "python3 -B docs/verification/benchmark.py",
+      "medians_seconds": {
+        "1": 8.721,
+        "2": 4.704,
+        "4": 2.465,
+        "8": 1.51
+      },
+      "speedup_vs_1": {
+        "1": 1.0,
+        "2": 1.85,
+        "4": 3.54,
+        "8": 5.78
+      },
+      "semantic_receipt_sha256": "6b26c5c532fcf113fb0057fb74ffe76e35c9a14e30b8973e1ec3db427508c93b",
+      "per_child_peak_rss_kib": 31928
+    }
+  },
+  "semantic_equivalence": {
+    "serial_vs_parallel_4": {
+      "gates": 79,
+      "json_artifacts_compared": 83,
+      "differences": 0
+    },
+    "serial_vs_parallel_8": {
+      "gates": 79,
+      "json_artifacts_compared": 83,
+      "differences": 0
+    },
+    "serial_vs_current_4_historical_subset": {
+      "gates": 79,
+      "json_artifacts_compared": 83,
+      "differences": 0
+    },
+    "base_vs_candidate_serial_unchanged_schema_77_gates": {
+      "gates": 77,
+      "json_artifacts_compared": 81,
+      "measurement_differences": 0,
+      "metadata_only_differences": [
+        "binding",
+        "verification_sources",
+        "sources.tools/ee_subset.py",
+        "mutated_model_sha256"
+      ]
+    }
+  },
+  "gate_00_and_01": {
+    "gate_00_authenticated_iso": {
+      "tests": 465,
+      "passed": 465,
+      "failed": 0,
+      "skipped": 0
+    },
+    "gate_00_public_ci_without_iso": {
+      "audio_original_module_discovered": 4,
+      "passed": 1,
+      "skipped_retail": 3
+    },
+    "gate_01_base_false_pass_reproduced": {
+      "missing_measurements": "passed",
+      "empty_cases": "passed",
+      "missing_report": "harness-error"
+    },
+    "gate_01_candidate_hardened": {
+      "missing_measurements": "harness-error",
+      "empty_cases": "harness-error",
+      "missing_report": "harness-error",
+      "genuine_elf_run": {
+        "verdict": "passed",
+        "randomized_by_function": {
+          "poll": 350,
+          "setup": 350,
+          "continue": 350,
+          "start": 350
+        },
+        "lifecycle_sequences": 12,
+        "lifecycle_steps": 48
+      }
+    }
+  },
+  "crosschecks_and_regressions": {
+    "m16_late_frame_functions_exact_match": true,
+    "m16_late_frame_area_exact_match": true,
+    "m18_boundary_crosscheck": {
+      "connected_run_exact_match": true,
+      "differential_exact_match": true,
+      "negative_controls_exact_match": true,
+      "scenarios_exact_match": true
+    },
+    "strict_c11_builds": {
+      "gcc_16_2_1_combined_and_audio": "passed",
+      "clang_23_1_5_combined_and_audio": "passed"
+    },
+    "asan_ubsan_c_harnesses": {
+      "resource_sanitizer": "passed",
+      "lifecycle_sanitizer": {
+        "status": "passed",
+        "iterations": 20000,
+        "calls": 129426,
+        "interrupts": 6667
+      },
+      "front_end_sanitizer": {
+        "status": "passed",
+        "iterations": 20000,
+        "calls": 136371,
+        "interrupts": 2500
+      }
+    },
+    "hg_sanitize_python_differential": {
+      "tests": 10,
+      "passed": 10,
+      "seconds": 34.642
+    },
+    "live_runner_controls": {
+      "competing_writer_lock": {
+        "exit_code": 2,
+        "rejected": true
+      },
+      "sigterm_interrupt_and_resume_reuse": {
+        "interrupt_exit_code": 143,
+        "accepted_before_interrupt": 5,
+        "reused_on_resume": 5,
+        "summarize_exit_code": 0
+      }
+    }
+  },
+  "defects_fixed_in_phase2": [
+    "tools/hg_verify_legacy_contracts.py: Gate 19 (connected-player-saved-runtime) crashed with KeyError on genuine nested connected-gameplay-sequence case 6",
+    "tools/hg_verify_legacy_contracts.py: Gate 56 (turn-camera-saved-runtime) crashed with KeyError on genuine probe-only release5-update stage 14",
+    "tools/hg_verify_current.py: m16-corridor and lifecycle-corridor crashed with KeyError on genuine pre-dispatch-window stages",
+    "tests/test_front_end_differential.py and tests/test_lifecycle_differential.py: routed mutant build directories through build_path() for attempt isolation",
+    "tools/hg_verify.py: locked Inputs.tool() and canonicalized Inputs.file() cache keys for thread safety"
+  ],
+  "optimizations_verified_in_phase2": [
+    "tools/ee_subset.py: O(1) exact arbitrary-precision integer fp_value/fp_chop/fp_signed_nearest (90.7x faster, 100% bit-exact across 15,019 cases, all 3 MODEL_DEFECTS anchors preserved)",
+    "tools/verify_player_connected_runtime.py: zero-copy memoryview fast path in compare_memory()",
+    "tools/hg_verify.py: bounded parallel execution of audited attempt-isolated verifiers with heavy-first dispatch when jobs > 1"
+  ],
+  "known_limits_and_future_opportunities": [
+    "Independent hardware/emulator oracle limits remain unchanged from M1-M18/Content/Audio (e.g., M18 native-driven execution, authentic Continue unverified, 48 unresolved HGScript bindings, host IOP/SPU2 audio model, host C compile != PS2 byte matching).",
+    "In parallel runs, heavy-first dispatch does not yet propagate priority to transitive after-prerequisites (e.g., constraint-shared-bytes delayed constraint-differential by 331s in PAR-4); adding transitive priority propagation can further trim parallel wall time in a later change without altering contracts."
+  ]
+}

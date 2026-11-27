@@ -19,10 +19,14 @@ and a final rebuild/port target remain unclaimed.
 python -m unittest discover -s tests -v
 ```
 
-On the integrated M17/M18/Content/Audio source this runs 452 tests. The three
+On the integrated M17/M18/Content/Audio source with Phase 2 verification
+infrastructure (`verification/phase-2-mainpc`), this runs 465 tests. The three
 retail-only Audio tests (`tests/test_hg_audio_original.py`) are skipped unless
-`HG_JAPAN_ISO` names the authenticated Japan ISO; with it set they run and a
-missing or non-matching image fails.
+`HG_JAPAN_ISO` names the authenticated Japan ISO; with it set all 465 tests run
+and a missing or non-matching image fails. See
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md) for
+the Phase 1/Phase 2 verification runner (`focused`, `historical`/`full`,
+`current` 120-gate profile, `synthetic`, and bounded `--jobs 1|2|4|8`).
 
 The full synthetic suite requires **Python 3.10+, a C11 compiler, and JDK 21
 with `javac`** for the Java export transaction test. Build products go in ignored
