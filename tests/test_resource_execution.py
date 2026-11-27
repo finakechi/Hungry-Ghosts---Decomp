@@ -3,7 +3,8 @@ import ctypes as C
 import struct
 import unittest
 
-from resource_harness import ROOT, library
+from resource_harness import ROOT, library  # also puts tools/ on sys.path
+from hg_verify_build import build_path
 from run_front_end_native import Mem
 from resource_execution import BUSY, ResourceScheduler, TASK, TASK_ACTIVE, TASK_ID
 import lifecycle_differential as L
@@ -132,7 +133,8 @@ class Harness:
 class ResourceExecutionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.lib = library(output=ROOT / 'local/build/m19-resource.so')
+        # Attempt-local under the runner (HG_VERIFY_BUILD_DIR); local/build otherwise.
+        cls.lib = library(output=build_path(ROOT / 'local/build/m19-resource.so'))
 
     def test_bootstrap_waits_retry_request_preserves_job_and_publishes(self):
         d = Harness(self.lib)

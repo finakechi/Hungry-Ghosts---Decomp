@@ -190,6 +190,11 @@ const HGProvenanceRecord *hg_world_harness_provenance_at(const HGWorldInitHarnes
                                                          size_t index);
 uint32_t hg_world_harness_guest_load(const HGWorldInitHarness *h,
                                      uint32_t address, uint32_t width);
+/* M23-M24 integration: the harness's single 32 MiB EE RAM, so a co-resident
+ * service (the M22/M24 audio bus) shares this guest memory rather than a
+ * second copy. Returns NULL unless [address, address + size) lies in EE RAM
+ * (the scratchpad is not exposed). The pointer stays valid until destroy. */
+uint8_t *hg_world_harness_guest_ram(HGWorldInitHarness *h, uint32_t address, uint32_t size);
 uint32_t hg_world_harness_last_domain_fault(const HGWorldInitHarness *h);
 uint32_t hg_world_harness_unknown_call_count(const HGWorldInitHarness *h);
 uint32_t hg_world_harness_actor_ticks_main(const HGWorldInitHarness *h);

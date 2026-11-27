@@ -1780,6 +1780,12 @@ uint32_t hg_world_harness_guest_load(const HGWorldInitHarness *h,
     return h ? bus_load((void *)h, address, width) : 0u;
 }
 
+uint8_t *hg_world_harness_guest_ram(HGWorldInitHarness *h, uint32_t address, uint32_t size) {
+    if (!h || size == 0u || address >= EE_RAM_SIZE || size > EE_RAM_SIZE - address)
+        return NULL;
+    return h->ee + address;
+}
+
 uint32_t hg_world_harness_last_domain_fault(const HGWorldInitHarness *h) {
     return h ? h->last_domain_fault : 0u;
 }

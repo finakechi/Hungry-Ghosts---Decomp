@@ -88,17 +88,42 @@ class ResultTests(unittest.TestCase):
         check = dict(result='discovery', minimum_tests=4)
         (self.directory / 'output.log').touch()
         names = sorted(results.RETAIL_AUDIO_TESTS)
-        report = dict(schema='hg-unittest-discovery/v1', pattern='test*.py', run=4,
-                      discovered=['test.clean', *names], passed=['test.clean'], skipped=names,
+        [elf_test] = results.RETAIL_ELF_TESTS
+        report = dict(schema='hg-unittest-discovery/v1', pattern='test*.py', run=5,
+                      discovered=['test.clean', elf_test, *names], passed=['test.clean', elf_test], skipped=names,
                       failures=[], errors=[], expected_failures=[], unexpected_successes=[])
         self.result.write_text(json.dumps(report))
         verdict, details = results.classify(check, self.directory, 0)
         self.assertEqual((verdict, details['retail_tests_unrun']), (results.PASSED, names))
         self.assertEqual(results.classify(check, self.directory, 0, authenticated_image=True)[0], results.ERROR)
-        for bad in (dict(run=3), dict(skipped=names + ['test.clean']),
-                    dict(expected_failures=['test.clean']), dict(discovered=['test.clean']*4)):
+        for bad in (dict(run=4), dict(skipped=names + ['test.clean']),
+                    dict(expected_failures=['test.clean']), dict(discovered=['test.clean']*5)):
             self.result.write_text(json.dumps(report | bad))
             self.assertEqual(results.classify(check, self.directory, 0)[0], results.ERROR)
+
+    def test_named_elf_skip_contract_requires_authenticated_elf_to_run(self):
+        check = dict(result='discovery', minimum_tests=5)
+        (self.directory / 'output.log').touch()
+        audio = sorted(results.RETAIL_AUDIO_TESTS)
+        [elf_test] = results.RETAIL_ELF_TESTS
+        base = dict(schema='hg-unittest-discovery/v1', pattern='test*.py', run=5,
+                    discovered=['test.clean', elf_test, *audio], failures=[], errors=[],
+                    expected_failures=[], unexpected_successes=[])
+        skipped = base | dict(passed=['test.clean'], skipped=[elf_test, *audio])
+        self.result.write_text(json.dumps(skipped))
+        verdict, details = results.classify(check, self.directory, 0, authenticated_elf=False)
+        self.assertEqual((verdict, details['retail_tests_unrun']), (results.PASSED, sorted([elf_test, *audio])))
+        # An authenticated ELF makes the retail test mandatory; a skip is a harness error.
+        self.assertEqual(results.classify(check, self.directory, 0, authenticated_elf=True)[0], results.ERROR)
+        ran = base | dict(passed=['test.clean', elf_test, *audio], skipped=[])
+        self.result.write_text(json.dumps(ran))
+        self.assertEqual(results.classify(check, self.directory, 0, authenticated_image=True)[0], results.PASSED)
+        self.assertEqual(results.classify(check, self.directory, 0, authenticated_image=True,
+                                          authenticated_elf=False)[0], results.ERROR)
+        # Full discovery must still contain every named retail test.
+        missing = ran | dict(run=4, discovered=['test.clean', *audio], passed=['test.clean', *audio])
+        self.result.write_text(json.dumps(missing))
+        self.assertEqual(results.classify(check, self.directory, 0, authenticated_image=True)[0], results.ERROR)
 
     def test_legacy_reports_require_the_recorded_workload(self):
         gates = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'historical')
@@ -480,6 +505,98 @@ class SchedulerTests(unittest.TestCase):
         synthetic = runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'synthetic')
         self.assertFalse(any(row['id'] in {'content-corpus', 'retail-input-identity'} for row in synthetic))
 
+
+
+class MilestoneGateTests(unittest.TestCase):
+    """M19-M24 and M23-M24 integration registrations and contracts."""
+    NEW = ('m19-resource-job', 'm19-resource-retail', 'm19-connected-title', 'm20-hgscript-differential',
+           'm20-title-hgscript', 'm21-title-menu', 'm21-title-neutral', 'm21-cold-new-game', 'm21-area1-entry',
+           'm21-ferry-reload', 'm21-ferry-resume', 'm22-retail-service', 'm23-authentic-boundary',
+           'm24-reference-map', 'm23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
+           'world-audio-lifecycle')
+    SYNTHETIC = ('m23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
+                 'world-audio-lifecycle')
+
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.directory = Path(directory.name)
+        (self.directory / 'output.log').write_text('')
+        self.nodes = {row['id']: row for row in runner.inventory(runner.INVENTORY, runner.HISTORICAL, 'current')}
+
+    def test_profile_totals_and_scheduling(self):
+        inv = lambda name: runner.inventory(runner.INVENTORY, runner.HISTORICAL, name)
+        current, synthetic = inv('current'), inv('synthetic')
+        self.assertEqual((len(inv('focused')), len(inv('historical')), len(inv('full')), len(current), len(synthetic)),
+                         (8, 79, 79, 138, 41))
+        self.assertEqual([row['id'] for row in current[-18:]], list(self.NEW))
+        self.assertEqual({row['id'] for row in synthetic} - {row['id'] for row in inv('historical')}
+                         - {row['id'] for row in current[79:120]}, set(self.SYNTHETIC))
+        for name in self.NEW:
+            row = self.nodes[name]
+            parallel = row['result'] in runner.PARALLEL_RESULTS and not row.get('exclusive')
+            # Only the attempt-isolated synthetic C gates may overlap; retail gates stay exclusive.
+            self.assertEqual(parallel, name in self.SYNTHETIC, name)
+            self.assertEqual(row['evidence'] == 'synthetic', name in self.SYNTHETIC, name)
+            if name not in self.SYNTHETIC:
+                self.assertTrue({'{elf}', '{image}'} & set(row['inputs']), name)
+        self.assertIn('{m13-captures}/obs3-000.json', self.nodes['m23-authentic-boundary']['inputs'])
+        self.assertIn('docs/m21/title-to-area1.json', self.nodes['m21-cold-new-game']['inputs'])
+
+    def test_discovery_exports_hg_elf_only_when_authenticated(self):
+        options = runner.configured_paths(runner.ROOT, None)
+        inputs = runner.Inputs(options, runner.Stop())
+        self.assertNotIn('HG_ELF', inputs.child_environment(self.directory, False, False))
+        self.assertIn('HG_ELF', inputs.child_environment(self.directory, False, True))
+        self.assertNotIn('HG_JAPAN_ISO', inputs.child_environment(self.directory, False, True))
+
+    def classify(self, name, row):
+        (self.directory / 'result.json').write_text(json.dumps(row))
+        return results.classify(self.nodes[name], self.directory, 0)
+
+    def evidence(self, path):
+        return json.loads((runner.ROOT / path).read_text())
+
+    def test_world_audio_contract_rejects_missing_detection_and_stale_state(self):
+        report = self.evidence('evidence/m23-m24/world-audio-lifecycle.json')
+        row = dict(schema='hg-world-audio-verification/v1', exit_code=0, stderr='', sanitized=True, failure=None,
+                   matches_evidence=True, report=report)
+        verdict, details = self.classify('world-audio-lifecycle', row)
+        self.assertEqual((verdict, details['controls'], details['cycles']), (results.PASSED, 10, 2))
+        tampered = json.loads(json.dumps(report))
+        tampered['controls'][4]['failures'] = ['cycle-parity']
+        self.assertEqual(self.classify('world-audio-lifecycle', row | dict(report=tampered))[0], results.ERROR)
+        tampered = json.loads(json.dumps(report))
+        tampered['connected']['cycles'][1]['end_state']['owned_voices'] = 1
+        self.assertEqual(self.classify('world-audio-lifecycle', row | dict(report=tampered))[0], results.ERROR)
+        self.assertEqual(self.classify('world-audio-lifecycle', row | dict(sanitized=False))[0], results.ERROR)
+
+    def test_retail_receipt_contracts_compare_tracked_evidence(self):
+        refmap = self.evidence('evidence/m24/reference-map.json')
+        self.assertEqual(self.classify('m24-reference-map', refmap)[0], results.PASSED)
+        self.assertEqual(self.classify('m24-reference-map', refmap | dict(functions={}))[0], results.ERROR)
+        m20 = self.evidence('evidence/m20/differential.json')
+        measured = {name: tick + ': byte at 0x0: EE 00, C 01 differ' for name, tick in m20['negative_controls'].items()}
+        self.assertEqual(self.classify('m20-hgscript-differential', m20 | dict(negative_controls=measured))[0],
+                         results.PASSED)
+        # The recorded evidence alone (no measured divergence) cannot prove the controls.
+        self.assertEqual(self.classify('m20-hgscript-differential', m20)[0], results.ERROR)
+        ferry = self.evidence('evidence/m21/ferry-resume.json')
+        self.assertEqual(self.classify('m21-ferry-resume', ferry)[0], results.PASSED)
+        broken = json.loads(json.dumps(ferry))
+        broken['domains']['handles']['match'] = False
+        self.assertEqual(self.classify('m21-ferry-resume', broken)[0], results.ERROR)
+        self.assertEqual(self.classify('m21-area1-entry', self.evidence('evidence/m21/area1-entry.json'))[0],
+                         results.PASSED)
+
+    def test_c_driver_contract_requires_detected_canary(self):
+        from verify_c_drivers import DRIVERS
+        clean = dict(exit_code=0, sanitizer_report=False, stderr='', stdout_bytes=0)
+        row = dict(schema='hg-c-driver-sanitizers/v1', drivers={name: clean for name in DRIVERS},
+                   canary=dict(detected=True, exit_code=1))
+        self.assertEqual(self.classify('m20-m22-c-sanitizers', row)[0], results.PASSED)
+        self.assertEqual(self.classify('m20-m22-c-sanitizers', row | dict(canary=dict(detected=False, exit_code=0)))[0],
+                         results.ERROR)
 
 
 if __name__ == '__main__':

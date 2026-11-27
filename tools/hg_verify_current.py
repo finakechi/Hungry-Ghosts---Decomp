@@ -4,6 +4,7 @@ import re
 
 from hg_evidence_safety import digest
 from hg_verify_legacy_contracts import exact
+import hg_verify_milestones as milestones
 
 ROOT = Path(__file__).resolve().parents[1]
 KINDS = {
@@ -11,7 +12,7 @@ KINDS = {
     'lifecycle-native', 'lifecycle-controls', 'lifecycle-corridor-controls', 'lifecycle-sequence',
     'front-end-differential', 'front-end-native', 'front-end-controls', 'content-corpus',
     'audio-instructions', 'audio-connected', 'overlay-bytes',
-}
+} | milestones.KINDS
 SCHEMAS = {
     'continuous': 'hg-player-continuous/v6',
     'predispatch': 'hg-m14-predispatch-window/v2',
@@ -267,6 +268,8 @@ def measurements(check, directory, log, code, output, read, elf):
              'Missing authenticated ELF/overlay counts')
         return {'words': 2740, 'tables': 4}
     row = read(output)
+    if kind in milestones.KINDS:
+        return milestones.measurements(check, directory, row, read)
     if kind in SCHEMAS:
         need(row['schema'] == SCHEMAS[kind], 'Wrong extended verification schema')
     if kind in ELF_REPORTS:
