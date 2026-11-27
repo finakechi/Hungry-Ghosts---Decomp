@@ -5,6 +5,8 @@ import re
 from hg_verify_results import read_json
 
 
+PROFILES = ('focused', 'full', 'historical', 'current', 'synthetic')
+
 TOKENS = {
     '$HG_ELF': '{elf}', '$HG_JAPAN_ISO': '{image}', '$HG_PS2DINFO': '{ps2dinfo}',
     '$HG_PCSX2': '{emulator}',
@@ -36,7 +38,9 @@ def inventory(path, historical_path, profile):
     for check, recorded in zip(mapping, historical):
         number = check['historical']
         argv = list(adapt(recorded['command'], directory))
-        if number in ('22', '23'):
+        if number == '00':
+            argv = ['python', '-B', 'tools/hg_verify_suite.py', '--output', '{artifact:result.json}']
+        elif number in ('22', '23'):
             argv = ['python', '-B', 'tools/hg_m8_controls.py', 'setup' if number == '22' else 'lists',
                     '--output', '{artifact:result.json}']
             if number == '23':
@@ -63,6 +67,18 @@ def inventory(path, historical_path, profile):
             or len(set(config['focused'])) != len(config['focused'])):
         raise ValueError('Invalid check identifiers or focused selection')
 
+    current = []
+    if profile in ('current', 'synthetic'):
+        extension = read_json(path.with_name('current-verification.json'))
+        if extension['schema'] != 'hg-current-verification/v1':
+            raise ValueError('Unsupported current inventory schema')
+        for check in extension['checks']:
+            name = check['id']
+            if name in checks or not re.fullmatch('[a-z0-9][a-z0-9-]*', name):
+                raise ValueError('Invalid or duplicate current check ID')
+            checks[name] = describe({'expected': 'passed', **check})
+            current.append(name)
+
     def ordered(names):
         result = []
         ready = set()
@@ -83,13 +99,22 @@ def inventory(path, historical_path, profile):
     focused = config['focused']
     primary = [row['id'] for row in mapping]
     all_checks = ordered([name for name in focused if name in primary] + [name for name in primary if name not in focused])
-    return all_checks if profile == 'full' else ordered(focused)
+    if profile == 'current':
+        return ordered([row['id'] for row in all_checks] + current)
+    if profile == 'synthetic':
+        candidates = ordered([row['id'] for row in all_checks] + current)
+        return [row for row in candidates if row['evidence'] in ('synthetic', 'structure')
+                or row['id'] in ('committed-publication-audit', 'worktree-publication-audit', 'worktree-diff-check')]
+    if profile in ('historical', 'full'):
+        return all_checks
+    return ordered(focused)
 
 
 def describe(check):
     argv = check['argv']
     inputs = [item for item in argv if item.startswith(('local/', 'analysis/', 'evidence/'))
               or item.startswith(('{shared:', '{dependency:', '{elf}', '{image}', '{emulator}', '{ordinary-source}'))]
+    inputs += check.get('required_inputs', [])
     if '{ps2dinfo}' in argv:
         inputs.append('{shared:verify_elf_evidence.py}')
     if check['result'] == 'local-inputs':
@@ -97,13 +122,20 @@ def describe(check):
     if check.get('input_group') in ('m12', 'm12-differential'):
         inputs = ['{captures}' if item == 'local/m12/captures' else item for item in inputs]
         argv = ['{captures}' if item == 'local/m12/captures' else item for item in argv]
+    if check.get('input_group') == 'm18-differential':
+        # These arguments are stems; the verifier opens the three files below.
+        captures = [argv[i + 1] for i, arg in enumerate(argv[:-1]) if arg == '--capture']
+        inputs = [item for item in inputs if item not in captures]
+        inputs.extend(stem + suffix for stem in captures for suffix in ('.json', '.ee.z', '.sp.z'))
     outputs = ['output.log']
     if '--output' in argv:
         outputs.append(argv[argv.index('--output') + 1].removeprefix('{artifact:').removesuffix('}'))
     if check['result'] == 'sanitizer-build':
         outputs.append('sanitizer')
+    if check.get('outputs'):
+        outputs = ['output.log', *check['outputs']]
     side_outputs = []
-    if 'cc' in check.get('tools', []) and '--output' in argv:
+    if 'cc' in check.get('tools', []) and ('--output' in argv or '--receipt' in argv):
         side_outputs += ['build/**', '*.so']
     if check.get('controls'):
         side_outputs.append('*-controls/**')

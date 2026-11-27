@@ -1,10 +1,14 @@
 # Hungry Ghosts — development and reproduction
 
-**Current local baseline:** M7 on `research/m7-engine-preparation`, based on
-verified GitHub main `280a1a296a877cc14709a6adca0505569f1a57c7` (2026-11-15).
-[The M7 report](docs/M7.md) owns the selected engine-preparation boundary,
-original-data commands and Resume here handoff. M7 is local and unpublished;
-recheck actual HEAD, tool versions and private inputs before reproducing.
+**Current verification baseline (Phase 3 integration — 2026-11-27):** Built on
+PR #21 `main` (`86a5670852d47c4ead140e5c8e40a5289f773053`), integrating the
+hardened, bounded-parallel verification runner (`tools/hg_verify.py`, profiles
+`focused` [8], `historical`/`full` [79], `current` [120], `synthetic` [37],
+`--jobs 1|2|4|8` with serial default `1`). See
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md) for
+current runner commands, safe worker guidance, private config placeholders,
+M19–M24 compatibility notes, and rollout/rollback rules. The dated M1–M7
+baseline notes below are preserved for historical reproduction.
 
 ## Current quick start — synthetic checks only
 
@@ -20,16 +24,23 @@ python3 --version
 cc --version
 java -version
 javac -version
-python3 -m unittest discover -s tests -v
+python3 -B -m unittest discover -s tests -v
 git diff --check
 ```
 
-Expected at the M7 local milestone: **136 tests** and a passing full suite when
-those prerequisites are installed. [GitHub CI](https://github.com/finakechi/Hungry-Ghosts---Decomp/actions/runs/43675180294)
-passed its two M6-head jobs (Python 3.10/3.14 with JDK 21 and C sanitizers).
-That remote result does not prove a new local run passed. If a prerequisite is
-missing, record the affected check as **blocked/unrun**, not passed; do not
-install or reconfigure system software automatically.
+Expected on the integrated verification baseline: **465 discovered tests**
+(**462 passed, 3 retail-only Audio skips** when `HG_JAPAN_ISO` is unset; all
+**465 passed, 0 skipped** with authenticated `HG_JAPAN_ISO` set). Public CI
+runs `.github/workflows/tests.yml` (Python 3.10 and 3.14, Temurin JDK 21,
+`tests/resource_sanitizer.c` under ASan+UBSan, `git diff --check`) using
+synthetic inputs only. If a prerequisite is missing, record the affected check
+as **blocked/unrun**, not passed; do not install or reconfigure system software
+automatically.
+
+*(Historical M7 note preserved: at the M7 local milestone on
+`research/m7-engine-preparation` from `280a1a296a877cc14709a6adca0505569f1a57c7`,
+the suite had 136 tests and [docs/M7.md](docs/M7.md) owned the M7 engine
+preparation boundary.)*
 
 ## Original media and runtime checks — owner-local only
 

@@ -63,6 +63,7 @@ import struct
 import sys
 import zlib
 from pathlib import Path
+from hg_verify_build import build_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import front_end_differential as F
@@ -400,7 +401,7 @@ CONTROLS = (
 
 def negative_controls(native):
     import subprocess
-    folder = ROOT / 'local/m18/controls'
+    folder = build_path(ROOT / 'local/m18/controls')
     folder.mkdir(parents=True, exist_ok=True)
     rows = []
     for name, src, old, new, start in CONTROLS:

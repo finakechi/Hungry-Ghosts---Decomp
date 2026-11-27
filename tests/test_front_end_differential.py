@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 import front_end_differential as F  # noqa: E402
+from hg_verify_build import build_path  # noqa: E402
 import verify_front_end_differential as V  # noqa: E402
 
 # (name, anchor, replacement, entry): compiled defects the differential must reject.
@@ -46,7 +47,7 @@ class FrontEndDifferential(unittest.TestCase):
 
     def test_compiled_defects_are_rejected(self):
         source = (ROOT / 'src/front_end.c').read_text()
-        out = ROOT / 'local/build/m18-test-controls'
+        out = build_path(ROOT / 'local/build/m18-test-controls')
         out.mkdir(parents=True, exist_ok=True)
         for name, old, new, entry in CONTROLS:
             with self.subTest(control=name):

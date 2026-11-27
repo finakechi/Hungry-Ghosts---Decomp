@@ -1,0 +1,750 @@
+{
+  "schema": "hg-current-verification/v1",
+  "checks": [
+    {
+      "id": "m13-frame-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/player_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m13-frame-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/player_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m13-frame-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/player_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m14-window-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/pre_dispatch/functions.json"
+      ]
+    },
+    {
+      "id": "m14-window-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/pre_dispatch/functions.json"
+      ]
+    },
+    {
+      "id": "m14-window-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/pre_dispatch/functions.json"
+      ]
+    },
+    {
+      "id": "m15-nodes-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/render_nodes/functions.json"
+      ]
+    },
+    {
+      "id": "m15-nodes-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/render_nodes/functions.json"
+      ]
+    },
+    {
+      "id": "m15-nodes-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/render_nodes/functions.json"
+      ]
+    },
+    {
+      "id": "m15-model-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/model_draw/functions.json"
+      ]
+    },
+    {
+      "id": "m15-model-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/model_draw/functions.json"
+      ]
+    },
+    {
+      "id": "m15-model-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/model_draw/functions.json"
+      ]
+    },
+    {
+      "id": "m16-late-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/late_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m16-late-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/late_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m16-late-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/late_frame/functions.json"
+      ]
+    },
+    {
+      "id": "m17-lifecycle-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/game_lifecycle/functions.json"
+      ]
+    },
+    {
+      "id": "m17-lifecycle-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/game_lifecycle/functions.json"
+      ]
+    },
+    {
+      "id": "m17-lifecycle-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/game_lifecycle/functions.json"
+      ]
+    },
+    {
+      "id": "m18-front-end-packet",
+      "result": "structure",
+      "evidence": "structure",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:validate_evidence.py}",
+        "analysis/front_end/functions.json"
+      ]
+    },
+    {
+      "id": "m18-front-end-shared-bytes",
+      "result": "ps2dinfo-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "{shared:verify_elf_evidence.py}",
+        "--require-all-bytes",
+        "{elf}",
+        "analysis/front_end/functions.json"
+      ]
+    },
+    {
+      "id": "m18-front-end-bytes-jal",
+      "result": "hg-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_elf_evidence.py",
+        "--elf",
+        "{elf}",
+        "--record",
+        "analysis/front_end/functions.json"
+      ]
+    },
+    {
+      "id": "m16-corridor",
+      "result": "continuous",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_player_continuous.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture-dir",
+        "{m13-captures}",
+        "--area-image",
+        "{image}",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "lifecycle-corridor",
+      "result": "continuous",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_player_continuous.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture-dir",
+        "{m13-captures}",
+        "--area-image",
+        "{image}",
+        "--lifecycle",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "m14-native-window",
+      "result": "predispatch",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_predispatch_window.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture-dir",
+        "{m13-captures}",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "m14-register-contracts",
+      "result": "predispatch-contracts",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_predispatch_contracts.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture-dir",
+        "{m13-captures}",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "m14-counter-guard",
+      "result": "counter-guard",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_counter_guard.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture",
+        "{m13-captures}/obs3-010.json",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "lifecycle-corridor-controls",
+      "result": "lifecycle-corridor-controls",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_lifecycle_corridor_controls.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--capture-dir",
+        "{m13-captures}",
+        "--area-image",
+        "{image}",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m13"
+    },
+    {
+      "id": "lifecycle-differential",
+      "result": "lifecycle-differential",
+      "evidence": "differential",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_lifecycle_differential.py",
+        "--elf",
+        "{elf}",
+        "--capture",
+        "local/m13/captures/obs3-000.json",
+        "--capture",
+        "local/m8/captures/native-player-init-entry-001.json",
+        "--capture",
+        "local/m8/captures/resume-square-edge-entry-001.json",
+        "--capture",
+        "local/m8/captures/resume-equipment-transition-entry-001.json",
+        "--capture",
+        "local/m9/captures/s3-release1-camera-entry.json",
+        "--capture",
+        "local/m10/captures/s1-held1-dispatch-entry.json",
+        "--capture",
+        "local/m11/captures/obs1-000.json",
+        "--capture",
+        "local/m12/captures/obs2-000.json",
+        "--cases",
+        "2400",
+        "--seed",
+        "17",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m17-differential"
+    },
+    {
+      "id": "lifecycle-negative-controls",
+      "result": "lifecycle-controls",
+      "evidence": "differential-control",
+      "argv": [
+        "python",
+        "-B",
+        "tools/lifecycle_negative_controls.py",
+        "--elf",
+        "{elf}",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "expected": "passed"
+    },
+    {
+      "id": "native-pause-entry",
+      "result": "lifecycle-native",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_lifecycle_native.py",
+        "--elf",
+        "{elf}",
+        "--entry",
+        "frame",
+        "--before",
+        "local/m8/captures/pad-read-entry.json",
+        "--after",
+        "local/m8/captures/pause-transition.json",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m17-native"
+    },
+    {
+      "id": "native-pause-retained",
+      "result": "lifecycle-native",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_lifecycle_native.py",
+        "--elf",
+        "{elf}",
+        "--entry",
+        "mode",
+        "--before",
+        "local/m8/captures/pause-transition.json",
+        "--after",
+        "local/m8/captures/pause-retained.json",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m17-native"
+    },
+    {
+      "id": "native-area-pack",
+      "result": "lifecycle-native",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_lifecycle_native.py",
+        "--elf",
+        "{elf}",
+        "--entry",
+        "pack",
+        "--before",
+        "local/m7/captures/c6-entry.json",
+        "--after",
+        "local/m7/captures/c6-entry.json",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m17-native"
+    },
+    {
+      "id": "front-end-differential",
+      "result": "front-end-differential",
+      "evidence": "differential",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_front_end_differential.py",
+        "--elf",
+        "{elf}",
+        "--overlay",
+        "local/m18/ovl/A0_B09.BIN",
+        "--cases",
+        "1500",
+        "--capture",
+        "local/m18/native/full/title-menu-input-ready",
+        "--capture",
+        "local/m18/native/full/s1-active-settled",
+        "--capture",
+        "local/m18/native/full/s2-pause-menu",
+        "--capture",
+        "local/m18/native/full/s3-title-menu-ready",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m18-differential"
+    },
+    {
+      "id": "connected-native-lifecycle",
+      "result": "front-end-native",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/run_front_end_native.py",
+        "--start",
+        "title-menu-input-ready",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m18-native",
+      "required_inputs": [
+        "{elf}",
+        "local/m18/native"
+      ]
+    },
+    {
+      "id": "connected-native-controls",
+      "result": "front-end-controls",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/run_front_end_native.py",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "input_group": "m18-native",
+      "required_inputs": [
+        "{elf}",
+        "local/m18/native"
+      ]
+    },
+    {
+      "id": "m18-overlay-bytes",
+      "result": "overlay-bytes",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_m18_evidence.py",
+        "--verify",
+        "--elf",
+        "{elf}",
+        "--overlay",
+        "local/m18/ovl/A0_B09.BIN"
+      ]
+    },
+    {
+      "id": "lifecycle-sequence-synthetic",
+      "result": "lifecycle-sequence",
+      "evidence": "synthetic",
+      "argv": [
+        "python",
+        "-B",
+        "tools/run_lifecycle_sequence.py",
+        "--frames",
+        "1500",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600
+    },
+    {
+      "id": "content-corpus",
+      "result": "content-corpus",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_content/cli.py",
+        "corpus",
+        "{image}",
+        "--expect-sha256",
+        "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "timeout": 3600
+    },
+    {
+      "id": "audio-instructions",
+      "result": "audio-instructions",
+      "evidence": "differential",
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_audio/verify_audio.py",
+        "--cases",
+        "20",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "timeout": 21600,
+      "required_inputs": [
+        "{elf}"
+      ]
+    },
+    {
+      "id": "audio-connected",
+      "result": "audio-connected",
+      "evidence": "saved-runtime",
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_audio/audio_runner.py",
+        "--iso",
+        "{image}",
+        "--member",
+        "6b51",
+        "--out",
+        "{artifact:audio.wav}",
+        "--receipt",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "outputs": [
+        "result.json",
+        "audio.wav"
+      ],
+      "timeout": 3600
+    },
+    {
+      "id": "audio-owner-endpoints",
+      "result": "discovery",
+      "evidence": "original-bytes",
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_verify_suite.py",
+        "--pattern",
+        "test_hg_audio_original.py",
+        "--output",
+        "{artifact:result.json}"
+      ],
+      "tools": [
+        "cc"
+      ],
+      "pattern": "test_hg_audio_original.py",
+      "minimum_tests": 4,
+      "required_inputs": [
+        "{image}"
+      ],
+      "timeout": 3600
+    }
+  ]
+}

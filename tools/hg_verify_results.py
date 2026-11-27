@@ -1,8 +1,11 @@
 """Interpret the M12 inventory verifiers' output contracts."""
 from collections import Counter
+from pathlib import Path
 import json
 import re
 
+from hg_verify_current import KINDS, measurements
+from hg_verify_legacy_contracts import legacy_coverage
 from verify_player_ordinary import CONTROL_SCHEMA, m8_a1_zero_difference
 from verify_resource_loader import EXPECTED
 
@@ -19,9 +22,16 @@ INTERRUPTED = 'interrupted'
 UNRUN = 'unrun'
 
 
+def unique_object(pairs):
+    result = dict(pairs)
+    if len(result) != len(pairs):
+        raise ValueError('Duplicate JSON object key')
+    return result
+
+
 def read_json(path):
     with path.open(encoding='utf-8') as stream:
-        return json.load(stream)
+        return json.load(stream, object_pairs_hook=unique_object)
 
 
 def unittest_result(log, code):
@@ -36,6 +46,36 @@ def unittest_result(log, code):
     raise ValueError('Synthetic suite had errors, skipped cases or inconsistent exit status')
 
 
+RETAIL_AUDIO_TESTS = {
+    'test_hg_audio_original.OriginalDataTests.' + name for name in (
+        'test_registration_matches_m7_evidence', 'test_payload_transferred_to_iop',
+        'test_control_wrong_bank_offset_detected')
+}
+
+
+def discovery_result(check, directory, code, authenticated_image=False):
+    row = read_json(output_path(check, directory))
+    discovered = row['discovered']
+    skip = set() if authenticated_image else RETAIL_AUDIO_TESTS
+    fields = ('passed', 'skipped', 'failures', 'errors', 'expected_failures', 'unexpected_successes')
+    outcomes = [name for field in fields for name in row[field]]
+    if (row['schema'] != 'hg-unittest-discovery/v1'
+            or row['pattern'] != check.get('pattern', 'test*.py')
+            or not positive(row['run']) or row['run'] != len(discovered)
+            or len(discovered) < check['minimum_tests'] or len(set(discovered)) != len(discovered)
+            or Counter(discovered) != Counter(outcomes) or set(row['skipped']) != skip
+            or row['errors'] or row['expected_failures'] or row['unexpected_successes']):
+        raise ValueError('Incomplete suite discovery or unexpected test outcomes')
+    if check.get('pattern') and set(discovered) != RETAIL_AUDIO_TESTS | {
+            'test_hg_audio_original.RetailInputDefaultsTests.test_differential_elf_default_is_under_repository_local'}:
+        raise ValueError('Unexpected owner-local Audio test inventory')
+    if code != int(bool(row['failures'])):
+        raise ValueError('Suite outcome disagrees with child exit status')
+    return (FAILURE if row['failures'] else PASSED), {
+        'tests': row['run'], 'passed_tests': len(row['passed']), 'failed_tests': len(row['failures']),
+        'retail_tests_unrun': sorted(skip)}
+
+
 def structure_result(log, code):
     lines = log.splitlines()
     if code == 0 and len(lines) == 1 and re.fullmatch(r'OK .+: structurally valid \(NOT binary-verified\)', lines[0]):
@@ -48,12 +88,18 @@ def structure_result(log, code):
     raise ValueError('No completed PS2DInfo structural verdict')
 
 
-def byte_result(kind, log, code):
+def byte_result(kind, log, code, check):
+    packets = [name for name in check.get('inputs', []) if name.startswith('analysis/')]
+    functions = None
+    if len(packets) == 1:
+        functions = read_json(Path(__file__).resolve().parents[1] / packets[0])['functions']
     if kind == 'ps2dinfo-bytes':
         if code == 0:
-            row = json.loads(log)
+            row = json.loads(log, object_pairs_hook=unique_object)
             if (row['schema'], row['elf_sha256'], row['instructions_unknown']) == (
                     'ps2-elf-byte-check/v1', EXPECTED, 0) and positive(row['instructions_verified']):
+                if functions is not None and row['instructions_verified'] != sum(len(fn['instructions']) for fn in functions):
+                    raise ValueError('Incomplete verified instruction count')
                 return PASSED, {'words': row['instructions_verified']}
         if code == 1 and re.fullmatch(
             r'FAIL: (byte mismatch at .+|instruction at .+ has unknown bytes|unmapped or ambiguous PT_LOAD at .+'
@@ -64,6 +110,8 @@ def byte_result(kind, log, code):
     else:
         match = re.fullmatch(r'PASS: ([1-9][0-9]*) function listings match original ELF bytes and JAL targets', log.strip())
         if code == 0 and match:
+            if functions is not None and int(match[1]) != len(functions):
+                raise ValueError('Incomplete verified function count')
             return PASSED, {'functions': int(match[1])}
         if code == 1 and re.fullmatch(
             r'ValueError: (ELF mismatch [0-9a-f]{8}|JAL target disagreement|address not in exactly one file-backed PT_LOAD)',
@@ -153,6 +201,38 @@ def reported_verdict(row, code, verdict, details, success='passed'):
     return verdict, details
 
 
+def disc_read_result(check, directory, log, code):
+    from verify_disc_read import CASES_PER_FUNCTION, CHUNKS, FUNCTIONS, LENGTHS, MAX_TICKS, SEED
+
+    output = output_path(check, directory)
+    if code and not output.exists():
+        return log_failure(log)
+    row = read_json(output)
+    if (row['schema'] != check['report_schema'] or row['elf_sha256'] != EXPECTED
+            or row['seed'] != hex(SEED) or row['function_entries'] != FUNCTIONS):
+        raise ValueError('Wrong disc-read identity or function inventory')
+    randomized = row['randomized_by_function']
+    if set(randomized) != set(FUNCTIONS) or any(
+        type(count) is not int or count != CASES_PER_FUNCTION for count in randomized.values()
+    ):
+        raise ValueError('Incomplete disc-read randomized measurements')
+    sequences = row['lifecycle']
+    expected = [(chunk, length) for chunk in CHUNKS for length in LENGTHS]
+    if ([(item['chunk'], item['length']) for item in sequences] != expected
+            or any(type(item[key]) is not int for item in sequences for key in ('chunk', 'length', 'steps'))
+            or any(not 1 <= item['steps'] <= MAX_TICKS for item in sequences)):
+        raise ValueError('Invalid disc-read lifecycle coverage')
+    steps = sum(item['steps'] for item in sequences)
+    cases = sum(randomized.values())
+    for key, exact in {'cases': cases + steps, 'randomized_cases': cases,
+                       'randomized_cases_per_function': CASES_PER_FUNCTION,
+                       'lifecycle_sequences': len(expected), 'lifecycle_steps': steps}.items():
+        if type(row[key]) is not int or row[key] != exact:
+            raise ValueError(f'Inconsistent disc-read count {key}')
+    return reported_verdict(row, code, PASSED, {'randomized_by_function': randomized,
+                                                'lifecycle_sequences': len(expected), 'lifecycle_steps': steps})
+
+
 def runtime_result(check, directory, code):
     from verify_player_grounded_runtime import NATIVE, operation_checks, observation
 
@@ -176,9 +256,16 @@ def runtime_result(check, directory, code):
     expected_registers = {(f['counter'], name) for f in frames for name in
                           ('floor-query-v0', 'floor-return-v0', 'constraint-entry-f12')}
     actual_registers = [(r['frame'], r['register']) for r in row['registers']]
+    for register in row['registers']:
+        if register['result'] == 'passed':
+            if not re.fullmatch('[0-9a-f]{8}', register['native']) or register['native'] != register['calculated']:
+                raise ValueError('Unproved grounded register comparison')
     if (len(actual_stages) != len(expected_stages) or set(actual_stages) != expected_stages
             or actual_handoffs != [f['counter'] for f in frames[1:]]
             or len(actual_registers) != len(expected_registers) or set(actual_registers) != expected_registers
+            or [r['frame'] for r in row['status_invariance']] != [
+                r['frame'] for r in read_json(Path(__file__).resolve().parents[1] /
+                                              'evidence/m12/grounded-runtime-comparison.json')['status_invariance']]
             or operation_checks(obs, row['operation_values']) != row['operation_checks']):
         raise ValueError('Runtime result does not cover the observation or its operation checks')
     outcomes = [r['result'] for key in ('stages', 'handoffs', 'registers', 'status_invariance') for r in row[key]]
@@ -285,7 +372,10 @@ def measured_control(control):
     if control.get('error') or control.get('execution_error'):
         return False
     if control.get('reason'):
-        return True  # Typed mismatch or the specific assertion named by the standalone verifier.
+        reason = control['reason']
+        return (isinstance(reason, str) and bool(reason.strip()) and
+                not re.search(r'Traceback|compiler error|fatal error|segmentation fault|timed out',
+                              reason, re.I))
     if 'comparison' in control:
         comparison = control['comparison']
         return (not comparison.get('external_dma', {}).get('modeled_accesses') and
@@ -303,6 +393,7 @@ def legacy_report(check, directory, log, code):
     row = read_json(output)
     if row.get('schema') != check.get('report_schema') or check.get('report_elf') and row.get('elf_sha256') != EXPECTED:
         raise ValueError('Wrong verifier report schema or ELF identity')
+    legacy_coverage(check, row, read_json, EXPECTED)
     details = {}
     failure = ERROR if row['result'] not in ('passed', 'failed') else None
     for key, required in check.get('controls', {}).items():
@@ -316,12 +407,24 @@ def legacy_report(check, directory, log, code):
                 failure = FAILURE
             elif control['result'] != required[control['control']] or not measured_control(control):
                 raise ValueError(f'Unproved negative-control rejection for {control["control"]}')
+            elif check.get('historical') in ('20', '22', '23'):
+                name = control['control']
+                folder = output.parent / (output.stem + '-controls')
+                source = folder / (name + '.c')
+                compiled = folder / (name + '.so')
+                from hg_evidence_safety import digest
+                if control['compiled'] is not True or digest(source) != control['source_sha256'] or not positive(compiled.stat().st_size):
+                    raise ValueError(f'Missing compiled control artifacts for {name}')
         details['controls'] = {r['control']: r['result'] for r in controls}
 
     for key in ('stages', 'handoffs', 'cases', 'status_invariance', 'input_counterfactuals', 'original_camera_model'):
         data = row.get(key)
-        if not isinstance(data, list) or not data or not all(isinstance(r, dict) and 'result' in r for r in data):
+        if not isinstance(data, list):
             continue
+        if not data or any(r['result'] not in ('passed', 'failed', 'error', 'unsupported') for r in data):
+            raise ValueError(f'Invalid or empty measurement list {key}')
+        if key != 'cases' and any(r['result'] == 'unsupported' for r in data):
+            raise ValueError(f'Unexpected refusal in {key}')
         if any(r.get('execution_error') or r['result'] == 'error' for r in data):
             return ERROR, {'basis': f'{key} contain an execution error'}
         outcomes = Counter(r['result'] for r in data)
@@ -338,8 +441,11 @@ def legacy_report(check, directory, log, code):
         if row['counts'].get('error'):
             return ERROR, {'basis': 'Differential cases contain an execution error', **details}
     operation_checks = row.get('operation_checks')
-    if operation_checks and not all(operation_checks.values()):
-        failure = FAILURE
+    if operation_checks is not None:
+        if not operation_checks or any(type(value) is not bool for value in operation_checks.values()):
+            raise ValueError('Invalid runtime operation checks')
+        if not all(operation_checks.values()):
+            failure = FAILURE
     if 'failed_closed' in row and type(row['failed_closed']) is int:
         details['expected_refusals'] = row['failed_closed']
     if failure:
@@ -350,7 +456,7 @@ def legacy_report(check, directory, log, code):
     return reported_verdict(row, code, verdict, details)
 
 
-def classify(check, directory, code):
+def classify(check, directory, code, *, authenticated_image=False):
     if code not in (0, 1):
         return ERROR, {'basis': f'Unexpected child exit status {code}'}
     try:
@@ -365,12 +471,22 @@ def classify(check, directory, code):
         if kind == 'grounded-differential':
             return grounded_differential(check, directory, code)
         log = (directory / 'output.log').read_text(encoding='utf-8', errors='replace')
+        if kind in KINDS:
+            if code and (kind == 'overlay-bytes' or not output_path(check, directory).is_file()):
+                return log_failure(log)
+            return PASSED, measurements(check, directory, log, code,
+                                        output_path(check, directory) if kind != 'overlay-bytes' else None,
+                                        read_json, EXPECTED)
+        if kind == 'discovery':
+            return discovery_result(check, directory, code, authenticated_image)
+        if kind == 'disc-read':
+            return disc_read_result(check, directory, log, code)
         if kind == 'unittest':
             return unittest_result(log, code)
         if kind == 'structure':
             return structure_result(log, code)
         if kind.endswith('bytes'):
-            return byte_result(kind, log, code)
+            return byte_result(kind, log, code, check)
         if kind in ('report', 'legacy-controls'):
             return legacy_report(check, directory, log, code)
         if kind == 'audit':
@@ -381,9 +497,9 @@ def classify(check, directory, code):
                 if code == 1 and row['result'] == 'review-required' and row['findings']:
                     return FAILURE, {'basis': 'Publication audit requires review', 'findings': len(row['findings'])}
         if kind == 'local-inputs':
-            row = json.loads(log)
+            row = json.loads(log, object_pairs_hook=unique_object)
             statuses = {r['name']: r['status'] for r in row['inputs']}
-            if row['schema'] == 'ps2-local-input-check/v1' and statuses.keys() == {'HG_ELF', 'HG_JAPAN_ISO'}:
+            if row['schema'] == 'ps2-local-input-check/v1' and len(row['inputs']) == 2 and statuses.keys() == {'HG_ELF', 'HG_JAPAN_ISO'}:
                 if code == 0 and set(statuses.values()) == {'verified'}:
                     return PASSED, {'inputs': statuses}
                 if code:

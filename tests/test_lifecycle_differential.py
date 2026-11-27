@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+from hg_verify_build import build_path  # noqa: E402
 from lifecycle_differential import build, packet_image  # noqa: E402
 import verify_lifecycle_differential as V  # noqa: E402
 
@@ -30,7 +31,7 @@ class LifecycleDifferential(unittest.TestCase):
     def test_compiled_defects_are_rejected(self):
         import lifecycle_negative_controls as N
         source = N.SOURCE.read_text()
-        out = Path(__file__).resolve().parents[1] / 'local/build/m17-test-controls'
+        out = build_path(Path(__file__).resolve().parents[1] / 'local/build/m17-test-controls')
         out.mkdir(parents=True, exist_ok=True)
         for name, old, new, target, defect in N.CONTROLS[:6]:
             with self.subTest(control=name):

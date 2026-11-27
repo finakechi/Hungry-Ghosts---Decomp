@@ -35,7 +35,9 @@ import ctypes as C
 import hashlib
 import json
 import sys
+import tempfile
 from pathlib import Path
+from hg_verify_build import build_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lifecycle_differential import (CALL, Env, LOAD, STORE, HG_CALL_FP_REGS, HG_CALL_T_REGS,
@@ -81,8 +83,9 @@ CONTROLS = {'frame': (
 def negative_controls(entry, argv_base):
     import subprocess
     source = (ROOT / 'src/game_lifecycle.c').read_text()
-    folder = ROOT / 'local/m17/controls'
+    folder = build_path(ROOT / 'local/m17/controls')
     folder.mkdir(parents=True, exist_ok=True)
+    folder = Path(tempfile.mkdtemp(prefix='native-', dir=folder))
     rows = []
     for name, old, new in CONTROLS[entry]:
         if source.count(old) != 1:
@@ -91,10 +94,19 @@ def negative_controls(entry, argv_base):
             text = source.replace(old, new)
         path = folder / f'native-{name}.c'
         path.write_text(text)
+        output = folder / f'native-{name}.json'
         r = subprocess.run([sys.executable, '-B', __file__, *argv_base, '--source', str(path),
-                            '--build', str(folder / f'native-{name}.so')], capture_output=True, text=True)
+                            '--build', str(folder / f'native-{name}.so'), '--output', str(output)],
+                           capture_output=True, text=True)
+        measurement = None
+        if r.returncode == 1 and output.is_file():
+            report = json.loads(output.read_text())
+            if report['mismatches'] and not report['uncaptured_reads']:
+                measurement = {'memory': report['mismatches'][0]}
+            if entry == 'pack' and report['pack']['c'] != report['pack']['native']:
+                measurement = {'pack': report['pack']}
         rows.append(dict(control=name, source_sha256=hashlib.sha256(text.encode()).hexdigest(),
-                         rejected=r.returncode == 1, returncode=r.returncode))
+                         rejected=measurement is not None, returncode=r.returncode, measurement=measurement))
     return rows
 
 

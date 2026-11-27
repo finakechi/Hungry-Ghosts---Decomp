@@ -76,7 +76,8 @@ def main():
         parser.error(f'original image not found: {args.iso}')
     spec = KNOWN[args.member]
 
-    receipt = {'member': args.member, 'stages': []}
+    receipt = {'schema': 'hg-audio-connected/v1', 'iso_sha256': ISO_SHA256,
+               'member': args.member, 'stages': []}
     with open(args.iso, 'rb') as fp:
         authenticate(fp)
         iso = ISO(fp)

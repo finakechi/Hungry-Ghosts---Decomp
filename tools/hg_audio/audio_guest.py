@@ -19,6 +19,7 @@ import struct
 import subprocess
 import tempfile
 from pathlib import Path
+from hg_verify_build import build_path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -313,7 +314,7 @@ class AudioHarness:
             raise exc
 
     def _compile(self):
-        cache = ROOT / 'local' / 'audio' / 'libhg_audio.so'
+        cache = build_path(ROOT / 'local' / 'audio' / 'libhg_audio.so')
         cache.parent.mkdir(parents=True, exist_ok=True)
         src = ROOT / 'src' / 'audio' / 'audio_engine.c'
         subprocess.run(['cc', '-std=c11', '-Wall', '-Wextra', '-Werror',

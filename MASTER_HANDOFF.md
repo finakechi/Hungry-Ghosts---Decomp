@@ -1,5 +1,109 @@
 # Hungry Ghosts — master handoff
 
+## Verification infrastructure, Phase 3 (reviewed integration) — 2026-11-27
+
+**Resume here.** Synchronized with [START_HERE.md](START_HERE.md),
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md),
+[docs/verification/phase2-results.json](docs/verification/phase2-results.json),
+and [docs/verification/phase3-compatibility.json](docs/verification/phase3-compatibility.json).
+
+- **Verified Git & evidence provenance:**
+  - Base (`origin/main` at preflight, PR #21 merge): `86a5670852d47c4ead140e5c8e40a5289f773053`
+  - Phase 1 tested / handoff: `750446db1a95c6957c7ee5cc64ebddf2abd70984` / `1bd0930c2753e03e0da0895908466732b29050c5`
+  - Phase 2 verified code: `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0` (`source_sha256` `c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8`)
+  - Phase 2 docs tip: `593a44afecb279d6f877ec45d5d9ecf38a5e84dc` (preserved untouched on `verification/phase-2-mainpc`)
+  - Phase 3 integration branch: `integration/verification-infrastructure-phase3` (adds docs and sanitized compatibility evidence only; `source_sha256` unchanged `c66bc38ffb97...`; prior private receipts unresealed).
+- **Private receipt IDs (retained locally in ignored `local/verification/`, all seals and artifact hashes independently re-verified `0` bad):**
+  - Base serial (`86a56708`, `full`, 1w): `m12-20261127T190644Z-2j7t7my9` (79/79, 3,143.14 s)
+  - Candidate serial (`734e328`, `historical`, 1w): `m12-20261127T195941Z-ixt34s27` (79/79, 1,950.38 s, 1.61×)
+  - Candidate parallel-4 (`734e328`, `historical`, 4w): `m12-20261127T203250Z-mx0eah77` (79/79, 818.49 s, 3.84×)
+  - Candidate parallel-8 (`734e328`, `historical`, 8w): `m12-20261127T211502Z-cm9phbqt` (79/79, 645.33 s, 4.87×)
+  - Candidate expanded `current` (`734e328`, `current`, 4w): `m12-20261127T204736Z-49j6appf` (120/120, 1,424.22 s)
+- **Private input pins (owner-local read-only; never committed):** `SCPS_150.46` (`a74248c5...`), Japan ISO (`8ca1513c...`), `DATA/PACK.DAT` (`f2e04a08...`), M18 overlay `A0_B09.BIN` (`ef257df9...`), M18 `frames.jsonl` (`4e52bc00...`), PCSX2 v2.8.2 (`0c46bb6a...`), PS2DInfo `2e4a226e00d33ab35391aacade71b55826e5f52f` (4/4 tool pins, 74/74 tests).
+- **M19–M24 compatibility:** All eight local branches (`e512f2f2` through `1830f5ec`) merge with 0 code conflicts (handoff docs only). Disposable isolated trials across all four dependency families passed `compileall`, targeted tests, and 79/120 plans. Future adoption notes: wrap `local/build/m19-resource.so` in `build_path()` (M19+), archive/clean 11 untracked probe files in `decomp-m20` before migration, and explicitly declare/isolate the `HG_ELF` retail skip in `tests/test_m24_reference_map.py:36` (M24) so Gate 00 remains fail-closed.
+- **Boundaries & limits:** Historical M1–M18/Content/Audio oracle boundaries remain unchanged (M18 native-driven execution, authentic Continue unverified, 48 unresolved HGScript bindings, host IOP/SPU2 audio model, bounded R5900 model, host C build ≠ PS2 byte matching). M19–M24 remain separate unpublished local branches.
+- **Safe commands:**
+  - `python3 -B tools/hg_verify.py plan --profile {focused,historical,current} --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py run --profile historical --jobs {1,4,8} --config "$CONFIG"` (`--jobs 8` quiet window only)
+  - `python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"`
+  - `python3 -B tools/hg_verify.py resume --run "$RUN_ID" --jobs 4` / `summarize --run "$RUN_ID"`
+  - `python3 -B -m unittest discover -s tests -v` (public CI synthetic mode)
+- **Single next action:** After PR merge into `main` and post-merge CI confirmation, proceed with independent review/integration of M19–M24 on their own branches, adopting `main` in isolated worktrees at clean checkpoints.
+
+## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
+
+**Resume here (isolated Phase 2 review; Phase 3 deferred).** Synchronized with
+[START_HERE.md](START_HERE.md),
+[docs/verification-infrastructure.md](docs/verification-infrastructure.md), and
+[docs/verification/phase2-results.json](docs/verification/phase2-results.json).
+
+- **Verified Git / source identities:**
+  - Base: `86a5670852d47c4ead140e5c8e40a5289f773053` (PR #21 merge; tested unchanged
+    in isolated `decomp-phase2-base`).
+  - Phase 1 handoff: tested `750446db1a95c6957c7ee5cc64ebddf2abd70984`, tip
+    `1bd0930c2753e03e0da0895908466732b29050c5`, tree
+    `6aa22a459d0b1f07043fba2ccb6efc33c9e89852`, patch SHA-256
+    `7ffc4d87daaf34548482f05196650dc8173c28d9083dd5ed24c6a3798c9b8f57`.
+  - Phase 2 verified code commit: `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0`
+    (`source_sha256` `c66bc38ffb97...`) on isolated branch
+    `verification/phase-2-mainpc` (`decomp-phase2-candidate`). Documentation and
+    sanitized results are recorded in a separate docs-only follow-up commit; prior
+    receipts are never resealed.
+- **Authenticated owner-local inputs (read-only):** `SCPS_150.46`
+  (`a74248c5...`, PT_LOAD verified via PS2DInfo), `Hungry Ghosts (Japan).iso`
+  (`8ca1513c...`), `SYSTEM.CNF` (`b9bae7d4...`), `DATA/PACK.DAT` (`f2e04a08...`),
+  all 8 `IRX/` IOP files, M18 `A0_B09.BIN` (`ef257df9...`) and `frames.jsonl`
+  (`4e52bc00...`), M13 22-frame captures/stops, pinned PCSX2 v2.8.2
+  (`0c46bb6a...`), pinned PS2DInfo `2e4a226e00d33ab35391aacade71b55826e5f52f`
+  (4/4 tool pins, 74/74 synthetic tests).
+- **Last passing results (zero reuse, zero retries, quiet window):**
+  - Unmodified serial baseline (`86a56708`, `full`, 1w,
+    `m12-20261127T190644Z-2j7t7my9`): 79/79 accepted in **3,143.14 s** (52m 23s).
+  - Corrected serial (`734e328`, `historical`, 1w,
+    `m12-20261127T195941Z-ixt34s27`): 79/79 accepted in **1,950.38 s** (32m 30s,
+    1.61× / −38.0%).
+  - Optimized parallel-4 (`734e328`, `historical`, 4w,
+    `m12-20261127T203250Z-mx0eah77`): 79/79 accepted in **818.49 s** (13m 38s,
+    3.84× / −74.0% vs. base; 2.38× vs. corrected serial).
+  - Optimized parallel-8 (`734e328`, `historical`, 8w,
+    `m12-20261127T211502Z-cm9phbqt`): 79/79 accepted in **645.33 s** (10m 45s,
+    4.87× / −79.5% vs. base; 3.02× vs. corrected serial).
+  - Expanded current (`734e328`, `current`, 4w,
+    `m12-20261127T204736Z-49j6appf`): **120/120 accepted** (115 passed, 5
+    expected-rejection) in **1,424.22 s** (23m 44s).
+  - Deep semantic equivalence: 0 differences across 79/79 gates and 83/83 JSON
+    report/control artifacts across 1w, 4w, 8w, and `current`'s 79 historical
+    gates; 0 measurement differences vs. base across all 77 unchanged-schema gates.
+- **Confirmed defects fixed & regressions:** Fixed Gate 19, Gate 56, and corridor
+  `pre-dispatch-window` false rejections, routed mutant test directories through
+  `build_path()`, locked `Inputs.tool()` and canonicalized `Inputs.file()`. Strict
+  C11 (GCC 16.2.1 & Clang 23.1.5), all 3 ASan+UBSan C harnesses, `HG_SANITIZE=1`
+  differential tests (10/10), M16/M18 cross-checks, Gate 01 before/after controls,
+  competing-writer lock, and SIGTERM interrupt/`resume` reuse all passed.
+- **Blockers / limits:** None for Phase 2. Phase 3 (push/PR/merge) is deferred by
+  owner instruction. Independent hardware/emulator oracle limits from M1–M18,
+  Content, and Audio remain unchanged.
+- **Reproducible commands:**
+  - Focused: `python3 -B tools/hg_verify.py run --profile focused --jobs 4 --config "$CONFIG"`
+  - Historical serial: `python3 -B tools/hg_verify.py run --profile historical --jobs 1 --config "$CONFIG"`
+  - Historical parallel: `python3 -B tools/hg_verify.py run --profile historical --jobs 4 --config "$CONFIG"` (or `--jobs 8`)
+  - Comprehensive current: `python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"`
+  - Public CI synthetic: `python3 -B -m unittest discover -s tests -v`
+- **Single next action:** Owner review of isolated branch
+  `verification/phase-2-mainpc` and authorization before any Phase 3
+  integration, rebase/merge, or publication.
+
+## Verification infrastructure, Phase 1 — 2026-11-27
+
+The local Phase 1 handoff contains the Gate 01 report-contract correction,
+bounded gate concurrency, and a 120-gate current-project profile preserving
+all 79 historical checks. On the cloud checkpoint, 37 applicable gates were
+accepted and 83 original-input gates were blocked. This is a bounded partial
+milestone. MainPC original-data checks, exact contract review and benchmarks
+remain outstanding. See [the handoff](docs/verification-infrastructure.md)
+for source identity, cloud results and the owner reproduction checklist.
+
 ## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
 
 **Resume here.** Start with [START_HERE.md](START_HERE.md) for the short form. The four milestones are integrated on branch

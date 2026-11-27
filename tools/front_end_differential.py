@@ -21,6 +21,7 @@ import os
 import struct
 import subprocess
 from pathlib import Path
+from hg_verify_build import build_path
 
 import lifecycle_differential as L
 from ee_subset import Machine
@@ -126,6 +127,7 @@ def build(output=None, sanitize=False, front_end=None, lifecycle=None):
     sanitize = sanitize or os.environ.get('HG_SANITIZE') == '1'
     output = Path(output or ROOT / ('local/build/m18-front-end-ubsan.so' if sanitize
                                     else 'local/build/m18-front-end.so'))
+    output = build_path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     args = ['cc', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fPIC', '-shared',
             '-I' + str(ROOT / 'src'), str(front_end or ROOT / 'src/front_end.c'),

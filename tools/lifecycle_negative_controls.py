@@ -15,6 +15,7 @@ import json
 import random
 import sys
 from pathlib import Path
+from hg_verify_build import build_path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lifecycle_differential import build, elf_image
@@ -74,7 +75,7 @@ def main():
     ram[0x100000:0x100000 + len(code)] = code
     bases = {'elf-image': (bytes(ram), bytes(0x4000))}
     source = SOURCE.read_text()
-    out_dir = ROOT / 'local/m17/controls'
+    out_dir = build_path(ROOT / 'local/m17/controls')
     out_dir.mkdir(parents=True, exist_ok=True)
     results = []
     for name, old, new, target, defect in CONTROLS:

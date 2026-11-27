@@ -1,0 +1,1226 @@
+{
+  "schema": "hg-verification-infrastructure-phase1/v1",
+  "status": "bounded-partial",
+  "base": "86a5670852d47c4ead140e5c8e40a5289f773053",
+  "validation_source": {
+    "revision": "750446db1a95c6957c7ee5cc64ebddf2abd70984",
+    "source_sha256": "a043950ddabc0f5daa86b1e6eb6eb321954e00d48343e7bae813859106a6307b",
+    "working_files": ""
+  },
+  "cloud": {
+    "platform": "Linux x86_64",
+    "python": "3.12.14",
+    "cc": "Debian GCC 14.2.0-19",
+    "jdk": "Eclipse Temurin 21.0.13+9 (java and javac)",
+    "jdk_archive_sha256": "d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c",
+    "logical_cpus_available": 5,
+    "cgroup_cpu_quota": 4,
+    "cgroup_memory_limit_bytes": 34359738368,
+    "free_disk_gib_preflight_approx": 60
+  },
+  "gate_01_classifier": {
+    "method": "Run the classifier only, in isolated temp directories, with synthetic identity-tagged reports.",
+    "before": {
+      "missing_measurements": "passed",
+      "empty_cases": "passed",
+      "explicit_failed_case_exit_zero": "harness-error",
+      "pass_report_exit_one": "harness-error"
+    },
+    "after": {
+      "missing_measurements": "harness-error",
+      "empty_cases": "harness-error",
+      "explicit_failed_case_exit_zero": "harness-error",
+      "pass_report_exit_one": "harness-error",
+      "invented_complete_report": "passed",
+      "missing_or_truncated_report": "harness-error",
+      "wrong_schema_elf_seed_count_or_ids": "harness-error"
+    },
+    "original_verifier_execution": "unrun"
+  },
+  "baseline": [
+    {
+      "command": "python3 -B -m unittest discover -s tests -v",
+      "prerequisite": "initial environment",
+      "exit_code": 1,
+      "discovered": 452,
+      "passed": 448,
+      "errors": 1,
+      "skipped_retail": 3,
+      "basis": "javac was missing",
+      "seconds": 129.203
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests -v",
+      "prerequisite": "verified JDK 21 on PATH",
+      "exit_code": 0,
+      "discovered": 452,
+      "passed": 449,
+      "errors": 0,
+      "skipped_retail": 3,
+      "seconds": 131.568
+    },
+    {
+      "command": "python3 -B -m unittest discover -s tests -v (pinned PS2DInfo checkout)",
+      "exit_code": 0,
+      "discovered": 74,
+      "passed": 74,
+      "seconds": 0.391,
+      "shared_revision": "af62918c7b2d1b0a4c435fc2176de14111c69e68",
+      "verified_tool_digests": 4
+    }
+  ],
+  "validation": {
+    "runner_sessions": [
+      {
+        "run": "m12-20261127T165807Z-2ejg2boh",
+        "profile": "current",
+        "state": "complete",
+        "jobs": 1,
+        "counts": {
+          "passed": 35,
+          "missing-input": 83,
+          "expected-rejection": 2
+        },
+        "accepted": 37,
+        "reused": 0,
+        "executed": 37,
+        "session_seconds": 180.298,
+        "child_seconds": 177.415,
+        "exit_code": 1,
+        "command": "python3 -B tools/hg_verify.py run --profile current --jobs 1"
+      },
+      {
+        "run": "m12-20261127T170116Z-yvshmk5v",
+        "profile": "synthetic",
+        "state": "complete",
+        "jobs": 4,
+        "counts": {
+          "passed": 35,
+          "expected-rejection": 2
+        },
+        "accepted": 37,
+        "reused": 0,
+        "executed": 37,
+        "session_seconds": 173.98,
+        "child_seconds": 176.469,
+        "exit_code": 0,
+        "command": "python3 -B tools/hg_verify.py run --profile synthetic --jobs 4"
+      }
+    ],
+    "gate_00": {
+      "tests": 462,
+      "passed_tests": 459,
+      "failed_tests": 0,
+      "retail_tests_unrun": [
+        "test_hg_audio_original.OriginalDataTests.test_control_wrong_bank_offset_detected",
+        "test_hg_audio_original.OriginalDataTests.test_payload_transferred_to_iop",
+        "test_hg_audio_original.OriginalDataTests.test_registration_matches_m7_evidence"
+      ],
+      "child_seconds": 138.369
+    },
+    "targeted": {
+      "command": "python3 -B -m unittest discover -s tests -p test_hg_verify.py -q",
+      "exit_code": 0,
+      "passed": 23
+    },
+    "competing_writer": {
+      "command": "python3 -B tools/hg_verify.py run --profile focused --jobs 2 while current owned the worktree lock",
+      "exit_code": 2,
+      "basis": "Run verification already has a writer"
+    },
+    "interrupt_resume": {
+      "run": "m12-20261127T170109Z-711cwrvz",
+      "interrupt_status": 143,
+      "resumes": [
+        {
+          "status": 1,
+          "accepted": 4,
+          "reused": 0,
+          "executed": 4
+        },
+        {
+          "status": 1,
+          "accepted": 4,
+          "reused": 4,
+          "executed": 0
+        }
+      ],
+      "commands": [
+        "python3 -B tools/hg_verify.py run --profile focused --jobs 2",
+        "SIGTERM to the coordinator while grounded-synthetic was active",
+        "python3 -B tools/hg_verify.py resume --run RUN --jobs 4 (twice)"
+      ]
+    },
+    "ubsan": {
+      "command": "HG_SANITIZE=1 python3 -B -m unittest tests.test_lifecycle_sequence tests.test_lifecycle_differential tests.test_front_end_differential",
+      "exit_code": 0,
+      "passed": 10,
+      "seconds": 41.321,
+      "source": "pre-commit checkpoint"
+    },
+    "sanitizers": {
+      "common_flags": "-std=c11 -Wall -Wextra -Werror -pedantic -O1 -g -fsanitize=address,undefined -fno-sanitize-recover=all -Isrc",
+      "common_sources": [
+        "src/resource_loader.c",
+        "src/disc_read.c"
+      ],
+      "run_env": {
+        "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+        "UBSAN_OPTIONS": "halt_on_error=1"
+      },
+      "tests": [
+        {
+          "entry": "tests/resource_sanitizer.c",
+          "extra_sources": [],
+          "exit_code": 0,
+          "checks": "M1\u2013M7 workers, connected M8 player, M9/M10 turn/walk camera, M11 constraint, M12 grounded composition"
+        },
+        {
+          "entry": "tests/lifecycle_sanitizer.c",
+          "extra_sources": [
+            "src/game_lifecycle.c"
+          ],
+          "exit_code": 0,
+          "iterations": 20000,
+          "calls": 129426,
+          "interrupts": 6667
+        },
+        {
+          "entry": "tests/front_end_sanitizer.c",
+          "extra_sources": [
+            "src/front_end.c",
+            "src/game_lifecycle.c"
+          ],
+          "exit_code": 0,
+          "iterations": 20000,
+          "calls": 136371,
+          "interrupts": 2500
+        }
+      ]
+    },
+    "strict_host_builds": [
+      {
+        "command": "cc -std=c11 -O2 -Wall -Wextra -Werror -pedantic -fPIC -shared -Isrc src/front_end.c src/game_lifecycle.c src/resource_loader.c src/disc_read.c -o OUT/strict-front-end.so",
+        "exit_code": 0
+      },
+      {
+        "command": "cc -std=c11 -O2 -Wall -Wextra -Werror -pedantic -fPIC -shared src/audio/audio_engine.c -o OUT/strict-audio.so",
+        "exit_code": 0
+      }
+    ]
+  },
+  "synthetic_benchmark": {
+    "command": "python3 -B docs/verification/benchmark.py",
+    "exit_code": 0,
+    "gates_per_repeat": 16,
+    "cases_per_gate": 25000,
+    "repeats_per_worker_count": 3,
+    "seed_start": 86086,
+    "timings": {
+      "1": [
+        6.9,
+        6.862,
+        7.127
+      ],
+      "2": [
+        3.486,
+        3.72,
+        3.845
+      ],
+      "4": [
+        1.972,
+        2.007,
+        2.087
+      ],
+      "8": [
+        2.096,
+        2.133,
+        2.37
+      ]
+    },
+    "medians": {
+      "1": 6.9,
+      "2": 3.72,
+      "4": 2.007,
+      "8": 2.133
+    },
+    "semantic_receipt_sha256": "ceb4dcdd92c8b75d22fb291f558f44d07b5d8c77cb1e31954ec7fa47afafbc6e",
+    "per_child_peak_rss_kib": 28492
+  },
+  "production_cloud_receipt_comparison": {
+    "serial": 37,
+    "parallel": 37,
+    "matched": 37,
+    "differences": {},
+    "serial_only": [],
+    "parallel_only": []
+  },
+  "inventory": [
+    {
+      "id": "grounded-synthetic",
+      "historical": "71",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "grounded-packet",
+      "historical": "72",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "grounded-shared-bytes",
+      "historical": "73",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "grounded-bytes-jal",
+      "historical": "74",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "ordinary-a1-zero-control",
+      "historical": "78",
+      "evidence": "differential-control",
+      "expected": "expected-rejection",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "grounded-saved-runtime",
+      "historical": "75",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "synthetic-suite",
+      "historical": "00",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "disc-read-instructions",
+      "historical": "01",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "resource-loader-instructions",
+      "historical": "02",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "resource-rebase-instructions",
+      "historical": "03",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "resource-fixup-and-pack-instructions",
+      "historical": "04",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "area-lifecycle-instructions",
+      "historical": "05",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "python-compile",
+      "historical": "06",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "engine-preparation-instructions",
+      "historical": "07",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "actor-lists-instructions",
+      "historical": "08",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "fixup-saved-runtime",
+      "historical": "09",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "area-and-pack-saved-runtime",
+      "historical": "10",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "retail-input-identity",
+      "historical": "11",
+      "evidence": "local-integrity",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "engine-saved-runtime",
+      "historical": "12",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "actor-setup-instructions",
+      "historical": "13",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "actor-setup-saved-runtime",
+      "historical": "14",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "ordinary-player-instructions",
+      "historical": "15",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-player-instructions",
+      "historical": "16",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "player-transition-instructions",
+      "historical": "17",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "ordinary-input-saved-runtime",
+      "historical": "18",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-player-negative-controls",
+      "historical": "20",
+      "evidence": "synthetic",
+      "expected": "expected-rejection",
+      "cloud_verdict": "expected-rejection",
+      "executed": true
+    },
+    {
+      "id": "actor-setup-negative-controls",
+      "historical": "22",
+      "evidence": "synthetic",
+      "expected": "expected-rejection",
+      "cloud_verdict": "expected-rejection",
+      "executed": true
+    },
+    {
+      "id": "actor-lists-negative-controls",
+      "historical": "23",
+      "evidence": "differential-control",
+      "expected": "expected-rejection",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "sanitizer-build",
+      "historical": "24",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "sanitizer-run",
+      "historical": "25",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "actor-lists-packet",
+      "historical": "26",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "actor-lists-bytes-jal",
+      "historical": "27",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "actor-setup-packet",
+      "historical": "28",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "actor-setup-bytes-jal",
+      "historical": "29",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "actor-math-packet",
+      "historical": "30",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "actor-math-bytes-jal",
+      "historical": "31",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "area-overlay-packet",
+      "historical": "32",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "area-lifecycle-packet",
+      "historical": "33",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "area-lifecycle-bytes-jal",
+      "historical": "34",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "disc-read-packet",
+      "historical": "35",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "disc-read-bytes-jal",
+      "historical": "36",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "engine-preparation-packet",
+      "historical": "37",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "engine-preparation-bytes-jal",
+      "historical": "38",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "pack-finalization-packet",
+      "historical": "39",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "pack-finalization-bytes-jal",
+      "historical": "40",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-player-packet",
+      "historical": "41",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "connected-player-bytes-jal",
+      "historical": "42",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-player-saved-runtime",
+      "historical": "19",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "ordinary-player-packet",
+      "historical": "43",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "ordinary-player-bytes-jal",
+      "historical": "44",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "player-transition-negative-controls",
+      "historical": "21",
+      "evidence": "differential-control",
+      "expected": "expected-rejection",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "resource-fixup-packet",
+      "historical": "45",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "resource-fixup-bytes-jal",
+      "historical": "46",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "resource-loader-packet",
+      "historical": "47",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "resource-loader-bytes-jal",
+      "historical": "48",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "committed-publication-audit",
+      "historical": "49",
+      "evidence": "local-integrity",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "worktree-publication-audit",
+      "historical": "50",
+      "evidence": "local-integrity",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "worktree-diff-check",
+      "historical": "51",
+      "evidence": "local-integrity",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "turn-camera-packet",
+      "historical": "52",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "turn-camera-bytes-jal",
+      "historical": "53",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "turn-camera-shared-bytes",
+      "historical": "54",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "turn-camera-instructions",
+      "historical": "55",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "turn-camera-saved-runtime",
+      "historical": "56",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "turn-camera-synthetic",
+      "historical": "57",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "walk-camera-synthetic",
+      "historical": "58",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "walk-camera-packet",
+      "historical": "59",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "walk-camera-shared-bytes",
+      "historical": "60",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "walk-camera-bytes-jal",
+      "historical": "61",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "walk-dispatch-instructions",
+      "historical": "62",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "walk-camera-saved-runtime",
+      "historical": "63",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "walk-dependency-survey",
+      "historical": "64",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "constraint-synthetic",
+      "historical": "65",
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "constraint-packet",
+      "historical": "66",
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "constraint-shared-bytes",
+      "historical": "67",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "constraint-bytes-jal",
+      "historical": "68",
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "constraint-saved-runtime",
+      "historical": "69",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "constraint-differential",
+      "historical": "70",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "grounded-differential",
+      "historical": "76",
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "grounded-m11-frames",
+      "historical": "77",
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m13-frame-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m13-frame-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m13-frame-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m14-window-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m14-window-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m14-window-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m15-nodes-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m15-nodes-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m15-nodes-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m15-model-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m15-model-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m15-model-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m16-late-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m16-late-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m16-late-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m17-lifecycle-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m17-lifecycle-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m17-lifecycle-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m18-front-end-packet",
+      "historical": null,
+      "evidence": "structure",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "m18-front-end-shared-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m18-front-end-bytes-jal",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m16-corridor",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "lifecycle-corridor",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m14-native-window",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m14-register-contracts",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m14-counter-guard",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "lifecycle-corridor-controls",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "lifecycle-differential",
+      "historical": null,
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "lifecycle-negative-controls",
+      "historical": null,
+      "evidence": "differential-control",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "native-pause-entry",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "native-pause-retained",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "native-area-pack",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "front-end-differential",
+      "historical": null,
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-native-lifecycle",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "connected-native-controls",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "m18-overlay-bytes",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "lifecycle-sequence-synthetic",
+      "historical": null,
+      "evidence": "synthetic",
+      "expected": "passed",
+      "cloud_verdict": "passed",
+      "executed": true
+    },
+    {
+      "id": "content-corpus",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "audio-instructions",
+      "historical": null,
+      "evidence": "differential",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "audio-connected",
+      "historical": null,
+      "evidence": "saved-runtime",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    },
+    {
+      "id": "audio-owner-endpoints",
+      "historical": null,
+      "evidence": "original-bytes",
+      "expected": "passed",
+      "cloud_verdict": "missing-input",
+      "executed": false
+    }
+  ],
+  "limits": [
+    "No original media, ELF, BIOS, captures, emulator session or private databases accessed.",
+    "Retail gate contracts and exact exclusion and mutation reasons still need owner-side verification.",
+    "No MainPC timing, publication, push, PR or merge was performed.",
+    "The handoff documentation commit follows the listed validation revision. Runner source content is unchanged across those commits."
+  ]
+}

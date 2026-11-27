@@ -7,5 +7,5 @@ def build_path(default):
     destination = os.environ.get('HG_VERIFY_BUILD_DIR')
     if not destination:
         return default
-    directory = Path(destination)
+    directory = Path(destination).resolve()
     return default if default.resolve().is_relative_to(directory.parent) else directory / default.name

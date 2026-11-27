@@ -2,6 +2,7 @@
 """Plan, run, resume and summarize the owner-local M12 verification."""
 import argparse
 from collections import Counter
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -19,11 +20,12 @@ import sys
 import tempfile
 import stat
 import time
+from threading import Lock
 
 from hg_evidence_safety import digest
 from hg_publication_audit import worktree_paths
 from hg_verify_inputs import ENV_PATHS, configured_paths, saved_inputs
-from hg_verify_inventory import inventory
+from hg_verify_inventory import PROFILES, inventory
 from hg_verify_results import (
     ERROR, INTERRUPTED, INVALID, MISSING, PASSED, REJECTED, SKIPPED, UNRUN, classify, read_json,
 )
@@ -37,6 +39,33 @@ MEDIA = ROOT / 'evidence/local-inputs.json'
 STATE_SCHEMA = 'hg-m12-verification/v2'
 SOURCE_DIRS = ('src', 'tools', 'tests', 'ghidra_scripts', 'analysis', 'evidence', 'config')
 ACCEPTED = {PASSED, REJECTED}
+JOBS = (1, 2, 4, 8)
+# Audited readers and attempt-isolated verifiers whose build/temp/output paths
+# stay strictly within the active attempt directory and HG_VERIFY_BUILD_DIR.
+PARALLEL_RESULTS = {
+    'structure', 'hg-bytes', 'ps2dinfo-bytes', 'overlay-bytes', 'git-diff',
+    'compileall', 'audit', 'local-inputs', 'sanitizer-build', 'sanitizer-run',
+    'unittest', 'discovery', 'disc-read', 'report', 'legacy-controls',
+    'ordinary-control', 'runtime', 'grounded-differential',
+    'continuous', 'predispatch', 'predispatch-contracts', 'counter-guard',
+    'lifecycle-differential', 'lifecycle-native', 'lifecycle-controls',
+    'lifecycle-corridor-controls', 'lifecycle-sequence',
+    'front-end-differential', 'front-end-native', 'front-end-controls',
+    'content-corpus', 'audio-instructions', 'audio-connected',
+}
+# Dispatch priority when jobs > 1: launch measured long-running gates early
+# alongside fast diagnostics so no single straggler stretches the tail.
+# Serial runs (jobs == 1) always dispatch in exact inventory order.
+PARALLEL_HEAVY_ORDER = (
+    'constraint-differential', 'turn-camera-saved-runtime', 'grounded-saved-runtime',
+    'constraint-saved-runtime', 'synthetic-suite', 'walk-camera-saved-runtime',
+    'grounded-differential', 'turn-camera-instructions', 'm16-corridor',
+    'lifecycle-corridor', 'm14-register-contracts', 'm14-native-window',
+    'lifecycle-differential', 'front-end-differential', 'connected-native-lifecycle',
+    'connected-native-controls', 'lifecycle-corridor-controls', 'lifecycle-negative-controls',
+    'connected-player-saved-runtime', 'player-transition-instructions',
+    'connected-player-instructions', 'area-lifecycle-instructions', 'grounded-m11-frames',
+)
 
 
 class Interrupted(Exception):
@@ -81,6 +110,8 @@ class Inputs:
     def __init__(self, options, stop):
         self.stop = stop
         self.files = {}
+        self.cache_lock = Lock()
+        self.file_locks = {}
         self.pins = read_json(PINS)['tools']
         self.media = read_json(MEDIA)['inputs']
         self.paths = {key: Path(value) for key, value in options.items()}
@@ -113,15 +144,21 @@ class Inputs:
 
     def file(self, path, expected=None, *, probe=False):
         self.stop.check()
+        key = path.resolve()
         stamp = self.stamp(path)
         if probe and stamp[2] > 8 * 1024 * 1024:
             return None
-        cached = self.files.get(path)
-        if not cached or cached[0] != stamp:
-            cached = stamp, digest(path)
-            if self.stamp(path) != stamp:
-                raise ValueError(f'Input changed while reading {path}')
-            self.files[path] = cached
+        with self.cache_lock:
+            lock = self.file_locks.setdefault(key, Lock())
+        with lock:
+            self.stop.check()
+            stamp = self.stamp(path)
+            cached = self.files.get(key)
+            if not cached or cached[0] != stamp:
+                cached = stamp, digest(path)
+                if self.stamp(path) != stamp:
+                    raise ValueError(f'Input changed while reading {path}')
+                self.files[key] = cached
         if expected and cached[1] != expected:
             raise ValueError(f'Input identity mismatch for {path}')
         return cached[1]
@@ -139,24 +176,27 @@ class Inputs:
         return tuple(files), files, git_value(ROOT, 'rev-parse', 'HEAD')
 
     def tool(self, name):
-        if name not in self.tools:
-            executable = shutil.which(name, path=self.environment['PATH'])
-            if not executable:
-                raise FileNotFoundError(f'Missing tool {name} on PATH')
-            path = Path(executable)
-            files = [path]
-            if name == 'cc':
-                for argument in ('-print-prog-name=cc1', '-print-prog-name=as', '-print-prog-name=ld',
-                                 '-print-file-name=libasan.so', '-print-file-name=libubsan.so'):
-                    found = subprocess.run([executable, argument], env=self.environment, stdout=subprocess.PIPE,
-                                           text=True, check=True, timeout=10).stdout.strip()
-                    resolved = shutil.which(found, path=self.environment['PATH'])
-                    if Path(found).is_absolute() and Path(found).is_file():
-                        files.append(Path(found))
-                    elif resolved:
-                        files.append(Path(resolved))
-            self.tools[name] = files
-        return self.tools[name]
+        with self.cache_lock:
+            cached = self.tools.get(name)
+        if cached is not None:
+            return cached
+        executable = shutil.which(name, path=self.environment['PATH'])
+        if not executable:
+            raise FileNotFoundError(f'Missing tool {name} on PATH')
+        path = Path(executable)
+        files = [path]
+        if name == 'cc':
+            for argument in ('-print-prog-name=cc1', '-print-prog-name=as', '-print-prog-name=ld',
+                             '-print-file-name=libasan.so', '-print-file-name=libubsan.so'):
+                found = subprocess.run([executable, argument], env=self.environment, stdout=subprocess.PIPE,
+                                       text=True, check=True, timeout=10).stdout.strip()
+                resolved = shutil.which(found, path=self.environment['PATH'])
+                if Path(found).is_absolute() and Path(found).is_file():
+                    files.append(Path(found))
+                elif resolved:
+                    files.append(Path(resolved))
+        with self.cache_lock:
+            return self.tools.setdefault(name, files)
 
     def resolve(self, argument, directory, dependencies):
         if argument.startswith('{artifact:'):
@@ -167,7 +207,8 @@ class Inputs:
         if argument.startswith('{shared:'):
             return str(self.paths['ps2dinfo'] / 'tools' / argument[8:-1])
         if argument.startswith('{'):
-            return str(self.paths[argument[1:-1]])
+            key, _, suffix = argument[1:].partition('}')
+            return str(self.paths[key] / suffix.lstrip('/'))
         return argument
 
     def git_basis(self, check):
@@ -194,7 +235,10 @@ class Inputs:
                     self.python: self.identity['python']['sha256']}
         for name in check.get('tools', []):
             expected.update(dict.fromkeys(self.tool(name)))
-        for item in check['inputs']:
+        items = check['inputs']
+        if check['id'] == 'synthetic-suite' and self.paths['image'].exists():
+            items = [*items, '{image}']
+        for item in items:
             if item.startswith('{dependency:') and probe:
                 continue
             if group and (item == '{captures}' or item.startswith('local/') and item in
@@ -217,6 +261,11 @@ class Inputs:
             else:
                 expected[path] = None
         expected.update(saved_inputs(ROOT, group, self.paths))
+        if group == 'm17-native':
+            record = ROOT / 'evidence/m17/results.json'
+            observation = read_json(record)['native_observations'][check['id']]
+            for stage in ('before', 'after'):
+                expected[ROOT / argv[argv.index('--' + stage) + 1]] = observation[stage + '_sha256']
         # The M8 connected replay also uses auxiliary legacy captures.
         if group == 'm8-connected':
             capture_dir = ROOT / 'local/m8/captures'
@@ -238,6 +287,8 @@ class Inputs:
         _, current, revision = self.sources()
         if revision != self.revision or current != self.source_files:
             raise ValueError('Repository sources changed during verification')
+        if basis['ps2dinfo_revision'] and git_value(self.paths['ps2dinfo'], 'rev-parse', 'HEAD') != self.shared_revision:
+            raise ValueError('Shared tool revision changed during verification')
         if self.snapshot(check, dependencies) != basis:
             raise ValueError('Check configuration, tools or inputs changed during verification')
 
@@ -249,8 +300,9 @@ class Inputs:
             return [str(self.python), '-s', '-B', '-u', *argv[first:]]
         return argv
 
-    def child_environment(self, directory):
-        return {**self.environment, **{name: str(self.paths[key]) for key, name in ENV_PATHS.items()},
+    def child_environment(self, directory, authenticated_image):
+        return {**self.environment, **{name: str(self.paths[key]) for key, name in ENV_PATHS.items()
+                                         if key != 'image' or authenticated_image},
                 'HG_VERIFY_BUILD_DIR': str(directory / 'build'),
                 'PYTHONPYCACHEPREFIX': str(directory / 'pycache')}
 
@@ -298,11 +350,12 @@ def run_child(argv, directory, env, lock_fd, stop, timeout):
         except ProcessLookupError:
             pass
 
+    locks = (lock_fd,) if isinstance(lock_fd, int) else lock_fd
     with (directory / 'output.log').open('x') as log:
         stop.check()
         with subprocess.Popen(argv, cwd=ROOT, env={**env, 'TMPDIR': str(directory)},
                               stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
-                              start_new_session=True, pass_fds=(lock_fd,)) as child:
+                              start_new_session=True, pass_fds=locks) as child:
             deadline = time.monotonic() + timeout
             try:
                 while True:
@@ -310,7 +363,13 @@ def run_child(argv, directory, env, lock_fd, stop, timeout):
                     if time.monotonic() >= deadline:
                         raise TimeoutError(f'Verifier exceeded {timeout} seconds')
                     try:
-                        return child.wait(timeout=0.2)
+                        code = child.wait(timeout=0.2)
+                        try:
+                            os.killpg(child.pid, 0)
+                        except ProcessLookupError:
+                            return code
+                        send(child, signal.SIGKILL)
+                        raise ValueError('Verifier left running child processes')
                     except subprocess.TimeoutExpired:
                         continue
             except (Interrupted, TimeoutError):
@@ -326,9 +385,23 @@ def run_child(argv, directory, env, lock_fd, stop, timeout):
 
 
 def artifacts(directory):
-    return {path.relative_to(directory).as_posix(): digest(path)
-            for path in sorted(directory.rglob('*'))
-            if path.is_file() and path.name not in ('attempt.json', 'receipt.json')}
+    if directory.is_symlink():
+        raise ValueError('Attempt directory must not be a symlink')
+    sealed = {}
+    for path in sorted(directory.rglob('*')):
+        relative = path.relative_to(directory).as_posix()
+        if relative in ('attempt.json', 'receipt.json'):
+            continue
+        mode = path.lstat().st_mode
+        if stat.S_ISDIR(mode):
+            continue
+        if not stat.S_ISREG(mode):
+            raise ValueError(f'Invalid attempt artifact {relative}')
+        before = Inputs.stamp(path)
+        sealed[relative] = digest(path)
+        if before != Inputs.stamp(path):
+            raise ValueError(f'Artifact changed while sealing {relative}')
+    return sealed
 
 
 def reusable(folder, basis):
@@ -346,6 +419,12 @@ def reusable(folder, basis):
         if (row['schema'] == STATE_SCHEMA and row['verdict'] in ACCEPTED
                 and canonical_hash(row) == seal and row['fingerprint'] == basis
                 and row['artifacts'] == artifacts(directory)):
+            if basis.get('check') and (
+                    row['id'] != basis['check']['id'] or row['expected'] != basis['check']['expected']
+                    or row['expected'] != row['verdict']
+                    or row['attempt'] != directory.relative_to(folder.parent.parent).as_posix()
+                    or any(name not in row['artifacts'] for name in basis['check'].get('outputs', []))):
+                return None
             return {**row, 'receipt_sha256': seal, 'reused': True}
     except (OSError, ValueError, KeyError, TypeError):
         pass
@@ -392,20 +471,29 @@ def attempt(folder, check, inputs, dependencies, lock_fd, stop):
         launched = time.monotonic()
         try:
             row['executed'] = True
-            row['exit_code'] = run_child(argv, directory, inputs.child_environment(directory), lock_fd, stop,
+            image_bound = str(inputs.paths['image']) in basis['inputs']
+            env = inputs.child_environment(directory, image_bound)
+            row['exit_code'] = run_child(argv, directory, env, lock_fd, stop,
                                          timeout=check.get('timeout', 180))
             row['child_seconds'] = round(time.monotonic() - launched, 3)
             stop.check()
             inputs.require_current(check, dependencies, basis)
-            verdict, details = classify(check, directory, row['exit_code'])
+            verdict, details = classify(check, directory, row['exit_code'], authenticated_image=image_bound)
         except (OSError, ValueError, subprocess.SubprocessError) as exc:
             verdict, details = ERROR, {'basis': str(exc)}
         except Interrupted as exc:
             verdict, details = INTERRUPTED, {'basis': str(exc)}
         if row['child_seconds'] is None:
             row['child_seconds'] = round(time.monotonic() - launched, 3)
+    try:
+        sealed = artifacts(directory)
+    except (OSError, ValueError) as exc:
+        sealed = {}
+        verdict, details = ERROR, {'basis': str(exc)}
+    if verdict == check['expected'] and any(name not in sealed for name in check.get('outputs', [])):
+        verdict, details = ERROR, {'basis': 'A required artifact was not sealed'}
     row.update(verdict=verdict, details=details, ended_utc=now(), seconds=round(time.monotonic() - start, 3),
-               artifacts=artifacts(directory))
+               artifacts=sealed)
     row['receipt_sha256'] = canonical_hash(row)
     atomic_json(directory / 'receipt.json', row)
     return row
@@ -422,7 +510,7 @@ def summary(folder, manifest, checks, identity, rows, state, session):
     accepted = sum(row['verdict'] == row['expected'] for row in checks)
     reused = sum(row.get('reused', False) for row in checks)
     executed = sum(row.get('executed', False) and not row.get('reused') for row in checks)
-    full = manifest['profile'] == 'full'
+    full = manifest['profile'] in ('full', 'historical', 'current')
     full_verdict = ('passed' if state == 'complete' and accepted == len(checks) else 'incomplete') if full else 'unrun'
     result = {'schema': STATE_SCHEMA, 'run': manifest['run'], 'profile': manifest['profile'],
               'state': state, 'updated_utc': now(), 'identity': identity, 'counts': counts,
@@ -430,6 +518,7 @@ def summary(folder, manifest, checks, identity, rows, state, session):
               'historical_checks': sum(row['historical'] is not None for row in checks),
               'full_verdict': full_verdict,
               'session_seconds': round(time.monotonic() - session['start'], 3),
+              'jobs': session['jobs'],
               'first_actionable_seconds': session['first_actionable_seconds'],
               'first_actionable_check': session['first_actionable_check'],
               'historical_full_seconds': manifest['historical_full_seconds'],
@@ -443,10 +532,10 @@ def summary(folder, manifest, checks, identity, rows, state, session):
     lines = [f'# M12 {manifest["profile"]} verification — {state}', '',
              f'{accepted}/{len(checks)} gates accepted. {executed} executed, {reused} reused, {result["retries"]} retries.',
              f'Historical coverage {result["historical_checks"]}/79. Full verdict **{full_verdict}**.',
-             f'Session {result["session_seconds"]:.2f}s; child commands {result["child_seconds"]:.2f}s; '
+             f'Session ({session["jobs"]} workers) {result["session_seconds"]:.2f}s; child commands {result["child_seconds"]:.2f}s; '
              f'historical full run {result["historical_full_seconds"]:.2f}s.',
              'Verdicts ' + ', '.join(f'{name} {n}' for name, n in sorted(counts.items())) + '.']
-    if state == 'complete' and not reused:
+    if state == 'complete' and not reused and session['jobs'] == 1:
         overhead = result['session_seconds'] - result['child_seconds']
         lines.append(f'Runner time outside child commands {overhead:.2f}s.')
     if session['first_actionable_check']:
@@ -519,38 +608,124 @@ def plan(profile, options):
                       'historical_checks': sum('historical' in row for row in rows), 'checks': rows}, indent=2))
 
 
-def execute(folder, manifest, checks, start, resuming):
-    with run_lock(folder) as lock, interruptible() as stop:
+def dispatch_order(pending, jobs):
+    items = list(pending.items())
+    if jobs <= 1:
+        return items
+    rank = {name: i for i, name in enumerate(PARALLEL_HEAVY_ORDER)}
+    return sorted(items, key=lambda pair: (0 if pair[0] in rank else 1, rank.get(pair[0], 0)))
+
+
+def schedule(checks, jobs, stop, run, complete):
+    """Dispatch ready checks. Only the coordinator mutates the run summary."""
+    pending = {check['id']: check for check in checks}
+    active = {}
+    rows = {}
+
+    def finish(check, row):
+        rows[check['id']] = row
+        complete(check, row, active, len(pending))
+
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        while active or pending and not stop.signum:
+            for name, check in dispatch_order(pending, jobs):
+                if stop.signum or len(active) >= jobs:
+                    break
+                required = check.get('requires', [])
+                if not set(required + check.get('after', [])) <= rows.keys():
+                    continue
+                parents = [rows[parent] for parent in required]
+                blocked = [row['id'] for row in parents if row['verdict'] != row['expected']]
+                if blocked:
+                    del pending[name]
+                    finish(check, brief(check, SKIPPED, 'Blocked by ' + ', '.join(blocked)))
+                    continue
+                exclusive = bool(check.get('exclusive')) or check['result'] not in PARALLEL_RESULTS
+                if active and (exclusive or any(
+                        bool(row.get('exclusive')) or row['result'] not in PARALLEL_RESULTS
+                        for row in active.values())):
+                    # Drain before starting an exclusive gate.
+                    continue
+                del pending[name]
+                active[pool.submit(run, check, parents)] = check
+                if exclusive:
+                    break
+            if active:
+                ready, _ = wait(active, timeout=0.2, return_when=FIRST_COMPLETED)
+                for future in sorted(ready, key=lambda item: active[item]['id']):
+                    check = active.pop(future)
+                    try:
+                        row = future.result()
+                    except Exception as exc:
+                        row = brief(check, ERROR, f'Worker failed: {type(exc).__name__}: {exc}')
+                    finish(check, row)
+            elif pending and not stop.signum and not any(
+                    set(check.get('requires', []) + check.get('after', [])) <= rows.keys()
+                    for check in pending.values()):
+                raise ValueError('Inventory has a missing or cyclic dependency')
+    return rows
+
+
+def finish_identity(folder, checks, inputs, rows):
+    """Recheck accepted evidence before aggregating the final verdict."""
+    for check in checks:
+        row = rows[check['id']]
+        if row['verdict'] != row['expected']:
+            continue
+        parents = [rows[name] for name in check.get('requires', [])]
+        dependencies = {parent['id']: folder / parent['attempt'] for parent in parents}
+        try:
+            if any(parent['verdict'] != parent['expected'] for parent in parents):
+                raise ValueError('A required receipt became invalid')
+            inputs.require_current(check, dependencies, row['fingerprint'])
+            if artifacts(folder / row['attempt']) != row['artifacts']:
+                raise ValueError('Attempt artifacts changed before run completion')
+        except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
+            rows[check['id']] = {**row, 'verdict': ERROR, 'recorded_verdict': row['verdict'],
+                                 'details': {'basis': str(exc)}}
+
+
+def execute(folder, manifest, checks, start, resuming, jobs):
+    with run_lock(RUN_ROOT) as checkout_lock, run_lock(folder) as lock, interruptible() as stop:
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
         print(f'Run {folder.name}', flush=True)
         history = read_json(folder / 'sessions.json') if (folder / 'sessions.json').is_file() else []
         session = {'start': start, 'first_actionable_seconds': None, 'first_actionable_check': None,
-                   'history': history, 'resumes': sum(row['resume'] for row in history) + int(resuming)}
-        record = {'started_utc': now(), 'resume': resuming, 'state': 'running'}
+                   'history': history, 'jobs': jobs, 'resumes': sum(row['resume'] for row in history) + int(resuming)}
+        record = {'started_utc': now(), 'resume': resuming, 'jobs': jobs, 'state': 'running'}
         atomic_json(folder / 'sessions.json', [*history, record])
         rows = {}
         summary(folder, manifest, checks, {}, rows, 'running', session)
         inputs = None
         try:
             inputs = Inputs(manifest['options'], stop)
-            for check in checks:
-                if stop.signum:
-                    break
-                parents = [rows[name] for name in check.get('requires', [])]
-                blocked = [row['id'] for row in parents if row['verdict'] != row['expected']]
-                if blocked:
-                    row = brief(check, SKIPPED, 'Blocked by ' + ', '.join(blocked))
-                else:
-                    dependencies = {row['id']: folder / row['attempt'] for row in parents}
-                    row = attempt(folder, check, inputs, dependencies, lock, stop)
+            def run(check, parents):
+                dependencies = {row['id']: folder / row['attempt'] for row in parents}
+                for row in parents:
+                    if artifacts(dependencies[row['id']]) != row['artifacts']:
+                        return brief(check, SKIPPED, f'Required gate artifact changed for {row["id"]}')
+                return attempt(folder, check, inputs, dependencies, (checkout_lock, lock), stop)
+
+            def complete(check, row, active, pending):
                 rows[check['id']] = row
                 if row['verdict'] != row['expected'] and not session['first_actionable_check']:
                     session.update(first_actionable_check=check['id'],
                                    first_actionable_seconds=round(time.monotonic() - start, 3))
-                verdict = row['verdict'] + (' (reused)' if row.get('reused') else '')
-                elapsed = row.get('reuse_seconds', row.get('seconds', 0))
-                print(f'{check["id"]} {verdict} ({elapsed:.2f}s)', flush=True)
+                elapsed = time.monotonic() - start
+                remaining = len(active) + pending
+                eta = remaining * elapsed / len(rows)
+                status = Counter(item['verdict'] for item in rows.values())
+                print(f'{check["id"]} {row["verdict"]} | active {len(active)}, completed {len(rows)}, '
+                      f'pending {pending}, blocked {status[SKIPPED] + status[MISSING] + status[INVALID]}, '
+                      f'reused {sum(item.get("reused", False) for item in rows.values())}, '
+                      f'passed {status[PASSED]}, rejected as expected {status[REJECTED]}, '
+                      f'failed/interrupted {len(rows) - sum(status[k] for k in (PASSED, REJECTED, SKIPPED, MISSING, INVALID))}, '
+                      f'elapsed {elapsed:.1f}s, throughput-based ETA ~{eta:.1f}s', flush=True)
                 summary(folder, manifest, checks, inputs.identity, rows, 'running', session)
+
+            schedule(checks, jobs, stop, run, complete)
+            if not stop.signum:
+                finish_identity(folder, checks, inputs, rows)
         except Interrupted:
             pass
         state = 'interrupted' if stop.signum else 'complete'
@@ -571,10 +746,12 @@ def main(argv=None):
     commands = parser.add_subparsers(dest='command', required=True)
     for name in ('plan', 'run'):
         command = commands.add_parser(name)
-        command.add_argument('--profile', choices=['focused', 'full'], default='focused')
+        command.add_argument('--profile', choices=PROFILES, default='focused')
         command.add_argument('--config', type=Path)
     for name in ('resume', 'summarize'):
         commands.add_parser(name).add_argument('--run', required=True)
+    commands.choices['run'].add_argument('--jobs', type=int, choices=JOBS, default=1)
+    commands.choices['resume'].add_argument('--jobs', type=int, choices=JOBS)
     args = parser.parse_args(argv)
     try:
         if args.command == 'plan':
@@ -597,7 +774,7 @@ def main(argv=None):
                        datetime.fromisoformat(historic['started_utc'])).total_seconds()
             manifest = {'schema': STATE_SCHEMA, 'run': folder.name, 'profile': profile,
                         'historical_full_seconds': round(seconds, 3), 'created_utc': now(),
-                        'options': configured, 'cwd': str(ROOT)}
+                        'options': configured, 'cwd': str(ROOT), 'jobs': args.jobs}
             atomic_json(folder / 'manifest.json', manifest)
         else:
             if not re.fullmatch(r'm12-[A-Za-z0-9_-]+', args.run):
@@ -613,10 +790,13 @@ def main(argv=None):
                 return 0
             if manifest['schema'] == 'hg-m12-verification/v1':
                 raise ValueError('Stage 1 receipts predate the full inventory and input binding. Start a new run.')
-            if manifest['schema'] != STATE_SCHEMA or manifest['profile'] not in ('focused', 'full'):
+            if manifest['schema'] != STATE_SCHEMA or manifest['profile'] not in PROFILES:
                 raise ValueError('Unsupported verification run manifest')
             checks = inventory(INVENTORY, HISTORICAL, manifest['profile'])
-        return execute(folder, manifest, checks, start, args.command == 'resume')
+        jobs = args.jobs or manifest.get('jobs', 1)
+        if type(jobs) is not int or jobs not in JOBS:
+            raise ValueError('Invalid worker count in run manifest')
+        return execute(folder, manifest, checks, start, args.command == 'resume', jobs)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as exc:
         print(f'M12 verification: {exc}', file=sys.stderr)
         return 2

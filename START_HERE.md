@@ -1,5 +1,98 @@
 # Hungry Ghosts — start here
 
+## Verification infrastructure, Phase 3 (reviewed integration) — 2026-11-27
+
+**Resume here.** Phase 3 reviews and integrates the verification-only
+infrastructure from Phase 1/Phase 2 into `main` (base `86a5670852d47c4ead140e5c8e40a5289f773053`,
+PR #21 merge) on branch `integration/verification-infrastructure-phase3`,
+preserving the exact verified Phase 2 code commit
+`734e328fe7c9cea90b2dd746c0ea1fff0647dbc0` (`source_sha256`
+`c66bc38ffb97f13b9e2e2da13b7a4df8ea2a1b25fa97b86868fd927b551524f8`) without
+folding in unpublished M19–M24 branches.
+
+- **Verified evidence closure:** Zero files in `src/`, `tools/`, `tests/`,
+  `ghidra_scripts/`, `analysis/`, `evidence/`, or `config/` changed after
+  `734e328`. All five MainPC Phase 2 receipts (`m12-20261127T190644Z-2j7t7my9`
+  base 3,143.14 s; `m12-20261127T195941Z-ixt34s27` serial 1,950.38 s;
+  `m12-20261127T203250Z-mx0eah77` 4w 818.49 s; `m12-20261127T211502Z-cm9phbqt`
+  8w 645.33 s; `m12-20261127T204736Z-49j6appf` 120-gate `current` 4w
+  1,424.22 s) passed independent seal and artifact verification (`0` bad seals,
+  `0` bad artifacts), with `0` semantic differences across 79/79 gates and
+  83/83 JSON artifacts.
+- **M19–M24 compatibility:** All eight local M19–M24 branches (`e512f2f2`,
+  `04648507`, `b855eb93`, `167a7281`, `54f1f130`, `705cd20f`, `6cc3ce8d`,
+  `1830f5ec`) merge with **0 code conflicts** (handoff docs only). Disposable
+  trials across all four dependency families passed `compileall`, targeted
+  tests, and 79/120 plans. Two nonblocking future-adoption items are mapped in
+  [docs/verification-infrastructure.md](docs/verification-infrastructure.md) and
+  [docs/verification/phase3-compatibility.json](docs/verification/phase3-compatibility.json):
+  wrap `local/build/m19-resource.so` in `build_path()` (M19+), and declare or
+  isolate the `HG_ELF` retail skip in `tests/test_m24_reference_map.py:36`
+  (M24) when those milestones integrate.
+- **Safe defaults & rollout:** Default remains `--jobs 1`; use `--jobs 4` for
+  ordinary owner-local runs on an idle host and `--jobs 8` for `historical`
+  only in an approved quiet window. Active agents finish on their pinned runner
+  before adopting `main` in an isolated worktree. Rollback via a reviewed
+  revert PR only.
+- **Next action:** Continue local M19–M24 milestone review/integration in their
+  own worktrees; adopt `main` only at each milestone's clean checkpoint with
+  fresh receipts and explicit milestone gate mapping.
+
+## Verification infrastructure, Phase 2 (MainPC validation) — 2026-11-27
+
+**Resume here (isolated Phase 2 review; Phase 3 deferred).** On isolated branch
+`verification/phase-2-mainpc` from exact PR #21 base
+`86a5670852d47c4ead140e5c8e40a5289f773053`, Phase 1 handoff (`1bd0930c2753...`,
+patch SHA-256 `7ffc4d87...`) was authenticated, four genuine contract/isolation
+defects were repaired (Gates 19, 56, corridor `pre-dispatch-window`, and mutant
+test `build_path` isolation), and verified exact optimizations (`ee_subset.py`
+O(1) rational FP, zero-copy `compare_memory()`, and bounded parallel scheduling)
+were validated at code commit `734e328fe7c9cea90b2dd746c0ea1fff0647dbc0`
+(`source_sha256` `c66bc38ffb97...`) against authenticated retail inputs
+(`SCPS_150.46` `a74248c5...`, Japan ISO `8ca1513c...`, `DATA/PACK.DAT`
+`f2e04a08...`, M18 overlay `ef257df9...`, PCSX2 v2.8.2 `0c46bb6a...`, PS2DInfo
+`2e4a226e...`).
+
+- **Fresh unmodified serial baseline** (`full`, 79 gates, `86a56708`, 1w,
+  `m12-20261127T190644Z-2j7t7my9`): **79/79 accepted** in **3,143.14 s** (52m 23s).
+- **Fresh corrected serial** (`historical`, 79 gates, `734e328`, 1w,
+  `m12-20261127T195941Z-ixt34s27`): **79/79 accepted** in **1,950.38 s** (32m 30s,
+  1.61× / −38.0%).
+- **Fresh optimized parallel** (`historical`, 79 gates, `734e328`):
+  - **4 workers** (`m12-20261127T203250Z-mx0eah77`): **79/79 accepted** in
+    **818.49 s** (13m 38s, **3.84× / −74.0%** vs. unmodified baseline).
+  - **8 workers** (`m12-20261127T211502Z-cm9phbqt`): **79/79 accepted** in
+    **645.33 s** (10m 45s, **4.87× / −79.5%** vs. unmodified baseline).
+  - **Deep semantic equivalence:** **0 differences** across all 79 gates and 83
+    JSON report/control artifacts between 1w, 4w, 8w, and the `current` historical
+    subset; **0 measurement differences** vs. unmodified base across all 77
+    unchanged-schema gates.
+- **Fresh expanded current profile** (`current`, 120 gates, `734e328`, 4w,
+  `m12-20261127T204736Z-49j6appf`): **120/120 accepted** (115 passed, 5 expected
+  rejections, 0 reused, 0 retries) in **1,424.22 s** (23m 44s).
+- **Cross-checks & regressions:** M16 `functions.json` / `area.json` and M18
+  `connected_run` / `differential` / `negative_controls` / 17 `scenarios` exact
+  match; strict C11 GCC 16.2.1 & Clang 23.1.5 pass; all 3 ASan+UBSan C harnesses
+  and `HG_SANITIZE=1` Python differential suite (10/10) pass; Gate 00 passes
+  465/465 with authenticated ISO (3 retail-only skips without ISO).
+- **Limits:** Historical hardware/oracle boundaries remain unchanged (M18
+  native-driven limits, unverified authentic Continue, 48 unresolved HGScript
+  bindings, host IOP/SPU2 audio model, host compile ≠ PS2 byte matching).
+- **Next action:** Owner review of isolated branch `verification/phase-2-mainpc`
+  and decision on Phase 3 integration/publication (not started). See
+  [docs/verification-infrastructure.md](docs/verification-infrastructure.md) and
+  [docs/verification/phase2-results.json](docs/verification/phase2-results.json).
+
+## Verification infrastructure, Phase 1 — 2026-11-27
+
+The local Phase 1 handoff contains the Gate 01 report-contract correction,
+bounded gate concurrency, and a 120-gate current-project profile preserving
+all 79 historical checks. On the cloud checkpoint, 37 applicable gates were
+accepted and 83 original-input gates were blocked. This is a bounded partial
+milestone. MainPC original-data checks, exact contract review and benchmarks
+remain outstanding. See [the handoff](docs/verification-infrastructure.md)
+for source identity, cloud results and the owner reproduction checklist.
+
 ## Integration of M17, M18, Content/HGScript and Audio — 2026-11-23
 
 **Resume here.** The four milestones are integrated on branch

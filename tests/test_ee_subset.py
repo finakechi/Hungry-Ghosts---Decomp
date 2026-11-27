@@ -106,5 +106,45 @@ class SubsetTests(unittest.TestCase):
             m.fpr[1]=x;m.fpr[2]=y;m.run(0x1000)
             self.assertEqual(m.fpr[3],want,(fn,hex(x),hex(y)))
 
+    def test_exact_rational_chop_sqrt_and_nearest_boundaries(self):
+        from fractions import Fraction
+        from ee_subset import fp_chop, fp_signed_nearest, fp_value
+        from verify_player_turn_runtime import MODEL_DEFECTS
+
+        # Exact reference binary-search oracle over Fraction.
+        def ref_chop(value, root=False):
+            low, high = 0, 0x7f7fffff
+            while low < high:
+                mid = (low + high + 1) // 2
+                c = fp_value(mid)
+                if (c * c if root else c) <= value:
+                    low = mid
+                else:
+                    high = mid - 1
+            return low if low >= 0x800000 else 0
+
+        vals = [
+            Fraction(0), Fraction(1, 1 << 130), Fraction(1, 1 << 127), Fraction(1, 1 << 126),
+            Fraction(1, 1 << 126) - Fraction(1, 1 << 200), Fraction(1, 1 << 126) + Fraction(1, 1 << 200),
+            Fraction(1, 3), Fraction(2, 3), Fraction(5, 3), Fraction(7, 4),
+            Fraction((0x800000 << 1) + 1, 1 << 24), Fraction((0x800001 << 1) + 1, 1 << 24),
+            Fraction((0xffffff << 1) + 1, 1 << 24), Fraction(((1 << 24) - 1) << 104, 1),
+            Fraction((((1 << 24) - 1) << 104) + 1, 1), Fraction(1 << 128, 1),
+        ]
+        for v in vals:
+            self.assertEqual(fp_chop(v, False), ref_chop(v, False))
+            self.assertEqual(fp_chop(v, True), ref_chop(v, True))
+        # Negative values fail closed.
+        with self.assertRaises(ValueError):
+            fp_chop(Fraction(-1, 2))
+        # Exact tie-to-even checks for DIV.S nearest rounding.
+        self.assertEqual(fp_signed_nearest(Fraction((0x800000 << 1) + 1, 1 << 24)), 0x3f800000)
+        self.assertEqual(fp_signed_nearest(Fraction((0x800001 << 1) + 1, 1 << 24)), 0x3f800002)
+        self.assertEqual(fp_signed_nearest(-Fraction((0x800001 << 1) + 1, 1 << 24)), 0xbf800002)
+        # Preserve every turn-runtime model-defect mutation anchor verbatim.
+        model_text = (Path(__file__).resolve().parents[1] / 'tools/ee_subset.py').read_text()
+        for name, old, _ in MODEL_DEFECTS:
+            self.assertEqual(model_text.count(old), 1, f'Missing model anchor {name}')
+
 
 if __name__=='__main__':unittest.main()

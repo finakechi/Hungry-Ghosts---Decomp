@@ -249,10 +249,13 @@ def compare_memory(actual,expected,external=()):
     def outside(i):return any(e['start']<=i<e['end'] for e in external)
     if len(actual.raw)!=len(expected.raw):raise ValueError('Comparison sizes differ')
     raw=[]
-    for base in range(0,len(actual.raw),0x1000):  # scan only differing pages
-        left=actual.raw[base:base+0x1000];right=expected.raw[base:base+0x1000]
-        if left!=right:
-            raw+=[base+i for i,(a,b) in enumerate(zip(left,right)) if a!=b and not lower<=base+i<upper]
+    mv_a,mv_e=memoryview(actual.raw),memoryview(expected.raw)
+    if mv_a[:lower]!=mv_e[:lower] or mv_a[upper:]!=mv_e[upper:]:
+        for base in range(0,len(actual.raw),0x1000):  # scan only differing pages
+            if lower<=base and base+0x1000<=upper:continue
+            left=mv_a[base:base+0x1000];right=mv_e[base:base+0x1000]
+            if left!=right:
+                raw+=[base+i for i,(a,b) in enumerate(zip(left,right)) if a!=b and not lower<=base+i<upper]
     dma=[i for i in raw if outside(i)];differences=[i for i in raw if not outside(i)]
     touched=sorted(i for i in actual.writes|actual.watched_reads if outside(i))
     words=sorted({i&~3 for i in differences})

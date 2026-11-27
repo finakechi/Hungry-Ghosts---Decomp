@@ -6,8 +6,8 @@
     {"id": "m12-ee", "name": "EE arithmetic including signed zero", "argv": ["python", "-B", "-m", "unittest", "discover", "-s", "tests", "-p", "test_ee_subset.py", "-v"], "evidence": "synthetic", "result": "unittest"}
   ],
   "checks": [
-    {"historical": "00", "id": "synthetic-suite", "result": "unittest", "evidence": "synthetic", "tools": ["cc", "java", "javac", "git"], "timeout": 1800},
-    {"historical": "01", "id": "disc-read-instructions", "result": "report", "evidence": "differential", "tools": ["cc"], "timeout": 1800, "report_schema": "hg-differential/v1", "report_elf": true},
+    {"historical": "00", "id": "synthetic-suite", "result": "discovery", "minimum_tests": 452, "evidence": "synthetic", "tools": ["cc", "java", "javac", "git"], "timeout": 1800},
+    {"historical": "01", "id": "disc-read-instructions", "result": "disc-read", "evidence": "differential", "tools": ["cc"], "timeout": 1800, "report_schema": "hg-disc-read-differential/v2", "report_elf": true},
     {"historical": "02", "id": "resource-loader-instructions", "result": "report", "evidence": "differential", "tools": ["cc"], "timeout": 1800, "report_schema": "hg-resource-differential/v1", "report_elf": true},
     {"historical": "03", "id": "resource-rebase-instructions", "result": "report", "evidence": "differential", "tools": ["cc"], "report_schema": "hg-rebase-check/v1"},
     {"historical": "04", "id": "resource-fixup-and-pack-instructions", "result": "report", "evidence": "differential", "tools": ["cc"], "timeout": 1800, "report_schema": "hg-fixup-check/v1"},
