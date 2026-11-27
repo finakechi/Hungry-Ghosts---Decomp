@@ -49,7 +49,10 @@ implementation checkpoint is `263b246`. Full detail is in [M24](docs/M24.md).
   - M22 `verify_m22.py` receipt identical to the committed one. Legacy EE
     differential: 407 passed, 0 failed, 13 excluded. Runner passed.
   - `HG_JAPAN_ISO`/`HG_ELF` discovery: **478/478**, 0 skipped.
-  - Full profile: see the M24 verification table.
+  - Full profile on clean `a1df5fc`: **79/79** accepted (74 passed, 5
+    expected rejections, 0 failed, unrun or reused) in `m12-20261127T164636Z-_7x8pqlh`.
+    `summary.json` SHA-256 `8e5e090d…b9c2a0`; `source_sha256`
+    `667c2db3…dfdf4`.
 - **Evidence levels.** These results cover synthetic sequencer and
   allocator behaviour only. They include no observed original EE command
   progression, no authenticated comparison of automatic sequencing, and no

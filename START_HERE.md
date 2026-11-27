@@ -32,7 +32,8 @@ M23. The implementation checkpoint is `263b246`.
   - 478/478 discovered tests pass with retail inputs.
   - The M22 retail receipt reproduced identically, and the legacy EE
     differential passed 407/0.
-  - Full-profile receipt: see [M24](docs/M24.md#verification-results).
+  - The full profile accepted **79/79** on `a1df5fc` (74 passed, 5
+    expected rejections, 0 reused): `m12-20261127T164636Z-_7x8pqlh`.
 - **Not claimed:** retail sequencer or allocator reconstruction, automatic
   retail sequencing, or PCM equivalence.
 - **Next:** record `00a6c3c0`, command `+0x20..+0x48`, the channel ring and
