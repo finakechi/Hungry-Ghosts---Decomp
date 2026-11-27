@@ -30,6 +30,7 @@ class TestSceneAudioInterface(unittest.TestCase):
                 'src/disc_read.c',
                 'src/audio/audio_engine.c',
                 'src/audio/audio_iop.c',
+                'src/audio/audio_sequencer.c',
                 '-lm', '-o', str(binary),
             ], cwd=ROOT, check=True, timeout=30)
             subprocess.run([binary], check=True, timeout=10)

@@ -500,6 +500,14 @@ bool hg_audio_ee_sample_address(const HGAudioEeService *service, uint32_t slot,
     return true;
 }
 
+static HGSg2Packet pitch_packet(uint32_t voice, HGSg2VoiceParams params)
+{
+    uint32_t note = params.root << 24 | params.note << 16 |
+                    (uint32_t)(uint8_t)params.fine_offset << 8 | params.bend;
+    return (HGSg2Packet){HG_SG2_PITCH, voice, note,
+                         (uint32_t)params.bend_scale << 24 | params.scale};
+}
+
 bool hg_audio_ee_stage_voice(HGAudioEeService *service, uint32_t voice, uint32_t slot,
                              uint32_t sample_offset, HGSg2VoiceParams params)
 {
@@ -512,10 +520,7 @@ bool hg_audio_ee_stage_voice(HGAudioEeService *service, uint32_t voice, uint32_t
         bus->r32(bus->ctx, HG_SG2_EE_CURSOR) > HG_SG2_QUEUE_SIZE - 5 ||
         !hg_audio_ee_sample_address(service, slot, sample_offset, &address))
         return false;
-    uint32_t note = params.root << 24 | params.note << 16 |
-                    (uint32_t)(uint8_t)params.fine_offset << 8 | params.bend;
-    HGSg2Packet pitch = {HG_SG2_PITCH, voice, note,
-                         (uint32_t)params.bend_scale << 24 | params.scale};
+    HGSg2Packet pitch = pitch_packet(voice, params);
     bool upload = false;
     if (!valid_packet(service->iop, pitch, &upload))
         return false;
@@ -547,4 +552,25 @@ bool hg_audio_ee_stage_key(HGAudioEeService *service, uint32_t voice, bool on)
     uint32_t mask = 1u << (voice % VOICES_PER_CORE);
     return hg_audio_ee_post(service, (HGSg2Packet){on ? HG_SG2_KEY_ON : HG_SG2_KEY_OFF, 0,
                          voice < VOICES_PER_CORE ? mask : 0, voice >= VOICES_PER_CORE ? mask : 0});
+}
+
+bool hg_audio_ee_stage_gain(HGAudioEeService *service, uint32_t voice,
+                            uint32_t left, uint32_t right)
+{
+    if (!service || !service->bus || !service->iop || voice >= HG_SG2_VOICES)
+        return false;
+    return hg_audio_ee_post(service, (HGSg2Packet){HG_SG2_GAIN, voice, left, right});
+}
+
+bool hg_audio_ee_stage_pitch(HGAudioEeService *service, uint32_t voice,
+                             HGSg2VoiceParams params)
+{
+    if (!service || !service->bus || !service->iop || voice >= HG_SG2_VOICES ||
+        params.root > 255 || params.note > 255 || params.scale > 0x3fff)
+        return false;
+    HGSg2Packet pitch = pitch_packet(voice, params);
+    bool upload = false;
+    if (!valid_packet(service->iop, pitch, &upload))
+        return false;
+    return hg_audio_ee_post(service, pitch);
 }

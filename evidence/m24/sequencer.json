@@ -1,0 +1,34 @@
+{
+  "format": "hg-m24-sequencer/1",
+  "frames_per_update": 800,
+  "scenarios": [
+    {"name": "short-notification", "group": "positive", "harness_completed": true, "updates": 6, "decisions": 6, "key_on": 1, "key_off": 1, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 6, "pcm_nonzero_frames": 2400, "pcm_fnv1a64": "f643ae031b676027", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "timed-events", "group": "positive", "harness_completed": true, "updates": 11, "decisions": 11, "key_on": 2, "key_off": 2, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 14, "pcm_nonzero_frames": 4800, "pcm_fnv1a64": "b4dc1febaf7bc1b9", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "overlapping-channels", "group": "positive", "harness_completed": true, "updates": 10, "decisions": 20, "key_on": 4, "key_off": 4, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 24, "pcm_nonzero_frames": 4904, "pcm_fnv1a64": "94433320e4b1e049", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "exhaustion-steal-reuse", "group": "positive", "harness_completed": true, "updates": 16, "decisions": 28, "key_on": 5, "key_off": 5, "steal": 1, "drop": 1, "reject": 0, "stage_fail": 0, "ring_records": 30, "pcm_nonzero_frames": 8000, "pcm_fnv1a64": "abbe244078168b14", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "active-cancel", "group": "positive", "harness_completed": true, "updates": 7, "decisions": 5, "key_on": 1, "key_off": 1, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 6, "pcm_nonzero_frames": 4000, "pcm_fnv1a64": "8da3e1e0204a283b", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "bank-release", "group": "positive", "harness_completed": true, "updates": 11, "decisions": 11, "key_on": 2, "key_off": 2, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 12, "pcm_nonzero_frames": 4800, "pcm_fnv1a64": "bbd7521d58667497", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "service-reset", "group": "positive", "harness_completed": true, "updates": 9, "decisions": 21, "key_on": 4, "key_off": 4, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 21, "pcm_nonzero_frames": 4800, "pcm_fnv1a64": "16fdad31c5e6b7b7", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "repeated-requests", "group": "positive", "harness_completed": true, "updates": 206, "decisions": 276, "key_on": 46, "key_off": 46, "steal": 2, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 276, "pcm_nonzero_frames": 98400, "pcm_fnv1a64": "1523a51ac0462f6b", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "malformed-input", "group": "positive", "harness_completed": true, "updates": 15, "decisions": 24, "key_on": 1, "key_off": 1, "steal": 0, "drop": 0, "reject": 2, "stage_fail": 1, "ring_records": 6, "pcm_nonzero_frames": 800, "pcm_fnv1a64": "623e97d8b2fd9e2b", "failures": [], "expected_failure": "", "detail": ""},
+    {"name": "nc-missing-event-advancement", "group": "control-fault-injection", "harness_completed": true, "updates": 11, "decisions": 8, "key_on": 2, "key_off": 1, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 13, "pcm_nonzero_frames": 7200, "pcm_fnv1a64": "6e9538d73fca924f", "failures": ["timeline", "end-state"], "expected_failure": "timeline", "detail": "6 of 9 expected decisions observed"},
+    {"name": "nc-dropped-service-requests", "group": "control-fault-injection", "harness_completed": true, "updates": 6, "decisions": 6, "key_on": 1, "key_off": 1, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 1, "pcm_nonzero_frames": 0, "pcm_fnv1a64": "4b66313d0e238783", "failures": ["start-address", "key-on", "envx-silent"], "expected_failure": "key-on", "detail": "voice 8 start address mismatch (tick 1)"},
+    {"name": "nc-missing-key-off", "group": "control-fault-injection", "harness_completed": true, "updates": 6, "decisions": 6, "key_on": 1, "key_off": 1, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 5, "pcm_nonzero_frames": 4800, "pcm_fnv1a64": "0dd31fa5c121270f", "failures": ["key-off", "envx-unowned", "end-state"], "expected_failure": "key-off", "detail": "voice 8: 1 key-off decisions, 0 SPU2 key-offs (update 3)"},
+    {"name": "nc-foreign-key-off", "group": "control-fault-injection", "harness_completed": true, "updates": 10, "decisions": 20, "key_on": 4, "key_off": 4, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 25, "pcm_nonzero_frames": 4908, "pcm_fnv1a64": "69732997a3e9bfcd", "failures": ["key-off", "envx-silent"], "expected_failure": "key-off", "detail": "voice 8: 0 key-off decisions, 1 SPU2 key-offs (update 2)"},
+    {"name": "nc-ownership-log-mutation", "group": "control-log-mutation", "harness_completed": true, "updates": 10, "decisions": 20, "key_on": 4, "key_off": 4, "steal": 0, "drop": 0, "reject": 0, "stage_fail": 0, "ring_records": 24, "pcm_nonzero_frames": 4904, "pcm_fnv1a64": "94433320e4b1e049", "failures": ["ownership"], "expected_failure": "ownership", "detail": "voice 9 released by request 0, not its owner"}
+  ],
+  "connected_decisions": [
+    [1, 1, 0, 0, -1, -1, -1, 0],
+    [1, 3, 0, 0, 0, 60, 8, 0],
+    [1, 6, 0, 0, 0, 60, 8, 0],
+    [3, 8, 0, 0, 0, -1, -1, 64],
+    [4, 9, 0, 0, 0, -1, -1, 96],
+    [5, 7, 0, 0, 0, 60, 8, 2],
+    [7, 3, 0, 0, 0, 67, 8, 0],
+    [7, 6, 0, 0, 0, 67, 8, 1],
+    [9, 7, 0, 0, 0, 67, 8, 3],
+    [9, 10, 0, 0, 0, -1, -1, 0],
+    [9, 11, 0, 0, -1, -1, -1, 0]
+  ],
+  "ok": true
+}

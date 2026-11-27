@@ -23,6 +23,7 @@
  *        hg_audio_iop_render.
  */
 #include "audio/audio_iop.h"
+#include "audio/audio_sequencer.h"
 #include "front_end.h"
 #include "game_lifecycle.h"
 #include "scene/title_scene.h"
@@ -866,9 +867,91 @@ static void test_negative_controls(void) {
     }
 }
 
+/* ---- Test 4 (M24): the same menu request played by the synthetic sequencer --
+ * The documented 00157ed0 descriptor still stands in for the unreconstructed
+ * retail dispatcher, but every note and voice decision after hg_audio_play now
+ * comes from src/audio/audio_sequencer.c: no resolved-note inputs are passed. */
+static void put_hsq1_cue(uint8_t *cue) {
+    static const uint8_t blob[42] = {
+        'H', 'S', 'Q', '1', 1, 1, 1, 64, 0x14, 0, 42, 0, 0x20, 0, 0, 0, 0, 0, 0, 0,
+        /* tone 0: offset 0, root 60, fine 0, ADSR 0x8080/0x808a, scale 0x116b, vol 127, pan 64 */
+        0, 0, 60, 0, 0x80, 0x80, 0x8a, 0x80, 0x6b, 0x11, 127, 64,
+        HG_SEQ_OP_NOTE_ON, 60, 100, 0, HG_SEQ_OP_WAIT, 3, 0, HG_SEQ_OP_NOTE_OFF, 60, HG_SEQ_OP_END,
+    };
+    memcpy(cue, blob, sizeof(blob));
+}
+
+static void test_scene_sfx_with_m24_sequencer(void) {
+    Guest *g = guest_create(true);
+    uint8_t payload[32];
+    build_synthetic_bank(g->bank_blob, &g->bank_blob_size, payload);
+    put_hsq1_cue(g->bank_blob + 0x30u + 0x90u + 0x40u); /* cue entry resolved by (1, 3) */
+    stage_pack_for_bank(g);
+    assert(drive_pack_audio_registration(g, true) != 0);
+    uint32_t slot = guest_load(g, HG_AUDIO_ID_TABLE, 4);
+
+    guest_store(g, 0x700000c0u, 4, MODE_BLOCK);
+    guest_store(g, MODE_BLOCK + 9, 1, 2);
+    guest_store(g, MODE_BLOCK + 0x11, 1, 0);
+    guest_store(g, TITLE_ALPHA, 4, 0x43000000u);
+    guest_store(g, SAVE_FLAG, 4, 1);
+    guest_store(g, VOLUME_ADDR, 4, 0x3f800000u);
+    guest_store(g, PAD_EDGE, 2, 0x4000u);
+    HGResourceEnv env = make_res_env(g);
+    assert(hg_title_menu(&env) == 0);
+    assert(g->sfx_request_count == 1 && g->sfx_requests[0].a0 == 4u);
+    uint32_t play_index = hg_audio_play(&g->audio_bus, slot, 1, 3, 0, 0);
+    assert(play_index == 0);
+
+    HGSequencer *seq = calloc(1, sizeof(*seq));
+    assert(seq && hg_seq_init(seq, &g->audio_ee, (HGSeqConfig){0, 24, 0}));
+    HGSg2Reply reply;
+    int16_t pcm[64 * 2];
+    for (uint32_t tick = 1; tick <= 5; ++tick) {
+        g->spu_write_count = 0;
+        assert(hg_seq_update(seq, 1));
+        assert(hg_audio_ee_flush(&g->audio_ee, &reply));
+        hg_audio_iop_render(g->audio_iop, pcm, 64);
+        bool sounding = false;
+        for (unsigned i = 0; i < 128; ++i)
+            sounding |= pcm[i] != 0;
+        if (tick == 1) {
+            /* Model chose voice 0 and staged ADSR, SSA, gain, pitch and key-on. */
+            assert(g->spu_write_count == 11);
+            assert(g->spu_writes[3].address == 0xbf9001c2u && g->spu_writes[3].value == 0x2808u);
+            assert(g->spu_writes[7].address == 0xbf9001a0u && g->spu_writes[7].value == 1u);
+            assert(reply.envelope[0] == 0x7fffu && sounding);
+        } else if (tick < 4) {
+            assert(g->spu_write_count == 0 && reply.envelope[0] == 0x7fffu && sounding);
+        } else if (tick == 4) {
+            /* Authored note-off three ticks later: model-staged key-off, retirement. */
+            assert(g->spu_write_count == 4);
+            assert(g->spu_writes[0].address == 0xbf9001a4u && g->spu_writes[0].value == 1u);
+            assert(reply.envelope[0] == 0 && !sounding);
+            uint32_t cmd = HG_AUDIO_COMMAND_BASE + play_index * HG_CMD_STRIDE;
+            uint32_t channel = guest_load(g, cmd + HG_CMD_CHANNEL, 4);
+            assert(guest_load(g, cmd + HG_CMD_STATE, 4) == 0);
+            assert(guest_load(g, HG_AUDIO_CHANNEL_BASE + channel * HG_CH_STRIDE, 4) == UINT32_MAX);
+            assert(hg_seq_active_requests(seq) == 0 && hg_seq_owned_voices(seq, NULL) == 0);
+        } else {
+            assert(g->spu_write_count == 0 && !sounding);
+        }
+    }
+    static const uint32_t kinds[] = {HG_SEQ_D_START, HG_SEQ_D_ALLOC, HG_SEQ_D_KEY_ON,
+                                     HG_SEQ_D_KEY_OFF, HG_SEQ_D_TRACK_END, HG_SEQ_D_COMPLETE};
+    assert(seq->log_count == 6);
+    for (unsigned i = 0; i < 6; ++i)
+        assert(seq->log[i].kind == kinds[i] && seq->log[i].play_index == 0);
+    assert(seq->log[2].voice == 0 && seq->log[2].note == 60 && seq->log[2].tick == 1);
+    assert(seq->log[3].tick == 4 && seq->log[3].detail == HG_SEQ_R_NOTE_OFF);
+    free(seq);
+    guest_destroy(g);
+}
+
 int main(void) {
     test_scene_sfx_to_audio_boundary();
     test_hgscript_dialogue_voice_boundary();
     test_negative_controls();
+    test_scene_sfx_with_m24_sequencer();
     return 0;
 }

@@ -1,5 +1,70 @@
 # Hungry Ghosts — master handoff
 
+## M24 audio sequencing and physical voice management — 2026-11-27
+
+**Resume here for audio.** Local branch `research/m24-audio-sequencing` in
+worktree `decomp-m24`. It was created from the accepted integration HEAD
+`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, whose tested source is
+`5e7f10776492e36cacd463d507ba9089f0ccab0a`. It does not depend on `main` or
+M23: `research/m23-gameplay-initialization` at `b0464cd` is untouched. The
+implementation checkpoint is `263b246`. Full detail is in [M24](docs/M24.md).
+
+- **Reference dependency map.**
+  `tools/hg_audio/m24_reference_map.py` scans the authenticated ELF
+  `a74248c5…` read-only; [evidence/m24/reference-map.json](evidence/m24/reference-map.json)
+  holds addresses and table words only.
+  - Boot wiring: `002a7508` sets 16 idle slots at `00a6c340`. Slots 0–4 are
+    registered by `002b4060`, `002ae030`, `002aa5e0`, `002b2df8` and
+    `002ad288`.
+  - The thread `001566c0` runs `SleepThread`, then `sceSifCheckStatRpc`,
+    then `002a7450`, then the stream services.
+  - Slot 1, `002add90`, does the soft-double timing, running status,
+    variable-length deltas and dispatch through table `003bd170` (A, B and F
+    only). It forwards channel bytes through `002a95c8`, and retires a
+    state-2 command once `002a9d18` returns 0.
+  - Slot 2's `{handler, length}` table is at `003bd078`; the Ax note handler
+    is `002ab508`.
+  - The allocator chain is `002ae9b8` (a class-ranged search from cursor
+    `00a832a0`), then `002afed8`, `002af1d0` and `002b1098`. Release is
+    `002b2030`; the pending masks are at `00a83278`.
+  - `002ad358` limits concurrent instances per cue by cancelling the oldest.
+  - Unknown: the wake source and period, the internals of the consumer and
+    the fallback allocators, and the release timing.
+- **Synthetic model.** `src/audio/audio_sequencer.{c,h}` is original. The
+  HSQ1 format has fixed opcodes and integer ticks.
+  - Allocation takes the lowest free voice in the pool. On exhaustion it
+    steals by priority, oldest first, or drops the note.
+  - Requests come from the existing `hg_audio_play` cue address. Cancel
+    comes from `hg_audio_cancel`, detected by state 2 and the `ff 41 f7`
+    ring marker. Bank loss and service reset are handled.
+  - Additive bridge helpers: `hg_audio_ee_stage_gain` and
+    `hg_audio_ee_stage_pitch`.
+- **Verification on `263b246`:**
+  - Strict combined GCC/Clang builds of 11 sources: 257 exported functions,
+    0 duplicates.
+  - GCC/Clang ASan+UBSan+LSan of the sequencer and scene/audio harnesses:
+    4/4. M22 Clang ASan: 6/6.
+  - Lifecycle harness: 9 scenarios and 5 controls, byte-identical across
+    four builds.
+  - M22 `verify_m22.py` receipt identical to the committed one. Legacy EE
+    differential: 407 passed, 0 failed, 13 excluded. Runner passed.
+  - `HG_JAPAN_ISO`/`HG_ELF` discovery: **478/478**, 0 skipped.
+  - Full profile on clean `a1df5fc`: **79/79** accepted (74 passed, 5
+    expected rejections, 0 failed, unrun or reused) in `m12-20261127T164636Z-_7x8pqlh`.
+    `summary.json` SHA-256 `8e5e090d…b9c2a0`; `source_sha256`
+    `667c2db3…dfdf4`.
+- **Evidence levels.** These results cover synthetic sequencer and
+  allocator behaviour only. They include no observed original EE command
+  progression, no authenticated comparison of automatic sequencing, and no
+  check of original IOP behaviour beyond M22 or of PCM equivalence.
+- **M23 reconciliation.** Shared tests changed only by addition: one new
+  function in `tests/scene_audio_interface.c` and one source added in
+  `tests/test_scene_audio_interface.py`. Combined builds must add
+  `src/audio/audio_sequencer.c`. No new guest addresses are used.
+- **Next action.** Capture the scheduler counters, the command timing
+  fields, the channel ring and the voice records across both M22 cursor
+  checkpoints. Then reconstruct `002add90` and `002ab508` against them.
+
 ## M23 cold gameplay initialization and world-state continuity — 2026-11-27
 
 **Resume here for M23.** Branch `research/m23-gameplay-initialization` in
@@ -56,7 +121,7 @@ and receipts.
 
 ## M21–M22 local integration review — 2026-11-26
 
-**Resume here.** Branch `integration/m21-m22-review` in
+**Accepted integration baseline** (M24 builds on it). Branch `integration/m21-m22-review` in
 `decomp-m21-m22-integration`, based on `integration/m19-m20-review`
 (`b855eb93fa797eded31c1849f2bb69d68470609a`). Verified integrated source commit:
 `5e7f10776492e36cacd463d507ba9089f0ccab0a`. Merges M21
