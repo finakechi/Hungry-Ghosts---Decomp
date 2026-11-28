@@ -31,7 +31,7 @@ python -m unittest discover -s tests -v
 ```
 
 On the integrated M19–M24 baseline with the Phase 1–3 verification
-infrastructure, this runs TESTCOUNT tests. The retail-only tests are skipped
+infrastructure, this runs 505 tests. The retail-only tests are skipped
 unless their authenticated inputs are named (`HG_JAPAN_ISO` for
 `tests/test_hg_audio_original.py`; `HG_ELF` for
 `tests/test_m24_reference_map.py`); with them set they run and a missing

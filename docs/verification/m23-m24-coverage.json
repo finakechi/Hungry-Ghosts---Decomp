@@ -1,0 +1,320 @@
+{
+ "schema": "hg-m23-m24-coverage/v1",
+ "date": "2026-11-27",
+ "profiles": {
+  "focused": 8,
+  "historical": 79,
+  "full": "alias of historical (79)",
+  "current": 138,
+  "synthetic": 41,
+  "current_added": 18,
+  "synthetic_added": 4
+ },
+ "capabilities": {
+  "M19 loading, publication, worker completion": [
+   {
+    "gate": "m19-resource-job",
+    "verifier": "tools/verify_resource_job.py --negative-controls",
+    "inputs": [
+     "{elf}",
+     "{ps2dinfo}"
+    ],
+    "evidence_level": "differential + original-bytes",
+    "expected": "report equal to evidence/m19/results.json differential",
+    "acceptance": "exact equality; schema, ELF identity; every control rejected with a measured failure and source hash",
+    "negative_controls": "source mutants built from src/resource_loader.c",
+    "scheduling": "exclusive",
+    "limits": "EE vs C job slices only"
+   },
+   {
+    "gate": "m19-resource-retail",
+    "verifier": "tools/verify_resource_retail.py",
+    "inputs": [
+     "{image}",
+     "local/m4/runtime",
+     "local/m7/captures"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "cold title 837 frames / 9 requests; 5 M4 and 12 M7 checkpoint domains",
+    "acceptance": "exact equality with evidence/m19/results.json cold_title and checkpoint_domains M4/M7",
+    "negative_controls": "none beyond domain equality",
+    "scheduling": "exclusive",
+    "limits": "saved M4/M7 captures only"
+   }
+  ],
+  "M19 resource lifecycle (connected cold title)": [
+   {
+    "gate": "m19-connected-title",
+    "verifier": "tools/run_resource_lifecycle.py",
+    "inputs": [
+     "{image}",
+     "local/m18/native"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "16,273 units, 11 ordered requests, 57 setups, 164 transfers, 3 M18 checkpoints",
+    "acceptance": "summary re-derived from the raw report must equal evidence/m19/results.json connected; all checkpoint domains 0 differing bytes; compiled library artifact",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": "frame-indexed matches 15,591/16,273 as recorded; natural scheduling unproved"
+   }
+  ],
+  "M20 timed dialogue, paged text": [
+   {
+    "gate": "m20-hgscript-differential",
+    "verifier": "tools/hgscript_differential.py",
+    "inputs": [
+     "{elf}",
+     "{image}"
+    ],
+    "evidence_level": "differential",
+    "expected": "report equal to evidence/m20/differential.json",
+    "acceptance": "exact equality except control messages; each of 4 controls must report a measured divergence at the recorded tick",
+    "negative_controls": "4 timed.c mutants",
+    "scheduling": "exclusive",
+    "limits": "selected script slices"
+   }
+  ],
+  "M20 connected resource/script execution": [
+   {
+    "gate": "m20-title-hgscript",
+    "verifier": "tools/verify_title_hgscript.py",
+    "inputs": [
+     "{image}",
+     "local/m18/native"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "3,861 carried frames, 10,801 glyph requests",
+    "acceptance": "exact equality with evidence/m19-m20-integration/title.json except source_revision",
+    "negative_controls": "title smoke controls in the synthetic suite",
+    "scheduling": "exclusive",
+    "limits": "fixture voice/glyph services"
+   }
+  ],
+  "M21 scene coordination, cold entry": [
+   {
+    "gate": "m21-title-menu",
+    "verifier": "tools/verify_title_scene.py --negative-controls",
+    "inputs": [
+     "{image}",
+     "local/m21"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "evidence/m21/title-menu.json",
+    "acceptance": "exact equality; every control has a measured divergence",
+    "negative_controls": "title_scene.c mutants",
+    "scheduling": "exclusive",
+    "limits": "live stop comparison"
+   },
+   {
+    "gate": "m21-title-neutral",
+    "verifier": "tools/verify_title_scene.py --until-reset",
+    "inputs": [
+     "{image}",
+     "local/m21"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "evidence/m21/title-neutral.json",
+    "acceptance": "exact equality",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": ""
+   },
+   {
+    "gate": "m21-cold-new-game",
+    "verifier": "tools/verify_title_scene.py --new-game",
+    "inputs": [
+     "{image}",
+     "local/m21",
+     "local/m21/native",
+     "docs/m21/title-to-area1.json"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "1,174 units to AREA1 coordinator",
+    "acceptance": "exact equality with docs/m21/title-to-area1.json",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": "stops at 0012f850 before full actor/player/camera init"
+   },
+   {
+    "gate": "m21-area1-entry",
+    "verifier": "tools/verify_scene_area_entry.py",
+    "inputs": [
+     "{image}",
+     "local/m21/native"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "183 units, 7 domains",
+    "acceptance": "exact equality with evidence/m21/area1-entry.json",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": ""
+   }
+  ],
+  "M21 ferry reload": [
+   {
+    "gate": "m21-ferry-reload",
+    "verifier": "tools/verify_scene_ferry_reload.py --begin-job",
+    "inputs": [
+     "{image}",
+     "local/m21/native",
+     "docs/m21/boat-reload.json"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "18 units, 3,825 native vblanks, 7 domains",
+    "acceptance": "equal to docs/m21/boat-reload.json plus identity; all 7 domains match; one no-save confirmation",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": "overlay stays A1_B00; no distinct warp"
+   },
+   {
+    "gate": "m21-ferry-resume",
+    "verifier": "tools/verify_scene_ferry_reload.py",
+    "inputs": [
+     "{image}",
+     "local/m21/native"
+    ],
+    "evidence_level": "saved-runtime",
+    "expected": "34 units, 49 vblanks, 7 domains",
+    "acceptance": "equal to evidence/m21/ferry-resume.json (identical to the private M21 receipt)",
+    "negative_controls": "none",
+    "scheduling": "exclusive",
+    "limits": ""
+   }
+  ],
+  "M22 service communication, uploads, ordered output": [
+   {
+    "gate": "m22-retail-service",
+    "verifier": "tools/hg_audio/verify_m22.py",
+    "inputs": [
+     "{image}",
+     "local/m22/retail",
+     "local/m22/live",
+     "M18 PCSX2 saved state"
+    ],
+    "evidence_level": "saved-runtime + original-bytes",
+    "expected": "evidence/m22/retail-check.json",
+    "acceptance": "exact equality; result pass; 3 instruction controls detected",
+    "negative_controls": "wrong key id, wrong core, reversed edges",
+    "scheduling": "exclusive",
+    "limits": "host IOP model; PCM equivalence untested"
+   },
+   {
+    "gate": "audio-instructions / audio-connected (existing)",
+    "verifier": "tools/hg_audio/verify_audio.py, audio_runner.py",
+    "inputs": [
+     "{elf}",
+     "{image}"
+    ],
+    "evidence_level": "differential / saved-runtime",
+    "expected": "407 + 13 excluded; member 6b51",
+    "acceptance": "existing current contracts",
+    "negative_controls": "existing",
+    "scheduling": "parallel (existing)",
+    "limits": "reused, not duplicated"
+   },
+   {
+    "gate": "m20-m22-c-sanitizers",
+    "verifier": "tools/verify_c_drivers.py",
+    "inputs": [],
+    "evidence_level": "synthetic",
+    "expected": "4 drivers clean under ASan+UBSan+LSan",
+    "acceptance": "exit 0, no output, no sanitizer report; canary detected",
+    "negative_controls": "deliberate heap overflow canary",
+    "scheduling": "parallel",
+    "limits": ""
+   }
+  ],
+  "M23 authentic-boundary inspection": [
+   {
+    "gate": "m23-authentic-boundary",
+    "verifier": "tools/verify_world_init.py --inspect-authentic",
+    "inputs": [
+     "{elf}",
+     "{image}",
+     "local/m21/native",
+     "{m13-captures}/obs3-000.json"
+    ],
+    "evidence_level": "original-bytes + saved-runtime",
+    "expected": "evidence/m23/authentic-boundary.json",
+    "acceptance": "exact equality; identity",
+    "negative_controls": "HG_DOMAIN_FAULT(0x30) boundary is part of the receipt",
+    "scheduling": "exclusive",
+    "limits": "authentic entry stops before full initialization"
+   }
+  ],
+  "M23 synthetic lifecycle and controls": [
+   {
+    "gate": "m23-world-init-synthetic",
+    "verifier": "tools/verify_world_init.py --synthetic --sanitize",
+    "inputs": [],
+    "evidence_level": "synthetic",
+    "expected": "evidence/m23/synthetic-lifecycle.json",
+    "acceptance": "exact equality except compiler; sanitized; 10 controls",
+    "negative_controls": "10 M23 controls",
+    "scheduling": "parallel",
+    "limits": "original synthetic scene"
+   }
+  ],
+  "M24 authenticated reference map": [
+   {
+    "gate": "m24-reference-map",
+    "verifier": "tools/hg_audio/m24_reference_map.py --check",
+    "inputs": [
+     "{elf}"
+    ],
+    "evidence_level": "original-bytes",
+    "expected": "evidence/m24/reference-map.json",
+    "acceptance": "exact equality; ELF identity",
+    "negative_controls": "tool refuses other ELF (synthetic test)",
+    "scheduling": "exclusive",
+    "limits": "structure only; no retail sequencing"
+   },
+   {
+    "gate": "synthetic-suite (Gate 00) named skip",
+    "verifier": "tests/test_m24_reference_map.py",
+    "inputs": [
+     "{elf} when present"
+    ],
+    "evidence_level": "original-bytes",
+    "expected": "retail test runs when ELF authenticated",
+    "acceptance": "named RETAIL_ELF_TESTS skip allowed only without an authenticated ELF",
+    "negative_controls": "test_named_elf_skip_contract_requires_authenticated_elf_to_run",
+    "scheduling": "exclusive",
+    "limits": ""
+   }
+  ],
+  "M24 synthetic sequencer, voice ownership, controls": [
+   {
+    "gate": "m24-sequencer-synthetic",
+    "verifier": "tools/verify_audio_sequencer.py --sanitize",
+    "inputs": [],
+    "evidence_level": "synthetic",
+    "expected": "evidence/m24/sequencer.json byte-identical",
+    "acceptance": "byte equality; 9 positive scenarios with output; 5 controls detected",
+    "negative_controls": "5 M24 controls",
+    "scheduling": "parallel",
+    "limits": "original HSQ1 model, not retail"
+   }
+  ],
+  "Integration: combined lifecycle, ownership, cleanup, repeatability, controls": [
+   {
+    "gate": "world-audio-lifecycle",
+    "verifier": "tools/verify_world_audio.py --sanitize",
+    "inputs": [],
+    "evidence_level": "synthetic",
+    "expected": "evidence/m23-m24/world-audio-lifecycle.json byte-identical",
+    "acceptance": "independent re-check: standalone-M23 parity per frame and masked EE digest, M23 checkpoint values, clean end state both cycles, cycle and repeat parity, 10 controls in their intended checks",
+    "negative_controls": "10 integration controls",
+    "scheduling": "parallel",
+    "limits": "external 60 Hz/48 kHz schedule; not retail EE timing or service order"
+   }
+  ]
+ },
+ "reused_existing": [
+  "synthetic-suite (Gate 00) runs every M19-M24 Python test",
+  "sanitizer-build/sanitizer-run (Gates 24/25) cover tests/resource_sanitizer.c incl. M19 additions",
+  "m16-corridor/lifecycle-corridor (M17 22-frame corridor)",
+  "connected-native-lifecycle (M18 16,273 frames)",
+  "audio-instructions, audio-connected, audio-owner-endpoints"
+ ]
+}

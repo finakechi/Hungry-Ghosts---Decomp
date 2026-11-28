@@ -1,8 +1,40 @@
 # Hungry Ghosts — master handoff
 
+## M23–M24 integration review — 2026-11-27
+
+**Resume here.** `integration/m23-m24-review` (worktree
+`decomp-m23-m24-integration`) on remote `main` `09b58321` (PR #22), merging
+M23 `6cc3ce8d` and M24 `1830f5ec` with their shared M19–M22 history
+(`705cd20f` ⊃ `b855eb93`). Merge commits `71cd01d`, `216b126`; tested
+commit `77a8dee39813a8ec8e8ade6952279f4891559f00`. Detail and limits:
+[M23–M24 review](docs/M23-M24-review.md).
+
+- **Merge:** 0 code conflicts; handoff docs reconciled (main's Phase 1–3
+  START_HERE sections moved verbatim to `START_HERE_HISTORY.md`). Five
+  additive auto-merges reviewed (`ee_subset.py` `lwu` beside Phase 2 FP,
+  `test_ee_subset.py`, `front_end_differential.py`, `run_front_end_native.py`,
+  `audio_guest.py`). PR #22 runner fixes and optimizations unchanged.
+- **Migration:** explicit M19 `build_path()`; named `RETAIL_ELF_TESTS`
+  discovery skip with Gate 00 ELF authentication; ferry probe promoted to
+  `tools/verify_scene_ferry_reload.py`; 18 new current gates (retail ones
+  exclusive; 4 attempt-isolated synthetic C gates parallel).
+- **Coverage:** M19 job/retail/connected title; M20 differential/connected
+  title script; M21 menu/neutral/cold New Game/AREA1 entry/two ferry pairs;
+  M22 retail service; M23 authentic boundary and synthetic lifecycle; M24
+  reference map and sequencer; integration lifecycle. Each contract compares
+  tracked evidence or re-derives measurements and requires its controls.
+- **Connected lifecycle:** one shared EE RAM via the new additive
+  `hg_world_harness_guest_ram()`; external 60 Hz/48 kHz schedule; two cycles
+  with identical results; standalone-M23 per-frame and masked-EE parity;
+  0 stray cross-system writes; clean end state; 10 controls detected.
+- **Verification:** fresh `current` run `m12-20261128T000859Z-4aeadr8x` on clean `77a8dee` (source `3b698e92…`, 4 workers): 138/138 accepted (133 passed, 5 expected rejections), all 79 historical gates passed, Gate 00 505/505 with 0 skips, 0 bad seals/artifacts, 2,280.6 s session / 6,390.1 s child. `synthetic` run `m12-20261128T004904Z-tqj5dqx3` (1 worker, public inputs): 41/41, 501 + 4 named skips, 320.0 s. An earlier `ade2ece` `current` run had 3 contract-shape harness errors, fixed in `77a8dee` (receipts kept, not resealed).
+- **Gaps:** authentic state-0 player/world setup, collision/overlay
+  services, retail audio timing/consumer/allocation, `00156cf0` resume and
+  streaming dialogue remain open (listed in the review).
+
 ## M24 audio sequencing and physical voice management — 2026-11-27
 
-**Resume here for audio.** Local branch `research/m24-audio-sequencing` in
+**Historical (integrated by the M23–M24 review).** Local branch `research/m24-audio-sequencing` in
 worktree `decomp-m24`. It was created from the accepted integration HEAD
 `705cd20fcc28d17b3fac374dfad34c990f76ddc6`, whose tested source is
 `5e7f10776492e36cacd463d507ba9089f0ccab0a`. It does not depend on `main` or
@@ -67,7 +99,7 @@ implementation checkpoint is `263b246`. Full detail is in [M24](docs/M24.md).
 
 ## M23 cold gameplay initialization and world-state continuity — 2026-11-27
 
-**Resume here for M23.** Branch `research/m23-gameplay-initialization` in
+**Historical (integrated by the M23–M24 review).** Branch `research/m23-gameplay-initialization` in
 `decomp-m23`, branched from the shared baseline `integration/m21-m22-review`
 (`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, tested source
 `5e7f10776492e36cacd463d507ba9089f0ccab0a`). Verified M23 implementation commit:

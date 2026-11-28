@@ -1,8 +1,39 @@
 # Hungry Ghosts — start here
 
+## M23–M24 integration review — 2026-11-27
+
+**Resume here.** Branch `integration/m23-m24-review` in
+`decomp-m23-m24-integration`, based on remote `main`
+`09b5832119d5ec97c85c05c6ab1eddd6c20be8ad` (PR #22). It merges
+`research/m23-gameplay-initialization` (`6cc3ce8d`) and
+`research/m24-audio-sequencing` (`1830f5ec`), which carry the accepted
+M19–M20 (`b855eb93`) and M21–M22 (`705cd20f`) histories. Tested commit
+`77a8dee39813a8ec8e8ade6952279f4891559f00`. Full detail:
+[M23–M24 review](docs/M23-M24-review.md).
+
+- **Verification migration:** named `HG_ELF` skip contract (Gate 00
+  authenticates the ELF before exporting it; skip allowed only when unbound),
+  explicit M19 `build_path()`, and 18 new `current` gates with contracts in
+  `tools/hg_verify_milestones.py` (14 authenticated M19–M24, 4 synthetic).
+  Profiles: `focused` 8, `historical`/`full` 79, `current` **138**,
+  `synthetic` **41**. Coverage map:
+  [docs/verification/m23-m24-coverage.json](docs/verification/m23-m24-coverage.json).
+- **Connected lifecycle:** `tests/world_audio_lifecycle.c` runs the M23
+  world harness and the M22/M24 audio path on one guest EE RAM. Synthetic
+  events from carried world state drive `hg_audio_play`; the M24 model makes
+  every note/voice decision. Two cycles (143 frames, 17 requests, 19
+  key-on/off, 1 steal, 101,600 non-zero PCM frames each) with clean teardown,
+  re-entry, bit-identical standalone-M23 parity and 10 detected controls.
+- **Results:** `current` 138/138 accepted (`m12-20261128T000859Z-4aeadr8x`, 4 workers, 2,280.6 s; Gate 00 505/505, 0 skips); `synthetic` 41/41 (`m12-20261128T004904Z-tqj5dqx3`, 1 worker, 320.0 s; 501 + 4 named skips); 0 bad seals.
+- **Not claimed:** retail equivalence, retail sequencing/timing/allocation,
+  authentic initialization past `0012f850`, IOP/PCM equivalence.
+- **Next (not started):** authentic AREA1 state-0 world setup (world track)
+  and retail sequencer timing/allocation observation (audio track); see the
+  review's recommendations.
+
 ## M24 audio sequencing and physical voice management — 2026-11-27
 
-**Resume here for audio.** Local branch `research/m24-audio-sequencing` in
+**Historical (integrated by the M23–M24 review).** Local branch `research/m24-audio-sequencing` in
 `decomp-m24`. It is based on the accepted integration HEAD
 `705cd20fcc28d17b3fac374dfad34c990f76ddc6` and is independent of `main` and
 M23. The implementation checkpoint is `263b246`.
@@ -42,7 +73,7 @@ M23. The implementation checkpoint is `263b246`.
 
 ## M23 cold gameplay initialization and world-state continuity — 2026-11-27
 
-**Resume here for M23.** Branch `research/m23-gameplay-initialization` in
+**Historical (integrated by the M23–M24 review).** Branch `research/m23-gameplay-initialization` in
 `decomp-m23`, branched from the shared baseline `integration/m21-m22-review`
 (`705cd20fcc28d17b3fac374dfad34c990f76ddc6`, tested source
 `5e7f10776492e36cacd463d507ba9089f0ccab0a`). Verified M23 implementation commit:
