@@ -1,8 +1,69 @@
 # Hungry Ghosts — master handoff
 
+## M26 audio timing and voice management — 2026-11-27
+
+**Resume here.** `research/m26-audio-timing` (worktree `decomp-m26`) on pinned
+`origin/main` `7191ca7402b5c8f0d5a58dbd38c62d099470c667` (PR #23 merge;
+`PS2DInfo` `2e4a226e00d33ab35391aacade71b55826e5f52f`). Working tree is
+uncommitted pending user approval; local `main`, M25, and world/gameplay code
+are untouched. Detail and limits: [M26](docs/M26.md).
+
+- **Reference timing research (`evidence/m26/reference-timing.json`,
+  `tools/hg_audio/m26_reference_timing.py`):**
+  - Authenticated `SCPS-15046` ELF (`a74248c5…`, 23 instruction anchors) proves
+    boot `0011d880..0011d8b8` registers VBlank-End `0011df80` (INTC 3), which
+    wakes `001566c0` via `00104e10` → `00103ea0` (`iWakeupThread`, syscall
+    `-52`) whenever `003f6db0 == 1`.
+  - Across all 12 pinned M22 PCSX2 v2.8.2 checkpoints (`title-idle` through
+    `cursor-confirm`, 5,618 VBlanks), `VBlankStart(0095e300) - AudioWake(00a6c3c0) == 1`
+    and all 16 slot counters `00a6c344 + 8n == 00a6c3c0`.
+  - Cursor attribution resolved: at `cursor-up`, voice 8 (`owner=0`, age 31) is
+    `cursor-down`'s 3rd note and voices 9–10 (`owner=1`) are `cursor-up`;
+    Slot 3 (`002b2438`) retires voices at `age >= 3 && ENVX < 2` and enqueues
+    masks in order `0x09, 0x0a, 0x07, 0x08`, gating Slot 2 channel and Slot 1
+    command retirement.
+  - Instrumentation limit: frame-boundary checkpoints only; live multi-frame
+    PINE tracing was not run.
+- **Timing & voice model (`src/audio/audio_sequencer.{h,c}`):** additive opt-in
+  `HG_SEQ_TIMING_CHRONO` mode (`HGSeqTimingConfig`, `HGSeqClock`,
+  `HGSeqDecisionTiming`, 9 new APIs; 289 exported functions, 0 duplicates).
+  Separates elapsed, request, due, service/flush, and render time; provides
+  deterministic chronological ordering across 0-tick, unit-tick, coarse, and
+  irregular updates; rotating-cursor/lowest-free allocation, steal/refusal,
+  polyphonic/retrigger repeat, deferred exclusive release holds, pending/active
+  cancel retirement, bank replacement, and reset/rebind. Legacy M22/M24 and
+  combined world-audio receipts are byte-identical.
+- **Connected lifecycle (`tests/audio_timing_lifecycle.c`,
+  `tools/verify_audio_timing.py`, `evidence/m26/timing-lifecycle.json`):** 7
+  scenario families, 17 schedule runs × 2 cycles (5 families checked for exact
+  logical parity across `unit-tick`, `coarse-2`, and `irregular-zero`), clean
+  teardown, Cycle 2 repeat parity, and 10/10 targeted negative controls;
+  byte-identical across GCC/Clang + ASan/UBSan/LSan (`f52168bd…`).
+- **Verification (`focused` 8, `historical`/`full` 79, `synthetic` 42,
+  `current` 140):**
+  - `synthetic` `m12-20261128T021136Z-o9n0yove` (`--jobs 1`, `source_sha256`
+    `feeafd55…`): **42/42 accepted** (40 passed, 2 expected rejections, 0
+    reused, 0 bad seals, Gate 00 510/510, 353.8 s; `summary.json` `8bc00726…`).
+  - `current` `m12-20261128T021844Z-end66r4x` (`--jobs 1`, `source_sha256`
+    `feeafd55…`): **140/140 accepted** (135 passed, 5 expected rejections, 0
+    reused, 0 bad seals, Gate 00 510/510 with 0 skips, 5,079.5 s; `summary.json`
+    `3b61dbf2…`), including `m26-reference-timing` (0.60 s) and
+    `m26-audio-timing-synthetic` (3.52 s).
+  - Coverage/results: [docs/verification/m26-coverage.json](docs/verification/m26-coverage.json),
+    [docs/verification/m26-results.json](docs/verification/m26-results.json).
+- **Additive shared files for later integration:** `config/current-verification.json`,
+  `tools/hg_verify_milestones.py`, `tests/test_hg_verify.py`, `START_HERE.md`,
+  `MASTER_HANDOFF.md`.
+- **Gaps / limits:** live multi-frame PCSX2 PINE tracing, RPC-busy skip rate,
+  fallback steal internals (`002afed8`/`002af1d0`), retail ADSR curves,
+  `00156cf0` resume, streaming dialogue (`001564a0`/`00156550`), full IOP
+  emulation, and PCM equivalence remain out of scope.
+- **Next action:** user review and approval to commit `research/m26-audio-timing`
+  (and optionally push/PR or authorize live PINE tracing).
+
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** `integration/m23-m24-review` (worktree
+**Historical baseline (merged into `origin/main` at `7191ca74`).** `integration/m23-m24-review` (worktree
 `decomp-m23-m24-integration`) on remote `main` `09b58321` (PR #22), merging
 M23 `6cc3ce8d` and M24 `1830f5ec` with their shared M19–M22 history
 (`705cd20f` ⊃ `b855eb93`). Merge commits `71cd01d`, `216b126`; tested

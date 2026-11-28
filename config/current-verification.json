@@ -1167,6 +1167,44 @@
         "--output",
         "{artifact:result.json}"
       ]
+    },
+    {
+      "id": "m26-reference-timing",
+      "result": "m26-reference-timing",
+      "evidence": "original-bytes",
+      "timeout": 600,
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_audio/m26_reference_timing.py",
+        "--elf",
+        "{elf}",
+        "--live",
+        "local/m22/live",
+        "--output",
+        "{artifact:result.json}",
+        "--check",
+        "evidence/m26/reference-timing.json"
+      ]
+    },
+    {
+      "id": "m26-audio-timing-synthetic",
+      "result": "m26-audio-timing",
+      "evidence": "synthetic",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_audio_timing.py",
+        "--compiler",
+        "cc",
+        "--sanitize",
+        "--output",
+        "{artifact:result.json}"
+      ]
     }
   ]
 }

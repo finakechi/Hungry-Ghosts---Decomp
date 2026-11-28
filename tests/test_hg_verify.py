@@ -508,14 +508,14 @@ class SchedulerTests(unittest.TestCase):
 
 
 class MilestoneGateTests(unittest.TestCase):
-    """M19-M24 and M23-M24 integration registrations and contracts."""
+    """M19-M24, M23-M24 integration, and M26 registrations and contracts."""
     NEW = ('m19-resource-job', 'm19-resource-retail', 'm19-connected-title', 'm20-hgscript-differential',
            'm20-title-hgscript', 'm21-title-menu', 'm21-title-neutral', 'm21-cold-new-game', 'm21-area1-entry',
            'm21-ferry-reload', 'm21-ferry-resume', 'm22-retail-service', 'm23-authentic-boundary',
            'm24-reference-map', 'm23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
-           'world-audio-lifecycle')
+           'world-audio-lifecycle', 'm26-reference-timing', 'm26-audio-timing-synthetic')
     SYNTHETIC = ('m23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
-                 'world-audio-lifecycle')
+                 'world-audio-lifecycle', 'm26-audio-timing-synthetic')
 
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
@@ -528,8 +528,8 @@ class MilestoneGateTests(unittest.TestCase):
         inv = lambda name: runner.inventory(runner.INVENTORY, runner.HISTORICAL, name)
         current, synthetic = inv('current'), inv('synthetic')
         self.assertEqual((len(inv('focused')), len(inv('historical')), len(inv('full')), len(current), len(synthetic)),
-                         (8, 79, 79, 138, 41))
-        self.assertEqual([row['id'] for row in current[-18:]], list(self.NEW))
+                         (8, 79, 79, 140, 42))
+        self.assertEqual([row['id'] for row in current[-20:]], list(self.NEW))
         self.assertEqual({row['id'] for row in synthetic} - {row['id'] for row in inv('historical')}
                          - {row['id'] for row in current[79:120]}, set(self.SYNTHETIC))
         for name in self.NEW:
@@ -605,6 +605,24 @@ class MilestoneGateTests(unittest.TestCase):
         self.assertEqual(self.classify('m20-m22-c-sanitizers', row)[0], results.PASSED)
         self.assertEqual(self.classify('m20-m22-c-sanitizers', row | dict(canary=dict(detected=False, exit_code=0)))[0],
                          results.ERROR)
+
+    def test_m26_contracts_verify_evidence_and_reject_tampering(self):
+        ref = self.evidence('evidence/m26/reference-timing.json')
+        verdict, details = self.classify('m26-reference-timing', ref)
+        self.assertEqual((verdict, details['checkpoints']), (results.PASSED, 12))
+        bad_ref = json.loads(json.dumps(ref))
+        bad_ref['saved_checkpoints']['all_diffs_equal_one'] = False
+        self.assertEqual(self.classify('m26-reference-timing', bad_ref)[0], results.ERROR)
+
+        report = self.evidence('evidence/m26/timing-lifecycle.json')
+        row = dict(schema='hg-m26-audio-timing-verification/v1', exit_code=0, stderr='', sanitized=True,
+                   failure=None, matches_evidence=True, report=report)
+        verdict, details = self.classify('m26-audio-timing-synthetic', row)
+        self.assertEqual((verdict, details['families'], details['controls']), (results.PASSED, 7, 10))
+        self.assertEqual(self.classify('m26-audio-timing-synthetic', row | dict(sanitized=False))[0], results.ERROR)
+        tampered = json.loads(json.dumps(report))
+        tampered['controls'][0]['failures'] = ['end-state']
+        self.assertEqual(self.classify('m26-audio-timing-synthetic', row | dict(report=tampered))[0], results.ERROR)
 
 
 if __name__ == '__main__':

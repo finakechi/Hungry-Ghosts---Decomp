@@ -1,8 +1,65 @@
 # Hungry Ghosts — start here
 
+## M26 audio timing and voice management — 2026-11-27
+
+**Resume here.** Branch `research/m26-audio-timing` in `decomp-m26`, based on
+pinned `origin/main` `7191ca7402b5c8f0d5a58dbd38c62d099470c667` (PR #23 merge;
+leaves local `main`, M25, and world/gameplay code untouched). Working tree is
+**uncommitted** pending user approval for commit/push/PR. Full detail:
+[M26](docs/M26.md).
+
+- **Authenticated reference timing research**
+  ([evidence/m26/reference-timing.json](evidence/m26/reference-timing.json),
+  `tools/hg_audio/m26_reference_timing.py`):
+  - **Wake source confirmed from `SCPS-15046` ELF bytes (`a74248c5…`):** boot
+    `0011d880..0011d8b8` registers VBlank-End handler `0011df80` (INTC 3), which
+    wakes audio thread `001566c0` via `00104e10` → `00103ea0` (`iWakeupThread`,
+    syscall `-52`) when `003f6db0 == 1`.
+  - **12 M22 PCSX2 v2.8.2 checkpoints:** across 5,618 VBlanks (`title-idle`
+    through `cursor-confirm`), `VBlankStart(0095e300) - AudioWake(00a6c3c0) == 1`
+    and all 16 slot counters `00a6c344 + 8n == 00a6c3c0` identically.
+  - **Cursor attribution & retirement:** at `cursor-up`, voice 8 (`owner=0`) is
+    `cursor-down`'s 3rd note while voices 9–10 (`owner=1`) are `cursor-up`;
+    Slot 3 (`002b2438`) retires voices at `age >= 3 && ENVX < 2` and enqueues
+    masks in order `0x09, 0x0a, 0x07, 0x08`, followed by Slot 2 channel and
+    Slot 1 command retirement.
+  - **Limits:** saved frame-boundary snapshots only; live multi-frame PINE
+    capture was not run.
+- **Independent timing & voice model** (`src/audio/audio_sequencer.{h,c}`):
+  additive opt-in `HG_SEQ_TIMING_CHRONO` mode (`HGSeqTimingConfig`,
+  `HGSeqClock`, `HGSeqDecisionTiming`, 9 new APIs; 289 combined exported
+  functions, 0 duplicates). Distinguishes elapsed, request, due, service/flush,
+  and render time; supports 0-tick/unit/coarse/irregular schedules, rotating
+  cursor or lowest-free allocation, steal/refusal, polyphonic/retrigger repeat,
+  pending/active cancel retirement, deferred exclusive release holds, bank
+  replacement, and reset/rebind. Legacy M22/M24/world-audio receipts stay
+  byte-identical.
+- **Verification (2 new gates; profiles: `focused` 8, `historical`/`full` 79,
+  `synthetic` 42, `current` 140):**
+  - Connected driver (`tests/audio_timing_lifecycle.c`,
+    [evidence/m26/timing-lifecycle.json](evidence/m26/timing-lifecycle.json)):
+    all 7 scenario families, 3-schedule logical parity (`unit-tick`,
+    `coarse-2`, `irregular-zero`), Cycle 2 repeat parity, 10/10 negative
+    controls, byte-identical across GCC/Clang + ASan/UBSan/LSan.
+  - `synthetic` (`m12-20261128T021136Z-o9n0yove`, `--jobs 1`): **42/42 accepted**
+    (40 passed, 2 expected rejections, 0 reused, 0 bad seals, 353.8 s).
+  - `current` (`m12-20261128T021844Z-end66r4x`, `--jobs 1`, `local/m26/config.json`):
+    **140/140 accepted** (135 passed, 5 expected rejections, 0 reused, 0 bad
+    seals, Gate 00 510/510 with 0 skips, 5,079.5 s).
+  - Coverage/results: [m26-coverage.json](docs/verification/m26-coverage.json),
+    [m26-results.json](docs/verification/m26-results.json).
+  - Private inputs needed for full `current`: `HG_JAPAN_ISO`, `HG_ELF`,
+    `local/m22/{retail,live}`, M18/M21/M4–M11 saved states, and pinned PCSX2
+    v2.8.2 (`{emulator}` in `local/m26/config.json`).
+- **Not claimed:** retail equivalence, retail sequencer/allocator
+  reconstruction, live multi-frame PINE timing, streaming dialogue
+  (`001564a0`/`00156550`), full IOP emulation, or PCM equivalence.
+- **Next single action:** review and approve committing `research/m26-audio-timing`
+  (or request optional live PCSX2 PINE multi-frame capture before commit).
+
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** Branch `integration/m23-m24-review` in
+**Historical baseline (merged into `origin/main` at `7191ca7402b5c8f0d5a58dbd38c62d099470c667`).** Branch `integration/m23-m24-review` in
 `decomp-m23-m24-integration`, based on remote `main`
 `09b5832119d5ec97c85c05c6ab1eddd6c20be8ad` (PR #22). It merges
 `research/m23-gameplay-initialization` (`6cc3ce8d`) and

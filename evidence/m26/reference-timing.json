@@ -1,0 +1,798 @@
+{
+  "elf": {
+    "anchors": {
+      "audio_init_create_thread": {
+        "address": "0015691c",
+        "target": "00143360"
+      },
+      "audio_init_set_tick_60": {
+        "address": "00156890",
+        "target": "002a74b8"
+      },
+      "audio_thread_rpc_check": {
+        "address": "001566d8",
+        "target": "002ad118"
+      },
+      "audio_thread_scheduler": {
+        "address": "001566e8",
+        "target": "002a7450"
+      },
+      "audio_thread_sleep": {
+        "address": "001566d0",
+        "target": "00103e80"
+      },
+      "boot_audio_init": {
+        "address": "0011d8b8",
+        "target": "00156870"
+      },
+      "boot_enable_intc2": {
+        "address": "0011d8a8",
+        "target": "00104aa8"
+      },
+      "boot_enable_intc3": {
+        "address": "0011d8b0",
+        "target": "00104aa8"
+      },
+      "boot_register_intc2_vblank_start": {
+        "address": "0011d88c",
+        "target": "00103c40"
+      },
+      "boot_register_intc3_vblank_end": {
+        "address": "0011d8a0",
+        "target": "00103c40"
+      },
+      "iwakeup_wrapper_syscall": {
+        "address": "00104e30",
+        "target": "00103ea0"
+      },
+      "release_note_set_adsr": {
+        "address": "002b20c0",
+        "target": "002b1668"
+      },
+      "slot1_retire_check": {
+        "address": "002adde4",
+        "target": "002a9d18"
+      },
+      "slot1_time_add": {
+        "address": "002ade44",
+        "target": "00115fd8"
+      },
+      "slot1_time_cmp": {
+        "address": "002adf30",
+        "target": "00116580"
+      },
+      "slot2_voice_owner_check": {
+        "address": "002a98ac",
+        "target": "002b0cd8"
+      },
+      "slot3_enqueue_key_off": {
+        "address": "002b2da4",
+        "target": "002acf60"
+      },
+      "slot3_enqueue_key_on": {
+        "address": "002b2d78",
+        "target": "002acf60"
+      },
+      "slot3_enqueue_noise_mask": {
+        "address": "002b2d44",
+        "target": "002acf60"
+      },
+      "slot3_enqueue_wet_mask": {
+        "address": "002b2cf4",
+        "target": "002acf60"
+      },
+      "slot3_envx_read": {
+        "address": "002b24b8",
+        "target": "002ad0e8"
+      },
+      "vblank_end_wakeup_audio": {
+        "address": "0011dfa8",
+        "target": "00104e10"
+      },
+      "vblank_start_wakeup": {
+        "address": "0011df5c",
+        "target": "00104e10"
+      }
+    },
+    "constants": {
+      "alloc_cursor_addr": "00a832a0",
+      "audio_thread_slot_kind": 100,
+      "i_wakeup_thread_syscall": -52,
+      "pending_key_off_masks": [
+        "00a83278",
+        "00a8327c"
+      ],
+      "pending_key_on_masks": [
+        "00a83270",
+        "00a83274"
+      ],
+      "release_note_adsr2": 8,
+      "scheduler_tick_hz_word": 60,
+      "sleep_thread_syscall": 50,
+      "slot3_mask_enqueue_order": [
+        9,
+        10,
+        7,
+        8
+      ],
+      "slot3_retire_envx_lt": 2,
+      "slot3_retire_min_age_wakes": 3,
+      "vblank_end_thread_flag_addr": "003f6db0",
+      "vblank_end_thread_id_addr": "003f6db4",
+      "vblank_start_counter_addr": "0095e300",
+      "wake_counter_addr": "00a6c3c0"
+    },
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61"
+  },
+  "evidence_note": "Authenticated ELF instruction anchors and sanitized M22 saved-checkpoint counter/state observations. Contains no game media, raw captures, or personal paths. Live multi-frame PINE tracing was not executed.",
+  "instrumentation_limits": [
+    "Saved PCSX2 checkpoints capture frame-boundary snapshots only (not sub-frame wake latency).",
+    "Pending SG2IOP masks at 00a83270..00a8327c are always 0 at saved boundaries because Slot 3 clears them before Slot 4 flushes.",
+    "Live PCSX2 PINE polling across consecutive frames and repeated cursor runs remain unexecuted in this milestone.",
+    "Exact RPC-busy skip frequency under heavy load, fallback steal tie-breaking inside 002afed8/002af1d0, and SPU2 hardware ADSR release curves remain outside this bounded check."
+  ],
+  "saved_checkpoints": {
+    "all_diffs_equal_one": true,
+    "all_slots_match_wake": true,
+    "checkpoint_count": 12,
+    "cursor_attribution": {
+      "cursor_confirm_wakes": 6762,
+      "cursor_down_to_up_delta_wakes": 34,
+      "cursor_down_wakes": 6694,
+      "cursor_up_to_confirm_delta_wakes": 34,
+      "cursor_up_wakes": 6728,
+      "note_spacing_ticks": 72,
+      "note_spacing_wakes": 9,
+      "ticks_per_wake": 8.0,
+      "voice_10_owner_at_cursor_up": 1,
+      "voice_16_17_releasing_at_confirm": true,
+      "voice_6_7_8_idle_at_confirm": true,
+      "voice_8_owner_at_cursor_up": 0,
+      "voice_9_owner_at_cursor_up": 1
+    },
+    "cursor_sequence": {
+      "cursor-confirm": {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 18,
+        "audio_thread_flag_003f6db0": 1,
+        "audio_thread_id_003f6db4": 3,
+        "channels": [
+          {
+            "channel": 1,
+            "closing_flag_0x10": 0,
+            "owner_id_0x04": 0,
+            "ring_drained": true,
+            "ring_read_index": 15,
+            "ring_write_index": 15,
+            "slot": null
+          },
+          {
+            "channel": 2,
+            "closing_flag_0x10": 1,
+            "owner_id_0x04": 1,
+            "ring_drained": true,
+            "ring_read_index": 15,
+            "ring_write_index": 15,
+            "slot": 0
+          },
+          {
+            "channel": 3,
+            "closing_flag_0x10": 1,
+            "owner_id_0x04": 2,
+            "ring_drained": true,
+            "ring_read_index": 52,
+            "ring_write_index": 52,
+            "slot": 0
+          }
+        ],
+        "commands": [
+          {
+            "accum_0x28_double": 0.0,
+            "channel": 1,
+            "cursor_0x40": "00000000",
+            "delta_0x30_double": 0.0,
+            "flag_0x44": 0,
+            "index": 1,
+            "param1": 1,
+            "param2": 3,
+            "running_status_0x48": "ff",
+            "seq": 1,
+            "slot": 0,
+            "state": 0,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          },
+          {
+            "accum_0x28_double": 0.0,
+            "channel": 2,
+            "cursor_0x40": "00000000",
+            "delta_0x30_double": 0.0,
+            "flag_0x44": 0,
+            "index": 2,
+            "param1": 1,
+            "param2": 3,
+            "running_status_0x48": "ff",
+            "seq": 2,
+            "slot": 0,
+            "state": 2,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          },
+          {
+            "accum_0x28_double": 0.0,
+            "channel": 3,
+            "cursor_0x40": "00000000",
+            "delta_0x30_double": 0.0,
+            "flag_0x44": 0,
+            "index": 3,
+            "param1": 1,
+            "param2": 4,
+            "running_status_0x48": "ff",
+            "seq": 3,
+            "slot": 0,
+            "state": 2,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          }
+        ],
+        "ee_sg2_cursor_00a80180": 0,
+        "global_staging_00a83260_count": 0,
+        "global_tick_00a6c3c4": 60,
+        "nonzero_envx": [
+          [
+            9,
+            32762
+          ],
+          [
+            10,
+            32762
+          ],
+          [
+            11,
+            32767
+          ],
+          [
+            12,
+            32767
+          ],
+          [
+            13,
+            32767
+          ],
+          [
+            14,
+            32767
+          ],
+          [
+            15,
+            32767
+          ],
+          [
+            16,
+            19400
+          ],
+          [
+            17,
+            19400
+          ],
+          [
+            18,
+            32767
+          ],
+          [
+            19,
+            32767
+          ]
+        ],
+        "pending_masks_00a83270_7c": [
+          "00000000",
+          "00000000",
+          "00000000",
+          "00000000"
+        ],
+        "sequence_counter_00a832a4": 3,
+        "staging_00a83150_count": 10,
+        "staging_00a83154_last_status": "ff",
+        "state_sha256": "a549596bd96641dde84e6132293205ee8520abc3a21b6579638d7652729ba9e9",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6763,
+        "voices": [
+          {
+            "age_wakes_0x20": 0,
+            "alloc_stamp_0x08": 0,
+            "class_0x04": 0,
+            "envx_reply": 0,
+            "flags_0x00": "00",
+            "note_0x24": 84,
+            "owner_channel_id_0x0c": 0,
+            "voice": 6
+          },
+          {
+            "age_wakes_0x20": 0,
+            "alloc_stamp_0x08": 0,
+            "class_0x04": 0,
+            "envx_reply": 0,
+            "flags_0x00": "00",
+            "note_0x24": 83,
+            "owner_channel_id_0x0c": 0,
+            "voice": 7
+          },
+          {
+            "age_wakes_0x20": 0,
+            "alloc_stamp_0x08": 0,
+            "class_0x04": 0,
+            "envx_reply": 0,
+            "flags_0x00": "00",
+            "note_0x24": 82,
+            "owner_channel_id_0x0c": 0,
+            "voice": 8
+          },
+          {
+            "age_wakes_0x20": 50,
+            "alloc_stamp_0x08": 9,
+            "class_0x04": 2,
+            "envx_reply": 32762,
+            "flags_0x00": "01",
+            "note_0x24": 84,
+            "owner_channel_id_0x0c": 1,
+            "voice": 9
+          },
+          {
+            "age_wakes_0x20": 41,
+            "alloc_stamp_0x08": 10,
+            "class_0x04": 2,
+            "envx_reply": 32762,
+            "flags_0x00": "01",
+            "note_0x24": 83,
+            "owner_channel_id_0x0c": 1,
+            "voice": 10
+          },
+          {
+            "age_wakes_0x20": 32,
+            "alloc_stamp_0x08": 11,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 82,
+            "owner_channel_id_0x0c": 1,
+            "voice": 11
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 12,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 77,
+            "owner_channel_id_0x0c": 2,
+            "voice": 12
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 13,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 75,
+            "owner_channel_id_0x0c": 2,
+            "voice": 13
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 14,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 70,
+            "owner_channel_id_0x0c": 2,
+            "voice": 14
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 15,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 68,
+            "owner_channel_id_0x0c": 2,
+            "voice": 15
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 16,
+            "class_0x04": 2,
+            "envx_reply": 19400,
+            "flags_0x00": "15",
+            "note_0x24": 69,
+            "owner_channel_id_0x0c": 2,
+            "voice": 16
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 17,
+            "class_0x04": 2,
+            "envx_reply": 19400,
+            "flags_0x00": "15",
+            "note_0x24": 67,
+            "owner_channel_id_0x0c": 2,
+            "voice": 17
+          }
+        ],
+        "wake_counter_00a6c3c0": 6762
+      },
+      "cursor-down": {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 8,
+        "audio_thread_flag_003f6db0": 1,
+        "audio_thread_id_003f6db4": 3,
+        "channels": [
+          {
+            "channel": 1,
+            "closing_flag_0x10": 0,
+            "owner_id_0x04": 0,
+            "ring_drained": true,
+            "ring_read_index": 8,
+            "ring_write_index": 8,
+            "slot": 0
+          }
+        ],
+        "commands": [
+          {
+            "accum_0x28_double": 40.0,
+            "channel": 1,
+            "cursor_0x40": "00b5576f",
+            "delta_0x30_double": 72.0,
+            "flag_0x44": 0,
+            "index": 1,
+            "param1": 1,
+            "param2": 3,
+            "running_status_0x48": "a0",
+            "seq": 1,
+            "slot": 0,
+            "state": 1,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          }
+        ],
+        "ee_sg2_cursor_00a80180": 0,
+        "global_staging_00a83260_count": 0,
+        "global_tick_00a6c3c4": 60,
+        "nonzero_envx": [
+          [
+            6,
+            32767
+          ],
+          [
+            7,
+            32767
+          ]
+        ],
+        "pending_masks_00a83270_7c": [
+          "00000000",
+          "00000000",
+          "00000000",
+          "00000000"
+        ],
+        "sequence_counter_00a832a4": 1,
+        "staging_00a83150_count": 0,
+        "staging_00a83154_last_status": "00",
+        "state_sha256": "815393198648ded45e6b704eba9d8087a44ce5d2d8b958e20e13324c9ed8dda2",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6695,
+        "voices": [
+          {
+            "age_wakes_0x20": 15,
+            "alloc_stamp_0x08": 6,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 84,
+            "owner_channel_id_0x0c": 0,
+            "voice": 6
+          },
+          {
+            "age_wakes_0x20": 6,
+            "alloc_stamp_0x08": 7,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 83,
+            "owner_channel_id_0x0c": 0,
+            "voice": 7
+          }
+        ],
+        "wake_counter_00a6c3c0": 6694
+      },
+      "cursor-up": {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 11,
+        "audio_thread_flag_003f6db0": 1,
+        "audio_thread_id_003f6db4": 3,
+        "channels": [
+          {
+            "channel": 1,
+            "closing_flag_0x10": 1,
+            "owner_id_0x04": 0,
+            "ring_drained": true,
+            "ring_read_index": 15,
+            "ring_write_index": 15,
+            "slot": 0
+          },
+          {
+            "channel": 2,
+            "closing_flag_0x10": 0,
+            "owner_id_0x04": 1,
+            "ring_drained": true,
+            "ring_read_index": 8,
+            "ring_write_index": 8,
+            "slot": 0
+          }
+        ],
+        "commands": [
+          {
+            "accum_0x28_double": 0.0,
+            "channel": 1,
+            "cursor_0x40": "00000000",
+            "delta_0x30_double": 0.0,
+            "flag_0x44": 0,
+            "index": 1,
+            "param1": 1,
+            "param2": 3,
+            "running_status_0x48": "ff",
+            "seq": 1,
+            "slot": 0,
+            "state": 2,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          },
+          {
+            "accum_0x28_double": 48.0,
+            "channel": 2,
+            "cursor_0x40": "00b5576f",
+            "delta_0x30_double": 72.0,
+            "flag_0x44": 0,
+            "index": 2,
+            "param1": 1,
+            "param2": 3,
+            "running_status_0x48": "a0",
+            "seq": 2,
+            "slot": 0,
+            "state": 1,
+            "step_0x20_double": 8.0,
+            "step_0x20_hex": "4020000000000000"
+          }
+        ],
+        "ee_sg2_cursor_00a80180": 0,
+        "global_staging_00a83260_count": 0,
+        "global_tick_00a6c3c4": 60,
+        "nonzero_envx": [
+          [
+            6,
+            32762
+          ],
+          [
+            7,
+            32762
+          ],
+          [
+            8,
+            32767
+          ],
+          [
+            9,
+            32767
+          ],
+          [
+            10,
+            32767
+          ]
+        ],
+        "pending_masks_00a83270_7c": [
+          "00000000",
+          "00000000",
+          "00000000",
+          "00000000"
+        ],
+        "sequence_counter_00a832a4": 2,
+        "staging_00a83150_count": 0,
+        "staging_00a83154_last_status": "00",
+        "state_sha256": "a05d36829abacd4c5f139e95a8b7c1362222a8377e6d120e40c9af9a801ddd14",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6729,
+        "voices": [
+          {
+            "age_wakes_0x20": 49,
+            "alloc_stamp_0x08": 6,
+            "class_0x04": 2,
+            "envx_reply": 32762,
+            "flags_0x00": "01",
+            "note_0x24": 84,
+            "owner_channel_id_0x0c": 0,
+            "voice": 6
+          },
+          {
+            "age_wakes_0x20": 40,
+            "alloc_stamp_0x08": 7,
+            "class_0x04": 2,
+            "envx_reply": 32762,
+            "flags_0x00": "01",
+            "note_0x24": 83,
+            "owner_channel_id_0x0c": 0,
+            "voice": 7
+          },
+          {
+            "age_wakes_0x20": 31,
+            "alloc_stamp_0x08": 8,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 82,
+            "owner_channel_id_0x0c": 0,
+            "voice": 8
+          },
+          {
+            "age_wakes_0x20": 16,
+            "alloc_stamp_0x08": 9,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 84,
+            "owner_channel_id_0x0c": 1,
+            "voice": 9
+          },
+          {
+            "age_wakes_0x20": 7,
+            "alloc_stamp_0x08": 10,
+            "class_0x04": 2,
+            "envx_reply": 32767,
+            "flags_0x00": "01",
+            "note_0x24": 83,
+            "owner_channel_id_0x0c": 1,
+            "voice": 10
+          }
+        ],
+        "wake_counter_00a6c3c0": 6728
+      },
+      "title-input": {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "audio_thread_flag_003f6db0": 1,
+        "audio_thread_id_003f6db4": 3,
+        "channels": [],
+        "commands": [],
+        "ee_sg2_cursor_00a80180": 0,
+        "global_staging_00a83260_count": 0,
+        "global_tick_00a6c3c4": 60,
+        "nonzero_envx": [],
+        "pending_masks_00a83270_7c": [
+          "00000000",
+          "00000000",
+          "00000000",
+          "00000000"
+        ],
+        "sequence_counter_00a832a4": 0,
+        "staging_00a83150_count": 0,
+        "staging_00a83154_last_status": "00",
+        "state_sha256": "4c32e376633fe1e9fa922bb1760d441af938df567414c7c7321b10f29a02a1bb",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 2979,
+        "voices": [],
+        "wake_counter_00a6c3c0": 2978
+      }
+    },
+    "timeline": [
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "title-idle",
+        "state_sha256": "effabcd0720950feaedbb488e95ab2f7686388321ea82a08ee3a08896a082a73",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 1145,
+        "wake_counter_00a6c3c0": 1144
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "title-move",
+        "state_sha256": "7acba6926a595facfbb4e8f3e72db2401b16595584623aabd74b7882b11a5d83",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 1188,
+        "wake_counter_00a6c3c0": 1187
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "title-enter",
+        "state_sha256": "b3abe2174bbf4d5c40185691f41f3b0fc4ac011bd942750cf5d9a1afee3d04d6",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 1974,
+        "wake_counter_00a6c3c0": 1973
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "no-save",
+        "state_sha256": "a8448af82e8fd065754cf255c7485bce791ca3359987bef863ba635f94b0a98e",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 2407,
+        "wake_counter_00a6c3c0": 2406
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "title-input",
+        "state_sha256": "4c32e376633fe1e9fa922bb1760d441af938df567414c7c7321b10f29a02a1bb",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 2979,
+        "wake_counter_00a6c3c0": 2978
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "press-start",
+        "state_sha256": "889957d2127083f7c559fcbe5b3cc5ba3f080c6aac6a537269f9282c9808c96e",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 4793,
+        "wake_counter_00a6c3c0": 4792
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "menu-enter",
+        "state_sha256": "376f4e912ac64e0ab6e4f00423168e44bf3bd0de20f51da8ea0a6a3596601662",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 5893,
+        "wake_counter_00a6c3c0": 5892
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "menu-move-down",
+        "state_sha256": "d4bf28f93b8bac9138b2474cac9501780808b8c5b5c7c504308d8252aeea0c05",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 5924,
+        "wake_counter_00a6c3c0": 5923
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 6,
+        "checkpoint": "menu-move-up",
+        "state_sha256": "b9e8a41a55df8d7de1e3197264a0b872b715e15b574c52e51967e69231ffd195",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 5954,
+        "wake_counter_00a6c3c0": 5953
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 8,
+        "checkpoint": "cursor-down",
+        "state_sha256": "815393198648ded45e6b704eba9d8087a44ce5d2d8b958e20e13324c9ed8dda2",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6695,
+        "wake_counter_00a6c3c0": 6694
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 11,
+        "checkpoint": "cursor-up",
+        "state_sha256": "a05d36829abacd4c5f139e95a8b7c1362222a8377e6d120e40c9af9a801ddd14",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6729,
+        "wake_counter_00a6c3c0": 6728
+      },
+      {
+        "all_16_slot_counters_equal_wake": true,
+        "alloc_cursor_00a832a0": 18,
+        "checkpoint": "cursor-confirm",
+        "state_sha256": "a549596bd96641dde84e6132293205ee8520abc3a21b6579638d7652729ba9e9",
+        "vblank_minus_wake": 1,
+        "vblank_start_0095e300": 6763,
+        "wake_counter_00a6c3c0": 6762
+      }
+    ],
+    "timestamp_source": "guest VBlank-Start counter (0095e300) vs audio scheduler wake counter (00a6c3c0) in PCSX2 v2.8.2 saved states",
+    "vblank_span": 5618,
+    "wake_span": 5618
+  },
+  "schema": "hg-m26-reference-timing/v1"
+}
