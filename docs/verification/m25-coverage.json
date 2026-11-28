@@ -1,0 +1,54 @@
+{
+ "schema": "hg-m25-coverage/v1",
+ "date": "2026-11-27",
+ "profiles": {
+  "focused": 8,
+  "historical": 79,
+  "full": "alias of historical (79)",
+  "current": 140,
+  "synthetic": 42,
+  "current_added": 2,
+  "synthetic_added": 1
+ },
+ "capabilities": {
+  "M25 connected world session (two original scenes, teardown, re-entry)": [
+   {
+    "gate": "m25-world-session-synthetic",
+    "verifier": "tools/verify_world_session.py --synthetic --compiler cc --sanitize",
+    "inputs": [],
+    "evidence_level": "synthetic (independent model + existing C)",
+    "expected": "report equal to evidence/m25/world-session.json: 4 cycles (lantern-court, terrace-gallery, x2), 134 post-readiness updates and 198 coordinator ticks each, 14 controls, 36 invalid inputs",
+    "acceptance": "exact receipt equality; ASan/UBSan/LSan build with empty stderr; Python re-derivation (camera geometry, continuity, floor, coordinator order, ledger replay) reports 0 problems; contract re-checks cycle schedule, teardown pools (2048 nodes; 286/40/256 actors), cycle-relative parity, intended/forbidden control detectors, balanced ownership and 0 unknown provenance records",
+    "negative_controls": "13 fault switches + event-entry selector; each must fire its intended check and not its forbidden check; 36 invalid inputs must return their expected error",
+    "scheduling": "parallel (build and outputs inside HG_VERIFY_BUILD_DIR / attempt directory)",
+    "limits": "original synthetic scenes; no retail equivalence claimed"
+   }
+  ],
+  "M25 authentic initialization dependencies": [
+   {
+    "gate": "m25-authentic-dependencies",
+    "verifier": "tools/verify_world_session.py --inspect-authentic",
+    "inputs": [
+     "{elf}",
+     "{image}",
+     "local/m21/native",
+     "{m13-captures}/obs3-000.json",
+     "M8 native-player-init-entry-001",
+     "M8 native-player-init-return-001",
+     "{ps2dinfo}"
+    ],
+    "evidence_level": "original-bytes + saved-runtime (cross-run) + original-instruction prediction",
+    "expected": "report equal to evidence/m25/authentic-dependencies.json",
+    "acceptance": "exact equality; ISO/ELF identity, CRC 91AA4B28, entry 0x00100008; 18-service coordinator order; area1-active vs M8 entry equal in 11 domains; C 00158a10 on area1-active equals the M8 return in 6 domains; fault 0x30 reproduced; earliest unsupported dependency 001e3440",
+    "negative_controls": "fault 0x30 on state-0 C dispatch; characterization asserts fixed instruction words",
+    "scheduling": "exclusive",
+    "limits": "cross-run equivalence is not continuity; oracle values are predictions, not observations; live PCSX2 observation not performed"
+   }
+  ]
+ },
+ "reused_existing": [
+  "synthetic-suite (Gate 00) runs tests/test_world_session.py (9 tests, no skips) and tests/test_hg_verify.py M25 contract tests",
+  "m23-world-init-synthetic and world-audio confirm the M23 path and hg_world_harness_guest_ram() consumers are unchanged",
+  "m23-authentic-boundary reproduces the 0012f850 stop and fault 0x30"
+ ]
+}

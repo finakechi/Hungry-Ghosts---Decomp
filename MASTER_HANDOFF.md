@@ -1,8 +1,111 @@
 # Hungry Ghosts — master handoff
 
+## M25 world initialization and state continuity — 2026-11-28
+
+**Resume here (world track).** The branch is `research/m25-world-initialization`
+in worktree `decomp-m25`, created from `main` `7191ca7402b5c8f0d5a58dbd38c62d099470c667`
+(PR #23 merge; PR #22 `09b5832`; PS2DInfo `2e4a226e`). It has **no commit, push
+or PR yet** because these need owner approval. The verified source hash is
+`46bf628bc0af9eb5753c79c4eb0ccfeb564980a6794adc6cd3aa57ff82d6797e`, and the
+receipts list the working files. Detail: [M25](docs/M25.md). Results:
+[m25-results.json](docs/verification/m25-results.json). Coverage:
+[m25-coverage.json](docs/verification/m25-coverage.json).
+
+### Code
+
+- **Session API** in `src/scene/world_init.{h,c}`, additive. The M23 path and
+  `hg_world_harness_guest_ram()` are unchanged, and the M23 receipt is
+  identical.
+  - It adds the scene spec, readiness states, history, ownership and effect
+    ledgers, and a snapshot.
+  - It adds 4 errors and 3 provenance classes.
+  - The coordinator follows the 18-service ELF order.
+  - The state-0 and tail rules come from the original bytes. The rotation
+    helpers right-multiply, as measured.
+  - The model adds node release and actor retire. Teardown and
+    partial-initialization cleanup are driven by the ledger.
+- **Driver and checkers.** `tests/world_session_driver.c` is the checker-owned
+  driver. `tools/verify_world_session.py` provides `--synthetic` with an
+  independent Python re-derivation, and `--inspect-authentic`.
+- **Gate contracts.** `tools/hg_verify_m25.py` holds them.
+- **Tests.** `tests/test_world_session.py` has 9 tests and no skips.
+
+### Evidence
+
+| File | SHA-256 |
+| --- | --- |
+| `evidence/m25/world-session.json` | `b628f037…` |
+| `evidence/m25/authentic-dependencies.json` | `2986823e…` |
+| `evidence/m25/provenance-ledger.json` | `371d56fd…` (44 fields, 7 classes) |
+
+### Results
+
+- **Synthetic.** The cycles run `lantern-court`/`terrace-gallery` ×2:
+  - Each cycle has 63 fade frames, 134 updates and 198 coordinator ticks in ELF
+    order.
+  - There are 89/67 wall-contact frames and 43/26 slide frames, plus 2 floor
+    changes per cycle.
+  - After teardown: 2048 free nodes and pools of 286/40/256.
+  - Parity holds. 14/14 controls are detected by their intended checks, and
+    36/36 invalid inputs are rejected.
+  - Ownership balances: 26/26 actors and 132/132 nodes.
+- **Authentic.**
+  - Identity reproduces `japan.json`.
+  - `area1-active` equals the M8 `00158a10` entry in 11 domains. C `00158a10`
+    on `area1-active` equals the M8 return in 6 domains. This is equivalence
+    across separate runs, not continuity.
+  - Oracle **predictions** for state 0: `+18 = 1`, Y 38.0455322,
+    `003f9f6e = 1`. For the camera: eye (48.5, 54.54541, 265), pitch 0.052359.
+  - Fault 0x30 is reproduced.
+  - The earliest unsupported dependency is `001e3440`.
+- **Recorded against M23.** `003f9f6e` is modeled as 0 (a conflict). The camera
+  pitch convention is lost at yaw π/2. The `local/m21/live` path is wrong
+  (erratum).
+
+### Verification
+
+- **Plans.** Baseline (source `3b698e92…`): focused 8, synthetic 41,
+  historical 79, current 138. After M25: synthetic 42 and current 140, all
+  ready.
+- **`current` run** `m12-20261128T034909Z-i9la3od6`:
+  - One worker, after M26's run finished.
+  - 140/140 accepted: 135 passed and 5 expected rejections.
+  - All 79 historical gates passed. Gate 00 515/515 with 0 skips.
+  - 0 reused and 0 retries. Session 4,962.9 s; child processes 4,907.9 s.
+- **`synthetic` run** `m12-20261128T034342Z-yclwqga6`: 42/42 accepted. Gate 00
+  had 511 passed and 4 named retail skips. Time 313.7 s.
+- **Seals.** Recomputed independently: 0 bad seals and 0 bad artifacts.
+- **Direct checks.**
+  - GCC 16.2.1 and Clang 23.1.5 strict builds of all 12 `src/**/*.c`: 0
+    warnings.
+  - ASan/UBSan/LSan: the driver JSON is bit-identical across all four builds.
+  - `world_audio` matches its evidence.
+  - `git diff --check` is clean, and the publication audit has 0 findings.
+
+### Blocked and decisions
+
+- **Live PINE observation.** No observation was made of:
+  - the same-run `00158a10` return;
+  - the `001e3440` return;
+  - the first state-1 frame;
+  - the first camera follow;
+  - the initial walk and collision.
+
+  The owner's desktop session was in use. This needs an approved quiet window
+  with the isolated emulator profile.
+- **Decisions needed:**
+  - Approval to commit and open a PR.
+  - The observation window.
+- **Shared-file edits to reconcile with M26** (M26 not merged):
+  - `config/current-verification.json`;
+  - `tools/hg_verify_milestones.py`;
+  - `tests/test_hg_verify.py` (counts 8/79/79/140/42);
+  - `START_HERE.md` and `MASTER_HANDOFF.md`.
+- **`00156cf0` gameplay audio resume** stays external.
+
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** `integration/m23-m24-review` (worktree
+**Integrated baseline.** `integration/m23-m24-review` (worktree
 `decomp-m23-m24-integration`) on remote `main` `09b58321` (PR #22), merging
 M23 `6cc3ce8d` and M24 `1830f5ec` with their shared M19–M22 history
 (`705cd20f` ⊃ `b855eb93`). Merge commits `71cd01d`, `216b126`; tested

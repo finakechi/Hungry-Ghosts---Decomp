@@ -1,0 +1,163 @@
+{
+ "schema": "hg-m25-results/v1",
+ "date": "2026-11-28",
+ "branch": "research/m25-world-initialization",
+ "base_main": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+ "committed": false,
+ "reference": {
+  "build": "SCPS-15046",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e"
+ },
+ "host": {
+  "os": "CachyOS x86-64",
+  "gcc": "16.2.1",
+  "clang": "23.1.5",
+  "python": "3.14.10",
+  "dedicated": false
+ },
+ "baseline_plan": {
+  "source_sha256": "3b698e927c94f94122f97e6a0177e8c76b04ae07e5aa46aad26ffb588ea8183b",
+  "focused": 8,
+  "synthetic": 41,
+  "historical": 79,
+  "current": 138
+ },
+ "acceptance": [
+  {
+   "run": "m12-20261128T034909Z-i9la3od6",
+   "profile": "current",
+   "jobs": 1,
+   "state": "complete",
+   "revision": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+   "source_sha256": "46bf628bc0af9eb5753c79c4eb0ccfeb564980a6794adc6cd3aa57ff82d6797e",
+   "working_tree_clean": false,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "488554dc630845f14021d6f77ce27667d2e4d1f8f6437d47792483dd386f7526",
+   "gates": 140,
+   "counts": {
+    "passed": 135,
+    "expected-rejection": 5
+   },
+   "accepted": 140,
+   "reused": 0,
+   "executed": 140,
+   "historical_gates": 79,
+   "full_verdict": "passed",
+   "retries": 0,
+   "session_seconds": 4962.869,
+   "child_seconds": 4907.948,
+   "not_accepted": [],
+   "expected_rejections": [
+    "ordinary-a1-zero-control",
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls",
+    "actor-lists-negative-controls",
+    "player-transition-negative-controls"
+   ],
+   "gate00": {
+    "tests": 515,
+    "passed_tests": 515,
+    "failed_tests": 0,
+    "retail_tests_unrun": []
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m25-world-session-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 3.865,
+     "receipt_sha256": "b9e96fedc222fc86445436607f7e4c7364217fe71d067ca2b9efd5775bf3a360",
+     "measured": {
+      "cycles": 4,
+      "updates": 536,
+      "controls": 14,
+      "invalid_inputs": 36
+     }
+    },
+    "m25-authentic-dependencies": {
+     "verdict": "passed",
+     "child_seconds": 19.009,
+     "receipt_sha256": "405660e24c7cf18550b3a9ec9b4c404e7ec6684639e5df878bb173a5435f4481",
+     "measured": {
+      "captures": 5,
+      "bridge_domains": 6
+     }
+    }
+   }
+  },
+  {
+   "run": "m12-20261128T034342Z-yclwqga6",
+   "profile": "synthetic",
+   "jobs": 1,
+   "state": "complete",
+   "revision": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+   "source_sha256": "46bf628bc0af9eb5753c79c4eb0ccfeb564980a6794adc6cd3aa57ff82d6797e",
+   "working_tree_clean": false,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "d3bbe90f957a8fb72bbfd3ff4ebb807b25b66bfc35d93cbf5bfd98b35eb475e0",
+   "gates": 42,
+   "counts": {
+    "passed": 40,
+    "expected-rejection": 2
+   },
+   "accepted": 42,
+   "reused": 0,
+   "executed": 42,
+   "historical_gates": 29,
+   "full_verdict": "unrun",
+   "retries": 0,
+   "session_seconds": 313.721,
+   "child_seconds": 309.689,
+   "not_accepted": [],
+   "expected_rejections": [
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls"
+   ],
+   "gate00": {
+    "tests": 515,
+    "passed_tests": 511,
+    "failed_tests": 0,
+    "retail_tests_unrun": [
+     "test_hg_audio_original.OriginalDataTests.test_control_wrong_bank_offset_detected",
+     "test_hg_audio_original.OriginalDataTests.test_payload_transferred_to_iop",
+     "test_hg_audio_original.OriginalDataTests.test_registration_matches_m7_evidence",
+     "test_m24_reference_map.ReferenceMapRetailTests.test_fresh_scan_matches_committed_map"
+    ]
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m25-world-session-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 3.966,
+     "receipt_sha256": "9b01aa397abf29513c5676f5eabc04951a53b54874ba9fe7fb832401ddcea09c",
+     "measured": {
+      "cycles": 4,
+      "updates": 536,
+      "controls": 14,
+      "invalid_inputs": 36
+     }
+    }
+   }
+  }
+ ],
+ "evidence_sha256": {
+  "evidence/m25/world-session.json": "b628f037c3522eab123bafdf6aa50f372c2b6ad365bffc5a5fe0019e5d26674c",
+  "evidence/m25/authentic-dependencies.json": "2986823eaf6faecf4722cd4a1861c4fcd5d8865137d38c3455caca5907df6f41",
+  "evidence/m25/provenance-ledger.json": "371d56fd2906102f2e9e98f6dd2087b4e7e64f4814c576fd98dbe6648ef3a446"
+ },
+ "direct": {
+  "driver_json_sha256_gcc_clang_sanitized": "1cf63202 (bit-identical across GCC, Clang, both sanitized)",
+  "test_world_session": "9/9",
+  "strict_builds": "12 src/**/*.c, GCC and Clang, 0 warnings",
+  "m23_receipt": "unchanged",
+  "world_audio": "matches evidence"
+ },
+ "not_run": [
+  "live PCSX2/PINE observation (owner session in use; needs an approved window)"
+ ],
+ "notes": "seals and artifact digests recomputed independently after the runs; receipts were produced on an uncommitted tree and record working_files"
+}

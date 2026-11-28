@@ -1,0 +1,1239 @@
+{
+ "schema": "hg-m25-authentic-dependencies/v1",
+ "synthetic_only": false,
+ "reference_build": "SCPS-15046",
+ "pcsx2_crc": "91AA4B28",
+ "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+ "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+ "identity": {
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "serial": "SCPS-15046",
+  "boot_path": "/SCPS_150.46",
+  "word_xor_crc": "91AA4B28",
+  "system_cnf_sha256": "b9bae7d4345fa8dadb5b34e2f17418ffa1b48ae44bd8c500e0ca4fbea4cdadd6",
+  "system_cnf": "BOOT2 = cdrom0:\\SCPS_150.46;1\r\nVER = 1.02\r\nVMODE = NTSC\r\n",
+  "entry": "0x00100008",
+  "pt_load": [
+   {
+    "vaddr": "00100000",
+    "filesz": 3058048,
+    "memsz": 9992192
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 145408
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 294912
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 366592
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 378880
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 2048
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 47104
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 2048
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 2048
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 36864
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 16384
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 30720
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 382976
+   },
+   {
+    "vaddr": "00a87800",
+    "filesz": 0,
+    "memsz": 20480
+   },
+   {
+    "vaddr": "00ae5000",
+    "filesz": 0,
+    "memsz": 0
+   },
+   {
+    "vaddr": "70000000",
+    "filesz": 0,
+    "memsz": 16384
+   }
+  ],
+  "pack_dat_sha256": "f2e04a08493fb5681ab468323f6b21195c55a9428234a977aea2247f53540a1a",
+  "area1_overlay_sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+  "files": 26,
+  "matches_tracked_build": true,
+  "crc_alone_insufficient": "SHA-256 of image, every file, SYSTEM.CNF and the ELF program headers checked"
+ },
+ "original_bytes": {
+  "state0_001585c0": {
+   "jump_table_003db540_0": "001585c0",
+   "calls": [
+    {
+     "va": "001585c0",
+     "target": "00158a10",
+     "delay_slot": "0200202d"
+    },
+    {
+     "va": "001585d8",
+     "target": "001e3440",
+     "delay_slot": "0200202d"
+    },
+    {
+     "va": "0015861c",
+     "target": "00159380",
+     "delay_slot": "0200202d"
+    },
+    {
+     "va": "00158684",
+     "target": "00196ad0",
+     "delay_slot": "0000282d"
+    },
+    {
+     "va": "001586c0",
+     "target": "00158470",
+     "delay_slot": "a2030018"
+    },
+    {
+     "va": "001586e8",
+     "target": "00196ad0",
+     "delay_slot": "a3822f78"
+    }
+   ],
+   "a0_delay_slots": "daddu a0, s0, zero (PLAYER, 64-bit move) at 001585c4 and 001585dc",
+   "floor_snap_arguments": {
+    "f12": "41000000",
+    "f13": "c0400000",
+    "f12_value": 8.0,
+    "f13_value": -3.0,
+    "loaded": "lui/mtc1 at 001585c8..001585d4, before jal 001e3440 at 001585d8"
+   },
+   "selector_memory_ops": [
+    {
+     "va": "001585e8",
+     "op": "lbu",
+     "target": "003fa1b0"
+    },
+    {
+     "va": "001585f4",
+     "op": "lbu",
+     "target": "003fa1b1"
+    },
+    {
+     "va": "00158604",
+     "op": "lbu",
+     "target": "003fa1b2"
+    },
+    {
+     "va": "00158610",
+     "op": "sb",
+     "target": "PLAYER+0x18"
+    },
+    {
+     "va": "00158618",
+     "op": "sb",
+     "target": "PLAYER+0x449"
+    },
+    {
+     "va": "00158634",
+     "op": "lbu",
+     "target": "003fa1b0"
+    },
+    {
+     "va": "00158644",
+     "op": "lbu",
+     "target": "003fa1b1"
+    },
+    {
+     "va": "00158658",
+     "op": "lbu",
+     "target": "003fa1b2"
+    },
+    {
+     "va": "00158664",
+     "op": "sb",
+     "target": "PLAYER+0x18"
+    },
+    {
+     "va": "0015866c",
+     "op": "sb",
+     "target": "PLAYER+0x19"
+    },
+    {
+     "va": "00158674",
+     "op": "lbu",
+     "target": "0046e106"
+    },
+    {
+     "va": "00158694",
+     "op": "sb",
+     "target": "gp+0x2f78"
+    },
+    {
+     "va": "00158698",
+     "op": "sb",
+     "target": "0046e106"
+    },
+    {
+     "va": "001586a4",
+     "op": "sb",
+     "target": "PLAYER+0x18"
+    },
+    {
+     "va": "001586a8",
+     "op": "lbu",
+     "target": "PLAYER+0x4a0"
+    },
+    {
+     "va": "001586b8",
+     "op": "sb",
+     "target": "PLAYER+0x18"
+    },
+    {
+     "va": "001586c4",
+     "op": "sb",
+     "target": "PLAYER+0x18"
+    },
+    {
+     "va": "001586e0",
+     "op": "sb",
+     "target": "003f9f39"
+    },
+    {
+     "va": "001586ec",
+     "op": "sb",
+     "target": "gp+0x2f78"
+    }
+   ],
+   "ordinary_entry": "jal 00158470 at 001586c0 with sb v1(=1), 0x18(s0) in its delay slot"
+  },
+  "tail_00158968": {
+   "memory_ops": [
+    {
+     "va": "00158988",
+     "op": "lbu",
+     "target": "003f9e3f"
+    },
+    {
+     "va": "0015898c",
+     "op": "lbu",
+     "target": "PLAYER+0x44b"
+    },
+    {
+     "va": "00158990",
+     "op": "lb",
+     "target": "PLAYER+0x4ac"
+    },
+    {
+     "va": "00158994",
+     "op": "lbu",
+     "target": "PLAYER+0x4ad"
+    },
+    {
+     "va": "00158998",
+     "op": "lh",
+     "target": "PLAYER+0x45a"
+    },
+    {
+     "va": "0015899c",
+     "op": "lbu",
+     "target": "PLAYER+0x49f"
+    },
+    {
+     "va": "001589a8",
+     "op": "lbu",
+     "target": "003fa067"
+    },
+    {
+     "va": "001589ac",
+     "op": "lbu",
+     "target": "PLAYER+0x464"
+    },
+    {
+     "va": "001589e0",
+     "op": "sb",
+     "target": "003f9f6e"
+    },
+    {
+     "va": "001589ec",
+     "op": "sb",
+     "target": "003f9f6e"
+    },
+    {
+     "va": "001589f8",
+     "op": "lq",
+     "target": "r3+0x0"
+    },
+    {
+     "va": "001589fc",
+     "op": "sq",
+     "target": "r4+0x0"
+    },
+    {
+     "va": "00158a04",
+     "op": "lq",
+     "target": "r29+0x0"
+    }
+   ],
+   "f12": "sub.s f12, f1, f0 (+3c0 - 0x3d567750) in the jal 001204e0 delay slot",
+   "history_copy": "lq/sq +30 -> +390 (four lanes)"
+  },
+  "coordinator_0012f850": {
+   "order": [
+    "0031bb80",
+    "00198f60",
+    "0017f6d0",
+    "0017f2d0",
+    "00158560",
+    "0012c790",
+    "0013b6e0",
+    "001430a0",
+    "00143100",
+    "0012bc70",
+    "0018c520",
+    "00143150",
+    "001431a0",
+    "0025c170",
+    "00182480",
+    "0013ce80",
+    "00137890",
+    "00189be0"
+   ],
+   "calls": [
+    {
+     "va": "0012f884",
+     "target": "0031bb80",
+     "delay_slot": "a4209ff8"
+    },
+    {
+     "va": "0012f8a8",
+     "target": "00198f60",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8b4",
+     "target": "0017f6d0",
+     "delay_slot": "24849e30"
+    },
+    {
+     "va": "0012f8bc",
+     "target": "0017f2d0",
+     "delay_slot": "0000202d"
+    },
+    {
+     "va": "0012f8c4",
+     "target": "00158560",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8cc",
+     "target": "0012c790",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8d8",
+     "target": "0013b6e0",
+     "delay_slot": "248497f0"
+    },
+    {
+     "va": "0012f8e0",
+     "target": "001430a0",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8e8",
+     "target": "00143100",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8f0",
+     "target": "0012bc70",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f8f8",
+     "target": "0018c520",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f900",
+     "target": "00143150",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f908",
+     "target": "001431a0",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f910",
+     "target": "0025c170",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f918",
+     "target": "00182480",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f924",
+     "target": "0013ce80",
+     "delay_slot": "248497f0"
+    },
+    {
+     "va": "0012f92c",
+     "target": "00137890",
+     "delay_slot": "00000000"
+    },
+    {
+     "va": "0012f934",
+     "target": "00189be0",
+     "delay_slot": "00000000"
+    }
+   ],
+   "branches": [
+    {
+     "va": "0012f874",
+     "target": "0012f880"
+    },
+    {
+     "va": "0012f890",
+     "target": "0012f8a8"
+    },
+    {
+     "va": "0012f940",
+     "target": "jr"
+    }
+   ],
+   "delay_slot_arguments": {
+    "0017f6d0": "24849e30",
+    "0017f2d0": "0000202d",
+    "0013b6e0": "248497f0",
+    "0013ce80": "248497f0"
+   }
+  }
+ },
+ "captures": {
+  "area1-request": {
+   "run": "M21 PCSX2 run",
+   "stop": "0012dd60 area request",
+   "ee_sha256": "d147ea88efc00061e95117c9583bc2c4a3cdcabbdd4bf3322c807f5f22415616",
+   "fields": {
+    "mode": [
+     "0012d1c0",
+     5,
+     5,
+     2
+    ],
+    "area_triple": [
+     1,
+     0,
+     0
+    ],
+    "selector_0046e106": 0,
+    "selector_3fa1bb": 0,
+    "player": {
+     "+00": 0,
+     "+01": 0,
+     "+18": 0,
+     "+19": 0,
+     "+2a": 0,
+     "pos": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "rot": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "+3c0": 0.0,
+     "eye_380": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "hist_390": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "model": "00000000",
+     "nodes": 0,
+     "+2c3": 0,
+     "+464": 0,
+     "+4a0": 0
+    },
+    "camera": {
+     "eye": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target": [
+      0.0,
+      0.0,
+      20.0
+     ],
+     "pitch": -0.0,
+     "yaw": 0.0
+    },
+    "input_block_3f9f6e": 0,
+    "handles": {
+     "0x3f": "00da1ec0",
+     "0x96": "014b8480",
+     "0x22f": "01661500"
+    },
+    "nodes": {
+     "free": 2048,
+     "top": "004d8140"
+    },
+    "actor_free": [
+     286,
+     40,
+     256
+    ],
+    "lists": {
+     "main": [],
+     "priority": [],
+     "type2": []
+    },
+    "fade": [
+     2,
+     0,
+     0,
+     1,
+     255,
+     0,
+     8,
+     0
+    ],
+    "counters": {
+     "3fa190": 0,
+     "46e118": 0,
+     "46d930": 0
+    },
+    "scratch_sampled": true
+   }
+  },
+  "area1-active": {
+   "run": "M21 PCSX2 run",
+   "stop": "first 0012f850 entry",
+   "ee_sha256": "9a31bdf5ad29f802074daf79a3cb875d435e47d2baa63f45c6d02cd0c07efb76",
+   "fields": {
+    "mode": [
+     "0012d1c0",
+     5,
+     1,
+     1
+    ],
+    "area_triple": [
+     1,
+     0,
+     0
+    ],
+    "selector_0046e106": 0,
+    "selector_3fa1bb": 0,
+    "player": {
+     "+00": 0,
+     "+01": 0,
+     "+18": 0,
+     "+19": 0,
+     "+2a": 0,
+     "pos": [
+      48.5,
+      38.0,
+      265.0,
+      1.0
+     ],
+     "rot": [
+      0.0,
+      1.570796,
+      0.0
+     ],
+     "+3c0": 0.05236,
+     "eye_380": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "hist_390": [
+      48.5,
+      38.0,
+      265.0
+     ],
+     "model": "00000000",
+     "nodes": 0,
+     "+2c3": 0,
+     "+464": 0,
+     "+4a0": 0
+    },
+    "camera": {
+     "eye": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target": [
+      0.0,
+      0.0,
+      20.0
+     ],
+     "pitch": -0.0,
+     "yaw": 0.0
+    },
+    "input_block_3f9f6e": 0,
+    "handles": {
+     "0x3f": "00da1ec0",
+     "0x96": "01481ac0",
+     "0x22f": "00000000"
+    },
+    "nodes": {
+     "free": 2048,
+     "top": "004d8140"
+    },
+    "actor_free": [
+     284,
+     40,
+     256
+    ],
+    "lists": {
+     "main": [
+      "004d8150",
+      "004d8520"
+     ],
+     "priority": [],
+     "type2": []
+    },
+    "fade": [
+     1,
+     0,
+     0,
+     2,
+     255,
+     0,
+     4,
+     0
+    ],
+    "counters": {
+     "3fa190": 0,
+     "46e118": 0,
+     "46d930": 0
+    },
+    "scratch_sampled": true
+   }
+  },
+  "m8-player-init-entry": {
+   "run": "M8 PCSX2 run (separate process)",
+   "stop": "00158a10 entry, a0 = 003f92d0",
+   "capture_sha256": "e83c3812de91a160b3908186f25b3b42a02a6589dea30159e624e10cea7dcc5b",
+   "fields": {
+    "mode": [
+     "0012d1c0",
+     5,
+     1,
+     1
+    ],
+    "area_triple": [
+     1,
+     0,
+     0
+    ],
+    "selector_0046e106": 0,
+    "selector_3fa1bb": 0,
+    "player": {
+     "+00": 0,
+     "+01": 0,
+     "+18": 0,
+     "+19": 0,
+     "+2a": 0,
+     "pos": [
+      48.5,
+      38.0,
+      265.0,
+      1.0
+     ],
+     "rot": [
+      0.0,
+      1.570796,
+      0.0
+     ],
+     "+3c0": 0.05236,
+     "eye_380": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "hist_390": [
+      48.5,
+      38.0,
+      265.0
+     ],
+     "model": "00000000",
+     "nodes": 0,
+     "+2c3": 0,
+     "+464": 0,
+     "+4a0": 0
+    },
+    "camera": {
+     "eye": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target": [
+      0.0,
+      0.0,
+      20.0
+     ],
+     "pitch": -0.0,
+     "yaw": 0.0
+    },
+    "input_block_3f9f6e": 0,
+    "handles": {
+     "0x3f": "00da1ec0",
+     "0x96": "01481ac0",
+     "0x22f": "00000000"
+    },
+    "nodes": {
+     "free": 2048,
+     "top": "004d8140"
+    },
+    "actor_free": [
+     284,
+     40,
+     256
+    ],
+    "lists": {
+     "main": [
+      "004d8150",
+      "004d8520"
+     ],
+     "priority": [],
+     "type2": []
+    },
+    "fade": [
+     1,
+     0,
+     0,
+     2,
+     255,
+     0,
+     4,
+     0
+    ],
+    "counters": {
+     "3fa190": 1,
+     "46e118": 1,
+     "46d930": 0
+    },
+    "scratch_sampled": false
+   }
+  },
+  "m8-player-init-return": {
+   "run": "M8 PCSX2 run (separate process)",
+   "stop": "001585c8 (return from 00158a10)",
+   "capture_sha256": "98cefaad03b9ea754a035e83ae4730a329056c08387cceb44a19246e8e51f3db",
+   "fields": {
+    "mode": [
+     "0012d1c0",
+     5,
+     1,
+     1
+    ],
+    "area_triple": [
+     1,
+     0,
+     0
+    ],
+    "selector_0046e106": 0,
+    "selector_3fa1bb": 0,
+    "player": {
+     "+00": 1,
+     "+01": 0,
+     "+18": 0,
+     "+19": 0,
+     "+2a": 63,
+     "pos": [
+      48.5,
+      38.0,
+      265.0,
+      1.0
+     ],
+     "rot": [
+      0.0,
+      1.570796,
+      0.0
+     ],
+     "+3c0": 0.05236,
+     "eye_380": [
+      48.5,
+      54.499878,
+      265.0
+     ],
+     "hist_390": [
+      48.5,
+      38.0,
+      265.0
+     ],
+     "model": "00f2c2f0",
+     "nodes": 48,
+     "+2c3": 0,
+     "+464": 0,
+     "+4a0": 0
+    },
+    "camera": {
+     "eye": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "target": [
+      0.0,
+      0.0,
+      20.0
+     ],
+     "pitch": -0.0,
+     "yaw": 0.0
+    },
+    "input_block_3f9f6e": 0,
+    "handles": {
+     "0x3f": "00da1ec0",
+     "0x96": "01481ac0",
+     "0x22f": "00000000"
+    },
+    "nodes": {
+     "free": 2000,
+     "top": "004d8080"
+    },
+    "actor_free": [
+     284,
+     40,
+     253
+    ],
+    "lists": {
+     "main": [
+      "004d8150",
+      "004d8520"
+     ],
+     "priority": [],
+     "type2": [
+      "00528430",
+      "00528540",
+      "00528650"
+     ]
+    },
+    "fade": [
+     1,
+     0,
+     0,
+     2,
+     255,
+     0,
+     4,
+     0
+    ],
+    "counters": {
+     "3fa190": 1,
+     "46e118": 1,
+     "46d930": 0
+    },
+    "scratch_sampled": false
+   }
+  },
+  "obs3-000": {
+   "run": "M13 PCSX2 run (separate process)",
+   "stop": "active corridor frame 10163",
+   "ee_sha256": "05d767e4d37b8f986fb222e269fbec6683c0c4ed377e323738f0a1d029ad70f7",
+   "fields": {
+    "mode": [
+     "0012d1c0",
+     5,
+     1,
+     1
+    ],
+    "area_triple": [
+     1,
+     0,
+     0
+    ],
+    "selector_0046e106": 0,
+    "selector_3fa1bb": 0,
+    "player": {
+     "+00": 1,
+     "+01": 1,
+     "+18": 1,
+     "+19": 1,
+     "+2a": 63,
+     "pos": [
+      42.137722,
+      38.025185,
+      271.21344,
+      1.0
+     ],
+     "rot": [
+      0.0,
+      -0.797178,
+      0.0
+     ],
+     "+3c0": 0.05236,
+     "eye_380": [
+      42.356663,
+      54.546715,
+      270.994843
+     ],
+     "hist_390": [
+      42.359043,
+      38.025185,
+      270.997284
+     ],
+     "model": "00f2c2f0",
+     "nodes": 48,
+     "+2c3": 1,
+     "+464": 1,
+     "+4a0": 0
+    },
+    "camera": {
+     "eye": [
+      42.356663,
+      54.546715,
+      270.994843
+     ],
+     "target": [
+      28.068523,
+      53.500023,
+      284.950226
+     ],
+     "pitch": 0.052359,
+     "yaw": -0.797179
+    },
+    "input_block_3f9f6e": 0,
+    "handles": {
+     "0x3f": "00da1ec0",
+     "0x96": "01481ac0",
+     "0x22f": "00000000"
+    },
+    "nodes": {
+     "free": 1943,
+     "top": "004d7f9c"
+    },
+    "actor_free": [
+     281,
+     40,
+     252
+    ],
+    "lists": {
+     "main": [
+      "004d8150",
+      "004d8520",
+      "004d88f0",
+      "004d8cc0",
+      "004d9090"
+     ],
+     "priority": [],
+     "type2": [
+      "00528430",
+      "00528540",
+      "00528650",
+      "00528760"
+     ]
+    },
+    "fade": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     4,
+     0
+    ],
+    "counters": {
+     "3fa190": 10163,
+     "46e118": 10163,
+     "46d930": 10162
+    },
+    "scratch_sampled": true
+   }
+  }
+ },
+ "cross_run_area1_active_vs_m8_entry": {
+  "claim": "separate runs; byte equality of world-setup domains, not continuity",
+  "domains": {
+   "player_003f92d0": {
+    "bytes": 1312,
+    "differing": 0
+   },
+   "camera_003f9860": {
+    "bytes": 336,
+    "differing": 0
+   },
+   "world_env_003f9e30": {
+    "bytes": 592,
+    "differing": 0
+   },
+   "block_003f99b0": {
+    "bytes": 1152,
+    "differing": 0
+   },
+   "area_map_003f97f0": {
+    "bytes": 100,
+    "differing": 0
+   },
+   "handle_table_003f4300": {
+    "bytes": 2620,
+    "differing": 0
+   },
+   "node_pool_and_stack": {
+    "bytes": 434184,
+    "differing": 0
+   },
+   "actor_pools": {
+    "bytes": 398104,
+    "differing": 0
+   },
+   "fade_003eaeb0": {
+    "bytes": 8,
+    "differing": 0
+   },
+   "mode_003ead30": {
+    "bytes": 16,
+    "differing": 0
+   },
+   "area1_overlay_00a87800": {
+    "bytes": 30720,
+    "differing": 0
+   }
+  },
+  "same_checkpoint_class": true
+ },
+ "bridge_00158a10": {
+  "claim": "cross-run domain equivalence only; not one continuous run",
+  "input": "M21 area1-active",
+  "reference": "M8 00158a10 return",
+  "c_function": "hg_player_initialize_fixed (00158a10) with original-instruction leaves",
+  "leaves": [
+   "0x1330f0",
+   "0x266a20",
+   "0x139ff0",
+   "0x1b7f00",
+   "0x196ad0",
+   "0x196ad0",
+   "0x196ad0",
+   "0x144340",
+   "0x13a240",
+   "0x267450"
+  ],
+  "domains": {
+   "player_003f92d0": {
+    "bytes": 1312,
+    "differing": 0
+   },
+   "camera_003f9860": {
+    "bytes": 336,
+    "differing": 0
+   },
+   "world_env_003f9e30": {
+    "bytes": 592,
+    "differing": 0
+   },
+   "handle_table_003f4300": {
+    "bytes": 2620,
+    "differing": 0
+   },
+   "node_pool_and_stack": {
+    "bytes": 434184,
+    "differing": 0
+   },
+   "actor_pools": {
+    "bytes": 398104,
+    "differing": 0
+   }
+  },
+  "passed": true
+ },
+ "oracle_state0_and_first_camera": {
+  "claim": "original ELF bytes executed by the functional EE subset; a prediction, not a runtime observation",
+  "start": "M21 area1-active",
+  "state0": {
+   "entry": "00158560",
+   "instructions": 62212,
+   "distinct_addresses": 3119,
+   "callees_in_order": [
+    "00158a10",
+    "00196ad0",
+    "00267450",
+    "00159380",
+    "001e3440",
+    "00158470"
+   ]
+  },
+  "camera": {
+   "entry": "0012c790",
+   "instructions": 33482,
+   "distinct_addresses": 1942,
+   "callees_in_order": [
+    "0015e1d0",
+    "00267450",
+    "0012d130"
+   ]
+  },
+  "predicted": {
+   "player": {
+    "+00": 1,
+    "+01": 0,
+    "+18": 1,
+    "+19": 0,
+    "+2a": 63,
+    "pos": [
+     48.5,
+     38.045532,
+     265.0,
+     1.0
+    ],
+    "rot": [
+     0.0,
+     1.570796,
+     0.0
+    ],
+    "+3c0": 0.05236,
+    "eye_380": [
+     48.5,
+     54.54541,
+     265.0
+    ],
+    "hist_390": [
+     48.5,
+     38.045532,
+     265.0
+    ],
+    "model": "00f2c2f0",
+    "nodes": 48,
+    "+2c3": 1,
+    "+464": 0,
+    "+4a0": 0
+   },
+   "camera": {
+    "eye": [
+     48.5,
+     54.54541,
+     265.0
+    ],
+    "target": [
+     68.472588,
+     53.498718,
+     265.0
+    ],
+    "pitch": 0.052359,
+    "yaw": 1.570796
+   },
+   "input_block_3f9f6e": 1,
+   "nodes": {
+    "free": 2000,
+    "top": "004d8080"
+   },
+   "lists": {
+    "main": [
+     "004d8150",
+     "004d8520"
+    ],
+    "priority": [],
+    "type2": [
+     "00528430",
+     "00528540",
+     "00528650"
+    ]
+   }
+  },
+  "entry_event_00158470": "returned zero (0xb4 store to 003f9f39 and gp+2f78 = 2 not taken)"
+ },
+ "rotation_helpers": {
+  "00143c60": {
+   "convention": "dst = src * R (column mixing)",
+   "max_error": 3e-06
+  },
+  "00143d30": {
+   "convention": "dst = src * R (column mixing)",
+   "max_error": 2e-06
+  },
+  "00143b90": {
+   "convention": "dst = src * R (column mixing)",
+   "max_error": 2e-06
+  },
+  "00144340": {
+   "convention": "identity * Rx(rot.x) * Ry(rot.y) * Rz(rot.z), row 3 = position",
+   "max_error": 0.0
+  }
+ },
+ "fault_00158560_area1_active": {
+  "entry": "00158560",
+  "input_player_phase_18": 0,
+  "domain_faults": [
+   "0x30"
+  ],
+  "boundary_confirmed": true
+ },
+ "boundary": {
+  "last_supported_single_run_stop": "0012f850 entry (M21 area1-active)",
+  "supported_by_cross_run_equivalence": "00158a10 return (001585c8): M21 area1-active domains equal the M8 entry, and C 00158a10 on area1-active reproduces the M8 return",
+  "earliest_unsupported_dependency": "001e3440(PLAYER, +8.0, -3.0) state-0 floor snap on the retail collision mesh: no C reconstruction and no runtime observation of its return",
+  "later_unobserved": [
+   "00158470 entry-event query return",
+   "state-0 tail result (003f9f6e predicted 1)",
+   "first 0012c790 camera follow",
+   "first state-1 frame",
+   "initial movement/collision (001e3850, 001e3c40, 001454a0)"
+  ],
+  "m23_conflicts": [
+   "003f9f6e: M23 model writes 0 at state 0; original bytes and oracle give 1 when +464 == 0",
+   "camera pitch: M23 synthetic helpers left-multiply; original 00143c60/00143d30/00143b90 right-multiply (M23 boom pitch 0.0301 at yaw 0 and 0 at yaw pi/2; oracle 0.0524)",
+   "M23.md cites local/m21/live/...; the captures are under local/m21/native/full/"
+  ]
+ },
+ "runtime_observations_pending": [
+  "00158a10 return in the same run as area1-active",
+  "001e3440 return and floor hit",
+  "first state-1 frame registers and memory",
+  "first camera follow",
+  "initial walk and wall/floor queries"
+ ]
+}

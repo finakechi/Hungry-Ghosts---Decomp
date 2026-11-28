@@ -1,8 +1,36 @@
 # Hungry Ghosts — start here
 
+## M25 world initialization and state continuity — 2026-11-28
+
+**Resume here (world track).** The branch `research/m25-world-initialization`
+in `decomp-m25`, based on `main` `7191ca74` (PR #23). The work is
+**uncommitted**, with source `46bf628b…`. Detail: [M25](docs/M25.md).
+
+- **Synthetic.** Two original scenes run four interleaved cycles of cold boot
+  → publish → world setup → first tick → fade → 134 controller updates →
+  teardown → re-entry. Teardown is clean and cycle-relative parity holds.
+  14/14 controls are detected by their intended checks, and 36/36 invalid
+  inputs are rejected.
+- **Authentic (read-only).** The state-0 path and the 18-service coordinator
+  are characterized from the original bytes. The `00158a10` return is
+  supported only across runs (M21 `area1-active` ≡ M8 entry, and C reproduces
+  the M8 return).
+- **Earliest unsupported dependency:** `001e3440`.
+- **Gates.** There are 2 new `m25-` gates. Runs:
+  - `current` `m12-20261128T034909Z-i9la3od6`: 140/140, Gate 00 515/515.
+  - `synthetic` `m12-20261128T034342Z-yclwqga6`: 42/42.
+  - Both runs: 0 bad seals.
+- **Not claimed:** retail continuity past `0012f850`. No live PCSX2
+  observation was made.
+- **Next:** in an approved quiet window, capture the `00158a10` and `001e3440`
+  returns and the first state-1 frame in one run.
+- **To do with M26:** reconcile the shared edits to `config/current-verification.json`,
+  `tools/hg_verify_milestones.py`, `tests/test_hg_verify.py` and these
+  handoff files.
+
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** Branch `integration/m23-m24-review` in
+**Integrated baseline.** Branch `integration/m23-m24-review` in
 `decomp-m23-m24-integration`, based on remote `main`
 `09b5832119d5ec97c85c05c6ab1eddd6c20be8ad` (PR #22). It merges
 `research/m23-gameplay-initialization` (`6cc3ce8d`) and
