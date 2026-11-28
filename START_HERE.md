@@ -3,9 +3,11 @@
 ## SCPS-15046 research realignment — 2026-11-28
 
 **Resume here.** The present scope is reverse engineering and decompilation
-research for Japanese SCPS-15046. Existing independent models support
-verification. The separate PC repository holds a research index for a
-possible future port. The dated sections below record earlier resume points.
+research for Japanese SCPS-15046. Existing independent models (including M25's
+bounded synthetic world-session fixtures) are retained as legacy verification
+infrastructure, not counted as recovered original functions. The separate PC
+repository holds a research index for a possible future port. The dated
+sections below record earlier resume points.
 
 - [Collision replay](docs/retail-collision-snap.md) isolates the
   `001585c8` → `001585e0` stop pair and checks original words and
@@ -16,12 +18,44 @@ possible future port. The dated sections below record earlier resume points.
   and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
   frames with a bounded trace.
 - [Coverage and review](docs/SCPS-15046-realignment.md) records
-  the authenticated build, v2 inventory, PR #24 hold recommendation,
-  and the standalone M26 commit required before reconciliation.
+  the authenticated build, v2 inventory, PR #24 scope review, and
+  standalone M26 reconciliation prerequisites.
+
+## M25 world initialization and state continuity — 2026-11-28
+
+**Reconciled onto realigned `main` (original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** The branch is `research/m25-world-initialization`
+([PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24)), originally based
+on `main` `7191ca74` and merged with `main` `32cf2bfb` (PR #25). Detail: [M25](docs/M25.md).
+
+- **Synthetic (legacy verification fixture).** Two original scenes run four interleaved cycles of boot →
+  publish → setup → 134 updates → teardown → re-entry. Parity holds, 14/14
+  controls are detected, and 36/36 invalid inputs are rejected.
+- **Live (one original PCSX2 run).** The run covers tick 0, the `00158a10`
+  return, the `001e3440` return (Y 38.0455322265625), the first camera follow,
+  ticks 1–3 and walk ticks 114–200.
+  - Its tick 0 equals M21 `area1-active`.
+  - Its `00158a10` return equals M8, and C reproduces it.
+  - Original instructions from its tick 0 reproduce the post-camera stop in
+    all 11 domains.
+- **Gates (historical M25 branch receipts at `969e913`, source `4075bec7…`).** There are 3 `m25-` gates.
+  - `current` `m12-20261128T141916Z-kghnfr1n`: 141/141 accepted, Gate 00
+    516/516.
+  - `synthetic` `m12-20261128T141423Z-cphcz36j`: 42/42.
+  - 0 bad seals.
+- **Still unobserved or unreconstructed:**
+  - the `00158470` return register;
+  - ticks 4–113;
+  - a neutral release;
+  - wall contact;
+  - retail teardown;
+  - C for `001e3440`.
+- **Historical M26 snapshot note:** the local branch `integration/m25-m26-review`
+  (`decomp-m25-m26-integration`) is preserved locally and not pushed; M26 is
+  integrated separately from its standalone commit.
 
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** Branch `integration/m23-m24-review` in
+**Integrated baseline.** Branch `integration/m23-m24-review` in
 `decomp-m23-m24-integration`, based on remote `main`
 `09b5832119d5ec97c85c05c6ab1eddd6c20be8ad` (PR #22). It merges
 `research/m23-gameplay-initialization` (`6cc3ce8d`) and

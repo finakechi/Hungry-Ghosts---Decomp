@@ -516,6 +516,9 @@ class MilestoneGateTests(unittest.TestCase):
            'world-audio-lifecycle')
     SYNTHETIC = ('m23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
                  'world-audio-lifecycle')
+    # M25 registrations (appended after the M19-M24 block).
+    M25 = ('m25-world-session-synthetic', 'm25-authentic-dependencies', 'm25-live-continuity')
+    M25_SYNTHETIC = ('m25-world-session-synthetic',)
 
     def setUp(self):
         directory = tempfile.TemporaryDirectory()
@@ -528,18 +531,22 @@ class MilestoneGateTests(unittest.TestCase):
         inv = lambda name: runner.inventory(runner.INVENTORY, runner.HISTORICAL, name)
         current, synthetic = inv('current'), inv('synthetic')
         self.assertEqual((len(inv('focused')), len(inv('historical')), len(inv('full')), len(current), len(synthetic)),
-                         (8, 79, 79, 138, 41))
-        self.assertEqual([row['id'] for row in current[-18:]], list(self.NEW))
+                         (8, 79, 79, 141, 42))
+        self.assertEqual([row['id'] for row in current[-21:]], list(self.NEW + self.M25))
         self.assertEqual({row['id'] for row in synthetic} - {row['id'] for row in inv('historical')}
-                         - {row['id'] for row in current[79:120]}, set(self.SYNTHETIC))
-        for name in self.NEW:
+                         - {row['id'] for row in current[79:120]}, set(self.SYNTHETIC + self.M25_SYNTHETIC))
+        for name in self.NEW + self.M25:
             row = self.nodes[name]
             parallel = row['result'] in runner.PARALLEL_RESULTS and not row.get('exclusive')
+            synthetic_gate = name in self.SYNTHETIC + self.M25_SYNTHETIC
             # Only the attempt-isolated synthetic C gates may overlap; retail gates stay exclusive.
-            self.assertEqual(parallel, name in self.SYNTHETIC, name)
-            self.assertEqual(row['evidence'] == 'synthetic', name in self.SYNTHETIC, name)
-            if name not in self.SYNTHETIC:
+            self.assertEqual(parallel, synthetic_gate, name)
+            self.assertEqual(row['evidence'] == 'synthetic', synthetic_gate, name)
+            if not synthetic_gate:
                 self.assertTrue({'{elf}', '{image}'} & set(row['inputs']), name)
+        self.assertIn('{m13-captures}/obs3-000.json', self.nodes['m25-authentic-dependencies']['inputs'])
+        self.assertIn('local/m8/captures/native-player-init-return-001.json',
+                      self.nodes['m25-authentic-dependencies']['inputs'])
         self.assertIn('{m13-captures}/obs3-000.json', self.nodes['m23-authentic-boundary']['inputs'])
         self.assertIn('docs/m21/title-to-area1.json', self.nodes['m21-cold-new-game']['inputs'])
 
@@ -596,6 +603,38 @@ class MilestoneGateTests(unittest.TestCase):
         title.pop('source_revision')
         self.assertEqual(self.classify('m20-title-hgscript', title)[0], results.PASSED)
         self.assertEqual(self.classify('m20-title-hgscript', title | dict(handle=1))[0], results.ERROR)
+
+    def test_m25_contracts_compare_receipts_and_reject_tampering(self):
+        session = self.evidence('evidence/m25/world-session.json')
+        row = dict(schema='hg-m25-world-session-verification/v1', compiler='cc', sanitized=True, exit_code=0,
+                   stderr='', failure=None, problems=[], matches_evidence=True, report=session)
+        verdict, details = self.classify('m25-world-session-synthetic', row)
+        self.assertEqual((verdict, details['cycles'], details['controls']), (results.PASSED, 4, 14))
+        self.assertGreaterEqual(details['updates'], 480)
+        tampered = json.loads(json.dumps(session))
+        tampered['controls'][3]['fired'] = 'model-error'
+        self.assertEqual(self.classify('m25-world-session-synthetic', row | dict(report=tampered))[0], results.ERROR)
+        tampered = json.loads(json.dumps(session))
+        tampered['cycles'][2]['after_teardown']['free_nodes'] = 2047
+        self.assertEqual(self.classify('m25-world-session-synthetic', row | dict(report=tampered))[0], results.ERROR)
+        for broken in (dict(sanitized=False), dict(problems=['x']), dict(matches_evidence=False), dict(stderr='leak')):
+            self.assertEqual(self.classify('m25-world-session-synthetic', row | broken)[0], results.ERROR)
+        authentic = self.evidence('evidence/m25/authentic-dependencies.json')
+        self.assertEqual(self.classify('m25-authentic-dependencies', authentic)[0], results.PASSED)
+        broken = json.loads(json.dumps(authentic))
+        broken['bridge_00158a10']['domains']['player_003f92d0']['differing'] = 1
+        self.assertEqual(self.classify('m25-authentic-dependencies', broken)[0], results.ERROR)
+        live = self.evidence('evidence/m25/live-continuity.json')
+        verdict, details = self.classify('m25-live-continuity', live)
+        self.assertEqual((verdict, details['stops'], details['walk_ticks']), (results.PASSED, 9, 87))
+        for path in (('original_instructions_same_run', 'domains', 'player_003f92d0'),
+                     ('cross_run', 'return_00158a10_vs_m8_return', 'actor_pools')):
+            broken = json.loads(json.dumps(live))
+            broken[path[0]][path[1]][path[2]]['differing'] = 3
+            self.assertEqual(self.classify('m25-live-continuity', broken)[0], results.ERROR)
+        broken = json.loads(json.dumps(live))
+        broken['walk']['table'][40][1] += 2.0
+        self.assertEqual(self.classify('m25-live-continuity', broken)[0], results.ERROR)
 
     def test_c_driver_contract_requires_detected_canary(self):
         from verify_c_drivers import DRIVERS

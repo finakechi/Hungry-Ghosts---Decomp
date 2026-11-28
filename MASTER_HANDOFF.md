@@ -3,9 +3,11 @@
 ## SCPS-15046 research realignment — 2026-11-28
 
 **Resume here.** The present scope is reverse engineering and decompilation
-research for Japanese SCPS-15046. Existing independent models support
-verification. The separate PC repository holds a research index for a
-possible future port. The dated sections below record earlier resume points.
+research for Japanese SCPS-15046. Existing independent models (including M25's
+bounded synthetic world-session fixtures) are retained as legacy verification
+infrastructure, not counted as recovered original functions. The separate PC
+repository holds a research index for a possible future port. The dated
+sections below record earlier resume points.
 
 - [Collision replay](docs/retail-collision-snap.md) isolates the
   `001585c8` → `001585e0` stop pair and checks original words and
@@ -16,12 +18,121 @@ possible future port. The dated sections below record earlier resume points.
   and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
   frames with a bounded trace.
 - [Coverage and review](docs/SCPS-15046-realignment.md) records
-  the authenticated build, v2 inventory, PR #24 hold recommendation,
-  and the standalone M26 commit required before reconciliation.
+  the authenticated build, v2 inventory, PR #24 scope review, and
+  standalone M26 reconciliation prerequisites.
+
+## M25 world initialization and state continuity — 2026-11-28
+
+**Reconciled onto realigned `main` (original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** The branch is `research/m25-world-initialization`
+in worktree `decomp-m25`, originally created from `main`
+`7191ca7402b5c8f0d5a58dbd38c62d099470c667` (PR #23 merge; PR #22 `09b5832`;
+PS2DInfo `2e4a226e`) and reconciled with `main` `32cf2bfb` (PR #25) in an
+isolated worktree. It is tracked on
+[PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24), with
+commits `7e0a686` and `969e913` preserved.
+
+- **Detail:** [M25](docs/M25.md)
+- **Results:** [m25-results.json](docs/verification/m25-results.json)
+- **Coverage:** [m25-coverage.json](docs/verification/m25-coverage.json)
+
+### Code
+
+- **Session API (legacy verification fixture)** in `src/scene/world_init.{h,c}`, additive. The M23 path and
+  `hg_world_harness_guest_ram()` are unchanged.
+  - It adds the scene spec, readiness states, ledgers and a snapshot.
+  - The coordinator follows the 18-service ELF order.
+  - The state-0 and tail rules come from the original bytes. The rotation
+    helpers right-multiply, as measured.
+  - The model adds node release and actor retire. Teardown and
+    partial-initialization cleanup are driven by the ledger.
+- **Synthetic driver and checks.** `tests/world_session_driver.c` is the driver,
+  with an independent re-derivation in `tools/verify_world_session.py`
+  (`--synthetic`).
+- **Authentic characterization.** `tools/verify_world_session.py`
+  (`--inspect-authentic`) covers the original bytes, the cross-run bridge, the
+  oracle, fault 0x30 and the boundary.
+- **Live checks.** `tools/verify_world_live.py` checks one continuous PCSX2 run.
+- **Contracts and tests.** Contracts are in `tools/hg_verify_m25.py`. Tests:
+  `tests/test_world_session.py` (11 tests, including a live-loader tamper
+  test) and `tests/test_hg_verify.py`.
+
+### Evidence
+
+| File | SHA-256 | Notes |
+| --- | --- | --- |
+| `evidence/m25/world-session.json` | `b628f037…` | |
+| `evidence/m25/authentic-dependencies.json` | `f401ebe6…` | boundary text now cites the live run |
+| `evidence/m25/live-continuity.json` | `815855b6…` | |
+| `evidence/m25/provenance-ledger.json` | `73bc611d…` | 45 fields, 7 classes; 21 retail fields are runtime observations |
+
+### Live window (2026-11-28, approved)
+
+**Setup.**
+- **Profile:** `local/m25/live/profile`, isolated. It uses the BIOS
+  `c641edbd…` and PCSX2 v2.8.2 `0c46bb6a…`.
+- **Breakpoints:** six execute breakpoints, loaded from the per-game settings
+  file.
+- **Reads and input:** read-only PINE on slot 28065, with XWayland input. This
+  is M21's method.
+- **Private captures:** `local/m25/live/captures`, 108 MB, not tracked.
+
+**Results.**
+- The tick-0 stop equals M21 `area1-active` and the M8 entry in 11 domains.
+- The same-run `00158a10` return equals the M8 return in 6 domains. C
+  `00158a10` on the same-run tick 0 reproduces it.
+- The `001e3440` return gives Y = 38.0455322265625.
+- After the first camera follow: `+18` = 1 and `003f9f6e` = 1, which confirms
+  the M23 conflict. Eye (48.5, 54.54541, 265) and pitch 0.052359.
+- Original instructions from the same-run tick 0 reproduce this stop in all
+  11 domains.
+- The walk window has 87 contiguous ticks (114–200) of forward and
+  forward-plus-left input, descending a slope.
+
+**Missed or unobserved.**
+- **Stops `001586c8` and `0012f8cc`:** passed by a resume misfire, now fixed.
+  Nothing was spliced in from other runs.
+- **Ticks 4–113.**
+- **A neutral release:** the forward key's release was not delivered.
+- **Wall contact.**
+
+**Conditions.** PCSX2 condition numbers are hex.
+
+### Verification
+
+Both historical branch runs below are attributed to `969e913` (source `4075bec7…`).
+
+- **`current` run `m12-20261128T141916Z-kghnfr1n`:**
+  - 4 workers on an idle host, with no M26 run active.
+  - 141/141 accepted: 136 passed and 5 expected rejections. All 79 historical
+    gates passed.
+  - Gate 00 516/516 with 0 skips.
+  - 0 reused and 0 retries. Session 1,984.9 s; child processes 5,378.5 s.
+- **`synthetic` run `m12-20261128T141423Z-cphcz36j`:** 42/42 accepted, 293.6 s.
+- **Seals:** 0 bad seals and 0 bad artifacts, recomputed independently.
+- **Superseded runs:** `m12-20261128T034909Z-i9la3od6` (140/140) and
+  `m12-20261128T034342Z-yclwqga6` (42/42) verified `7e0a686` on source
+  `46bf628b…`.
+
+### M26 reconciliation (historical local snapshot)
+
+- **Branch:** `integration/m25-m26-review` in worktree
+  `decomp-m25-m26-integration`.
+- **Contents:** M25 plus a snapshot of the uncommitted
+  `research/m26-audio-timing` working tree (tracked patch `03b393aa…`,
+  untracked archive `ee4bf4b6…`).
+- **Status:** preserved locally and not pushed; M26 is integrated separately
+  from its standalone commit on `research/m26-audio-timing`.
+
+### Historical M25 next notes (superseded by realignment resume point above)
+
+- Reconstruct `001e3440` in C against the live `001585c8` → `001585e0` pair.
+- Record a second window from tick 64, with a delivered neutral release and a
+  wall approach.
+- `00156cf0` gameplay audio resume stays external.
 
 ## M23–M24 integration review — 2026-11-27
 
-**Resume here.** `integration/m23-m24-review` (worktree
+**Integrated baseline.** `integration/m23-m24-review` (worktree
 `decomp-m23-m24-integration`) on remote `main` `09b58321` (PR #22), merging
 M23 `6cc3ce8d` and M24 `1830f5ec` with their shared M19–M22 history
 (`705cd20f` ⊃ `b855eb93`). Merge commits `71cd01d`, `216b126`; tested

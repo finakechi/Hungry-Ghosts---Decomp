@@ -27,7 +27,11 @@ typedef enum {
     HG_PROV_UNKNOWN = 0,
     HG_PROV_FIXTURE = 1,
     HG_PROV_C_PRODUCED = 2,
-    HG_PROV_SYNTHETIC_MODEL = 3
+    HG_PROV_SYNTHETIC_MODEL = 3,
+    /* M25 ledger classes (never produced by the M23 path). */
+    HG_PROV_ORIGINAL_BYTES = 4,      /* rule characterized from authenticated ELF bytes */
+    HG_PROV_RUNTIME_OBSERVATION = 5, /* value observed in an authenticated capture */
+    HG_PROV_INFERENCE = 6            /* inferred meaning, or a recorded conflict */
 } HGValueProvenance;
 
 typedef enum {
@@ -45,7 +49,12 @@ typedef enum {
     HG_WORLD_ERR_NODE_LEAK = 11,
     HG_WORLD_ERR_PROVENANCE_VIOLATION = 12,
     HG_WORLD_ERR_DOMAIN_FAULT = 13,
-    HG_WORLD_ERR_UNKNOWN_CALL = 14
+    HG_WORLD_ERR_UNKNOWN_CALL = 14,
+    /* M25 session errors. */
+    HG_WORLD_ERR_INVALID_CONFIG = 15,
+    HG_WORLD_ERR_CAPACITY = 16,
+    HG_WORLD_ERR_UNSUPPORTED_ENTRY = 17,
+    HG_WORLD_ERR_LIFECYCLE_STATE = 18
 } HGWorldInitError;
 
 typedef struct {
@@ -202,5 +211,184 @@ uint32_t hg_world_harness_actor_ticks_type2(const HGWorldInitHarness *h);
 
 const char *hg_world_harness_error_name(HGWorldInitError err);
 const char *hg_world_provenance_name(HGValueProvenance prov);
+
+/* ======================================================================
+ * M25 world session: connected initialization and state continuity.
+ *
+ * Opt-in through hg_world_session_create(); harnesses made by
+ * hg_world_harness_create() keep the exact M23 behavior. The same lifecycle
+ * calls (cold_boot, publish_resources, enter_world, step_frame, teardown)
+ * drive a session. A session additionally:
+ *   - takes an original scene description (spawn, floor tiers, walls, player
+ *     bones and head offset, world actors and their bone nodes, PACK
+ *     directories and arenas) and can switch scenes after teardown;
+ *   - runs 0012f850 in the 18-service order read from the authenticated ELF,
+ *     executing existing C where it exists and recording every other service
+ *     as an explicit external seam;
+ *   - applies the original-bytes characterization of the 00158560 state-0
+ *     selector, the 001e3440(+8.0, -3.0) floor-snap arguments and the common
+ *     tail (including the 003f9f6e rule) instead of inserted end states;
+ *   - records an ordered state history, an effect trace and an ownership
+ *     ledger (actors, bone nodes, handles), and retires everything through
+ *     release operations at teardown or after a failed initialization.
+ * No accessor here reports an injected fault; checkers must detect faults
+ * from guest memory, ledgers and traces.
+ * ====================================================================== */
+
+enum {
+    HG_WORLD_MAX_TIERS = 4u,
+    HG_WORLD_MAX_PROPS = 6u,
+    HG_WORLD_MAX_ROOTS = 4u,
+    HG_WORLD_MAX_PROP_NODES = 32u,
+    HG_WORLD_MIN_PLAYER_BONES = 18u, /* camera reads bone 0x11 */
+    HG_WORLD_MAX_PLAYER_BONES = 36u, /* synthetic FLK5 pose table capacity */
+    HG_WORLD_MAX_HISTORY = 256u,
+    HG_WORLD_MAX_OWNERSHIP = 8192u,
+    HG_WORLD_MAX_EFFECTS = 1024u
+};
+
+typedef struct {
+    float min_x;
+    float max_x;
+    float min_z;
+    float max_z;
+    float height;
+} HGWorldFloorTier;
+
+typedef struct {
+    uint32_t nodes;    /* bone nodes bound through C 00141e40 (0..32) */
+    uint32_t priority; /* 0 = main list 00539448, 1 = priority list 00539450 */
+} HGWorldPropSpec;
+
+typedef struct {
+    char name[24];
+    HGSyntheticSceneConfig base; /* spawn, base floor, walls, bones, triple */
+    float head_offset;           /* bone 2 local Y offset in the player FLK5 */
+    uint32_t tier_count;
+    HGWorldFloorTier tiers[HG_WORLD_MAX_TIERS]; /* raised floors; highest wins */
+    uint32_t root_actors;        /* world root actors spawned by 00189aa0 (1..4) */
+    uint32_t prop_count;
+    HGWorldPropSpec props[HG_WORLD_MAX_PROPS];
+    uint32_t player_dir;         /* PACK directory publishing handle 0x3f (0x3f..0x4d) */
+    uint32_t area_dir;           /* PACK directory publishing handle 0x96 (0x102..0x110) */
+    uint32_t player_arena;       /* 003f4d48 arena for the player FLK5 */
+    uint32_t area_arena;         /* 003f4d50 arena for the area FLK5 */
+    uint8_t entry_event_flag;    /* 0046e106: state-0 selector input */
+    uint8_t player_event_4a0;    /* PLAYER+0x4a0: state-0 selector input */
+} HGWorldSceneSpec;
+
+typedef struct {
+    /* Each switch perturbs an operation; none is visible through the API. */
+    bool omit_area_publish;          /* prerequisite */
+    bool swap_pool_and_spawn;        /* order: spawn effect before pool reset */
+    bool exhaust_nodes_before_player;/* allocation: a prop takes the node pool */
+    bool exhaust_actor_pool0;        /* allocation: pool 0 drained before roots */
+    bool bind_player_to_area;        /* binding: handle 0x3f aliases 0x96 */
+    uint32_t drop_update_at;         /* dropped update: post-readiness index (1-based) */
+    uint32_t disable_walls_from;     /* collision: wall query misses from index */
+    uint32_t teleport_at;            /* position: displacement injected at index */
+    bool ignore_floor_tiers;         /* collision: floor probe ignores tiers */
+    uint32_t skip_camera_from;       /* camera: follow skipped from index */
+    bool leak_player_node;           /* teardown: one player node not released */
+    bool leave_prop_linked;          /* teardown: one prop actor not retired */
+    bool skip_area_handle_revoke;    /* teardown: dynamic handles not revoked */
+} HGWorldSessionFaults;
+
+typedef enum {
+    HG_READY_NONE = 0,
+    HG_READY_BOOTED = 1,
+    HG_READY_PUBLISHED = 2,
+    HG_READY_WORLD_SETUP = 3,
+    HG_READY_FIRST_TICK = 4,
+    HG_READY_FADING = 5,
+    HG_READY_ACTIVE = 6,
+    HG_READY_TORN_DOWN = 7,
+    HG_READY_FAILED = 8
+} HGWorldReadiness;
+
+typedef struct {
+    uint32_t seq;
+    uint32_t cycle;
+    uint32_t frame;
+    uint32_t from;
+    uint32_t to;
+    uint32_t detail; /* HGWorldInitError for FAILED, else 0 */
+} HGWorldStateEvent;
+
+typedef enum {
+    HG_OWN_ACTOR_ALLOC = 1,
+    HG_OWN_ACTOR_RELEASE = 2,
+    HG_OWN_NODE_ALLOC = 3,
+    HG_OWN_NODE_RELEASE = 4,
+    HG_OWN_HANDLE_PUBLISH = 5,
+    HG_OWN_HANDLE_REVOKE = 6
+} HGOwnershipOp;
+
+typedef struct {
+    uint32_t seq;
+    uint32_t cycle;
+    uint32_t frame;
+    uint32_t op;          /* HGOwnershipOp */
+    uint32_t object;      /* actor address, node address or handle id */
+    uint32_t owner;       /* owning actor (player 003f92d0), or handle value */
+    uint32_t producer_pc; /* original or model operation that acted */
+} HGOwnershipEvent;
+
+/* Model-only effect tags (no original routine is claimed for these). */
+#define HG_EFFECT_RETIRE_ACTOR 0xfe250001u
+#define HG_EFFECT_RELEASE_NODES 0xfe250002u
+#define HG_EFFECT_REVOKE_PLAYER_HANDLE 0xfe250003u
+#define HG_EFFECT_CLEAR_PLAYER_CAMERA 0xfe250004u
+#define HG_EFFECT_PARTIAL_CLEANUP 0xfe250005u
+
+typedef struct {
+    uint32_t seq;
+    uint32_t cycle;
+    uint32_t frame;
+    uint32_t pc;          /* original routine whose effect ran, or HG_EFFECT_* */
+    uint32_t provenance;  /* HGValueProvenance of the effect's implementation */
+} HGEffectEvent;
+
+typedef struct {
+    HGWorldFrameSnapshot base;
+    uint32_t readiness;
+    uint32_t post_ready_updates;
+    uint32_t coordinator_ticks;
+    uint32_t pool_free[3];
+    uint32_t prio_actor_count;
+    uint32_t type2_prio_actor_count;
+    uint32_t input_block_3f9f6e;
+    uint32_t call_log_size;
+    uint32_t ownership_log_size;
+} HGWorldSessionSnapshot;
+
+uint32_t hg_world_scene_builtin_count(void);
+/* Built-in original scenes: 0 = "lantern-court", 1 = "terrace-gallery". An
+ * out-of-range index returns a spec that fails validation. */
+HGWorldSceneSpec hg_world_scene_builtin(uint32_t index);
+HGWorldInitError hg_world_scene_validate(const HGWorldSceneSpec *spec);
+
+HGWorldInitHarness *hg_world_session_create(const HGWorldSceneSpec *spec,
+                                            const HGWorldSessionFaults *faults);
+/* Only after cold boot or teardown: rebuild scene inputs on the live bus. */
+HGWorldInitError hg_world_session_select_scene(HGWorldInitHarness *h,
+                                               const HGWorldSceneSpec *spec);
+HGWorldInitError hg_world_session_snapshot(const HGWorldInitHarness *h,
+                                           HGWorldSessionSnapshot *out);
+HGWorldReadiness hg_world_session_readiness(const HGWorldInitHarness *h);
+bool hg_world_session_is_m25(const HGWorldInitHarness *h);
+size_t hg_world_session_history_count(const HGWorldInitHarness *h);
+const HGWorldStateEvent *hg_world_session_history_at(const HGWorldInitHarness *h, size_t i);
+size_t hg_world_session_ownership_count(const HGWorldInitHarness *h);
+const HGOwnershipEvent *hg_world_session_ownership_at(const HGWorldInitHarness *h, size_t i);
+size_t hg_world_session_effect_count(const HGWorldInitHarness *h);
+const HGEffectEvent *hg_world_session_effect_at(const HGWorldInitHarness *h, size_t i);
+/* Clears the call log (cold boot otherwise keeps growing it per cycle). */
+void hg_world_session_reset_call_log(HGWorldInitHarness *h);
+/* The 0012f850 service order a session executes (model side; checkers must
+ * compare it against an independently derived order). */
+size_t hg_world_session_coordinator_order(const uint32_t **out);
+const char *hg_world_readiness_name(HGWorldReadiness r);
+const char *hg_world_ownership_op_name(HGOwnershipOp op);
 
 #endif

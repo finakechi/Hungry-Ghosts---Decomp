@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 
 from hg_verify_legacy_contracts import exact
+import hg_verify_m25 as m25
 
 ROOT = Path(__file__).resolve().parents[1]
 ELF = 'a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61'
@@ -20,10 +21,10 @@ KINDS = {
     'm20-title-hgscript', 'm21-title-scene', 'm21-area-entry', 'm21-ferry-reload', 'm22-retail-check',
     'm23-authentic-boundary', 'm23-world-init-synthetic', 'm24-reference-map', 'm24-sequencer',
     'world-audio', 'c-drivers',
-}
+} | m25.KINDS
 # Synthetic C gates whose build and output paths stay inside the attempt
 # directory and HG_VERIFY_BUILD_DIR (checked by tests/test_hg_verify.py).
-PARALLEL = {'m23-world-init-synthetic', 'm24-sequencer', 'world-audio', 'c-drivers'}
+PARALLEL = {'m23-world-init-synthetic', 'm24-sequencer', 'world-audio', 'c-drivers'} | m25.PARALLEL
 
 
 def need(condition, basis):
@@ -182,4 +183,6 @@ def measurements(check, directory, row, read):
         return {'checkpoints': len(row['checkpoints'])}
     if kind.startswith('m24-'):
         return m24(kind, check, row, directory, read)
+    if kind in m25.KINDS:
+        return m25.measurements(check, row, read, need, same)
     return synthetic(kind, check, row, directory, read)
