@@ -1,5 +1,24 @@
 # Hungry Ghosts — start here
 
+## SCPS-15046 research realignment — 2026-11-28
+
+**Resume here.** The present scope is reverse engineering and decompilation
+research for Japanese SCPS-15046. Existing independent models support
+verification. The separate PC repository holds a research index for a
+possible future port. The dated sections below record earlier resume points.
+
+- [Collision replay](docs/retail-collision-snap.md) isolates the
+  `001585c8` → `001585e0` stop pair and checks original words and
+  non-stack memory effects through `001e3440`. Resume at the mesh
+  candidate selection in `00145740` and the second query `00268ad0`.
+- [Audio sequencing](docs/retail-audio-sequencing.md) reproduces M22
+  and the M26 working timing receipt. Resume at the return invariant
+  and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
+  frames with a bounded trace.
+- [Coverage and review](docs/SCPS-15046-realignment.md) records
+  the authenticated build, v2 inventory, PR #24 hold recommendation,
+  and the standalone M26 commit required before reconciliation.
+
 ## M23–M24 integration review — 2026-11-27
 
 **Resume here.** Branch `integration/m23-m24-review` in

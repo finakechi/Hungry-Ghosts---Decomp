@@ -1,0 +1,4167 @@
+{
+  "schema": "hg-coverage-inventory/v2",
+  "build_elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "EE": {
+    "image": "EE",
+    "sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "denominator": {
+      "candidate_entries": 4525,
+      "candidate_body_bytes": 2469784
+    },
+    "numerator": {
+      "source_mapped_entries": 178,
+      "original_bytes_checked_in_candidates": 93452,
+      "original_bytes_checked_outside_candidates": 4,
+      "recovered_original_instruction_bytes": null
+    },
+    "classifications": {
+      "analysis": 60,
+      "source-mapped": 178,
+      "unknown": 4287
+    },
+    "evidence_flags": {
+      "external-dependency": 294,
+      "interpreted-original-instructions": 1,
+      "original-byte-verified": 204,
+      "partial-recovery": 178,
+      "reviewed": 210,
+      "runtime-tested": 3,
+      "unknown": 4287
+    },
+    "entries": {
+      "00100008": {
+        "classification": "analysis",
+        "flags": [
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00100b80": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00101780": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00101cb0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00102150": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00102408": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00102738": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00103c40": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00103d60": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00103d80": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00103da0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001041e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00104aa8": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00104e10": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010cca0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0010db90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010dcf8": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010de10": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010de98": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e0d8": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e210": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e388": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e5c8": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e628": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0010e6d8": {
+        "classification": "analysis",
+        "flags": [
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00114010": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00119910": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00119ac8": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011ad58": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011af00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011b100": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011b378": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011b490": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011d830": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_main_init"
+        ]
+      },
+      "0011da00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011db30": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0011dc40": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011dc50": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011df10": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_vblank_start_handler"
+        ]
+      },
+      "0011df80": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_vblank_end_handler"
+        ]
+      },
+      "0011dfd0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011e350": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011f0c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0011fe20": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00120110": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00120490": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001204e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_angle_wrap"
+        ]
+      },
+      "00120580": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00120830": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00121810": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_boot_mode"
+        ]
+      },
+      "001219e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_logo_sequence_step"
+        ]
+      },
+      "00121be0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_lifecycle_mode"
+        ]
+      },
+      "00121bf4": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00122bd0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00123250": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00123370": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001235c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_set_palette"
+        ]
+      },
+      "001235f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00123660": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00123ee0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00124010": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00125d60": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00125f30": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00126180": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00128de0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00128e80": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00129020": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00129e40": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0012bc00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012bc70": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_model_draw"
+        ]
+      },
+      "0012bd00": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_camera_head_matrix"
+        ]
+      },
+      "0012bf70": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012c030": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012c3d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012c640": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012c790": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed",
+          "runtime-tested"
+        ],
+        "source": [
+          "hg_camera_update"
+        ]
+      },
+      "0012cce0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012d130": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_camera_follow"
+        ]
+      },
+      "0012d1c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_mode"
+        ]
+      },
+      "0012d208": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0012d680": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_title_step"
+        ]
+      },
+      "0012d7d0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_enter_step"
+        ]
+      },
+      "0012d850": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_reset_services"
+        ]
+      },
+      "0012d9a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_major5"
+        ]
+      },
+      "0012dbd0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_area_pack_id"
+        ]
+      },
+      "0012dc90": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_entry_step"
+        ]
+      },
+      "0012dd60": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_area_load_step"
+        ]
+      },
+      "0012e020": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_reload_step"
+        ]
+      },
+      "0012e2c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012e6d0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_event_frame"
+        ]
+      },
+      "0012e700": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_frame"
+        ]
+      },
+      "0012f270": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012f7d0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_request_exit"
+        ]
+      },
+      "0012f800": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_teardown"
+        ]
+      },
+      "0012f850": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_frame_advance"
+        ]
+      },
+      "0012f950": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0012fa00": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_gameplay_event_flags"
+        ]
+      },
+      "0012fb30": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_clear_dynamic_handles"
+        ]
+      },
+      "0012fb90": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_clear_selected_handles"
+        ]
+      },
+      "0012fbc0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_area_index"
+        ]
+      },
+      "0012fbf0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0012fcf0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_load_indexed"
+        ]
+      },
+      "0012fde0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_load_context"
+        ]
+      },
+      "0012fe90": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_prepare_context"
+        ]
+      },
+      "0012ff20": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_load_cached"
+        ]
+      },
+      "0012ffa0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_load_retained"
+        ]
+      },
+      "00130020": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_prepare_retained"
+        ]
+      },
+      "00130150": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_request_raw"
+        ]
+      },
+      "00130170": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_request"
+        ]
+      },
+      "00130220": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_worker"
+        ]
+      },
+      "001303e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pack_special_step"
+        ]
+      },
+      "001306a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pack_bootstrap"
+        ]
+      },
+      "00130900": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pack_general"
+        ]
+      },
+      "00131420": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pack_alternative"
+        ]
+      },
+      "00131810": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_area_read_step"
+        ]
+      },
+      "001318f0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001319c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_read_setup"
+        ]
+      },
+      "001319e0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00131bf0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00131da0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_rebase_upload"
+        ]
+      },
+      "00131dd0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_area_finalize"
+        ]
+      },
+      "001330f0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00137890": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00137ed0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_fixup"
+        ]
+      },
+      "00138370": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_resource_lookup"
+        ]
+      },
+      "00138560": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_flk5_disable"
+        ]
+      },
+      "001385a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_base_delta"
+        ]
+      },
+      "001385b0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00138690": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_material_next"
+        ]
+      },
+      "001386e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_geometry"
+        ]
+      },
+      "001389d0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_map_address"
+        ]
+      },
+      "00138a80": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_descriptor_address"
+        ]
+      },
+      "00138af0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_flk5_entry"
+        ]
+      },
+      "00138b30": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_flk5_type"
+        ]
+      },
+      "00138b70": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_flk5_count"
+        ]
+      },
+      "00138b90": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_flk5_size"
+        ]
+      },
+      "00138fa0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_reset"
+        ]
+      },
+      "00138fd0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_clear"
+        ]
+      },
+      "00139010": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_black"
+        ]
+      },
+      "00139040": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_out"
+        ]
+      },
+      "001390b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_in"
+        ]
+      },
+      "001390f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_music_fade_2"
+        ]
+      },
+      "00139140": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_music_fade_1"
+        ]
+      },
+      "00139190": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_music_fade_6"
+        ]
+      },
+      "001391f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_music_fade_5"
+        ]
+      },
+      "00139240": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_fade_service"
+        ]
+      },
+      "00139c90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00139d20": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_bind_resources"
+        ]
+      },
+      "00139fc0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_set_mode"
+        ]
+      },
+      "00139fe0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_set_animation_flag"
+        ]
+      },
+      "00139ff0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013a050": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013a060": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013a0a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_default_pose"
+        ]
+      },
+      "0013a240": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013a2a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_copy_node_matrix"
+        ]
+      },
+      "0013a4c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013b6e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013ce80": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_late_frame_service"
+        ]
+      },
+      "0013d7d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013d910": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_clear_buttons"
+        ]
+      },
+      "0013d970": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_service"
+        ]
+      },
+      "0013da80": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013dad0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_clear_port"
+        ]
+      },
+      "0013dc30": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_port"
+        ]
+      },
+      "0013e090": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_read"
+        ]
+      },
+      "0013e500": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_stick_dpad"
+        ]
+      },
+      "0013e550": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_digital_pressure"
+        ]
+      },
+      "0013e5b0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0013e8f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pad_pressure"
+        ]
+      },
+      "0013fef0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00140140": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001404f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141210": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141330": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001413a0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141470": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "title_frame"
+        ]
+      },
+      "00141570": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141760": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141810": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_options_to_game"
+        ]
+      },
+      "001418b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_controls_apply"
+        ]
+      },
+      "00141910": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141980": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_new_game_state"
+        ]
+      },
+      "00141b10": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00141de0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_take_node"
+        ]
+      },
+      "00141e40": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_allocate_nodes"
+        ]
+      },
+      "00142810": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_register_list"
+        ]
+      },
+      "001428f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_construct"
+        ]
+      },
+      "00142970": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_construct_short"
+        ]
+      },
+      "001429b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_allocate"
+        ]
+      },
+      "00142e90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001430a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_update_main"
+        ]
+      },
+      "00143100": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_update_priority"
+        ]
+      },
+      "00143150": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_update_type2",
+          "hg_render_node_list"
+        ]
+      },
+      "001431a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_update_type2_priority"
+        ]
+      },
+      "001431f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_init"
+        ]
+      },
+      "00143240": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_mode_dispatch"
+        ]
+      },
+      "001432c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_mode_init"
+        ]
+      },
+      "00143300": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_mode_set"
+        ]
+      },
+      "00143360": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_schedule"
+        ]
+      },
+      "001434e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001434f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_finish"
+        ]
+      },
+      "00143530": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_resource_sqrt"
+        ]
+      },
+      "00143560": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00143620": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00143b90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00143c60": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00143d30": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00143e60": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00144340": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001446a0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00144820": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00145630": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00145740": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001465d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001467b0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00147f10": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_menu_clear"
+        ]
+      },
+      "001482c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00148970": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001496e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00149890": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0014a0a0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0014b330": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_text_width_ascii"
+        ]
+      },
+      "0014b690": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_text_width_ascii_alt"
+        ]
+      },
+      "0014d4f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0014f060": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0014f370": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001503f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00151c40": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00152aa0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00152ae0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00152c50": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00152e90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00153020": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001537f0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00155350": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00155bf0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001564a0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00156550": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001566c0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00156740": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156870": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156a50": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_register_entry"
+        ]
+      },
+      "00156ad0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156ce0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156cf0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156d50": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156e60": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00156f20": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_transfer_setup"
+        ]
+      },
+      "00156fc0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_align16"
+        ]
+      },
+      "00157060": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_register_worker"
+        ]
+      },
+      "00158560": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00158a10": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed",
+          "runtime-tested"
+        ],
+        "source": [
+          "hg_player_initialize"
+        ]
+      },
+      "00158ce0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_unlink_effects"
+        ]
+      },
+      "00158d30": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_reset_transition"
+        ]
+      },
+      "00158d90": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_ordinary_transition"
+        ]
+      },
+      "00158e20": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_equipment_transition"
+        ]
+      },
+      "00159140": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00159380": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_apply_transition"
+        ]
+      },
+      "001594f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_condition_timer"
+        ]
+      },
+      "00159570": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_active_update"
+        ]
+      },
+      "00159ad0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_ordinary_update"
+        ]
+      },
+      "00159d00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015a0d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015aea0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015b1e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015b260": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_flag_status"
+        ]
+      },
+      "0015b6b0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015bf30": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015c160": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_spawn_equipment"
+        ]
+      },
+      "0015c410": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015c540": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015d770": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015de80": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_input_transitions"
+        ]
+      },
+      "0015e0c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015e190": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_select_animation"
+        ]
+      },
+      "0015e1d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015e420": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_floor"
+        ]
+      },
+      "0015ebc0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_static_constraint"
+        ]
+      },
+      "0015fc10": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_grounded"
+        ]
+      },
+      "0015fcd0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_speed_class"
+        ]
+      },
+      "0015fd30": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0015fe00": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_movement_gate"
+        ]
+      },
+      "0015fe70": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_movement"
+        ]
+      },
+      "00160420": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_rate_approach"
+        ]
+      },
+      "00160510": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_turn"
+        ]
+      },
+      "001606e0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001608b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_walk"
+        ]
+      },
+      "00160c20": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_player_move_limit"
+        ]
+      },
+      "00160c60": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00160ff0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00161110": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00161cf0": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_menu_cursor"
+        ]
+      },
+      "001620d0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00162750": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pause_menu"
+        ]
+      },
+      "00163350": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001635b0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00166770": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00166910": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001676f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00174900": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00175190": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00176fb0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00178270": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001782a0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001783c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00178ec0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0017d930": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0017f2d0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0017f6d0": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0017fad0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00182430": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00182480": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00182490": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_text_classify"
+        ]
+      },
+      "001824e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_text_width_bytes"
+        ]
+      },
+      "00182540": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_text_width"
+        ]
+      },
+      "00182850": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00182a60": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00182ae0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_script_advance"
+        ]
+      },
+      "00182b50": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00182e90": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_script_format_number"
+        ]
+      },
+      "00183060": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00183070": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001830b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_script_walk_positioned"
+        ]
+      },
+      "001836b0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00183840": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00183910": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001839f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_script_entry"
+        ]
+      },
+      "00183a30": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00187e10": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00188550": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00188650": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00189aa0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0018a330": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_setup"
+        ]
+      },
+      "0018a4c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_setup_resources"
+        ]
+      },
+      "0018a5b0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_setup_animation"
+        ]
+      },
+      "0018b6c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0018c120": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0018c1c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0018c220": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_data_init"
+        ]
+      },
+      "0018c280": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_active"
+        ]
+      },
+      "0018c520": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0018c9c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00196ad0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00198f60": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_pre_dispatch_service"
+        ]
+      },
+      "0019c8a0": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_camera_anchor_node"
+        ]
+      },
+      "001b7c80": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001b7f00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001bcd00": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001cc5b0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "001ccd80": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001cceb0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001ccfa0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001cd9c0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001cdc90": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001cdd30": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001cddc0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "001e3440": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "interpreted-original-instructions",
+          "original-byte-verified",
+          "reviewed",
+          "runtime-tested"
+        ],
+        "source": []
+      },
+      "001e5060": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0025c0f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0025c140": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0025c170": {
+        "classification": "analysis",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0025cf60": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0025ddd0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "00266850": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00266a20": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00266c40": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00267300": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_actor_bind_attachment"
+        ]
+      },
+      "00267450": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0026e9f0": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "0026fe40": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0026fea0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "0026ff90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00270c30": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00282160": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002821f0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002a9050": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_channel_init_a"
+        ]
+      },
+      "002a9180": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_channel_init_b"
+        ]
+      },
+      "002a94b8": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_channel_command"
+        ]
+      },
+      "002a99b8": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_open_channel_a"
+        ]
+      },
+      "002a9b68": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_open_channel_b"
+        ]
+      },
+      "002ab508": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "002ad478": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_play"
+        ]
+      },
+      "002ad748": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_cancel"
+        ]
+      },
+      "002adcf0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_bank_bind"
+        ]
+      },
+      "002add90": {
+        "classification": "analysis",
+        "flags": [
+          "original-byte-verified",
+          "reviewed"
+        ],
+        "source": []
+      },
+      "002ae998": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_next_sequence"
+        ]
+      },
+      "002b4db0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_find"
+        ]
+      },
+      "002b4df0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_bank_register"
+        ]
+      },
+      "002b4f88": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_active"
+        ]
+      },
+      "002b4fc8": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_state"
+        ]
+      },
+      "002b5008": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_table_lookup4"
+        ]
+      },
+      "002b50e0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_table_lookup6"
+        ]
+      },
+      "002b5178": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_table_lookup1"
+        ]
+      },
+      "002b5228": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_null8"
+        ]
+      },
+      "002b5240": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_range18"
+        ]
+      },
+      "002b5278": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_range20"
+        ]
+      },
+      "002b52c0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_swap"
+        ]
+      },
+      "002b52f0": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_get"
+        ]
+      },
+      "002b5318": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_bank_register_wrapper"
+        ]
+      },
+      "002b54e8": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slot_clear"
+        ]
+      },
+      "002b55a8": {
+        "classification": "source-mapped",
+        "flags": [
+          "partial-recovery"
+        ],
+        "source": [
+          "hg_audio_slots_init"
+        ]
+      },
+      "002cdef0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002cf020": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_title_card_scan"
+        ]
+      },
+      "002cf330": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002cf5c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002cfa90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "002f7830": {
+        "classification": "source-mapped",
+        "flags": [
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_camera_particle_field"
+        ]
+      },
+      "0031bb80": {
+        "classification": "source-mapped",
+        "flags": [
+          "external-dependency",
+          "original-byte-verified",
+          "partial-recovery",
+          "reviewed"
+        ],
+        "source": [
+          "hg_frame_edge_sync"
+        ]
+      },
+      "0032b3c0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "00336e90": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      },
+      "003372a0": {
+        "classification": "unknown",
+        "flags": [
+          "external-dependency",
+          "unknown"
+        ],
+        "source": []
+      }
+    },
+    "exclusions": [
+      "Unreviewed words outside candidates, BSS, overlays, IOP and VU microcode.",
+      "Coverage of recovered semantics has no measured instruction-byte numerator."
+    ],
+    "interpreted_original_bytes": 3296,
+    "excluded_automatic_entries": [
+      "0x00a87880",
+      "0x00a88510",
+      "0x00a88fc0",
+      "0x00a8ae10",
+      "0x00a8b800",
+      "0x00a8bab0",
+      "0x00a8f480",
+      "0x00a8f6d0",
+      "0x00a92a40",
+      "0x00a965a0",
+      "0x00a9ca00",
+      "0x00a9cb00",
+      "0x00a9cba0",
+      "0x00a9fce0",
+      "0x00aa36c0",
+      "0x00aa3980",
+      "0x00aa3be0",
+      "0x00aa3c70",
+      "0x00aa6560",
+      "0x00aa74f0",
+      "0x00aa85a0",
+      "0x00aab460",
+      "0x00ab06f0",
+      "0x00ab12f0",
+      "0x00abb1c0",
+      "0x00abc3d0",
+      "0x00abd680",
+      "0x00ac1010",
+      "0x00ac2640",
+      "0x00ac26e0",
+      "0x00ac7280",
+      "0x00ac7ba0",
+      "0x00ad3330",
+      "0x00ad3340",
+      "0x00ad33c0"
+    ]
+  },
+  "overlays": {
+    "status": "checked",
+    "images": [
+      {
+        "load_address": "00a87800",
+        "image": "/AREA0/A0_B09.BIN",
+        "sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935",
+        "denominator": {
+          "candidate_entries": 6,
+          "candidate_body_bytes": 2504
+        },
+        "numerator": {
+          "source_mapped_entries": 5,
+          "original_bytes_checked_in_candidates": 2504,
+          "original_bytes_checked_outside_candidates": 0,
+          "recovered_original_instruction_bytes": null
+        },
+        "classifications": {
+          "analysis": 1,
+          "source-mapped": 5
+        },
+        "evidence_flags": {
+          "original-byte-verified": 6,
+          "partial-recovery": 5,
+          "reviewed": 6,
+          "runtime-tested": 4
+        },
+        "entries": {
+          "00a87880": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed",
+              "runtime-tested"
+            ],
+            "source": [
+              "hg_title_menu"
+            ]
+          },
+          "00a87de0": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed"
+            ],
+            "source": [
+              "hg_title_card_poll"
+            ]
+          },
+          "00a88660": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed",
+              "runtime-tested"
+            ],
+            "source": [
+              "create_title"
+            ]
+          },
+          "00a886e0": {
+            "classification": "analysis",
+            "flags": [
+              "original-byte-verified",
+              "reviewed",
+              "runtime-tested"
+            ],
+            "source": []
+          },
+          "00a88a20": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed"
+            ],
+            "source": [
+              "title_actor"
+            ]
+          },
+          "00a88b40": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed",
+              "runtime-tested"
+            ],
+            "source": [
+              "title_dialogue"
+            ]
+          }
+        },
+        "exclusions": [
+          "Unmapped functions, overlay data and other overlays."
+        ]
+      },
+      {
+        "load_address": "00a87800",
+        "image": "/AREA1/A1_B00.BIN",
+        "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+        "denominator": {
+          "candidate_entries": 2,
+          "candidate_body_bytes": 2180
+        },
+        "numerator": {
+          "source_mapped_entries": 1,
+          "original_bytes_checked_in_candidates": 2180,
+          "original_bytes_checked_outside_candidates": 0,
+          "recovered_original_instruction_bytes": null
+        },
+        "classifications": {
+          "analysis": 1,
+          "source-mapped": 1
+        },
+        "evidence_flags": {
+          "original-byte-verified": 2,
+          "partial-recovery": 1,
+          "reviewed": 2,
+          "runtime-tested": 1
+        },
+        "entries": {
+          "00a8a070": {
+            "classification": "source-mapped",
+            "flags": [
+              "original-byte-verified",
+              "partial-recovery",
+              "reviewed",
+              "runtime-tested"
+            ],
+            "source": [
+              "hg_area1_actor"
+            ]
+          },
+          "00a8b800": {
+            "classification": "analysis",
+            "flags": [
+              "original-byte-verified",
+              "reviewed"
+            ],
+            "source": []
+          }
+        },
+        "exclusions": [
+          "Unmapped functions, overlay data and other overlays."
+        ]
+      }
+    ],
+    "excluded": "No whole-overlay denominator. Only authenticated AREA0 and AREA1 packets are supported."
+  },
+  "IOP": {
+    "status": "checked",
+    "images": [
+      {
+        "image": "LIBSD.IRX",
+        "sha256": "57cbd80b7c2f966985e14ca18c03e849e3b3eb1216f06a6f4c1e6ca85084ea37",
+        "original_instruction_bytes": 20,
+        "checked_noncode_anchor_bytes": 0,
+        "module_executable_section_bytes": 18528,
+        "address_context": "verified module-relative addresses",
+        "evidence": "M22 selected original anchors"
+      },
+      {
+        "image": "SDRDRV.IRX",
+        "sha256": "37b615869fed71ec90760543d83170dc7b7608142a4117d665a0cfbe78c3cc52",
+        "original_instruction_bytes": 12,
+        "checked_noncode_anchor_bytes": 0,
+        "module_executable_section_bytes": 4384,
+        "address_context": "verified module-relative addresses",
+        "evidence": "M22 selected original anchors"
+      },
+      {
+        "image": "SG2IOP.IRX",
+        "sha256": "a8ac82dc1f12b7960187d344d2bd5167383172c77f3ed15482b1183d30a9c1c1",
+        "original_instruction_bytes": 48,
+        "checked_noncode_anchor_bytes": 4,
+        "module_executable_section_bytes": 17840,
+        "address_context": "verified module-relative addresses",
+        "evidence": "M22 selected original anchors"
+      }
+    ],
+    "denominator": null,
+    "recovered_original_instruction_bytes": null,
+    "excluded": "No IOP census. Module load images contain data and relocations; modeled PCM and host code add zero."
+  },
+  "VU": {
+    "original_instruction_bytes": null,
+    "denominator": null,
+    "excluded": "EE COP2 macro instructions are EE words. No authenticated VU microprogram census."
+  },
+  "independent_models": {
+    "src/audio/audio_iop.c": "Host IOP/SPU2 service model. M22 checks selected boundaries.",
+    "src/audio/audio_sequencer.c": "HSQ1 sequencer and allocator.",
+    "src/scene/world_init.c": "M23 world harness includes independent collision and scene behavior."
+  }
+}

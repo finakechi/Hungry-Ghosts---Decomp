@@ -58,7 +58,7 @@ def sources(ref=None):
 
 
 def c_body(text, name):
-    m = re.search(r'^(?:static\s+)?(?:void|uint32_t|uint64_t|int)\s+' + name + r'\s*\([^)]*\)\s*\{', text, re.M)
+    m = re.search(r'^(?:static\s+)?(?:void|u?int(?:8|16|32|64)_t|int)\s+' + name + r'\s*\([^)]*\)\s*\{', text, re.M)
     if not m:
         return None
     depth, i = 0, m.end() - 1
@@ -159,20 +159,39 @@ def summarize(src, interpreted_pcs):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument('--baseline', default='46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b')
+    p.add_argument('--baseline', help='Git baseline for the historical v1 inventory')
     p.add_argument('--interpreted', type=Path, action='append', default=[],
                    help='JSON list (or {"pcs": [...]}) of original instruction addresses executed '
                         'by the interpreter in verified runs')
+    p.add_argument('--retail-elf', type=Path, help='Use the build-scoped v2 audit with this authenticated ELF')
+    p.add_argument('--retail-iso', type=Path, help='Also authenticate and audit documented overlays and IOP ranges')
     p.add_argument('--output', type=Path)
     a = p.parse_args()
+    if a.retail_elf:
+        if a.baseline or a.interpreted:
+            p.error('--baseline and --interpreted are historical v1 options')
+        from hg_retail_coverage import report
+
+        entries, callees = classify(sources())
+        result = report(ROOT, a.retail_elf, a.retail_iso, entries, callees, c_body)
+        content = json.dumps(result, indent=2) + '\n'
+        if a.output:
+            with a.output.open('x') as output:
+                output.write(content)
+        else:
+            print(content, end='')
+        return 0
+    if a.retail_iso:
+        p.error('--retail-iso requires --retail-elf')
+    baseline = a.baseline or '46cdb2189a3190b49830b0222e3a5cfcc4e0fd0b'
     pcs = set()
     for path in a.interpreted:
         data = json.loads(path.read_text())
         pcs.update(int(x, 16) if isinstance(x, str) else x for x in (data['pcs'] if isinstance(data, dict) else data))
     after = summarize(sources(), pcs)
-    before = summarize(sources(a.baseline), pcs)
+    before = summarize(sources(baseline), pcs)
     new = sorted(set(after['c_entries']) - set(before['c_entries']))
-    result = dict(schema='hg-coverage-inventory/v1', baseline=a.baseline,
+    result = dict(schema='hg-coverage-inventory/v1', baseline=baseline,
                   note='Inventory candidates are automatic Ghidra discoveries, not verified function totals. '
                        'C classes require C source; instruction-backed is interpreter execution of original '
                        'words in verified runs and is never counted as C. Byte counts are inventory body '
