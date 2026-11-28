@@ -1,0 +1,196 @@
+{
+  "schema": "hg-m26-results/v1",
+  "date": "2026-11-27",
+  "branch": "research/m26-audio-timing",
+  "base_commit": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+  "working_tree_clean": false,
+  "commit_status": "uncommitted_pending_approval",
+  "reference": {
+    "build": "SCPS-15046",
+    "crc": "91AA4B28",
+    "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+    "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e"
+  },
+  "host": {
+    "os": "CachyOS Linux 7.3.5-2-cachyos x86-64",
+    "gcc": "16.2.1",
+    "clang": "23.1.5",
+    "python": "3.14.10",
+    "dedicated": false
+  },
+  "evidence_digests": {
+    "evidence/m26/reference-timing.json": "149217648f474b009d5322f7d3a8f9eb2e445ee8014ebdfed92b455bba77058a",
+    "evidence/m26/timing-lifecycle.json": "f52168bd36e6a6459106a8e8fe39fa0f4f0b6c5bf07c001f437d8969c0391fc8"
+  },
+  "acceptance": [
+    {
+      "run": "m12-20261128T021844Z-end66r4x",
+      "profile": "current",
+      "jobs": 1,
+      "state": "complete",
+      "revision": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+      "source_sha256": "feeafd556ca965525284f63ab0bd43e7d46271c6a8431dff6af7ab5d2e8fafae",
+      "working_tree_clean": false,
+      "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+      "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+      "summary_sha256": "3b61dbf229b5cc1a78b1ada45e3c44521721b5e54aab438b8254f2aad6b52f65",
+      "gates": 140,
+      "counts": {
+        "passed": 135,
+        "expected-rejection": 5
+      },
+      "accepted": 140,
+      "reused": 0,
+      "executed": 140,
+      "historical_gates": 79,
+      "full_verdict": "passed",
+      "retries": 0,
+      "human_intervention": {
+        "resume_commands": 0,
+        "interruptions": 0
+      },
+      "session_seconds": 5079.475,
+      "child_seconds": 5021.976,
+      "not_accepted": [],
+      "expected_rejections": [
+        "ordinary-a1-zero-control",
+        "connected-player-negative-controls",
+        "actor-setup-negative-controls",
+        "actor-lists-negative-controls",
+        "player-transition-negative-controls"
+      ],
+      "gate00": {
+        "tests": 510,
+        "passed_tests": 510,
+        "failed_tests": 0,
+        "retail_tests_unrun": []
+      },
+      "bad_seals": 0,
+      "bad_artifacts": 0,
+      "new_gates": {
+        "m26-reference-timing": {
+          "verdict": "passed",
+          "child_seconds": 0.601,
+          "receipt_sha256": "968b05eda7e2443bb338aaee5f857d80ebc74358abf08ee4b019adfcbb43ba92",
+          "measured": {
+            "anchors": 23,
+            "checkpoints": 12
+          }
+        },
+        "m26-audio-timing-synthetic": {
+          "verdict": "passed",
+          "child_seconds": 3.516,
+          "receipt_sha256": "b14b73c4ebad9613491d3b0ee667e3dc824bf5a693f51852e4ffc6ed4b9299b9",
+          "measured": {
+            "families": 7,
+            "schedule_runs": 17,
+            "multi_schedule_families": 5,
+            "controls": 10,
+            "cycle1_total_key_on": 171
+          }
+        }
+      },
+      "key_preserved_gates": {
+        "m22-retail-service": {
+          "verdict": "passed",
+          "child_seconds": 5.235,
+          "receipt_sha256": "e3e9f2b3d3ec7ea0deb3a90588f80c4d3228443df414931c8d911262400bc8ff"
+        },
+        "m24-reference-map": {
+          "verdict": "passed",
+          "child_seconds": 0.314,
+          "receipt_sha256": "a73ca131aa2060dedd6d66a0df65d459b7b6285242a53f6317d2e68e0d592483"
+        },
+        "m24-sequencer-synthetic": {
+          "verdict": "passed",
+          "child_seconds": 2.202,
+          "receipt_sha256": "5d1ca443888d9d6b306ac5c55a55b8b94bdb2cd5747ebe868b646393463af99e"
+        },
+        "m20-m22-c-sanitizers": {
+          "verdict": "passed",
+          "child_seconds": 7.204,
+          "receipt_sha256": "be2927b6271fd352ee44441fd5eba0da689b11e9f732aaaa3fdbfe8336254e17"
+        },
+        "world-audio-lifecycle": {
+          "verdict": "passed",
+          "child_seconds": 6.568,
+          "receipt_sha256": "fcd1d3ff47ad35bd8d26b38957a750cb6c5dbac882feeb842594085f6dfe4a0c"
+        }
+      }
+    },
+    {
+      "run": "m12-20261128T021136Z-o9n0yove",
+      "profile": "synthetic",
+      "jobs": 1,
+      "state": "complete",
+      "revision": "7191ca7402b5c8f0d5a58dbd38c62d099470c667",
+      "source_sha256": "feeafd556ca965525284f63ab0bd43e7d46271c6a8431dff6af7ab5d2e8fafae",
+      "working_tree_clean": false,
+      "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+      "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+      "summary_sha256": "8bc00726c63000a7eb7dcd523c798e9c38dfa4fba2937e453d7ef6d1e12eb1f4",
+      "gates": 42,
+      "counts": {
+        "passed": 40,
+        "expected-rejection": 2
+      },
+      "accepted": 42,
+      "reused": 0,
+      "executed": 42,
+      "historical_gates": 29,
+      "full_verdict": "unrun",
+      "retries": 0,
+      "human_intervention": {
+        "resume_commands": 0,
+        "interruptions": 0
+      },
+      "session_seconds": 353.789,
+      "child_seconds": 345.817,
+      "not_accepted": [],
+      "expected_rejections": [
+        "connected-player-negative-controls",
+        "actor-setup-negative-controls"
+      ],
+      "gate00": {
+        "tests": 510,
+        "passed_tests": 510,
+        "failed_tests": 0,
+        "retail_tests_unrun": []
+      },
+      "bad_seals": 0,
+      "bad_artifacts": 0,
+      "new_gates": {
+        "m26-audio-timing-synthetic": {
+          "verdict": "passed",
+          "child_seconds": 4.006,
+          "receipt_sha256": "f3782eeac2f20b4d061a3e204a76cf85852af14579eaab3d2b27505afd86b057",
+          "measured": {
+            "families": 7,
+            "schedule_runs": 17,
+            "multi_schedule_families": 5,
+            "controls": 10,
+            "cycle1_total_key_on": 171
+          }
+        }
+      }
+    }
+  ],
+  "builds": {
+    "strict_combined": {
+      "sources": 12,
+      "exported_functions": 289,
+      "duplicate_symbols": 0,
+      "compilers": [
+        "gcc",
+        "clang"
+      ]
+    },
+    "audio_timing_receipts_byte_identical": [
+      "gcc",
+      "clang",
+      "gcc+asan/ubsan/lsan",
+      "clang+asan/ubsan/lsan"
+    ]
+  },
+  "receipts_note": "Receipts and attempt artifacts stay in ignored local storage; only identities and digests are published."
+}

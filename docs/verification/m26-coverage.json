@@ -1,0 +1,49 @@
+{
+  "schema": "hg-m26-coverage/v1",
+  "date": "2026-11-27",
+  "profiles": {
+    "focused": 8,
+    "historical": 79,
+    "full": "alias of historical (79)",
+    "current": 140,
+    "synthetic": 42,
+    "current_added": 2,
+    "synthetic_added": 1
+  },
+  "capabilities": {
+    "M26 authenticated reference timing and cursor voice attribution": [
+      {
+        "gate": "m26-reference-timing",
+        "verifier": "tools/hg_audio/m26_reference_timing.py --check evidence/m26/reference-timing.json",
+        "inputs": [
+          "{elf}",
+          "local/m22/live"
+        ],
+        "evidence_level": "original-bytes + saved-runtime",
+        "expected": "exact equality with evidence/m26/reference-timing.json (23 ELF anchors, 12 checkpoints, VBlank-wake diff == 1, cursor voice attribution)",
+        "acceptance": "ELF SHA-256 identity match, 12 checkpoint SHA-256 matches, all 16 slot counters == wake counter, cursor voice ownership and retirement verified",
+        "negative_controls": "refuses unauthenticated ELF and checks committed-evidence invariants (tests/test_m26_reference_timing.py)",
+        "scheduling": "exclusive",
+        "limits": "frame-boundary saved states only; live multi-frame PINE capture not run"
+      }
+    ],
+    "M26 timing-aware audio lifecycle, multi-schedule parity, and voice management": [
+      {
+        "gate": "m26-audio-timing-synthetic",
+        "verifier": "tools/verify_audio_timing.py --compiler cc --sanitize",
+        "inputs": [],
+        "evidence_level": "synthetic",
+        "expected": "byte-identical to evidence/m26/timing-lifecycle.json",
+        "acceptance": "independent re-derivation of all 7 scenario families (17 schedule runs x 2 cycles), 5 multi-schedule logical-parity families across unit-tick/coarse-2/irregular-zero, clean end state, Cycle 2 parity, and 10/10 targeted controls failing in their intended checks",
+        "negative_controls": "10 M26 controls (dropped timing, reordered events, missing channel consumption, ownership violation, missing key-off, premature reuse, bad cancel retirement, bad bank retirement, stale reset, service-order loss)",
+        "scheduling": "parallel",
+        "limits": "original HSQ1 synthetic timing model on M22 host IOP; not retail timing or PCM equivalence"
+      }
+    ]
+  },
+  "reused_existing": [
+    "synthetic-suite (Gate 00) runs tests/test_audio_timing.py, tests/test_m26_reference_timing.py, tests/test_hg_verify.py, and all M19-M24 tests (510 total)",
+    "m22-retail-service, audio-instructions, audio-connected, audio-owner-endpoints",
+    "m24-reference-map, m24-sequencer-synthetic, m20-m22-c-sanitizers, world-audio-lifecycle"
+  ]
+}

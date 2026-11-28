@@ -20,11 +20,11 @@ KINDS = {
     'm19-resource-job', 'm19-resource-retail', 'm19-connected', 'm20-hgscript-differential',
     'm20-title-hgscript', 'm21-title-scene', 'm21-area-entry', 'm21-ferry-reload', 'm22-retail-check',
     'm23-authentic-boundary', 'm23-world-init-synthetic', 'm24-reference-map', 'm24-sequencer',
-    'world-audio', 'c-drivers',
+    'world-audio', 'c-drivers', 'm26-reference-timing', 'm26-audio-timing',
 } | m25.KINDS
 # Synthetic C gates whose build and output paths stay inside the attempt
 # directory and HG_VERIFY_BUILD_DIR (checked by tests/test_hg_verify.py).
-PARALLEL = {'m23-world-init-synthetic', 'm24-sequencer', 'world-audio', 'c-drivers'} | m25.PARALLEL
+PARALLEL = {'m23-world-init-synthetic', 'm24-sequencer', 'world-audio', 'c-drivers', 'm26-audio-timing'} | m25.PARALLEL
 
 
 def need(condition, basis):
@@ -163,6 +163,32 @@ def synthetic(kind, check, row, directory, read):
     return {'drivers': len(row['drivers']), 'canary': 'detected'}
 
 
+def m26(kind, check, row, directory, read):
+    if kind == 'm26-reference-timing':
+        evidence = read(ROOT / 'evidence/m26/reference-timing.json')
+        same(row, evidence, 'M26 reference timing report')
+        sc = row['saved_checkpoints']
+        attr = sc['cursor_attribution']
+        need(row['schema'] == 'hg-m26-reference-timing/v1'
+             and row['elf']['elf_sha256'] == ELF
+             and sc['checkpoint_count'] == 12
+             and sc['all_diffs_equal_one'] is True
+             and sc['all_slots_match_wake'] is True
+             and attr['voice_8_owner_at_cursor_up'] == 0
+             and attr['voice_6_7_8_idle_at_confirm'] is True
+             and attr['voice_16_17_releasing_at_confirm'] is True,
+             'M26 reference timing identity or saved-checkpoint invariants')
+        return {'anchors': len(row['elf']['anchors']), 'checkpoints': sc['checkpoint_count']}
+    from verify_audio_timing import check_report
+    evidence = read(ROOT / 'evidence/m26/timing-lifecycle.json')
+    need(row['schema'] == 'hg-m26-audio-timing-verification/v1' and row['exit_code'] == 0
+         and row['stderr'] == '' and row['sanitized'] is ('--sanitize' in check['argv'])
+         and row['failure'] is None and row['matches_evidence'] is True,
+         'M26 audio timing build, exit, sanitization or receipt identity')
+    same(row['report'], evidence, 'M26 audio timing receipt')
+    return check_report(row['report'])
+
+
 def measurements(check, directory, row, read):
     kind = check['result']
     if kind.startswith('m19-'):
@@ -185,4 +211,6 @@ def measurements(check, directory, row, read):
         return m24(kind, check, row, directory, read)
     if kind in m25.KINDS:
         return m25.measurements(check, row, read, need, same)
+    if kind.startswith('m26-'):
+        return m26(kind, check, row, directory, read)
     return synthetic(kind, check, row, directory, read)
