@@ -2,31 +2,36 @@
 
 ## M25 world initialization and state continuity — 2026-11-28
 
-**Resume here (world track).** The branch `research/m25-world-initialization`
-in `decomp-m25`, based on `main` `7191ca74` (PR #23). The work is
-**uncommitted**, with source `46bf628b…`. Detail: [M25](docs/M25.md).
+**Resume here (world track).** The branch is `research/m25-world-initialization`
+([PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24)), based
+on `main` `7191ca74`. Detail: [M25](docs/M25.md).
 
-- **Synthetic.** Two original scenes run four interleaved cycles of cold boot
-  → publish → world setup → first tick → fade → 134 controller updates →
-  teardown → re-entry. Teardown is clean and cycle-relative parity holds.
-  14/14 controls are detected by their intended checks, and 36/36 invalid
-  inputs are rejected.
-- **Authentic (read-only).** The state-0 path and the 18-service coordinator
-  are characterized from the original bytes. The `00158a10` return is
-  supported only across runs (M21 `area1-active` ≡ M8 entry, and C reproduces
-  the M8 return).
-- **Earliest unsupported dependency:** `001e3440`.
-- **Gates.** There are 2 new `m25-` gates. Runs:
-  - `current` `m12-20261128T034909Z-i9la3od6`: 140/140, Gate 00 515/515.
-  - `synthetic` `m12-20261128T034342Z-yclwqga6`: 42/42.
-  - Both runs: 0 bad seals.
-- **Not claimed:** retail continuity past `0012f850`. No live PCSX2
-  observation was made.
-- **Next:** in an approved quiet window, capture the `00158a10` and `001e3440`
-  returns and the first state-1 frame in one run.
-- **To do with M26:** reconcile the shared edits to `config/current-verification.json`,
-  `tools/hg_verify_milestones.py`, `tests/test_hg_verify.py` and these
-  handoff files.
+- **Synthetic.** Two original scenes run four interleaved cycles of boot →
+  publish → setup → 134 updates → teardown → re-entry. Parity holds, 14/14
+  controls are detected, and 36/36 invalid inputs are rejected.
+- **Live (one original PCSX2 run).** The run covers tick 0, the `00158a10`
+  return, the `001e3440` return (Y 38.0455322265625), the first camera follow,
+  ticks 1–3 and walk ticks 114–200.
+  - Its tick 0 equals M21 `area1-active`.
+  - Its `00158a10` return equals M8, and C reproduces it.
+  - Original instructions from its tick 0 reproduce the post-camera stop in
+    all 11 domains.
+- **Gates.** There are 3 `m25-` gates.
+  - `current` `m12-20261128T141916Z-kghnfr1n`: 141/141 accepted, Gate 00
+    516/516.
+  - `synthetic` `m12-20261128T141423Z-cphcz36j`: 42/42.
+  - 0 bad seals.
+- **Still unobserved or unreconstructed:**
+  - the `00158470` return register;
+  - ticks 4–113;
+  - a neutral release;
+  - wall contact;
+  - retail teardown;
+  - C for `001e3440`.
+- **Next:** reconstruct `001e3440` against the live `001585c8` → `001585e0`
+  pair.
+- **M26 reconciliation:** the local branch `integration/m25-m26-review`
+  (`decomp-m25-m26-integration`) is not pushed.
 
 ## M23–M24 integration review — 2026-11-27
 

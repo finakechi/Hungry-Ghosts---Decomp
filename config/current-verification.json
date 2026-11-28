@@ -1223,6 +1223,41 @@
         "--output",
         "{artifact:result.json}"
       ]
+    },
+    {
+      "id": "m25-live-continuity",
+      "result": "m25-live",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "required_inputs": [
+        "local/m25/live/captures/walk.jsonl",
+        "local/m25/live/captures/full/s0-coordinator-t0.ee.z",
+        "local/m25/live/captures/full/s5-0012c790-return-t0.ee.z",
+        "local/m8/captures/native-player-init-entry-001.json",
+        "local/m8/captures/native-player-init-return-001.json"
+      ],
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_world_live.py",
+        "--elf",
+        "{elf}",
+        "--native",
+        "local/m21/native",
+        "--m8-entry",
+        "local/m8/captures/native-player-init-entry-001.json",
+        "--m8-return",
+        "local/m8/captures/native-player-init-return-001.json",
+        "--live",
+        "local/m25/live/captures",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--output",
+        "{artifact:result.json}"
+      ]
     }
   ]
 }

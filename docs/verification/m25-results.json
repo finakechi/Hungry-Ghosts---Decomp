@@ -25,6 +25,134 @@
  },
  "acceptance": [
   {
+   "run": "m12-20261128T141916Z-kghnfr1n",
+   "profile": "current",
+   "jobs": 4,
+   "state": "complete",
+   "revision": "7e0a686bc68251e1e693c79605bf9988323ec8f7",
+   "source_sha256": "4075bec787265f04be2a93d53b5d081de3b743c8a42177c5bccc0049196e196a",
+   "working_tree_clean": false,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "33f94c82e4a39e3fc642c0a7616dd65744461f973e45fb44b01bd592ff9b47d4",
+   "gates": 141,
+   "counts": {
+    "passed": 136,
+    "expected-rejection": 5
+   },
+   "accepted": 141,
+   "reused": 0,
+   "executed": 141,
+   "historical_gates": 79,
+   "full_verdict": "passed",
+   "retries": 0,
+   "session_seconds": 1984.884,
+   "child_seconds": 5378.52,
+   "not_accepted": [],
+   "expected_rejections": [
+    "ordinary-a1-zero-control",
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls",
+    "actor-lists-negative-controls",
+    "player-transition-negative-controls"
+   ],
+   "gate00": {
+    "tests": 516,
+    "passed_tests": 516,
+    "failed_tests": 0,
+    "retail_tests_unrun": []
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m25-world-session-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 4.116,
+     "receipt_sha256": "1d62a71916cf2085c980c99fe78404b08595b253c5a375ae795793a93f0b66ea",
+     "measured": {
+      "cycles": 4,
+      "updates": 536,
+      "controls": 14,
+      "invalid_inputs": 36
+     }
+    },
+    "m25-authentic-dependencies": {
+     "verdict": "passed",
+     "child_seconds": 18.922,
+     "receipt_sha256": "f86151ad80470c6c0ca4e0a4e0e9b1f23fb2b2f8a866095a7157b3c7f5071274",
+     "measured": {
+      "captures": 5,
+      "bridge_domains": 6
+     }
+    },
+    "m25-live-continuity": {
+     "verdict": "passed",
+     "child_seconds": 4.834,
+     "receipt_sha256": "fe139cdb0240814eb047a18390253c697677b9f7da0ed2ca97d9b05996c69435",
+     "measured": {
+      "stops": 9,
+      "walk_ticks": 87
+     }
+    }
+   }
+  },
+  {
+   "run": "m12-20261128T141423Z-cphcz36j",
+   "profile": "synthetic",
+   "jobs": 1,
+   "state": "complete",
+   "revision": "7e0a686bc68251e1e693c79605bf9988323ec8f7",
+   "source_sha256": "4075bec787265f04be2a93d53b5d081de3b743c8a42177c5bccc0049196e196a",
+   "working_tree_clean": false,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "489c47a9b61053dd4956f425f803b5ee0ee5c6c0948f1d0bd82df4ddb2d7aef1",
+   "gates": 42,
+   "counts": {
+    "passed": 40,
+    "expected-rejection": 2
+   },
+   "accepted": 42,
+   "reused": 0,
+   "executed": 42,
+   "historical_gates": 29,
+   "full_verdict": "unrun",
+   "retries": 0,
+   "session_seconds": 293.628,
+   "child_seconds": 290.151,
+   "not_accepted": [],
+   "expected_rejections": [
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls"
+   ],
+   "gate00": {
+    "tests": 516,
+    "passed_tests": 512,
+    "failed_tests": 0,
+    "retail_tests_unrun": [
+     "test_hg_audio_original.OriginalDataTests.test_control_wrong_bank_offset_detected",
+     "test_hg_audio_original.OriginalDataTests.test_payload_transferred_to_iop",
+     "test_hg_audio_original.OriginalDataTests.test_registration_matches_m7_evidence",
+     "test_m24_reference_map.ReferenceMapRetailTests.test_fresh_scan_matches_committed_map"
+    ]
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m25-world-session-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 3.833,
+     "receipt_sha256": "719f7048cb26b9612c178b96ed6fc0330859c42dcad57fb4f164a509dcbd85cc",
+     "measured": {
+      "cycles": 4,
+      "updates": 536,
+      "controls": 14,
+      "invalid_inputs": 36
+     }
+    }
+   }
+  },
+  {
    "run": "m12-20261128T034909Z-i9la3od6",
    "profile": "current",
    "jobs": 1,
@@ -85,7 +213,8 @@
       "bridge_domains": 6
      }
     }
-   }
+   },
+   "superseded_by_live_follow_up": true
   },
   {
    "run": "m12-20261128T034342Z-yclwqga6",
@@ -141,13 +270,15 @@
       "invalid_inputs": 36
      }
     }
-   }
+   },
+   "superseded_by_live_follow_up": true
   }
  ],
  "evidence_sha256": {
   "evidence/m25/world-session.json": "b628f037c3522eab123bafdf6aa50f372c2b6ad365bffc5a5fe0019e5d26674c",
-  "evidence/m25/authentic-dependencies.json": "2986823eaf6faecf4722cd4a1861c4fcd5d8865137d38c3455caca5907df6f41",
-  "evidence/m25/provenance-ledger.json": "371d56fd2906102f2e9e98f6dd2087b4e7e64f4814c576fd98dbe6648ef3a446"
+  "evidence/m25/authentic-dependencies.json": "f401ebe67ce42cb6be640297d2b1a90bf04f978ea9a269985d646d9bf7e249f6",
+  "evidence/m25/live-continuity.json": "815855b6d1d13f34cfd17c2da0b05aa0343f2699874c9facf6e69e5fc76e0521",
+  "evidence/m25/provenance-ledger.json": "73bc611d6e6633a52cdfb5d2b619a2972c2b2a0668c02a6b11ad95f93f8d8914"
  },
  "direct": {
   "driver_json_sha256_gcc_clang_sanitized": "1cf63202 (bit-identical across GCC, Clang, both sanitized)",
@@ -156,8 +287,22 @@
   "m23_receipt": "unchanged",
   "world_audio": "matches evidence"
  },
- "not_run": [
-  "live PCSX2/PINE observation (owner session in use; needs an approved window)"
- ],
- "notes": "seals and artifact digests recomputed independently after the runs; receipts were produced on an uncommitted tree and record working_files"
+ "not_run": [],
+ "notes": "Receipts were produced on uncommitted trees and record working_files; seals and artifact digests recomputed independently after every run. The first two runs (source 46bf628b) verified commit 7e0a686 and are superseded by the live follow-up.",
+ "initial_commit": "7e0a686",
+ "live_window": {
+  "date": "2026-11-28",
+  "emulator": "PCSX2 v2.8.2 AppImage 0c46bb6a...",
+  "bios_sha256": "c641edbd8fcc1ef363639710795a670850b4549efa0de7dbadabc2b6eb363c4a",
+  "full_stops": 9,
+  "walk_ticks": 87,
+  "private_images": "local/m25/live/captures (108 MB, not tracked)",
+  "unobserved": [
+   "001586c8",
+   "0012f8cc",
+   "ticks 4-113",
+   "neutral release",
+   "wall contact"
+  ]
+ }
 }

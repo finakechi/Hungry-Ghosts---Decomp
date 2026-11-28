@@ -1,13 +1,13 @@
 {
  "schema": "hg-m25-coverage/v1",
- "date": "2026-11-27",
+ "date": "2026-11-28",
  "profiles": {
   "focused": 8,
   "historical": 79,
   "full": "alias of historical (79)",
-  "current": 140,
+  "current": 141,
   "synthetic": 42,
-  "current_added": 2,
+  "current_added": 3,
   "synthetic_added": 1
  },
  "capabilities": {
@@ -43,6 +43,26 @@
     "negative_controls": "fault 0x30 on state-0 C dispatch; characterization asserts fixed instruction words",
     "scheduling": "exclusive",
     "limits": "cross-run equivalence is not continuity; oracle values are predictions, not observations; live PCSX2 observation not performed"
+   }
+  ],
+  "M25 live continuity (one original run)": [
+   {
+    "gate": "m25-live-continuity",
+    "verifier": "tools/verify_world_live.py",
+    "inputs": [
+     "{elf}",
+     "local/m21/native",
+     "M8 native-player-init-entry-001",
+     "M8 native-player-init-return-001",
+     "local/m25/live/captures",
+     "{ps2dinfo}"
+    ],
+    "evidence_level": "saved-runtime (single continuous PCSX2 run) + original-instruction reproduction",
+    "expected": "report equal to evidence/m25/live-continuity.json: 9 full stops, 87 contiguous walk ticks",
+    "acceptance": "exact equality; every image, scratchpad and debugger screenshot hash recomputed; ordered counters; tick 0 equal to M21 area1-active and M8 entry (11 domains); same-run 00158a10 return equal to the M8 return and to C 00158a10 on the same-run tick 0; original instructions from tick 0 reproduce the 0012f8d4 stop (11 domains); unobserved stops declared",
+    "negative_controls": "tamper tests in tests/test_hg_verify.py (domain and walk-table edits) and tests/test_world_session.py (image, screenshot and emulator identity)",
+    "scheduling": "exclusive",
+    "limits": "stops 001586c8/0012f8cc, ticks 4-113, neutral release and wall contact unobserved; 001e3440 not reconstructed"
    }
   ]
  },

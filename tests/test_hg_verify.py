@@ -517,7 +517,7 @@ class MilestoneGateTests(unittest.TestCase):
     SYNTHETIC = ('m23-world-init-synthetic', 'm24-sequencer-synthetic', 'm20-m22-c-sanitizers',
                  'world-audio-lifecycle')
     # M25 registrations (appended after the M19-M24 block).
-    M25 = ('m25-world-session-synthetic', 'm25-authentic-dependencies')
+    M25 = ('m25-world-session-synthetic', 'm25-authentic-dependencies', 'm25-live-continuity')
     M25_SYNTHETIC = ('m25-world-session-synthetic',)
 
     def setUp(self):
@@ -531,8 +531,8 @@ class MilestoneGateTests(unittest.TestCase):
         inv = lambda name: runner.inventory(runner.INVENTORY, runner.HISTORICAL, name)
         current, synthetic = inv('current'), inv('synthetic')
         self.assertEqual((len(inv('focused')), len(inv('historical')), len(inv('full')), len(current), len(synthetic)),
-                         (8, 79, 79, 140, 42))
-        self.assertEqual([row['id'] for row in current[-20:]], list(self.NEW + self.M25))
+                         (8, 79, 79, 141, 42))
+        self.assertEqual([row['id'] for row in current[-21:]], list(self.NEW + self.M25))
         self.assertEqual({row['id'] for row in synthetic} - {row['id'] for row in inv('historical')}
                          - {row['id'] for row in current[79:120]}, set(self.SYNTHETIC + self.M25_SYNTHETIC))
         for name in self.NEW + self.M25:
@@ -624,6 +624,17 @@ class MilestoneGateTests(unittest.TestCase):
         broken = json.loads(json.dumps(authentic))
         broken['bridge_00158a10']['domains']['player_003f92d0']['differing'] = 1
         self.assertEqual(self.classify('m25-authentic-dependencies', broken)[0], results.ERROR)
+        live = self.evidence('evidence/m25/live-continuity.json')
+        verdict, details = self.classify('m25-live-continuity', live)
+        self.assertEqual((verdict, details['stops'], details['walk_ticks']), (results.PASSED, 9, 87))
+        for path in (('original_instructions_same_run', 'domains', 'player_003f92d0'),
+                     ('cross_run', 'return_00158a10_vs_m8_return', 'actor_pools')):
+            broken = json.loads(json.dumps(live))
+            broken[path[0]][path[1]][path[2]]['differing'] = 3
+            self.assertEqual(self.classify('m25-live-continuity', broken)[0], results.ERROR)
+        broken = json.loads(json.dumps(live))
+        broken['walk']['table'][40][1] += 2.0
+        self.assertEqual(self.classify('m25-live-continuity', broken)[0], results.ERROR)
 
     def test_c_driver_contract_requires_detected_canary(self):
         from verify_c_drivers import DRIVERS

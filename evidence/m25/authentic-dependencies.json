@@ -1213,27 +1213,23 @@
   "boundary_confirmed": true
  },
  "boundary": {
-  "last_supported_single_run_stop": "0012f850 entry (M21 area1-active)",
+  "last_supported_single_run_stop": "0012f850 entry (M21 area1-active) for these inputs; the M25 live run extends single-run support (evidence/m25/live-continuity.json)",
   "supported_by_cross_run_equivalence": "00158a10 return (001585c8): M21 area1-active domains equal the M8 entry, and C 00158a10 on area1-active reproduces the M8 return",
-  "earliest_unsupported_dependency": "001e3440(PLAYER, +8.0, -3.0) state-0 floor snap on the retail collision mesh: no C reconstruction and no runtime observation of its return",
+  "earliest_unsupported_dependency": "001e3440(PLAYER, +8.0, -3.0) state-0 floor snap on the retail collision mesh: no C reconstruction; its return is observed only in the M25 live run",
   "later_unobserved": [
-   "00158470 entry-event query return",
-   "state-0 tail result (003f9f6e predicted 1)",
-   "first 0012c790 camera follow",
-   "first state-1 frame",
-   "initial movement/collision (001e3850, 001e3c40, 001454a0)"
+   "00158470 return register (branch effects observed in the M25 live run)",
+   "ticks 4-113 (walk start and input-block release)",
+   "neutral stick release",
+   "wall contact on the retail collision mesh (001e3850, 001e3c40, 001454a0)"
   ],
   "m23_conflicts": [
-   "003f9f6e: M23 model writes 0 at state 0; original bytes and oracle give 1 when +464 == 0",
+   "003f9f6e: M23 model writes 0 at state 0; original bytes and oracle give 1 when +464 == 0, and the M25 live run observes 1 after state 0",
    "camera pitch: M23 synthetic helpers left-multiply; original 00143c60/00143d30/00143b90 right-multiply (M23 boom pitch 0.0301 at yaw 0 and 0 at yaw pi/2; oracle 0.0524)",
    "M23.md cites local/m21/live/...; the captures are under local/m21/native/full/"
   ]
  },
  "runtime_observations_pending": [
-  "00158a10 return in the same run as area1-active",
-  "001e3440 return and floor hit",
-  "first state-1 frame registers and memory",
-  "first camera follow",
-  "initial walk and wall/floor queries"
+  "resolved by evidence/m25/live-continuity.json: same-run 00158a10 return, 001e3440 return, state-0 tail, first camera follow, first state-1 frames, walk ticks 114-200 with floor response",
+  "still pending: 00158470 return register, ticks 4-113, neutral release, wall contact"
  ]
 }

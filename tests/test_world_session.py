@@ -120,8 +120,34 @@ class WorldSessionSynthetic(unittest.TestCase):
         used = {row['session'] for row in ledger['fields']} | {row['retail'] for row in ledger['fields']}
         self.assertEqual(used, CLASSES)
         by_field = {row['field']: row for row in ledger['fields']}
-        self.assertEqual(by_field['003f9f6e input block']['retail'], 'inference-conflict')
+        self.assertEqual(by_field['003f9f6e input block']['retail'], 'runtime-observation')
+        self.assertEqual(by_field['00158470 entry-event query']['retail'], 'inference-conflict')
         self.assertEqual(by_field['gameplay audio resume']['retail'], 'unknown')
+
+    def test_live_loader_rejects_tampered_stops(self):
+        import hashlib
+        import zlib
+        import verify_world_live as L
+        with tempfile.TemporaryDirectory(prefix='m25-live-test-') as tmp:
+            full = Path(tmp) / 'full'
+            full.mkdir()
+            ee, sp, png = bytes(0x2000000), bytes(0x4000), b'png'
+            meta = dict(metadata=dict(version='PCSX2 v2.8.2', title='T', serial='SCPS-15046', uuid='91aa4b28', status=1),
+                        ee_sha256=hashlib.sha256(ee).hexdigest(), sp_sha256=hashlib.sha256(sp).hexdigest(),
+                        debugger_png_sha256=hashlib.sha256(png).hexdigest(), expected_pc='0012f850')
+            meta['metadata_after'] = dict(meta['metadata'])
+            (full / 'x.ee.z').write_bytes(zlib.compress(ee, 1))
+            (full / 'x.sp.z').write_bytes(zlib.compress(sp, 1))
+            (full / 'x-debugger.png').write_bytes(png)
+
+            def problems(**change):
+                (full / 'x.json').write_text(json.dumps(meta | change))
+                return L.load_stop(Path(tmp), 'x')[3]
+            self.assertEqual(problems(), [])
+            self.assertIn('image hash', problems(ee_sha256='0' * 64))
+            self.assertIn('debugger screenshot hash', problems(debugger_png_sha256='0' * 64))
+            self.assertIn('emulator identity or paused state', problems(metadata_after=meta['metadata'] | dict(status=0)))
+            self.assertIn('emulator identity or paused state', problems(metadata=meta['metadata'] | dict(uuid='0')))
 
     def test_m23_receipt_unchanged(self):
         import verify_world_init as M23

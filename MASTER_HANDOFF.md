@@ -3,105 +3,114 @@
 ## M25 world initialization and state continuity — 2026-11-28
 
 **Resume here (world track).** The branch is `research/m25-world-initialization`
-in worktree `decomp-m25`, created from `main` `7191ca7402b5c8f0d5a58dbd38c62d099470c667`
-(PR #23 merge; PR #22 `09b5832`; PS2DInfo `2e4a226e`). It has **no commit, push
-or PR yet** because these need owner approval. The verified source hash is
-`46bf628bc0af9eb5753c79c4eb0ccfeb564980a6794adc6cd3aa57ff82d6797e`, and the
-receipts list the working files. Detail: [M25](docs/M25.md). Results:
-[m25-results.json](docs/verification/m25-results.json). Coverage:
-[m25-coverage.json](docs/verification/m25-coverage.json).
+in worktree `decomp-m25`, created from `main`
+`7191ca7402b5c8f0d5a58dbd38c62d099470c667` (PR #23 merge; PR #22 `09b5832`;
+PS2DInfo `2e4a226e`). It is pushed as
+[PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24), with
+commit `7e0a686` followed by the live-continuity follow-up. It is not merged.
+
+- **Detail:** [M25](docs/M25.md)
+- **Results:** [m25-results.json](docs/verification/m25-results.json)
+- **Coverage:** [m25-coverage.json](docs/verification/m25-coverage.json)
 
 ### Code
 
 - **Session API** in `src/scene/world_init.{h,c}`, additive. The M23 path and
-  `hg_world_harness_guest_ram()` are unchanged, and the M23 receipt is
-  identical.
-  - It adds the scene spec, readiness states, history, ownership and effect
-    ledgers, and a snapshot.
-  - It adds 4 errors and 3 provenance classes.
+  `hg_world_harness_guest_ram()` are unchanged.
+  - It adds the scene spec, readiness states, ledgers and a snapshot.
   - The coordinator follows the 18-service ELF order.
   - The state-0 and tail rules come from the original bytes. The rotation
     helpers right-multiply, as measured.
   - The model adds node release and actor retire. Teardown and
     partial-initialization cleanup are driven by the ledger.
-- **Driver and checkers.** `tests/world_session_driver.c` is the checker-owned
-  driver. `tools/verify_world_session.py` provides `--synthetic` with an
-  independent Python re-derivation, and `--inspect-authentic`.
-- **Gate contracts.** `tools/hg_verify_m25.py` holds them.
-- **Tests.** `tests/test_world_session.py` has 9 tests and no skips.
+- **Synthetic driver and checks.** `tests/world_session_driver.c` is the driver,
+  with an independent re-derivation in `tools/verify_world_session.py`
+  (`--synthetic`).
+- **Authentic characterization.** `tools/verify_world_session.py`
+  (`--inspect-authentic`) covers the original bytes, the cross-run bridge, the
+  oracle, fault 0x30 and the boundary.
+- **Live checks.** `tools/verify_world_live.py` checks one continuous PCSX2 run.
+- **Contracts and tests.** Contracts are in `tools/hg_verify_m25.py`. Tests:
+  `tests/test_world_session.py` (11 tests, including a live-loader tamper
+  test) and `tests/test_hg_verify.py`.
 
 ### Evidence
 
-| File | SHA-256 |
-| --- | --- |
-| `evidence/m25/world-session.json` | `b628f037…` |
-| `evidence/m25/authentic-dependencies.json` | `2986823e…` |
-| `evidence/m25/provenance-ledger.json` | `371d56fd…` (44 fields, 7 classes) |
+| File | SHA-256 | Notes |
+| --- | --- | --- |
+| `evidence/m25/world-session.json` | `b628f037…` | |
+| `evidence/m25/authentic-dependencies.json` | `f401ebe6…` | boundary text now cites the live run |
+| `evidence/m25/live-continuity.json` | `815855b6…` | |
+| `evidence/m25/provenance-ledger.json` | `73bc611d…` | 45 fields, 7 classes; 21 retail fields are runtime observations |
 
-### Results
+### Live window (2026-11-28, approved)
 
-- **Synthetic.** The cycles run `lantern-court`/`terrace-gallery` ×2:
-  - Each cycle has 63 fade frames, 134 updates and 198 coordinator ticks in ELF
-    order.
-  - There are 89/67 wall-contact frames and 43/26 slide frames, plus 2 floor
-    changes per cycle.
-  - After teardown: 2048 free nodes and pools of 286/40/256.
-  - Parity holds. 14/14 controls are detected by their intended checks, and
-    36/36 invalid inputs are rejected.
-  - Ownership balances: 26/26 actors and 132/132 nodes.
-- **Authentic.**
-  - Identity reproduces `japan.json`.
-  - `area1-active` equals the M8 `00158a10` entry in 11 domains. C `00158a10`
-    on `area1-active` equals the M8 return in 6 domains. This is equivalence
-    across separate runs, not continuity.
-  - Oracle **predictions** for state 0: `+18 = 1`, Y 38.0455322,
-    `003f9f6e = 1`. For the camera: eye (48.5, 54.54541, 265), pitch 0.052359.
-  - Fault 0x30 is reproduced.
-  - The earliest unsupported dependency is `001e3440`.
-- **Recorded against M23.** `003f9f6e` is modeled as 0 (a conflict). The camera
-  pitch convention is lost at yaw π/2. The `local/m21/live` path is wrong
-  (erratum).
+**Setup.**
+- **Profile:** `local/m25/live/profile`, isolated. It uses the BIOS
+  `c641edbd…` and PCSX2 v2.8.2 `0c46bb6a…`.
+- **Breakpoints:** six execute breakpoints, loaded from the per-game settings
+  file.
+- **Reads and input:** read-only PINE on slot 28065, with XWayland input. This
+  is M21's method.
+- **Private captures:** `local/m25/live/captures`, 108 MB, not tracked.
+
+**Results.**
+- The tick-0 stop equals M21 `area1-active` and the M8 entry in 11 domains.
+- The same-run `00158a10` return equals the M8 return in 6 domains. C
+  `00158a10` on the same-run tick 0 reproduces it.
+- The `001e3440` return gives Y = 38.0455322265625.
+- After the first camera follow: `+18` = 1 and `003f9f6e` = 1, which confirms
+  the M23 conflict. Eye (48.5, 54.54541, 265) and pitch 0.052359.
+- Original instructions from the same-run tick 0 reproduce this stop in all
+  11 domains.
+- The walk window has 87 contiguous ticks (114–200) of forward and
+  forward-plus-left input, descending a slope.
+
+**Missed or unobserved.**
+- **Stops `001586c8` and `0012f8cc`:** passed by a resume misfire, now fixed.
+  Nothing was spliced in from other runs.
+- **Ticks 4–113.**
+- **A neutral release:** the forward key's release was not delivered.
+- **Wall contact.**
+
+**Conditions.** PCSX2 condition numbers are hex.
 
 ### Verification
 
-- **Plans.** Baseline (source `3b698e92…`): focused 8, synthetic 41,
-  historical 79, current 138. After M25: synthetic 42 and current 140, all
-  ready.
-- **`current` run** `m12-20261128T034909Z-i9la3od6`:
-  - One worker, after M26's run finished.
-  - 140/140 accepted: 135 passed and 5 expected rejections.
-  - All 79 historical gates passed. Gate 00 515/515 with 0 skips.
-  - 0 reused and 0 retries. Session 4,962.9 s; child processes 4,907.9 s.
-- **`synthetic` run** `m12-20261128T034342Z-yclwqga6`: 42/42 accepted. Gate 00
-  had 511 passed and 4 named retail skips. Time 313.7 s.
-- **Seals.** Recomputed independently: 0 bad seals and 0 bad artifacts.
-- **Direct checks.**
-  - GCC 16.2.1 and Clang 23.1.5 strict builds of all 12 `src/**/*.c`: 0
-    warnings.
-  - ASan/UBSan/LSan: the driver JSON is bit-identical across all four builds.
-  - `world_audio` matches its evidence.
-  - `git diff --check` is clean, and the publication audit has 0 findings.
+Both runs below are on source `4075bec7…`.
 
-### Blocked and decisions
+- **`current` run `m12-20261128T141916Z-kghnfr1n`:**
+  - 4 workers on an idle host, with no M26 run active.
+  - 141/141 accepted: 136 passed and 5 expected rejections. All 79 historical
+    gates passed.
+  - Gate 00 516/516 with 0 skips.
+  - 0 reused and 0 retries. Session 1,984.9 s; child processes 5,378.5 s.
+- **`synthetic` run `m12-20261128T141423Z-cphcz36j`:** 42/42 accepted, 293.6 s.
+- **Seals:** 0 bad seals and 0 bad artifacts, recomputed independently.
+- **Superseded runs:** `m12-20261128T034909Z-i9la3od6` (140/140) and
+  `m12-20261128T034342Z-yclwqga6` (42/42) verified `7e0a686` on source
+  `46bf628b…`.
 
-- **Live PINE observation.** No observation was made of:
-  - the same-run `00158a10` return;
-  - the `001e3440` return;
-  - the first state-1 frame;
-  - the first camera follow;
-  - the initial walk and collision.
+### M26 reconciliation (local)
 
-  The owner's desktop session was in use. This needs an approved quiet window
-  with the isolated emulator profile.
-- **Decisions needed:**
-  - Approval to commit and open a PR.
-  - The observation window.
-- **Shared-file edits to reconcile with M26** (M26 not merged):
-  - `config/current-verification.json`;
-  - `tools/hg_verify_milestones.py`;
-  - `tests/test_hg_verify.py` (counts 8/79/79/140/42);
-  - `START_HERE.md` and `MASTER_HANDOFF.md`.
-- **`00156cf0` gameplay audio resume** stays external.
+- **Branch:** `integration/m25-m26-review` in worktree
+  `decomp-m25-m26-integration`.
+- **Contents:** M25 plus a snapshot of the uncommitted
+  `research/m26-audio-timing` working tree (tracked patch `03b393aa…`,
+  untracked archive `ee4bf4b6…`).
+- **Shared files:**
+  - `config/current-verification.json`: the M25 gates come first, then M26's.
+  - `tools/hg_verify_milestones.py`: M26 kinds sit beside `m25.KINDS`.
+  - `tests/test_hg_verify.py`: separate `M25` and `M26` tuples.
+  - The handoff sections are stacked.
+- **Not pushed:** M26 has not been committed or approved by its owner.
+
+### Next
+
+- Reconstruct `001e3440` in C against the live `001585c8` → `001585e0` pair.
+- Record a second window from tick 64, with a delivered neutral release and a
+  wall approach.
+- `00156cf0` gameplay audio resume stays external.
 
 ## M23–M24 integration review — 2026-11-27
 
