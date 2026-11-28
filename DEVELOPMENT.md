@@ -1,5 +1,11 @@
 # Hungry Ghosts — development and reproduction
 
+Use this repository to understand and verify original Japanese SCPS-15046
+behavior. Record original instruction checks, captured runtime observations,
+bounded recovery and independent model behavior separately. Preserve earlier
+receipts when later findings refine their scope. See [AGENTS.md](AGENTS.md) for
+repository ownership and approval requirements.
+
 **Current verification baseline (M23–M24 integration — 2026-11-27):** M19–M24
 on the PR #22 `main` (`09b5832119d5ec97c85c05c6ab1eddd6c20be8ad`) with the
 hardened, bounded-parallel verification runner (`tools/hg_verify.py`, profiles

@@ -1,12 +1,33 @@
 # Hungry Ghosts — start here
 
+## SCPS-15046 research realignment — 2026-11-28
+
+**Resume here.** The present scope is reverse engineering and decompilation
+research for Japanese SCPS-15046. Existing independent models (including M25's
+bounded synthetic world-session fixtures) are retained as legacy verification
+infrastructure, not counted as recovered original functions. The separate PC
+repository holds a research index for a possible future port. The dated
+sections below record earlier resume points.
+
+- [Collision replay](docs/retail-collision-snap.md) isolates the
+  `001585c8` → `001585e0` stop pair and checks original words and
+  non-stack memory effects through `001e3440`. Resume at the mesh
+  candidate selection in `00145740` and the second query `00268ad0`.
+- [Audio sequencing](docs/retail-audio-sequencing.md) reproduces M22
+  and the M26 working timing receipt. Resume at the return invariant
+  and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
+  frames with a bounded trace.
+- [Coverage and review](docs/SCPS-15046-realignment.md) records
+  the authenticated build, v2 inventory, PR #24 scope review, and
+  standalone M26 reconciliation prerequisites.
+
 ## M25 world initialization and state continuity — 2026-11-28
 
-**Resume here (world track).** The branch is `research/m25-world-initialization`
-([PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24)), based
-on `main` `7191ca74`. Detail: [M25](docs/M25.md).
+**Reconciled onto realigned `main` (original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** The branch is `research/m25-world-initialization`
+([PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24)), originally based
+on `main` `7191ca74` and merged with `main` `32cf2bfb` (PR #25). Detail: [M25](docs/M25.md).
 
-- **Synthetic.** Two original scenes run four interleaved cycles of boot →
+- **Synthetic (legacy verification fixture).** Two original scenes run four interleaved cycles of boot →
   publish → setup → 134 updates → teardown → re-entry. Parity holds, 14/14
   controls are detected, and 36/36 invalid inputs are rejected.
 - **Live (one original PCSX2 run).** The run covers tick 0, the `00158a10`
@@ -16,7 +37,7 @@ on `main` `7191ca74`. Detail: [M25](docs/M25.md).
   - Its `00158a10` return equals M8, and C reproduces it.
   - Original instructions from its tick 0 reproduce the post-camera stop in
     all 11 domains.
-- **Gates.** There are 3 `m25-` gates.
+- **Gates (historical M25 branch receipts at `969e913`, source `4075bec7…`).** There are 3 `m25-` gates.
   - `current` `m12-20261128T141916Z-kghnfr1n`: 141/141 accepted, Gate 00
     516/516.
   - `synthetic` `m12-20261128T141423Z-cphcz36j`: 42/42.
@@ -28,10 +49,9 @@ on `main` `7191ca74`. Detail: [M25](docs/M25.md).
   - wall contact;
   - retail teardown;
   - C for `001e3440`.
-- **Next:** reconstruct `001e3440` against the live `001585c8` → `001585e0`
-  pair.
-- **M26 reconciliation:** the local branch `integration/m25-m26-review`
-  (`decomp-m25-m26-integration`) is not pushed.
+- **Historical M26 snapshot note:** the local branch `integration/m25-m26-review`
+  (`decomp-m25-m26-integration`) is preserved locally and not pushed; M26 is
+  integrated separately from its standalone commit.
 
 ## M23–M24 integration review — 2026-11-27
 

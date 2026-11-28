@@ -1,13 +1,35 @@
 # Hungry Ghosts — master handoff
 
+## SCPS-15046 research realignment — 2026-11-28
+
+**Resume here.** The present scope is reverse engineering and decompilation
+research for Japanese SCPS-15046. Existing independent models (including M25's
+bounded synthetic world-session fixtures) are retained as legacy verification
+infrastructure, not counted as recovered original functions. The separate PC
+repository holds a research index for a possible future port. The dated
+sections below record earlier resume points.
+
+- [Collision replay](docs/retail-collision-snap.md) isolates the
+  `001585c8` → `001585e0` stop pair and checks original words and
+  non-stack memory effects through `001e3440`. Resume at the mesh
+  candidate selection in `00145740` and the second query `00268ad0`.
+- [Audio sequencing](docs/retail-audio-sequencing.md) reproduces M22
+  and the M26 working timing receipt. Resume at the return invariant
+  and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
+  frames with a bounded trace.
+- [Coverage and review](docs/SCPS-15046-realignment.md) records
+  the authenticated build, v2 inventory, PR #24 scope review, and
+  standalone M26 reconciliation prerequisites.
+
 ## M25 world initialization and state continuity — 2026-11-28
 
-**Resume here (world track).** The branch is `research/m25-world-initialization`
-in worktree `decomp-m25`, created from `main`
+**Reconciled onto realigned `main` (original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** The branch is `research/m25-world-initialization`
+in worktree `decomp-m25`, originally created from `main`
 `7191ca7402b5c8f0d5a58dbd38c62d099470c667` (PR #23 merge; PR #22 `09b5832`;
-PS2DInfo `2e4a226e`). It is pushed as
+PS2DInfo `2e4a226e`) and reconciled with `main` `32cf2bfb` (PR #25) in an
+isolated worktree. It is tracked on
 [PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24), with
-commit `7e0a686` followed by the live-continuity follow-up. It is not merged.
+commits `7e0a686` and `969e913` preserved.
 
 - **Detail:** [M25](docs/M25.md)
 - **Results:** [m25-results.json](docs/verification/m25-results.json)
@@ -15,7 +37,7 @@ commit `7e0a686` followed by the live-continuity follow-up. It is not merged.
 
 ### Code
 
-- **Session API** in `src/scene/world_init.{h,c}`, additive. The M23 path and
+- **Session API (legacy verification fixture)** in `src/scene/world_init.{h,c}`, additive. The M23 path and
   `hg_world_harness_guest_ram()` are unchanged.
   - It adds the scene spec, readiness states, ledgers and a snapshot.
   - The coordinator follows the 18-service ELF order.
@@ -77,7 +99,7 @@ commit `7e0a686` followed by the live-continuity follow-up. It is not merged.
 
 ### Verification
 
-Both runs below are on source `4075bec7…`.
+Both historical branch runs below are attributed to `969e913` (source `4075bec7…`).
 
 - **`current` run `m12-20261128T141916Z-kghnfr1n`:**
   - 4 workers on an idle host, with no M26 run active.
@@ -91,21 +113,17 @@ Both runs below are on source `4075bec7…`.
   `m12-20261128T034342Z-yclwqga6` (42/42) verified `7e0a686` on source
   `46bf628b…`.
 
-### M26 reconciliation (local)
+### M26 reconciliation (historical local snapshot)
 
 - **Branch:** `integration/m25-m26-review` in worktree
   `decomp-m25-m26-integration`.
 - **Contents:** M25 plus a snapshot of the uncommitted
   `research/m26-audio-timing` working tree (tracked patch `03b393aa…`,
   untracked archive `ee4bf4b6…`).
-- **Shared files:**
-  - `config/current-verification.json`: the M25 gates come first, then M26's.
-  - `tools/hg_verify_milestones.py`: M26 kinds sit beside `m25.KINDS`.
-  - `tests/test_hg_verify.py`: separate `M25` and `M26` tuples.
-  - The handoff sections are stacked.
-- **Not pushed:** M26 has not been committed or approved by its owner.
+- **Status:** preserved locally and not pushed; M26 is integrated separately
+  from its standalone commit on `research/m26-audio-timing`.
 
-### Next
+### Historical M25 next notes (superseded by realignment resume point above)
 
 - Reconstruct `001e3440` in C against the live `001585c8` → `001585e0` pair.
 - Record a second window from tick 64, with a delivered neutral release and a
