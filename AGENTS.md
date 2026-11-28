@@ -1,5 +1,18 @@
 # Hungry Ghosts research instructions
 
+This repository owns reverse engineering and decompilation research on the
+original Japanese SCPS-15046 build. Grow the evidence through function and data
+maps, instruction analysis, state-machine documentation and bounded checks.
+Use independent models as verification fixtures where needed and preserve their
+provenance. Expanding a synthetic substitute for an unknown retail subsystem is
+outside current research scope.
+
+[Hungry Ghosts PC](https://github.com/finakechi/Hungry-Ghosts---PC) owns future
+PC-port planning and its research index. Port implementation starts there only
+after Noah accepts the research against criteria he defines and authorizes
+that phase. [PS2DInfo](https://github.com/finakechi/PS2DInfo) owns reusable PS2
+methods and tooling. Inspect and reuse it under its applicable terms.
+
 Read START_HERE.md, then the relevant MASTER_HANDOFF.md and raw evidence before
 changing analysis or code. The original Japanese SCPS-15046 executable is the
 primary reference. Verify its SHA-256 before assigning addresses or semantics.

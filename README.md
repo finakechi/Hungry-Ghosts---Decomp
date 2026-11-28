@@ -1,7 +1,14 @@
 # Hungry Ghosts — PS2 executable research
 
-Evidence and executable reconstruction for the original Japanese **SCPS-15046**.
-This continues the existing `finakechi/Hungry-Ghosts---Decomp` repository.
+Reverse engineering and decompilation research for the original Japanese
+**SCPS-15046**. This repository owns game-specific evidence, recovered
+structures and routines, and reproducible verification. Independent models
+serve as test fixtures and carry separate provenance.
+
+[Hungry Ghosts PC](https://github.com/finakechi/Hungry-Ghosts---PC) is the
+separate future port project. Implementation is deferred until Noah accepts
+the research against criteria he defines and authorizes that phase.
+[PS2DInfo](https://github.com/finakechi/PS2DInfo) owns shared PS2 methods and tools.
 
 Start with [START_HERE.md](START_HERE.md). Detailed findings and the continuation
 point are in [MASTER_HANDOFF.md](MASTER_HANDOFF.md).
