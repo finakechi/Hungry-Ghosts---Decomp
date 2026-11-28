@@ -53,10 +53,20 @@ RETAIL_AUDIO_TESTS = {
 }
 
 
-def discovery_result(check, directory, code, authenticated_image=False):
+# Named public discovery skip contract for M24: this retail-only test runs
+# only when the runner has authenticated the ELF and exported HG_ELF.
+RETAIL_ELF_TESTS = {
+    'test_m24_reference_map.ReferenceMapRetailTests.test_fresh_scan_matches_committed_map',
+}
+
+
+def discovery_result(check, directory, code, authenticated_image=False, authenticated_elf=True):
     row = read_json(output_path(check, directory))
     discovered = row['discovered']
-    skip = set() if authenticated_image else RETAIL_AUDIO_TESTS
+    unbound = (set() if authenticated_image else RETAIL_AUDIO_TESTS) | (set() if authenticated_elf else RETAIL_ELF_TESTS)
+    if not check.get('pattern') and not (RETAIL_AUDIO_TESTS | RETAIL_ELF_TESTS) <= set(discovered):
+        raise ValueError('Full discovery omitted a named retail-only test')
+    skip = unbound & set(discovered)
     fields = ('passed', 'skipped', 'failures', 'errors', 'expected_failures', 'unexpected_successes')
     outcomes = [name for field in fields for name in row[field]]
     if (row['schema'] != 'hg-unittest-discovery/v1'
@@ -456,7 +466,7 @@ def legacy_report(check, directory, log, code):
     return reported_verdict(row, code, verdict, details)
 
 
-def classify(check, directory, code, *, authenticated_image=False):
+def classify(check, directory, code, *, authenticated_image=False, authenticated_elf=True):
     if code not in (0, 1):
         return ERROR, {'basis': f'Unexpected child exit status {code}'}
     try:
@@ -478,7 +488,7 @@ def classify(check, directory, code, *, authenticated_image=False):
                                         output_path(check, directory) if kind != 'overlay-bytes' else None,
                                         read_json, EXPECTED)
         if kind == 'discovery':
-            return discovery_result(check, directory, code, authenticated_image)
+            return discovery_result(check, directory, code, authenticated_image, authenticated_elf)
         if kind == 'disc-read':
             return disc_read_result(check, directory, log, code)
         if kind == 'unittest':

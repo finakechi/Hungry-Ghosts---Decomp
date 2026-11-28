@@ -1,4 +1,36 @@
-# Verification infrastructure (Phases 1–3)
+# Verification infrastructure (Phases 1–3, M19–M24 registration)
+
+## M23–M24 integration: M19–M24 gate registration — 2026-11-27
+
+The [M23–M24 review](M23-M24-review.md) merges M19–M24 onto PR #22 `main`
+and registers their verification. Totals: `focused` 8 (unchanged),
+`historical`/`full` 79 (IDs and contracts unchanged), `current` **138**
+(120 + 14 authenticated + 4 synthetic), `synthetic` **41** (37 + 4). The
+coverage map is [m23-m24-coverage.json](verification/m23-m24-coverage.json);
+sanitized results are in [m23-m24-results.json](verification/m23-m24-results.json).
+
+- **Contracts:** `tools/hg_verify_milestones.py`. Retail receipts must equal
+  tracked evidence (M20 control messages must extend the recorded tick
+  prefix with a measured divergence); M19 connected summaries are re-derived
+  from the raw report; synthetic receipts must be byte-identical and their
+  controls detected. Exit status alone never passes.
+- **Named discovery skips:** `RETAIL_AUDIO_TESTS` (3, without an
+  authenticated ISO) and `RETAIL_ELF_TESTS` (1, without an authenticated
+  ELF). Gate 00 binds `{elf}` when it exists and exports `HG_ELF` to
+  discovery gates only after authentication; a wrong ELF blocks the gate;
+  full discovery must still list every named retail test.
+- **Scheduling:** the 14 retail gates are exclusive. `m23-world-init-synthetic`,
+  `m24-sequencer-synthetic`, `m20-m22-c-sanitizers` and `world-audio-lifecycle`
+  are parallel; they write only to the attempt directory and
+  `HG_VERIFY_BUILD_DIR` (checked by running all four concurrently).
+- **Private inputs:** besides the Phase 2 config keys, `current` reads
+  `local/m18/native`, `local/m18/runtime/PCSX2/sstates/SCPS-15046 (91AA4B28).01.p2s`,
+  `local/m21` (live stops and `native/full`), `local/m22/retail`,
+  `local/m22/live`, `local/m4/runtime`, `local/m7/captures` and
+  `{m13-captures}/obs3-000.json`. Directory inputs are hashed entirely.
+- **Results:** `current` `m12-20261128T000859Z-4aeadr8x` (4 workers) 138/138 accepted, 2,280.6 s, summary SHA-256 `310f44ea…0950`; `synthetic` `m12-20261128T004904Z-tqj5dqx3` (1 worker, unbound config) 41/41, 320.0 s. Both on clean `77a8dee`, source `3b698e92…`.
+
+Public discovery now reports 505 tests (501 pass + 4 named retail skips).
 
 Phase 1 implemented the Gate 01 contract fix, bounded scheduler, and 120-gate
 current profile in the cloud from `86a5670852d47c4ead140e5c8e40a5289f773053`
@@ -73,7 +105,8 @@ python3 -B tools/hg_verify.py run --profile current --jobs 4 --config "$CONFIG"
 python3 -B tools/hg_verify.py resume --run "$RUN_ID" --jobs 4
 python3 -B tools/hg_verify.py summarize --run "$RUN_ID"
 
-# Public CI synthetic suite (no retail inputs; 462 pass + 3 retail-only skips)
+# Public CI synthetic suite (no retail inputs; at Phase 3: 462 pass + 3 retail-only skips;
+# after M23–M24 integration: 501 pass + 4 named retail skips)
 python3 -B -m unittest discover -s tests -v
 ```
 

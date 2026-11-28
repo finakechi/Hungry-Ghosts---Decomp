@@ -745,6 +745,428 @@
         "{image}"
       ],
       "timeout": 3600
+    },
+    {
+      "id": "m19-resource-job",
+      "result": "m19-resource-job",
+      "evidence": "differential",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_resource_job.py",
+        "--elf",
+        "{elf}",
+        "--ps2dinfo",
+        "{ps2dinfo}",
+        "--negative-controls",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m19-resource-retail",
+      "result": "m19-resource-retail",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_resource_retail.py",
+        "--iso",
+        "{image}",
+        "--m4",
+        "local/m4/runtime",
+        "--m7",
+        "local/m7/captures",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m19-connected-title",
+      "result": "m19-connected",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "argv": [
+        "python",
+        "-B",
+        "tools/run_resource_lifecycle.py",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m18/native",
+        "--library",
+        "{artifact:lifecycle.so}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m20-hgscript-differential",
+      "result": "m20-hgscript-differential",
+      "evidence": "differential",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "argv": [
+        "python",
+        "-B",
+        "tools/hgscript_differential.py",
+        "--elf",
+        "{elf}",
+        "--iso",
+        "{image}",
+        "--scratch",
+        "{artifact:scratch}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m20-title-hgscript",
+      "result": "m20-title-hgscript",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "reference": "evidence/m19-m20-integration/title.json",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_title_hgscript.py",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m18/native",
+        "--library",
+        "{artifact:title.so}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m21-title-menu",
+      "result": "m21-title-scene",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "reference": "evidence/m21/title-menu.json",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_title_scene.py",
+        "--iso",
+        "{image}",
+        "--library",
+        "{artifact:title.so}",
+        "--output",
+        "{artifact:result.json}",
+        "--live",
+        "local/m21",
+        "--skip",
+        "100",
+        "--advance-interval",
+        "32",
+        "--negative-controls"
+      ]
+    },
+    {
+      "id": "m21-title-neutral",
+      "result": "m21-title-scene",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "reference": "evidence/m21/title-neutral.json",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_title_scene.py",
+        "--iso",
+        "{image}",
+        "--library",
+        "{artifact:title.so}",
+        "--output",
+        "{artifact:result.json}",
+        "--live",
+        "local/m21",
+        "--until-reset"
+      ]
+    },
+    {
+      "id": "m21-cold-new-game",
+      "result": "m21-title-scene",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "reference": "docs/m21/title-to-area1.json",
+      "required_inputs": [
+        "docs/m21/title-to-area1.json"
+      ],
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_title_scene.py",
+        "--iso",
+        "{image}",
+        "--library",
+        "{artifact:title.so}",
+        "--output",
+        "{artifact:result.json}",
+        "--live",
+        "local/m21",
+        "--skip",
+        "100",
+        "--advance-interval",
+        "32",
+        "--new-game",
+        "--area-native",
+        "local/m21/native"
+      ]
+    },
+    {
+      "id": "m21-area1-entry",
+      "result": "m21-area-entry",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "reference": "evidence/m21/area1-entry.json",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_scene_area_entry.py",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m21/native",
+        "--library",
+        "{artifact:area.so}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m21-ferry-reload",
+      "result": "m21-ferry-reload",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "reference": "docs/m21/boat-reload.json",
+      "required_inputs": [
+        "docs/m21/boat-reload.json"
+      ],
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_scene_ferry_reload.py",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m21/native",
+        "--library",
+        "{artifact:ferry.so}",
+        "--output",
+        "{artifact:result.json}",
+        "--start",
+        "boat-pack69-request",
+        "--end",
+        "boat-pack69-ready",
+        "--begin-job"
+      ]
+    },
+    {
+      "id": "m21-ferry-resume",
+      "result": "m21-ferry-reload",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "reference": "evidence/m21/ferry-resume.json",
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_scene_ferry_reload.py",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m21/native",
+        "--library",
+        "{artifact:ferry.so}",
+        "--output",
+        "{artifact:result.json}",
+        "--start",
+        "boat-after-pack69",
+        "--end",
+        "boat-resume-coordinator"
+      ]
+    },
+    {
+      "id": "m22-retail-service",
+      "result": "m22-retail-check",
+      "evidence": "saved-runtime",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 7200,
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_audio/verify_m22.py",
+        "--iso",
+        "{image}",
+        "--retail",
+        "local/m22/retail",
+        "--state",
+        "local/m18/runtime/PCSX2/sstates/SCPS-15046 (91AA4B28).01.p2s",
+        "--native",
+        "local/m22/live",
+        "--library",
+        "{artifact:m22.so}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m23-authentic-boundary",
+      "result": "m23-authentic-boundary",
+      "evidence": "original-bytes",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 3600,
+      "required_inputs": [
+        "{m13-captures}/obs3-000.json"
+      ],
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_world_init.py",
+        "--inspect-authentic",
+        "--elf",
+        "{elf}",
+        "--iso",
+        "{image}",
+        "--native",
+        "local/m21/native",
+        "--m13-captures",
+        "{m13-captures}",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m24-reference-map",
+      "result": "m24-reference-map",
+      "evidence": "original-bytes",
+      "timeout": 600,
+      "argv": [
+        "python",
+        "-B",
+        "tools/hg_audio/m24_reference_map.py",
+        "{elf}",
+        "--output",
+        "{artifact:result.json}",
+        "--check",
+        "evidence/m24/reference-map.json"
+      ]
+    },
+    {
+      "id": "m23-world-init-synthetic",
+      "result": "m23-world-init-synthetic",
+      "evidence": "synthetic",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_world_init.py",
+        "--synthetic",
+        "--compiler",
+        "cc",
+        "--sanitize",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m24-sequencer-synthetic",
+      "result": "m24-sequencer",
+      "evidence": "synthetic",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_audio_sequencer.py",
+        "--compiler",
+        "cc",
+        "--sanitize",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "m20-m22-c-sanitizers",
+      "result": "c-drivers",
+      "evidence": "synthetic",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_c_drivers.py",
+        "--compiler",
+        "cc",
+        "--output",
+        "{artifact:result.json}"
+      ]
+    },
+    {
+      "id": "world-audio-lifecycle",
+      "result": "world-audio",
+      "evidence": "synthetic",
+      "tools": [
+        "cc"
+      ],
+      "timeout": 1800,
+      "argv": [
+        "python",
+        "-B",
+        "tools/verify_world_audio.py",
+        "--compiler",
+        "cc",
+        "--sanitize",
+        "--output",
+        "{artifact:result.json}"
+      ]
     }
   ]
 }

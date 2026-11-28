@@ -1,0 +1,369 @@
+{
+ "schema": "hg-m23-m24-results/v1",
+ "date": "2026-11-27",
+ "tested_commit": "77a8dee39813a8ec8e8ade6952279f4891559f00",
+ "base_main": "09b5832119d5ec97c85c05c6ab1eddd6c20be8ad",
+ "reference": {
+  "build": "SCPS-15046",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e"
+ },
+ "host": {
+  "os": "CachyOS x86-64",
+  "gcc": "16.2.1",
+  "clang": "23.1.5",
+  "python": "3.14.10",
+  "dedicated": false
+ },
+ "acceptance": [
+  {
+   "run": "m12-20261128T000859Z-4aeadr8x",
+   "profile": "current",
+   "jobs": 4,
+   "state": "complete",
+   "revision": "77a8dee39813a8ec8e8ade6952279f4891559f00",
+   "source_sha256": "3b698e927c94f94122f97e6a0177e8c76b04ae07e5aa46aad26ffb588ea8183b",
+   "working_tree_clean": true,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "310f44ea114461781b24c9ee80a0f6707e11c6348bc4c8510d930eec93fb0950",
+   "gates": 138,
+   "counts": {
+    "passed": 133,
+    "expected-rejection": 5
+   },
+   "accepted": 138,
+   "reused": 0,
+   "executed": 138,
+   "historical_gates": 79,
+   "full_verdict": "passed",
+   "retries": 0,
+   "human_intervention": {
+    "resume_commands": 0,
+    "interruptions": 0
+   },
+   "session_seconds": 2280.647,
+   "child_seconds": 6390.1,
+   "not_accepted": [],
+   "expected_rejections": [
+    "ordinary-a1-zero-control",
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls",
+    "actor-lists-negative-controls",
+    "player-transition-negative-controls"
+   ],
+   "gate00": {
+    "tests": 505,
+    "passed_tests": 505,
+    "failed_tests": 0,
+    "retail_tests_unrun": []
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m19-resource-job": {
+     "verdict": "passed",
+     "child_seconds": 14.0,
+     "receipt_sha256": "6edd457687d1170c81f085afe2d25d33cbb45cc2e7a725b3fb1c136eed71e1bb",
+     "measured": {
+      "jobs": 36,
+      "controls": 4
+     }
+    },
+    "m19-resource-retail": {
+     "verdict": "passed",
+     "child_seconds": 8.2,
+     "receipt_sha256": "2b76af3b45c0325e25860ab52d103c0ebe72b43aea7e98fa34299c7eeb80d8ce",
+     "measured": {
+      "cold_title_frames": 837,
+      "domains": 17
+     }
+    },
+    "m19-connected-title": {
+     "verdict": "passed",
+     "child_seconds": 29.2,
+     "receipt_sha256": "92b88a31a376a5300173d83d55951524a7e8089799c85d42b08ae06521ed437b",
+     "measured": {
+      "units": 16273,
+      "requests": 11,
+      "checkpoints": 3
+     }
+    },
+    "m20-hgscript-differential": {
+     "verdict": "passed",
+     "child_seconds": 6.7,
+     "receipt_sha256": "611e9b40bebcd687c5c015dd531af2cf23e2e64ed6c4c9dbc5d3caf4f49ae570",
+     "measured": {
+      "sequences": 3,
+      "controls": 4
+     }
+    },
+    "m20-title-hgscript": {
+     "verdict": "passed",
+     "child_seconds": 16.2,
+     "receipt_sha256": "9b0314387f575889b9c4e666ca0eade8d0bc89eabfde061adc2b7706d85eccec",
+     "measured": {
+      "frames": 3861,
+      "glyph_requests": 10801
+     }
+    },
+    "m21-title-menu": {
+     "verdict": "passed",
+     "child_seconds": 37.9,
+     "receipt_sha256": "4f1600993e2d07d6ef7c6266993973c62c15f408886c91c7a586bc23ca14f90d",
+     "measured": {
+      "frames": 198,
+      "requests": 3
+     }
+    },
+    "m21-title-neutral": {
+     "verdict": "passed",
+     "child_seconds": 137.3,
+     "receipt_sha256": "2c0cb3dead49746c752c6de1ebe4ef23a20f9f6d8dc52fcdb115d3426d9213ae",
+     "measured": {
+      "frames": 3991,
+      "requests": 3
+     }
+    },
+    "m21-cold-new-game": {
+     "verdict": "passed",
+     "child_seconds": 276.8,
+     "receipt_sha256": "7fb53040d2dcffe306f14f7661eccaf19e7550daab5adb7ad8405ee20de1c2ae",
+     "measured": {
+      "frames": 1174,
+      "requests": 3
+     }
+    },
+    "m21-area1-entry": {
+     "verdict": "passed",
+     "child_seconds": 8.0,
+     "receipt_sha256": "db477b5d166a111f32d875a9171edef659aefa9df828402f198f714819415e9d",
+     "measured": {
+      "units": 183,
+      "domains": 7
+     }
+    },
+    "m21-ferry-reload": {
+     "verdict": "passed",
+     "child_seconds": 6.9,
+     "receipt_sha256": "f0b496fe1a1ea1c398375cdbc2137899606afd260c3674e79420e5c20f463f70",
+     "measured": {
+      "units": 18,
+      "native_vblanks": 3825,
+      "domains": 7
+     }
+    },
+    "m21-ferry-resume": {
+     "verdict": "passed",
+     "child_seconds": 6.9,
+     "receipt_sha256": "abe9ac506b2097e640333aa94e0b18028888bd3c596564a3a629fd9cee962c74",
+     "measured": {
+      "units": 34,
+      "native_vblanks": 49,
+      "domains": 7
+     }
+    },
+    "m22-retail-service": {
+     "verdict": "passed",
+     "child_seconds": 5.6,
+     "receipt_sha256": "ff72cede8c51bccdb36041ef6bd41b8be68fe6e40e1130084ded2cc33f155531",
+     "measured": {
+      "instruction_sequences": 7,
+      "controls": 3
+     }
+    },
+    "m23-authentic-boundary": {
+     "verdict": "passed",
+     "child_seconds": 5.7,
+     "receipt_sha256": "2e63495c6d3eb704f39f879ae477e10581ad474f6a9ffb7be5ab12d056c2bf38",
+     "measured": {
+      "checkpoints": 3
+     }
+    },
+    "m24-reference-map": {
+     "verdict": "passed",
+     "child_seconds": 0.4,
+     "receipt_sha256": "3cfc50a4cecb1986323e2bc9dd107b27e3a09bed237483b6ac74d43a0fad5528",
+     "measured": {
+      "functions": 37,
+      "scheduler_registrations": 6
+     }
+    },
+    "m23-world-init-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 9.4,
+     "receipt_sha256": "887acafd76d2a1e5616d71d82ee988c913088bd991090da4c7946917cf78d3e7",
+     "measured": {
+      "controls": 10,
+      "cycle2_parity": true
+     }
+    },
+    "m24-sequencer-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 3.0,
+     "receipt_sha256": "9586e269353b1f5ae85ddac2176a4cb0075b5adb6d9bd6aab2b1329b3144b0b6",
+     "measured": {
+      "scenarios": 9,
+      "controls": 5
+     }
+    },
+    "m20-m22-c-sanitizers": {
+     "verdict": "passed",
+     "child_seconds": 9.8,
+     "receipt_sha256": "5bb149ba9d3c789bb5ff2264254dcac8f92799263a5ca3959d085ce906c355fe",
+     "measured": {
+      "drivers": 4,
+      "canary": "detected"
+     }
+    },
+    "world-audio-lifecycle": {
+     "verdict": "passed",
+     "child_seconds": 8.8,
+     "receipt_sha256": "48ce02d6626d1f8ed165fbd73a2212e846141cf6c5cf01c1f97be833c87fe5e0",
+     "measured": {
+      "cycles": 2,
+      "frames_per_cycle": 143,
+      "events_per_cycle": 17,
+      "key_on_per_cycle": 19,
+      "steal_per_cycle": 1,
+      "pcm_nonzero_frames_per_cycle": 101600,
+      "controls": 10
+     }
+    }
+   }
+  },
+  {
+   "run": "m12-20261128T004904Z-tqj5dqx3",
+   "profile": "synthetic",
+   "jobs": 1,
+   "state": "complete",
+   "revision": "77a8dee39813a8ec8e8ade6952279f4891559f00",
+   "source_sha256": "3b698e927c94f94122f97e6a0177e8c76b04ae07e5aa46aad26ffb588ea8183b",
+   "working_tree_clean": true,
+   "ps2dinfo_revision": "2e4a226e00d33ab35391aacade71b55826e5f52f",
+   "inventory_sha256": "a09ae98290a235c9e4fc497f743b79b717f33394c4db54fc7a3947e33ef54827",
+   "summary_sha256": "f2143c2d6518e78f386748110b22886106765aab3284392046a7184df072a464",
+   "gates": 41,
+   "counts": {
+    "passed": 39,
+    "expected-rejection": 2
+   },
+   "accepted": 41,
+   "reused": 0,
+   "executed": 41,
+   "historical_gates": 29,
+   "full_verdict": "unrun",
+   "retries": 0,
+   "human_intervention": {
+    "resume_commands": 0,
+    "interruptions": 0
+   },
+   "session_seconds": 320.03,
+   "child_seconds": 316.1,
+   "not_accepted": [],
+   "expected_rejections": [
+    "connected-player-negative-controls",
+    "actor-setup-negative-controls"
+   ],
+   "gate00": {
+    "tests": 505,
+    "passed_tests": 501,
+    "failed_tests": 0,
+    "retail_tests_unrun": [
+     "test_hg_audio_original.OriginalDataTests.test_control_wrong_bank_offset_detected",
+     "test_hg_audio_original.OriginalDataTests.test_payload_transferred_to_iop",
+     "test_hg_audio_original.OriginalDataTests.test_registration_matches_m7_evidence",
+     "test_m24_reference_map.ReferenceMapRetailTests.test_fresh_scan_matches_committed_map"
+    ]
+   },
+   "bad_seals": 0,
+   "bad_artifacts": 0,
+   "new_gates": {
+    "m23-world-init-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 7.1,
+     "receipt_sha256": "e23f5103a548656888ab5e1fcf268d96bdaddfd4f7ceb9e3b0d4823b76d4d5ac",
+     "measured": {
+      "controls": 10,
+      "cycle2_parity": true
+     }
+    },
+    "m24-sequencer-synthetic": {
+     "verdict": "passed",
+     "child_seconds": 2.1,
+     "receipt_sha256": "9cb482a4eef60ae6a735a98f1e8c026fec7e5a97d7e914057a98d5b1c902a0ab",
+     "measured": {
+      "scenarios": 9,
+      "controls": 5
+     }
+    },
+    "m20-m22-c-sanitizers": {
+     "verdict": "passed",
+     "child_seconds": 7.8,
+     "receipt_sha256": "f2521265a1195a5d22f4bda6738d2a78a14c3795d17ca1b699b68018cf44b13d",
+     "measured": {
+      "drivers": 4,
+      "canary": "detected"
+     }
+    },
+    "world-audio-lifecycle": {
+     "verdict": "passed",
+     "child_seconds": 7.2,
+     "receipt_sha256": "3debb001073900e8a3637e6f764cf88764bb8142c11be14045c50fe359593b70",
+     "measured": {
+      "cycles": 2,
+      "frames_per_cycle": 143,
+      "events_per_cycle": 17,
+      "key_on_per_cycle": 19,
+      "steal_per_cycle": 1,
+      "pcm_nonzero_frames_per_cycle": 101600,
+      "controls": 10
+     }
+    }
+   }
+  }
+ ],
+ "builds": {
+  "strict_combined": {
+   "sources": 12,
+   "exported_functions": 280,
+   "duplicate_symbols": 0,
+   "compilers": [
+    "gcc",
+    "clang"
+   ],
+   "note": "src/ unchanged between ade2ece and 77a8dee"
+  },
+  "world_audio_receipts_byte_identical": [
+   "gcc",
+   "clang",
+   "gcc+asan/ubsan/lsan",
+   "clang+asan/ubsan/lsan"
+  ]
+ },
+ "superseded_attempts": [
+  {
+   "run": "m12-20261127T233042Z-1n5zu0lq",
+   "profile": "synthetic",
+   "jobs": 4,
+   "revision": "ade2ece22f740e62fac33ff1bedac538aa76286c",
+   "accepted": "41/41",
+   "session_seconds": 208.9
+  },
+  {
+   "run": "m12-20261127T233429Z-eu9ds18y",
+   "profile": "current",
+   "jobs": 4,
+   "revision": "ade2ece22f740e62fac33ff1bedac538aa76286c",
+   "accepted": "135/138",
+   "session_seconds": 2017.8,
+   "harness_errors": {
+    "m19-resource-job": "contract took len() of the integer jobs count",
+    "m20-hgscript-differential": "contract expected the word \"differ\"; messages read \"EE ..., C ...\"",
+    "m20-title-hgscript": "contract required source_revision, which the verifier does not emit"
+   },
+   "resolution": "contracts corrected in 77a8dee; receipts left sealed as recorded"
+  }
+ ],
+ "receipts_note": "Receipts and attempt artifacts stay in ignored local storage; only identities and digests are published."
+}

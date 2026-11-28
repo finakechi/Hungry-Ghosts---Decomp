@@ -1,0 +1,55 @@
+{
+  "schema": "hg-m21-ferry-reload/v1",
+  "iso_sha256": "8ca1513c8417c0a40b838ff5edf22a2360f43bce1b0458693a95a6efdafd994e",
+  "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+  "native_start": "boat-after-pack69",
+  "native_end": "boat-resume-coordinator",
+  "units": 34,
+  "native_vblanks": 49,
+  "overlay_ee_sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788",
+  "native_ee_sha256": {
+    "before": "2017c210e1cb9f8f6f84774656bf2935b34d70362b544bd3b16084f7f3157089",
+    "after": "339d7b53e24b4784c97b6366c74cdab7a5f0ece61b1e2af2775ef3316cf8045f"
+  },
+  "operations": [],
+  "reads": [],
+  "completed": [],
+  "confirmations": 1,
+  "domains": {
+    "handles": {
+      "match": true,
+      "diff": [],
+      "sha256": "d89cd8ac98252042b8d90edaa9641fb788f06c5c25fa519b2df2221c32ceaff5"
+    },
+    "arena": {
+      "match": true,
+      "diff": [],
+      "sha256": "32daba448888098e2fe96e19f426637ecdbe406a5b98512610aaa02697faa181"
+    },
+    "worker descriptor": {
+      "match": true,
+      "diff": [],
+      "sha256": "bfd91dc5dca1439558db612e0cdadd58d97e140eed64c55ef77128b97de29004"
+    },
+    "loader flags": {
+      "match": true,
+      "diff": [],
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    "area selector": {
+      "match": true,
+      "diff": [],
+      "sha256": "507503b51960cceda8d924904fb85377fe7d177fb8dfcf56b24e4557644ed486"
+    },
+    "mode handler and phase": {
+      "match": true,
+      "diff": [],
+      "sha256": "cf7407455c031192e528bb08aa8979106f03e0fbcd34212a64fc8e47d7049225"
+    },
+    "overlay": {
+      "match": true,
+      "diff": [],
+      "sha256": "8ec765c77cb432b8dbe29c3ef8daa99d23ff0dcfdca939636ffc7b8b78cfa788"
+    }
+  }
+}

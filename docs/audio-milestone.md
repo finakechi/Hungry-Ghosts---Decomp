@@ -1,5 +1,10 @@
 # Audio Milestone — EE Audio Engine and IOP Sound-System Reconstruction
 
+**M22 update.** The historical reconstruction below stops at the modeled
+IOP boundary. The [M22 report](M22.md) identifies the original SG2IOP RPC,
+corrects the old channel-ring and heap-release labels, and verifies a
+connected upload and voice playback path.
+
 ## Status
 
 > **Integration status (2026-11-23).** M17, M18, Content/HGScript and Audio

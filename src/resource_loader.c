@@ -49,56 +49,105 @@ static void clear_task_phases(HGResourceEnv *e,uint32_t task) {
 
 /* 0012fcf0. The high byte is an arithmetic word shift, not an unsigned
  * table index. All table/address arithmetic remains modulo 2^32. */
-void hg_resource_load_indexed(HGResourceEnv *e,uint32_t task) {
+static int select_indexed_pack(HGResourceEnv *e,uint32_t task) {
     uint32_t id=r32(e,task+0x44),high=id>>8;
     if((id&0x80000000u)!=0)high|=0xff000000u;
     uint32_t table=r32(e,0x3e0200u+((high-2u)<<2));
     w32(e,task+0x44,r32(e,table+((id&255u)<<2)));
     id=r32(e,task+0x44);
-    if(id==0xffffffffu || r16(e,0x46e130u+(r16(e,0x46e136)<<1))==id)return;
+    if(id==0xffffffffu || r16(e,0x46e130u+(r16(e,0x46e136)<<1))==id)return 0;
     clear_task_phases(e,task);
     w16(e,0x46e136,r16(e,0x46e136)+1u);
     if(r16(e,0x46e136)>=3)w16(e,0x46e136,0);
     uint32_t slot=r16(e,0x46e136);
     w16(e,0x46e130u+(slot<<1),r32(e,task+0x44));
-    call(e,0x130900,task,0,0,0);
+    return 1;
+}
+void hg_resource_load_indexed(HGResourceEnv *e,uint32_t task) {
+    if(select_indexed_pack(e,task))call(e,0x130900,task,0,0,0);
 }
 
 /* 0012fde0: context-to-directory lookup; ff and ffffffff are distinct
  * no-load sentinels. The second table uses the original unadjusted index. */
-void hg_resource_load_context(HGResourceEnv *e,uint32_t task) {
+static int select_context_pack(HGResourceEnv *e,uint32_t task) {
     uint32_t sub=r8(e,0x3fa201);
-    if(sub==255)return;
+    if(sub==255)return 0;
     uint32_t kind=r8(e,0x3fa200);
     uint32_t address=kind<3?0x3e01c0u+kind*12u+sub*4u:0x3e01e4u+kind*4u;
     w32(e,task+0x44,r32(e,address));
-    if(r32(e,task+0x44)==0xffffffffu)return;
+    if(r32(e,task+0x44)==0xffffffffu)return 0;
     clear_task_phases(e,task);
-    call(e,0x130900,task,0,0,0);
+    return 1;
 }
-
-void hg_resource_prepare_context(HGResourceEnv *e,uint32_t task) {
-    if(r32(e,0x700000c4)!=2)return;
+void hg_resource_load_context(HGResourceEnv *e,uint32_t task) {
+    if(select_context_pack(e,task))call(e,0x130900,task,0,0,0);
+}
+static void reset_context_slots(HGResourceEnv *e) {
     w16(e,0x46e136,0);w16(e,0x46e130,0);
     w16(e,0x46e132,0);w16(e,0x46e134,0);
+}
+static int prepare_context_index(HGResourceEnv *e,uint32_t task) {
     if(r8(e,0x46e12d)==2 && r8(e,0x3fa202)!=255) {
         w32(e,task+0x44,r8(e,0x3fa202)|0x200u);
-        call(e,0x12fcf0,task,0,0,0);
-    }else call(e,0x12fde0,task,0,0,0);
+        return 1;
+    }
+    return 0;
+}
+void hg_resource_prepare_context(HGResourceEnv *e,uint32_t task) {
+    if(r32(e,0x700000c4)!=2)return;
+    reset_context_slots(e);
+    call(e,prepare_context_index(e,task)?0x12fcf0:0x12fde0,task,0,0,0);
 }
 
+static int retained_enabled(HGResourceEnv *e) {
+    return r32(e,0x700000c4)==2 || r8(e,0x3fa1ba)!=0;
+}
+static uint32_t retained_directory(HGResourceEnv *e) {
+    return r8(e,0x3fa1b0)==2?0x4d:0x4c;
+}
+static void select_retained_first(HGResourceEnv *e,uint32_t task) {
+    w32(e,task+0x44,r8(e,0x3fa1b0)==0 && r8(e,0x3fa1b1)==3 && r8(e,0x3fa1b2)==3?0x4a:0x6b);
+    clear_task_phases(e,task);
+}
+static void select_retained_second(HGResourceEnv *e,uint32_t task) {
+    w32(e,task+0x44,retained_directory(e));
+    w8(e,0x3f9fef,r32(e,task+0x44));
+    clear_task_phases(e,task);
+}
 void hg_resource_prepare_retained(HGResourceEnv *e,uint32_t task) {
-    if(r32(e,0x700000c4)!=2 && r8(e,0x3fa1ba)==0)return;
-    uint32_t kind=r8(e,0x3fa1b0),wanted=kind==2?0x4d:0x4c;
-    if(wanted!=r8(e,0x3f9fef)) {
-        w32(e,task+0x44,kind==0 && r8(e,0x3fa1b1)==3 && r8(e,0x3fa1b2)==3?0x4a:0x6b);
-        clear_task_phases(e,task);call(e,0x130900,task,0,0,0);
+    if(!retained_enabled(e))return;
+    if(retained_directory(e)!=r8(e,0x3f9fef)) {
+        select_retained_first(e,task);call(e,0x130900,task,0,0,0);
         /* The first loader may change the selector: reload it as the EE does. */
-        w32(e,task+0x44,r8(e,0x3fa1b0)==2?0x4d:0x4c);
-        w8(e,0x3f9fef,r32(e,task+0x44));
-        clear_task_phases(e,task);call(e,0x130900,task,0,0,0);
+        select_retained_second(e,task);call(e,0x130900,task,0,0,0);
     }
     w8(e,0x46e10c,1);
+}
+
+/* 0012ff20 and 0012ffa0 select general PACK loads or retain the current
+ * selection. The selector cache widths differ. */
+static int select_cached_pack(HGResourceEnv *e,uint32_t task) {
+    uint32_t id=r32(e,task+0x44);
+    if(id==r32(e,0x3f9fe0))return 0;
+    w32(e,0x3f9fe0,id);
+    w32(e,task+0x44,r32(e,0x3e0210u+id*4u));
+    if(r32(e,task+0x44)==0xffffffffu)return 0;
+    clear_task_phases(e,task);
+    return 1;
+}
+void hg_resource_load_cached(HGResourceEnv *e,uint32_t task) {
+    if(select_cached_pack(e,task))call(e,0x130900,task,0,0,0);
+}
+static int select_retained_pack(HGResourceEnv *e,uint32_t task) {
+    uint32_t id=r32(e,task+0x44);
+    w8(e,0x46e10c,id==0x49?3:2);
+    if(id==r8(e,0x3f9fef))return 0;
+    w8(e,0x3f9fef,id);
+    clear_task_phases(e,task);
+    return 1;
+}
+void hg_resource_load_retained(HGResourceEnv *e,uint32_t task) {
+    if(select_retained_pack(e,task))call(e,0x130900,task,0,0,0);
 }
 
 void hg_resource_init(HGResourceEnv *e) {
@@ -141,6 +190,19 @@ void hg_resource_request(HGResourceEnv *e,uint32_t kind,uint32_t id) {
     hg_resource_request_raw(e,kind,id);
 }
 
+static int select_area_extra(HGResourceEnv *e,uint32_t task) {
+    w32(e,0x3eaf88,r32(e,task+0x44)); /* gp + 3018 */
+    uint32_t area=r8(e,0x3fa1b0);
+    if(area!=1 && (area!=0 || r8(e,0x3fa1b1)!=8 || r8(e,0x3fa1b2)!=1))return 0;
+    w32(e,task+0x44,r16(e,0x3fa1c4)==0?5:6);
+    clear_task_phases(e,task);
+    return 1;
+}
+static void select_area_followup(HGResourceEnv *e,uint32_t task) {
+    w32(e,task+0x44,r32(e,0x3eaf88));w16(e,task+0x32,3);
+    w32(e,task+0x44,r32(e,task+0x44)+r8(e,0x3fa1b2)+1);
+    clear_task_phases(e,task);
+}
 void hg_resource_worker(HGResourceEnv *e) {
     uint32_t task=0x3f8e00;
     switch(r16(e,task+0x32)) {
@@ -148,14 +210,8 @@ void hg_resource_worker(HGResourceEnv *e) {
     case 1:call(e,0x130900,task,0,0,0);break;
     case 2:
         call(e,0x131420,task,0,0,0);
-        w32(e,0x3eaf88,r32(e,task+0x44)); /* gp + 3018 */
-        if(r8(e,0x3fa1b0)==1 || (r8(e,0x3fa1b0)==0 && r8(e,0x3fa1b1)==8 && r8(e,0x3fa1b2)==1)) {
-            w32(e,task+0x44,r16(e,0x3fa1c4)==0?5:6);
-            clear_task_phases(e,task);call(e,0x130900,task,0,0,0);
-        }
-        w32(e,task+0x44,r32(e,0x3eaf88));w16(e,task+0x32,3);
-        w32(e,task+0x44,r32(e,task+0x44)+r8(e,0x3fa1b2)+1);
-        clear_task_phases(e,task);
+        if(select_area_extra(e,task))call(e,0x130900,task,0,0,0);
+        select_area_followup(e,task);
         /* falls through */
     case 3:
         call(e,0x131420,task,0,0,0);clear_task_phases(e,task);
@@ -1111,23 +1167,122 @@ static uint32_t process_call(void *user,uint32_t pc,uint32_t a,uint32_t b,uint32
     if(pc==0x12fe90) {hg_resource_prepare_context(&p->env,a);return 0;}
     if(pc==0x12fcf0) {hg_resource_load_indexed(&p->env,a);return 0;}
     if(pc==0x12fde0) {hg_resource_load_context(&p->env,a);return 0;}
+    if(pc==0x12ff20) {hg_resource_load_cached(&p->env,a);return 0;}
+    if(pc==0x12ffa0) {hg_resource_load_retained(&p->env,a);return 0;}
     if(pc==0x137ed0)return hg_resource_fixup(&p->env,a,b,c,p->frame);
     if(pc==0x1386e0) {hg_resource_geometry(&p->env,a,b);return 0;}
     if(pc==0x1389d0)return hg_resource_map_address(&p->env,a,p->frame-0x50);
+    if(pc==0x131da0) {hg_resource_rebase_upload(&p->env,a);return 0;}
     return p->outer->call(p->outer->user,pc,a,b,c,d);
 }
+static void init_processing(HGProcessing *p,HGResourceEnv *e,uint32_t frame) {
+    p->outer=e;p->frame=frame;p->env=*e;p->env.user=p;
+    p->env.load=process_load;p->env.store=process_store;p->env.call=process_call;
+}
 void hg_resource_worker_fixed(HGResourceEnv *e,uint32_t frame) {
-    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
-    p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
+    HGProcessing p;init_processing(&p,e,frame);
     hg_resource_worker(&p.env);
+}
+
+/* 00131da0, resource side of the final special-member group. */
+void hg_resource_rebase_upload(HGResourceEnv *e,uint32_t block) {
+    hg_resource_rebase(e,block,0x1e00);
+    call(e,0x152ae0,block,0,0,0);
+}
+
+/* A host continuation for 00130220 and its blocking callers. PACK phases and
+ * disc context remain guest-owned. Each pending step corresponds to exactly
+ * one original SleepThread call site. Non-sleeping tails run in the same slice. */
+enum {
+    JOB_ENTRY, JOB_PACK, JOB_AREA_EXTRA, JOB_AREA_FOLLOWUP, JOB_AFTER_AREA,
+    JOB_RETAINED, JOB_RETAINED_SECOND, JOB_RETAINED_READY, JOB_CONTEXT,
+    JOB_FINISH, JOB_DONE
+};
+enum { PACK_BOOTSTRAP, PACK_GENERAL, PACK_ALTERNATIVE };
+static void job_pack(HGResourceEnv *e,HGResourceJob *job,uint32_t pack,uint32_t after) {
+    job->stage=JOB_PACK;job->pack=pack;job->after=after;
+    if(pack==PACK_GENERAL)hg_pack_general_prepare(e,0x3f8e00);
+}
+uint32_t hg_resource_job_resume(HGResourceEnv *outer,HGResourceJob *job,uint32_t frame) {
+    HGProcessing p;init_processing(&p,outer,frame);
+    HGResourceEnv *e=&p.env;
+    const uint32_t task=0x3f8e00;
+    for(;;)switch(job->stage) {
+    case JOB_ENTRY: {
+        uint32_t kind=r16(e,task+0x32);
+        job->stage=JOB_FINISH;
+        switch(kind) {
+        case 0:job_pack(e,job,PACK_BOOTSTRAP,JOB_FINISH);break;
+        case 1:job_pack(e,job,PACK_GENERAL,JOB_FINISH);break;
+        case 2:job_pack(e,job,PACK_ALTERNATIVE,JOB_AREA_EXTRA);break;
+        case 3:job_pack(e,job,PACK_ALTERNATIVE,JOB_AFTER_AREA);break;
+        case 4:if(select_context_pack(e,task))job_pack(e,job,PACK_GENERAL,JOB_FINISH);break;
+        case 5:if(select_indexed_pack(e,task))job_pack(e,job,PACK_GENERAL,JOB_FINISH);break;
+        case 6:if(select_cached_pack(e,task))job_pack(e,job,PACK_GENERAL,JOB_FINISH);break;
+        case 7:if(select_retained_pack(e,task))job_pack(e,job,PACK_GENERAL,JOB_FINISH);break;
+        case 8:job->stage=JOB_RETAINED;job->retained_after=JOB_FINISH;break;
+        default:break; /* Original normal-worker default. Priority is a separate task. */
+        }
+        break;
+    }
+    case JOB_PACK: {
+        uint32_t done=job->pack==PACK_BOOTSTRAP?hg_pack_bootstrap_step(e,task):
+                      job->pack==PACK_GENERAL?hg_pack_general_step(e,task):hg_pack_alternative_step(e,task);
+        if(!done)return 0;
+        job->stage=job->after;
+        break;
+    }
+    case JOB_AREA_EXTRA:
+        if(select_area_extra(e,task))job_pack(e,job,PACK_GENERAL,JOB_AREA_FOLLOWUP);
+        else job->stage=JOB_AREA_FOLLOWUP;
+        break;
+    case JOB_AREA_FOLLOWUP:
+        select_area_followup(e,task);
+        job_pack(e,job,PACK_ALTERNATIVE,JOB_AFTER_AREA);
+        break;
+    case JOB_AFTER_AREA:
+        clear_task_phases(e,task);
+        job->stage=JOB_RETAINED;job->retained_after=JOB_CONTEXT;
+        break;
+    case JOB_RETAINED:
+        if(!retained_enabled(e))job->stage=job->retained_after;
+        else if(retained_directory(e)==r8(e,0x3f9fef))job->stage=JOB_RETAINED_READY;
+        else {
+            select_retained_first(e,task);
+            job_pack(e,job,PACK_GENERAL,JOB_RETAINED_SECOND);
+        }
+        break;
+    case JOB_RETAINED_SECOND:
+        select_retained_second(e,task);
+        job_pack(e,job,PACK_GENERAL,JOB_RETAINED_READY);
+        break;
+    case JOB_RETAINED_READY:
+        w8(e,0x46e10c,1);
+        job->stage=job->retained_after;
+        break;
+    case JOB_CONTEXT:
+        job->stage=JOB_FINISH;
+        if(r32(e,0x700000c4)==2) {
+            reset_context_slots(e);
+            int selected=prepare_context_index(e,task)?select_indexed_pack(e,task):select_context_pack(e,task);
+            if(selected)job_pack(e,job,PACK_GENERAL,JOB_FINISH);
+        }
+        break;
+    case JOB_FINISH:
+        w8(e,0x3eacec,0);
+        job->stage=JOB_DONE;
+        hg_resource_finish(e);
+        return 1;
+    case JOB_DONE:return 1;
+    default:return 0;
+    }
 }
 
 /* Host-only continuation for the measured pair at 00130368..00130378,
  * after the second alternative loader and its phase reset. Uses exactly the
  * worker's resolver, without replaying the preceding PACK/audio operation. */
 void hg_resource_prepare_engine_fixed(HGResourceEnv *e,uint32_t task,uint32_t frame) {
-    HGProcessing p={e,{0},frame};p.env=*e;p.env.user=&p;
-    p.env.load=process_load;p.env.store=process_store;p.env.call=process_call;
+    HGProcessing p;init_processing(&p,e,frame);
     hg_resource_prepare_retained(&p.env,task);
     hg_resource_prepare_context(&p.env,task);
 }

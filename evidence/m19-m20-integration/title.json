@@ -1,0 +1,103 @@
+{
+  "schema": "hg-title-script-integration/v1",
+  "boot": {
+    "requests": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        106
+      ],
+      [
+        0,
+        109
+      ],
+      [
+        1,
+        84
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        80
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        192
+      ]
+    ],
+    "frames": 837,
+    "completed": 9,
+    "overlay_bytes": 16384,
+    "overlay_sha256": "ef257df984b273e0482c1b6575c1f4a1898e7f4a33861b8127001cc5a769e935"
+  },
+  "publication": {
+    "tick": 845,
+    "thread": 9,
+    "last_read": 25,
+    "kind": 3,
+    "directory": 193
+  },
+  "original_capture_seq": 913,
+  "original_capture_ee_sha256": "648137359e80208843ed163b1ec219f1d5f9500a51f4d8b8d34301c6525a6674",
+  "handle": 559,
+  "parent": 23467264,
+  "parent_header_bytes": 120,
+  "child": 24293120,
+  "child_size": 1376,
+  "child_offset": 825856,
+  "child_sha256": "a4e59e414c7b0a3a690c19553bf5985828ecbbad290e75bf98f658ebc25fd0ac",
+  "child_rebuild_exact": true,
+  "runtime": {
+    "frames": 3861,
+    "phases": {
+      "0": 13,
+      "1": 3847,
+      "-1": 1
+    },
+    "requests": {
+      "0x1564a0": 1,
+      "0x182850": 10801
+    },
+    "audio_request_frames": [
+      [
+        0,
+        1402016,
+        1,
+        576,
+        1,
+        0,
+        1065353216,
+        1017370378
+      ]
+    ],
+    "request_trace_sha256": "db88f73ce9764729da108f7c5f9f2f649d92ddb03c64b612b0bc8eda1e14e6d7",
+    "unique_original_addresses": 877,
+    "voice_ready_frame": 1,
+    "voice_idle_frame": 200,
+    "reset_requests": [
+      [
+        1402192,
+        1
+      ]
+    ]
+  },
+  "cleanup": {
+    "handle_cleared": true,
+    "area1_overlay_matches": true
+  },
+  "source_revision": "970e7acb1b87c1b8f7397b763d655730780199fa"
+}

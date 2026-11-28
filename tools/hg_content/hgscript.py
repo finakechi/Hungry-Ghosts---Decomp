@@ -25,6 +25,8 @@ do not parse as event streams and non-text pool entries stay visible as
 opaque/raw regions and never acquire invented semantics.
 """
 
+from bisect import bisect_left
+from collections import Counter
 import struct
 
 from . import bounded_u32
@@ -69,7 +71,7 @@ def decode_text(raw):
 class Event:
     """One u32 word event; the raw value is authoritative."""
 
-    __slots__ = ('value', 'offset', 'role', 'bound_pool_index')
+    __slots__ = ('value', 'offset', 'role', 'bound_pool_index', 'reference')
 
     def __init__(self, value, offset):
         self.value = value
@@ -79,9 +81,21 @@ class Event:
         # interpretation is a supported inference, never asserted semantics.
         self.role = 'odd-word' if value & 1 else 'even-word'
         self.bound_pool_index = None
+        self.reference = None
+
+    @property
+    def opcode(self):
+        return self.value & 0x3f
+
+    @property
+    def operand(self):
+        return self.value >> 6
 
     def to_json(self):
-        out = dict(value=self.value, offset=self.offset, role=self.role)
+        out = dict(value=self.value, offset=self.offset, role=self.role,
+                   opcode=self.opcode, operand=self.operand)
+        if self.reference is not None:
+            out['runtime_reference'] = self.reference
         if self.bound_pool_index is not None:
             out['bound_pool_index'] = self.bound_pool_index
         return out
@@ -157,6 +171,7 @@ class Collection:
         self.pool = []
         self.pool_tail_pad = b''
         self.binding_status = 'none'
+        self.runtime = {}
         self.status = 'unparsed'
         self.note = None
 
@@ -171,6 +186,7 @@ class Collection:
             pool=[e.to_json(include_text) for e in self.pool],
             pool_tail_pad_length=len(self.pool_tail_pad),
             binding_status=self.binding_status,
+            runtime=self.runtime,
             status=self.status,
             note=self.note)
 
@@ -310,6 +326,61 @@ def bind_strings(collection):
     collection.binding_status = 'supported-inference-count-matched'
 
 
+def annotate_runtime(collection, data):
+    """Apply the proven EE address rules to raw bytes, independent of pool splitting."""
+    counts = Counter()
+    references = Counter()
+    schedule_ends = None
+    for record in collection.records:
+        for index, event in enumerate(record.events):
+            opcode = event.opcode
+            counts[opcode] += 1
+            offset = collection.records_end + event.operand * 4
+            if opcode == 1:
+                reference = dict(kind='draw-text', offset=offset, text_offset=offset + 4)
+                end = data.find(b'\0', offset + 4) if offset + 4 < len(data) else -1
+                if end != -1:
+                    reference.update(width=struct.unpack_from('<I', data, offset)[0],
+                                     byte_length=end - offset - 4,
+                                     status='resolved')
+            elif opcode == 7:
+                reference = dict(kind='timed-cue', offset=offset)
+                if offset + 8 <= len(data):
+                    voice, parameter = struct.unpack_from('<II', data, offset)
+                    reference.update(voice=voice, parameter=parameter)
+                    if parameter == 0xffffffff:
+                        reference.update(schedule_count=0, status='resolved')
+                    else:
+                        if schedule_ends is None:
+                            schedule_ends = [
+                                cursor for cursor in range(collection.records_end, len(data) - 3, 4)
+                                if struct.unpack_from('<I', data, cursor)[0] == 0xffffffff
+                            ]
+                        end_index = bisect_left(schedule_ends, offset + 8)
+                        if end_index < len(schedule_ends):
+                            reference.update(
+                                schedule_offset=offset + 8,
+                                schedule_count=(schedule_ends[end_index] - offset - 8) // 4,
+                                status='resolved')
+            elif opcode == 12 and index == 0:
+                # 001839f0 returns the block address. One verified caller reads
+                # its leading i16. The rest of the metadata stays opaque.
+                reference = dict(kind='leading-metadata', offset=offset)
+                if offset + 2 <= len(data):
+                    reference.update(leading_i16=struct.unpack_from('<h', data, offset)[0],
+                                     status='resolved')
+            else:
+                continue
+            reference.setdefault('status', 'unresolved')
+            event.reference = reference
+            references[(reference['kind'], reference['status'])] += 1
+    collection.runtime = dict(
+        opcodes={str(opcode): count for opcode, count in sorted(counts.items())},
+        references={kind: {status: references[(kind, status)]
+                           for status in ('resolved', 'unresolved')}
+                    for kind in sorted({kind for kind, _ in references})})
+
+
 def decode(data, include_text=True):
     """Decode a whole member. Never invents bytes; opaque spans stay raw."""
     count, records_end, offsets = decode_header(data)
@@ -334,6 +405,7 @@ def decode(data, include_text=True):
         text_entries >= POOL_MIN_TEXT_ENTRIES and
         (text_entries / len(entries)) >= POOL_TEXT_MIN_RATIO)
     bind_strings(collection)
+    annotate_runtime(collection, data)
     if opaque:
         collection.status = 'recognized-partial'
         collection.note = f'{opaque} opaque record(s); ' \

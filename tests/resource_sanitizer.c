@@ -468,6 +468,15 @@ int main(void) {
     unsigned reads=t.reads;
     hg_resource_request_raw(&e,8,0);hg_resource_worker_fixed(&e,0x1ff05c0);
     assert(t.reads==reads && load(&t,0xc91800,4)==0x12345679);
+    /* M19: yield all the way through alternative and nested context loads. */
+    HGResourceJob job={0};
+    unsigned sleeps=0;
+    hg_resource_request_raw(&e,3,3);
+    while(!hg_resource_job_resume(&e,&job,0x1ff05c0)) {
+        assert(++sleeps<100 && load(&t,0x3f8e30,2)==1 && load(&t,0x3eacec,1)==1);
+    }
+    assert(sleeps>2 && load(&t,0x3f8e30,2)==0 && load(&t,0x3eacec,1)==0);
+    assert(t.reads>reads && load(&t,0xc91800,4)==0x12345679);
     /* M8 pool construction into the ordinary list, then callbacks which sever
      * their own links. Both must run because NEXT is prefetched in a delay slot. */
     memset(t.ram+0x539430,0,56);

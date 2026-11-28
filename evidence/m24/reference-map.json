@@ -1,0 +1,545 @@
+{
+ "calls_in": {
+  "audio_thread": [
+   [
+    "001566d0",
+    "00103e80"
+   ],
+   [
+    "001566d8",
+    "002ad118"
+   ],
+   [
+    "001566e8",
+    "002a7450"
+   ],
+   [
+    "00156710",
+    "002a8ff0"
+   ],
+   [
+    "00156728",
+    "00156570"
+   ]
+  ],
+  "channel_a_note_allocation": [
+   [
+    "002ab61c",
+    "002b2030"
+   ],
+   [
+    "002ab630",
+    "002ae9b8"
+   ],
+   [
+    "002ab658",
+    "002afed8"
+   ],
+   [
+    "002ab674",
+    "002af1d0"
+   ],
+   [
+    "002ab69c",
+    "002b1098"
+   ],
+   [
+    "002ab6a8",
+    "002b11d0"
+   ]
+  ],
+  "sequence_service": [
+   [
+    "002addc0",
+    "0010cca0"
+   ],
+   [
+    "002adde4",
+    "002a9d18"
+   ],
+   [
+    "002ade44",
+    "00115fd8"
+   ],
+   [
+    "002ade94",
+    "jalr"
+   ],
+   [
+    "002adef4",
+    "00115898"
+   ],
+   [
+    "002adf0c",
+    "00115898"
+   ],
+   [
+    "002adf18",
+    "00115fd8"
+   ],
+   [
+    "002adf30",
+    "00116580"
+   ],
+   [
+    "002adf50",
+    "002a95c8"
+   ],
+   [
+    "002adfa0",
+    "002a95c8"
+   ]
+  ]
+ },
+ "elf_sha256": "a74248c5e2fd2cce9cede6c04d8117ce79e9472d380bbd80eb410370abcf3c61",
+ "format": "hg-m24-reference-map/1",
+ "functions": {
+  "audio_thread": {
+   "address": "001566c0",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "cancel": {
+   "address": "002ad748",
+   "direct_caller_count": 3,
+   "direct_callers": [
+    "002ad428",
+    "002ad9c8",
+    "002ada18"
+   ]
+  },
+  "channel_a_note": {
+   "address": "002ab508",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "channel_bytes": {
+   "address": "002a95c8",
+   "direct_caller_count": 4,
+   "direct_callers": [
+    "002adf50",
+    "002adfa0",
+    "002b3fa8",
+    "002b3ff8"
+   ]
+  },
+  "channel_command": {
+   "address": "002a94b8",
+   "direct_caller_count": 6,
+   "direct_callers": [
+    "002ad6f8",
+    "002ad704",
+    "002ad710",
+    "002ad7b0",
+    "002ad7bc",
+    "002ad7c8"
+   ]
+  },
+  "channel_consumer": {
+   "address": "002a96b8",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "channel_release_check": {
+   "address": "002a9d18",
+   "direct_caller_count": 2,
+   "direct_callers": [
+    "002ada98",
+    "002adde4"
+   ]
+  },
+  "channel_system_init": {
+   "address": "002aa5e0",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "001568a8"
+   ]
+  },
+  "command_table_init": {
+   "address": "002ae030",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "001568b0"
+   ]
+  },
+  "instrument_lookup": {
+   "address": "002b50e0",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002ab59c"
+   ]
+  },
+  "play": {
+   "address": "002ad478",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "00156c3c"
+   ]
+  },
+  "play_extra_limit": {
+   "address": "002ad358",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002ad644"
+   ]
+  },
+  "register_slot": {
+   "address": "002a7358",
+   "direct_caller_count": 6,
+   "direct_callers": [
+    "002a7320",
+    "002aa63c",
+    "002ad338",
+    "002ae0ac",
+    "002b2f88",
+    "002b40c4"
+   ]
+  },
+  "rpc_check": {
+   "address": "002ad118",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "001566d8"
+   ]
+  },
+  "sequence_a": {
+   "address": "002ae2c0",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sequence_b": {
+   "address": "002ae370",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sequence_dispatch_site": {
+   "address": "002ade94",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sequence_f": {
+   "address": "002ae8d8",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sequence_service": {
+   "address": "002add90",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sg2_bind": {
+   "address": "002ad288",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "00156880"
+   ]
+  },
+  "sg2_enqueue": {
+   "address": "002acf60",
+   "direct_caller_count": 26,
+   "direct_callers": [
+    "002a7234",
+    "002a726c",
+    "002a729c",
+    "002a78c0",
+    "002a78dc",
+    "002a78f0",
+    "002a7904",
+    "002a7934",
+    "002a79f8",
+    "002ab7b8",
+    "002ad1b8",
+    "002b2930"
+   ]
+  },
+  "sg2_flush": {
+   "address": "002ad138",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "sleep_thread": {
+   "address": "00103e80",
+   "direct_caller_count": 2,
+   "direct_callers": [
+    "001077c8",
+    "001566d0"
+   ]
+  },
+  "sound_descriptor": {
+   "address": "00157ed0",
+   "direct_caller_count": 2,
+   "direct_callers": [
+    "00156b30",
+    "00157458"
+   ]
+  },
+  "sound_dispatch": {
+   "address": "00156ad0",
+   "direct_caller_count": 917,
+   "direct_callers": [
+    "00122adc",
+    "00122cd4",
+    "00122d3c",
+    "00122dbc",
+    "00122e14",
+    "00122e90",
+    "00122ee0",
+    "00122f28",
+    "0012d398",
+    "0012d420",
+    "0012ded0",
+    "0012e838"
+   ]
+  },
+  "tick_runner": {
+   "address": "002a7450",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "001566e8"
+   ]
+  },
+  "unregister_slot": {
+   "address": "002a7398",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "voice_acquire": {
+   "address": "002b1098",
+   "direct_caller_count": 3,
+   "direct_callers": [
+    "002aabc0",
+    "002ab184",
+    "002ab69c"
+   ]
+  },
+  "voice_adsr": {
+   "address": "002b1668",
+   "direct_caller_count": 6,
+   "direct_callers": [
+    "002a9374",
+    "002aaedc",
+    "002ab464",
+    "002ab8dc",
+    "002ac664",
+    "002b20c0"
+   ]
+  },
+  "voice_fallback_1": {
+   "address": "002afed8",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002ab658"
+   ]
+  },
+  "voice_fallback_2": {
+   "address": "002af1d0",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002ab674"
+   ]
+  },
+  "voice_free_search": {
+   "address": "002ae9b8",
+   "direct_caller_count": 3,
+   "direct_callers": [
+    "002aab5c",
+    "002ab120",
+    "002ab630"
+   ]
+  },
+  "voice_prepare_slot": {
+   "address": "002b2438",
+   "direct_caller_count": 0,
+   "direct_callers": []
+  },
+  "voice_release_note": {
+   "address": "002b2030",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002ab61c"
+   ]
+  },
+  "voice_ssa": {
+   "address": "002b1188",
+   "direct_caller_count": 3,
+   "direct_callers": [
+    "002aae8c",
+    "002ab414",
+    "002aba5c"
+   ]
+  },
+  "voices_matching": {
+   "address": "002b0f58",
+   "direct_caller_count": 12,
+   "direct_callers": [
+    "002aa36c",
+    "002aa3e4",
+    "002aa45c",
+    "002abbc4",
+    "002abc70",
+    "002abd1c",
+    "002abdc4",
+    "002ac0ec",
+    "002ac1d8",
+    "002ac640",
+    "002ac6e8",
+    "002ac888"
+   ]
+  },
+  "voices_owned_by_channel": {
+   "address": "002b0cd8",
+   "direct_caller_count": 1,
+   "direct_callers": [
+    "002a98ac"
+   ]
+  }
+ },
+ "scheduler_registrations": [
+  {
+   "function": "002b3d70",
+   "site": "002b40c4",
+   "slot": 0
+  },
+  {
+   "function": "002add90",
+   "site": "002ae0ac",
+   "slot": 1
+  },
+  {
+   "function": "002a96b8",
+   "site": "002aa63c",
+   "slot": 2
+  },
+  {
+   "function": "002b2438",
+   "site": "002b2f88",
+   "slot": 3
+  },
+  {
+   "function": "002ad138",
+   "site": "002ad338",
+   "slot": 4
+  },
+  {
+   "function": null,
+   "site": "002a7320",
+   "slot": null
+  }
+ ],
+ "syscall_wrappers": {
+  "00103e80": {
+   "callers": [
+    "001077c8",
+    "001566d0"
+   ],
+   "number": 50,
+   "syscall": true
+  },
+  "00103e90": {
+   "callers": [
+    "00104cf8"
+   ],
+   "number": 51,
+   "syscall": true
+  },
+  "00103ea0": {
+   "callers": [
+    "00104e30"
+   ],
+   "number": -52,
+   "syscall": true
+  }
+ },
+ "tables": {
+  "channel_event_table": {
+   "address": "003bd078",
+   "words": [
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002ace78",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002ace78",
+    "00000001",
+    "002aa928",
+    "00000003",
+    "002aa960",
+    "00000003",
+    "002ab508",
+    "00000004",
+    "002ac758",
+    "00000003",
+    "002ac790",
+    "00000002",
+    "002ac820",
+    "00000002",
+    "002ac828",
+    "00000003",
+    "002ac8d8",
+    "00000100",
+    "002acf58",
+    "00000001",
+    "002ace58",
+    "00000003",
+    "002ace60",
+    "00000002",
+    "002ace68",
+    "00000001",
+    "002ace70",
+    "00000002",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002acf58",
+    "00000001",
+    "002ace78",
+    "00000003",
+    "002ae2b8",
+    "002ae2b8"
+   ]
+  },
+  "sequence_status_table": {
+   "address": "003bd170",
+   "words": [
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2c0",
+    "002ae370",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae2b8",
+    "002ae8d8"
+   ]
+  }
+ }
+}

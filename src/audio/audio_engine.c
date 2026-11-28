@@ -48,7 +48,7 @@ uint32_t hg_audio_register_entry(HGAudioBus *bus, uint32_t resource) {
 /*   +0x18 payload size; +0x1c 0.                                      */
 /*   descriptor[n] at resource+0x20 + word(+0x08)*0x10 + n*0x10:       */
 /*     +0x00 payload size; +0x04 bank offset; +0x08 bank id; +0x0c 0x7f */
-/* Phases 0..5 process one descriptor; phase>=6 computes the endpoint. */
+/* Phases 0..6 process each descriptor before endpoint handling. */
 /* ------------------------------------------------------------------ */
 uint32_t hg_audio_register_worker(HGAudioBus *bus, uint32_t resource) {
     /* Phase jump table (verified from 0x003db520):
@@ -144,7 +144,7 @@ uint32_t hg_audio_register_worker(HGAudioBus *bus, uint32_t resource) {
         bus->w32(bus->ctx, HG_AUDIO_DESC_DMA, dma_ptr);
         goto endpoint;
     }
-    case 6: { /* 1572d0: second poll + bind + MSCOM + advance */
+    case 6: { /* 1572d0: second poll + bind + free + advance */
         uint32_t id;
         if (bus->call(bus->ctx, 0x002a7590, dma_ptr, 0, 0, 0, 0) != 0) {
             goto endpoint; /* still busy */
@@ -157,9 +157,8 @@ uint32_t hg_audio_register_worker(HGAudioBus *bus, uint32_t resource) {
             hg_audio_bank_bind(bus, entry, bus->r32(bus->ctx, desc + 0x0c));
         }
         bus->w8(bus->ctx, HG_AUDIO_PHASE, 1);
-        /* MSCOM reads the first byte of the DMA'd payload at the alloc
-         * pointer (IOP-side memory, EE-visible through the SIF window) */
-        bus->call(bus->ctx, HG_X_SIF_MSCOM, alloc_ptr, 0, 0, 0, 0);
+        /* The IOP heap RPC releases the staging allocation after SG2 ACK. */
+        bus->call(bus->ctx, HG_X_SIF_FREE, alloc_ptr, 0, 0, 0, 0);
         desc_saved = U32(desc_saved + bus->r32(bus->ctx, desc + 0));
         bus->w32(bus->ctx, HG_AUDIO_DESC_SAVED, desc_saved);
         desc_src = U32(desc_src + bus->r32(bus->ctx, desc + 0));
@@ -190,7 +189,7 @@ endpoint: /* 1573c0..1573f4: endpoint calculation, M7-verified contract */
 /* ------------------------------------------------------------------ */
 /* 0x00156f20 hg_audio_transfer_setup - 156f20..156fb4                   */
 /* sceSifSetDma({src,dest,size,attr=0}, id=1); when wait!=0 poll        */
-/* sceSifDmaStat until it reports non-negative.                        */
+/* sceSifDmaStat until it reports negative.                        */
 /* ------------------------------------------------------------------ */
 uint32_t hg_audio_transfer_setup(HGAudioBus *bus, uint32_t src, uint32_t dest,
                                  uint32_t size, uint32_t wait) {
@@ -208,7 +207,7 @@ uint32_t hg_audio_transfer_setup(HGAudioBus *bus, uint32_t src, uint32_t dest,
     if (handle == 0) return U32(-1);
     if (wait != 0) {
         while ((int32_t)bus->call(bus->ctx, HG_X_SIF_DMA_STAT, handle,
-                                  0, 0, 0, 0) < 0) {
+                                  0, 0, 0, 0) >= 0) {
         }
         bus->call(bus->ctx, HG_X_FLUSHCACHE, 0, 0, 0, 0, 0);
     }
@@ -336,23 +335,17 @@ void hg_audio_slot_state(HGAudioBus *bus, uint32_t slot, uint32_t out_auxc,
 /* ------------------------------------------------------------------ */
 uint32_t hg_audio_table_lookup4(HGAudioBus *bus, uint32_t slot,
                                 uint32_t index, uint32_t extra) {
+    if (!hg_audio_slot_active(bus, slot)) return 0;
     uint32_t base = HG_AUDIO_SLOT_TABLE + slot * HG_SLOT_STRIDE;
     uint32_t bank = bus->r32(bus->ctx, base + HG_SLOT_BANK2);
-    uint32_t table;
     if (bank == 0) return 0;
-    table = bus->r32(bus->ctx, bank + 0x3c);
-    if (table == 0) return 0;
-    if (bus->r16(bus->ctx, table) < index) return 0;
-    {
-        uint32_t entry = bus->r16(bus->ctx, U32(table + index * 2 + 2));
-        uint32_t value;
-        if (entry == 0xffff) return 0;
-        value = entry >> 1;
-        value = U32(value + extra);
-        value = U32(value * 2 + table);
-        if (bus->r16(bus->ctx, value) < extra) return 0;
-        return U32(table + bus->r16(bus->ctx, U32(value + extra * 2 + 2)));
-    }
+    uint32_t table = bus->r32(bus->ctx, bank + 0x3c);
+    if (table == 0 || bus->r16(bus->ctx, table) < index) return 0;
+    uint32_t entry = bus->r16(bus->ctx, U32(table + index * 2 + 2));
+    if (entry == 0xffff) return 0;
+    uint32_t subtable = U32(table + (entry & ~1u));
+    if (bus->r16(bus->ctx, subtable) < extra) return 0;
+    return U32(table + bus->r16(bus->ctx, U32(subtable + extra * 2 + 2)));
 }
 
 /* ------------------------------------------------------------------ */
@@ -629,7 +622,7 @@ void hg_audio_channel_init_b(HGAudioBus *bus, uint32_t channel) {
 
 /* ------------------------------------------------------------------ */
 /* 0x002a94b8 hg_audio_channel_command - 2a94b8..2a9538                  */
-/* Queue a command byte into the channel's 512-byte IOP command ring.  */
+/* Queue a command byte into the channel's 512-byte EE channel command ring.  */
 /* ------------------------------------------------------------------ */
 void hg_audio_channel_command(HGAudioBus *bus, uint32_t channel,
                               uint32_t command) {

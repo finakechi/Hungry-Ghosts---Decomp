@@ -284,6 +284,18 @@ class TableLookupTests(BaseAudioTest):
         self.assertEqual(self.h._bind('hg_audio_table_lookup6',
                                       ['s', 'i'])(self.h._bus_p, 0, 0), 0)
 
+    def test_table_lookup4_uses_subtable_count_and_single_variant_offset(self):
+        bank = self._registered()
+        table = bank + 0x100
+        # Entry 1 points to a variant table containing two variants.
+        self.h.mem.w16(table + 4, 0x40)
+        self.h.mem.w16(table + 0x40, 1)
+        self.h.mem.w16(table + 0x42, 0x80)
+        self.h.mem.w16(table + 0x44, 0x90)
+        lookup = self.h._bind('hg_audio_table_lookup4', ['slot', 'index', 'variant'])
+        self.assertEqual(lookup(self.h._bus_p, 0, 1, 1), table + 0x90)
+        self.assertEqual(lookup(self.h._bus_p, 0, 1, 2), 0)
+
 
 class ChannelCommandTests(BaseAudioTest):
     def test_channel_init_a(self):

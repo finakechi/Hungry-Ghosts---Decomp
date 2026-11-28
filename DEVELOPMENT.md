@@ -1,14 +1,20 @@
 # Hungry Ghosts — development and reproduction
 
-**Current verification baseline (Phase 3 integration — 2026-11-27):** Built on
-PR #21 `main` (`86a5670852d47c4ead140e5c8e40a5289f773053`), integrating the
+**Current verification baseline (M23–M24 integration — 2026-11-27):** M19–M24
+on the PR #22 `main` (`09b5832119d5ec97c85c05c6ab1eddd6c20be8ad`) with the
 hardened, bounded-parallel verification runner (`tools/hg_verify.py`, profiles
-`focused` [8], `historical`/`full` [79], `current` [120], `synthetic` [37],
+`focused` [8], `historical`/`full` [79], `current` [138], `synthetic` [41],
 `--jobs 1|2|4|8` with serial default `1`). See
 [docs/verification-infrastructure.md](docs/verification-infrastructure.md) for
 current runner commands, safe worker guidance, private config placeholders,
 M19–M24 compatibility notes, and rollout/rollback rules. The dated M1–M7
 baseline notes below are preserved for historical reproduction.
+
+The [M23–M24 integration review](docs/M23-M24-review.md) gives the current
+integration baseline (M19–M24 on the verification runner), verified inputs and
+reproduction commands; the [M19–M20](docs/M19-M20-review.md) and
+[M21–M22](docs/M21-M22-review.md) reviews remain as recorded. The dated guides below
+describe earlier milestones.
 
 ## Current quick start — synthetic checks only
 
@@ -28,9 +34,11 @@ python3 -B -m unittest discover -s tests -v
 git diff --check
 ```
 
-Expected on the integrated verification baseline: **465 discovered tests**
-(**462 passed, 3 retail-only Audio skips** when `HG_JAPAN_ISO` is unset; all
-**465 passed, 0 skipped** with authenticated `HG_JAPAN_ISO` set). Public CI
+Expected on the integrated M19–M24 baseline: **505 discovered tests**
+(**501 passed, 4 named retail-only skips** — three Audio tests without
+`HG_JAPAN_ISO`, one M24 reference-map test without `HG_ELF`; all **505 pass,
+0 skipped** with both authenticated inputs set). The 3-Audio-skip/465-test
+figures below describe the Phase 3 baseline. Public CI
 runs `.github/workflows/tests.yml` (Python 3.10 and 3.14, Temurin JDK 21,
 `tests/resource_sanitizer.c` under ASan+UBSan, `git diff --check`) using
 synthetic inputs only. If a prerequisite is missing, record the affected check

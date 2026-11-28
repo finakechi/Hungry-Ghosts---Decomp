@@ -26,6 +26,7 @@ from hg_evidence_safety import digest
 from hg_publication_audit import worktree_paths
 from hg_verify_inputs import ENV_PATHS, configured_paths, saved_inputs
 from hg_verify_inventory import PROFILES, inventory
+from hg_verify_milestones import PARALLEL as MILESTONE_PARALLEL
 from hg_verify_results import (
     ERROR, INTERRUPTED, INVALID, MISSING, PASSED, REJECTED, SKIPPED, UNRUN, classify, read_json,
 )
@@ -52,7 +53,7 @@ PARALLEL_RESULTS = {
     'lifecycle-corridor-controls', 'lifecycle-sequence',
     'front-end-differential', 'front-end-native', 'front-end-controls',
     'content-corpus', 'audio-instructions', 'audio-connected',
-}
+} | MILESTONE_PARALLEL
 # Dispatch priority when jobs > 1: launch measured long-running gates early
 # alongside fast diagnostics so no single straggler stretches the tail.
 # Serial runs (jobs == 1) always dispatch in exact inventory order.
@@ -238,6 +239,10 @@ class Inputs:
         items = check['inputs']
         if check['id'] == 'synthetic-suite' and self.paths['image'].exists():
             items = [*items, '{image}']
+        # Bind and authenticate the ELF for the retail M24 test when it is present;
+        # without it the named public skip contract applies.
+        if check['id'] == 'synthetic-suite' and self.paths['elf'].exists():
+            items = [*items, '{elf}']
         for item in items:
             if item.startswith('{dependency:') and probe:
                 continue
@@ -300,9 +305,10 @@ class Inputs:
             return [str(self.python), '-s', '-B', '-u', *argv[first:]]
         return argv
 
-    def child_environment(self, directory, authenticated_image):
+    def child_environment(self, directory, authenticated_image, authenticated_elf=True):
         return {**self.environment, **{name: str(self.paths[key]) for key, name in ENV_PATHS.items()
-                                         if key != 'image' or authenticated_image},
+                                         if (key != 'image' or authenticated_image)
+                                         and (key != 'elf' or authenticated_elf)},
                 'HG_VERIFY_BUILD_DIR': str(directory / 'build'),
                 'PYTHONPYCACHEPREFIX': str(directory / 'pycache')}
 
@@ -472,13 +478,18 @@ def attempt(folder, check, inputs, dependencies, lock_fd, stop):
         try:
             row['executed'] = True
             image_bound = str(inputs.paths['image']) in basis['inputs']
-            env = inputs.child_environment(directory, image_bound)
+            elf_bound = str(inputs.paths['elf']) in basis['inputs']
+            # Discovery gates export HG_ELF only after authenticating it; other
+            # verifiers keep the historical environment.
+            env = inputs.child_environment(directory, image_bound,
+                                           elf_bound or check['result'] != 'discovery')
             row['exit_code'] = run_child(argv, directory, env, lock_fd, stop,
                                          timeout=check.get('timeout', 180))
             row['child_seconds'] = round(time.monotonic() - launched, 3)
             stop.check()
             inputs.require_current(check, dependencies, basis)
-            verdict, details = classify(check, directory, row['exit_code'], authenticated_image=image_bound)
+            verdict, details = classify(check, directory, row['exit_code'], authenticated_image=image_bound,
+                                        authenticated_elf=elf_bound)
         except (OSError, ValueError, subprocess.SubprocessError) as exc:
             verdict, details = ERROR, {'basis': str(exc)}
         except Interrupted as exc:
