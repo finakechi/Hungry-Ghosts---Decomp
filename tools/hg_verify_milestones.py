@@ -7,6 +7,7 @@ declared control to be detected. A zero exit status or a success field is
 never sufficient on its own.
 """
 from pathlib import Path
+import re
 
 from hg_verify_legacy_contracts import exact
 
@@ -47,7 +48,7 @@ def m19(kind, row, directory, read):
         need(row['schema'] == 'hg-m19-job-differential/v1' and row['elf_sha256'] == ELF and row['controls'] and all(
             c['rejected'] is True and c['failure'] and len(c['source_sha256']) == 64 for c in row['controls']),
             'M19 job controls were not all rejected with measured failures')
-        return {'jobs': len(row['jobs']), 'controls': len(row['controls'])}
+        return {'jobs': row['jobs'], 'controls': len(row['controls'])}
     if kind == 'm19-resource-retail':
         need(row['schema'] == 'hg-m19-retail-checkpoints/v1' and row['iso_sha256'] == ISO and row['elf_sha256'] == ELF and row['result'] == 'passed',
              'M19 retail identity or verdict')
@@ -84,14 +85,17 @@ def m20(kind, check, row, read):
         need(row['schema'] == 'hg-m20-differential/v1' and row['elf_sha256'] == ELF and row['iso_sha256'] == ISO,
              'M20 differential identity')
         measured, recorded = row['negative_controls'], evidence['negative_controls']
+        # Evidence keeps the 'tick N' prefix; the measured message must add the
+        # divergent EE and C values at that tick.
         need(list(measured) == list(recorded) and all(
-            measured[name].startswith(recorded[name] + ': ') and 'differ' in measured[name] for name in recorded),
-            'M20 negative control divergence not measured at the recorded tick')
+            measured[name].startswith(recorded[name] + ': ') and re.search(r'EE .+, C ', measured[name])
+            for name in recorded), 'M20 negative control divergence not measured at the recorded tick')
         return {'sequences': len(row['sequences']), 'controls': len(measured)}
     evidence = reference(check, read)
+    # source_revision was added to the tracked receipt by the M19-M20 review;
+    # the verifier does not emit it.
     same(row, evidence, 'M19-M20 connected title script', ignore=('source_revision',))
-    need(row['schema'] == 'hg-title-script-integration/v1' and len(row['source_revision']) == 40,
-         'Missing title identity or source revision')
+    need(row['schema'] == 'hg-title-script-integration/v1', 'Missing title identity')
     return {'frames': row['runtime']['frames'], 'glyph_requests': row['runtime']['requests']['0x182850']}
 
 

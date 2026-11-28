@@ -576,7 +576,7 @@ class MilestoneGateTests(unittest.TestCase):
         self.assertEqual(self.classify('m24-reference-map', refmap)[0], results.PASSED)
         self.assertEqual(self.classify('m24-reference-map', refmap | dict(functions={}))[0], results.ERROR)
         m20 = self.evidence('evidence/m20/differential.json')
-        measured = {name: tick + ': byte at 0x0: EE 00, C 01 differ' for name, tick in m20['negative_controls'].items()}
+        measured = {name: tick + ': byte at 0xa6bce9: EE 8c, C 83' for name, tick in m20['negative_controls'].items()}
         self.assertEqual(self.classify('m20-hgscript-differential', m20 | dict(negative_controls=measured))[0],
                          results.PASSED)
         # The recorded evidence alone (no measured divergence) cannot prove the controls.
@@ -588,6 +588,14 @@ class MilestoneGateTests(unittest.TestCase):
         self.assertEqual(self.classify('m21-ferry-resume', broken)[0], results.ERROR)
         self.assertEqual(self.classify('m21-area1-entry', self.evidence('evidence/m21/area1-entry.json'))[0],
                          results.PASSED)
+        # Real report shapes: the job count is an integer and the title report
+        # has no source_revision (the M19-M20 review added it to the evidence).
+        job = self.evidence('evidence/m19/results.json')['differential']
+        self.assertEqual(self.classify('m19-resource-job', job)[0], results.PASSED)
+        title = self.evidence('evidence/m19-m20-integration/title.json')
+        title.pop('source_revision')
+        self.assertEqual(self.classify('m20-title-hgscript', title)[0], results.PASSED)
+        self.assertEqual(self.classify('m20-title-hgscript', title | dict(handle=1))[0], results.ERROR)
 
     def test_c_driver_contract_requires_detected_canary(self):
         from verify_c_drivers import DRIVERS
