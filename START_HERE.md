@@ -1,61 +1,77 @@
 # Hungry Ghosts — start here
 
-## SCPS-15046 research realignment — 2026-11-28
+## SCPS-15046 research baseline (post-realignment M25/M26 reconciliation) — 2026-11-28
 
-**Resume here.** The present scope is reverse engineering and decompilation
-research for Japanese SCPS-15046. Existing independent models (including M25's
-bounded synthetic world-session fixtures) are retained as legacy verification
-infrastructure, not counted as recovered original functions. The separate PC
-repository holds a research index for a possible future port. The dated
-sections below record earlier resume points.
+**Resume here.** The active scope is reverse engineering and decompilation
+research for the original Japanese **SCPS-15046** build. Existing independent
+models (including M25's world-session fixtures in `src/scene/world_init.{c,h}`
+and M26's HSQ1 timing fixtures in `src/audio/audio_sequencer.{c,h}`) are
+retained strictly as legacy verification infrastructure and contribute zero
+recovered original instruction bytes. The separate
+[Hungry Ghosts PC](https://github.com/finakechi/Hungry-Ghosts---PC) repository
+holds a future-port research index (`main` `16d48310`, PR #1);
+[PS2DInfo](https://github.com/finakechi/PS2DInfo) (`2e4a226e`) owns shared PS2
+tooling.
 
-- [Collision replay](docs/retail-collision-snap.md) isolates the
-  `001585c8` → `001585e0` stop pair and checks original words and
-  non-stack memory effects through `001e3440`. Resume at the mesh
-  candidate selection in `00145740` and the second query `00268ad0`.
-- [Audio sequencing](docs/retail-audio-sequencing.md) reproduces M22
-  and the M26 working timing receipt. Resume at the return invariant
-  and tie-breaking in `002afed8`/`002af1d0` or measure RPC-busy
-  frames with a bounded trace.
-- [Coverage and review](docs/SCPS-15046-realignment.md) records
-  the authenticated build, v2 inventory, PR #24 scope review, and
-  standalone M26 reconciliation prerequisites.
+- **Accepted source identities:**
+  - Japanese `SCPS-15046` ISO `8ca1513c…`, boot ELF `a74248c5…` (CRC `91AA4B28`, entry `0x00100008`).
+  - Decomp PR #25 (`research/scps-15046-realignment` `ea330a5e`, merged on `main` at `32cf2bfb`).
+  - Decomp PR #24 (`research/m25-world-initialization` original `969e913c`, reconciled `205ce2fd`, merged on `main` at `4951c8aa`).
+  - Standalone M26 (`research/m26-audio-timing` `d0230a7e` on `7191ca74`), integrated here onto `4951c8aa` (branch `integration/m26-audio-timing`). The earlier local snapshot `integration/m25-m26-review` (`1be28330`, containing uncommitted-tree snapshot `5750236a`) is preserved locally, not pushed, and not used as the integration source.
+- **Verified original-game evidence retained:**
+  - [Coverage inventory v2](evidence/realignment/coverage.json) and [realignment report](docs/SCPS-15046-realignment.md): 178 / 4,525 source-mapped resident EE entries, 93,452 / 2,469,784 candidate bytes checked (+4 outside), AREA0 `5/6` (2,504 B), AREA1 `1/2` (2,180 B), IOP 80 checked instruction bytes across SG2IOP/LIBSD/SDRDRV, VU unmeasured; recovered-original-instruction byte coverage remains unmeasured.
+  - [Collision replay](docs/retail-collision-snap.md) ([receipt](evidence/realignment/collision.json)) and [M25 live/authentic evidence](docs/M25.md) (`evidence/m25/{live-continuity,authentic-dependencies,provenance-ledger}.json`): same-run AREA1 PCSX2 stops (`0012f850` tick 0 → `001585c8` → `001585e0` → `0012f8d4` → ticks 1–3 → walk ticks 114–200), 5,333-step / 824-address original-instruction replay of `001e3440` with 243/243 matching non-stack writes and 3 perturbed no-hit controls.
+  - [Audio sequencing research](docs/retail-audio-sequencing.md) and [M26 reference timing](evidence/m26/reference-timing.json) ([M26](docs/M26.md)): 23 ELF instruction anchors confirming VBlank-End INTC 3 (`0011df80`) → `iWakeupThread` (`00103ea0`, syscall `-52`) → `001566c0`, 1:1 VBlank-to-wake cadence across 12 M22 saves (5,618 VBlanks), cursor voice attribution (`voice 8` = `owner 0` at `cursor-up`), and Slot 3 retirement (`age >= 3 && ENVX < 2`, mask order `0x09, 0x0a, 0x07, 0x08`).
+- **Verification registry (`focused` 8, `historical`/`full` 79, `current` 143, `synthetic` 43):** All 3 M25 gates and 2 M26 gates are registered in `config/current-verification.json` with contracts in `tools/hg_verify_milestones.py` / `tools/hg_verify_m25.py` and tests in `tests/test_hg_verify.py`. Public/unbound discovery preserves the 4 named retail skips. Historical branch receipts remain attributed to their actual source commits (`969e913c` / `4075bec7…` for M25; `d0230a7e` / `feeafd55…` for M26).
+- **Current limits (not claimed):** No retail equivalence, C recovery of `001e3440`/collision meshes, retail audio sequencer/allocator reconstruction, streaming dialogue (`001564a0`/`00156550`), `00156cf0` resume, full IOP/VU census, or hardware ADSR/PCM equivalence. M25 unobserved stops (`001586c8`, `0012f8cc`, ticks 4–113, neutral release, wall contact, retail teardown) and audio fallback contention (`002afed8`/`002af1d0`, RPC-busy rate, sub-frame latency) remain open.
+- **Next single highest-value original research action:** Analyze **collision mesh candidate selection around `00145740` and the second query `00268ad0`** (inside `00144820` called by `001e3440`). Current evidence favors this over `002afed8`/`002af1d0` because `001e3440` is the earliest unsupported retail dependency blocking AREA1 cold-entry continuity (and shares `00144820` with M12 grounded movement), and we already have an authenticated same-run capture pair (`001585c8` → `001585e0`) plus a deterministic 5,333-step original-instruction replay ready for offline analysis without a new capture, whereas `002afed8`/`002af1d0` have zero contention observations in existing M22 saves.
+
+## M26 audio timing and voice management — 2026-11-28
+
+**Integrated onto realigned `main` (original reference timing retained; HSQ1 timing model preserved as legacy verification infrastructure).** Standalone commit `d0230a7e` on branch `research/m26-audio-timing` (`decomp-m26`, base `7191ca74`), merged into `integration/m26-audio-timing` on `4951c8aa`. Full detail: [M26](docs/M26.md).
+
+- **Authenticated reference timing research**
+  ([evidence/m26/reference-timing.json](evidence/m26/reference-timing.json),
+  `tools/hg_audio/m26_reference_timing.py`): 23 ELF anchors confirming VBlank-End
+  INTC 3 (`0011df80`) → `iWakeupThread` (`00103ea0`, syscall `-52`) → `001566c0`;
+  12 M22 checkpoints showing `VBlankStart(0095e300) - AudioWake(00a6c3c0) == 1`
+  and all 16 slot counters matching `00a6c3c0`; cursor voice attribution and
+  Slot 3 retirement order (`0x09, 0x0a, 0x07, 0x08`). Saved frame-boundary
+  snapshots only; live multi-frame PINE tracing was not run.
+- **Independent timing & voice model (legacy verification fixture)**
+  (`src/audio/audio_sequencer.{h,c}`): additive opt-in `HG_SEQ_TIMING_CHRONO`
+  mode (9 new APIs; legacy M22/M24/world-audio receipts unchanged); 7 scenario
+  families, 17 schedule runs × 2 cycles, 10/10 negative controls
+  ([evidence/m26/timing-lifecycle.json](evidence/m26/timing-lifecycle.json)).
+- **Historical standalone M26 branch receipts (`d0230a7e`, `source_sha256` `feeafd55…`):**
+  `synthetic` `m12-20261128T021136Z-o9n0yove` (42/42 accepted, 353.8 s);
+  `current` `m12-20261128T021844Z-end66r4x` (140/140 accepted, Gate 00 510/510, 0 skips, 5,079.5 s).
+  Coverage/results: [m26-coverage.json](docs/verification/m26-coverage.json),
+  [m26-results.json](docs/verification/m26-results.json).
+- **Not claimed:** retail equivalence, retail sequencer/allocator reconstruction,
+  live multi-frame PINE timing, streaming dialogue (`001564a0`/`00156550`),
+  full IOP emulation, or PCM equivalence.
 
 ## M25 world initialization and state continuity — 2026-11-28
 
-**Reconciled onto realigned `main` (original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** The branch is `research/m25-world-initialization`
-([PR #24](https://github.com/finakechi/Hungry-Ghosts---Decomp/pull/24)), originally based
-on `main` `7191ca74` and merged with `main` `32cf2bfb` (PR #25). Detail: [M25](docs/M25.md).
+**Merged into realigned `main` at `4951c8aa` (PR #24; original evidence retained; synthetic world-session fixtures preserved as legacy verification infrastructure).** Branch `research/m25-world-initialization` (original `969e913c` on `7191ca74`, reconciled with PR #25 `32cf2bfb` at `205ce2fd`). Detail: [M25](docs/M25.md).
 
 - **Synthetic (legacy verification fixture).** Two original scenes run four interleaved cycles of boot →
   publish → setup → 134 updates → teardown → re-entry. Parity holds, 14/14
   controls are detected, and 36/36 invalid inputs are rejected.
-- **Live (one original PCSX2 run).** The run covers tick 0, the `00158a10`
-  return, the `001e3440` return (Y 38.0455322265625), the first camera follow,
-  ticks 1–3 and walk ticks 114–200.
-  - Its tick 0 equals M21 `area1-active`.
-  - Its `00158a10` return equals M8, and C reproduces it.
-  - Original instructions from its tick 0 reproduce the post-camera stop in
-    all 11 domains.
-- **Gates (historical M25 branch receipts at `969e913`, source `4075bec7…`).** There are 3 `m25-` gates.
-  - `current` `m12-20261128T141916Z-kghnfr1n`: 141/141 accepted, Gate 00
-    516/516.
-  - `synthetic` `m12-20261128T141423Z-cphcz36j`: 42/42.
-  - 0 bad seals.
-- **Still unobserved or unreconstructed:**
-  - the `00158470` return register;
-  - ticks 4–113;
-  - a neutral release;
-  - wall contact;
-  - retail teardown;
-  - C for `001e3440`.
-- **Historical M26 snapshot note:** the local branch `integration/m25-m26-review`
-  (`decomp-m25-m26-integration`) is preserved locally and not pushed; M26 is
-  integrated separately from its standalone commit.
+- **Live (one original PCSX2 run).** Covers tick 0, `00158a10` return, `001e3440`
+  return (Y 38.0455322265625), first camera follow, ticks 1–3, and walk ticks 114–200.
+  Tick 0 equals M21 `area1-active`; `00158a10` return equals M8 and C reproduces it;
+  original instructions from tick 0 reproduce the post-camera stop in all 11 domains.
+- **Historical M25 branch receipts (`969e913c`, `source_sha256` `4075bec7…`):**
+  `current` `m12-20261128T141916Z-kghnfr1n` (141/141 accepted, Gate 00 516/516);
+  `synthetic` `m12-20261128T141423Z-cphcz36j` (42/42); 0 bad seals.
+- **Still unobserved or unreconstructed:** `00158470` return register, ticks 4–113,
+  neutral release, wall contact, retail teardown, C for `001e3440`.
 
 ## M23–M24 integration review — 2026-11-27
 
-**Integrated baseline.** Branch `integration/m23-m24-review` in
+**Historical baseline (merged into `origin/main` at `7191ca7402b5c8f0d5a58dbd38c62d099470c667`).** Branch `integration/m23-m24-review` in
 `decomp-m23-m24-integration`, based on remote `main`
 `09b5832119d5ec97c85c05c6ab1eddd6c20be8ad` (PR #22). It merges
 `research/m23-gameplay-initialization` (`6cc3ce8d`) and
